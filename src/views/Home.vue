@@ -6,7 +6,16 @@
 
 <script>
 // @ is an alias to /src
+import { couAnswerList } from '@/api/Answer.js'
 export default {
-  name: 'home'
+  name: 'home',
+  mounted() {
+    couAnswerList().then(res => {
+      let rep = res.data
+      if (rep.code === 200) {
+        console.log(rep.data)
+      }
+    })
+  }
 }
 </script>
