@@ -2,17 +2,17 @@
   <div class="index-wrap">
     <!-- banner -->
     <div class="banner-wrap">
-      <img src="@/assets/images/index/banner.jpg" alt="">
+      <img src="@/assets/images/index/banner.png" alt="">
     </div>
     <!-- 课程列表 -->
     <ul class="class-wrap w-wrap">
       <li class="class-item class-item01">
-        <img src="@/assets/images/index/banner.jpg" alt="">
+        <img class="ci-img" src="@/assets/images/index/undraw_video_call_kxyp.png" alt="">
         <div class="class-instru">
           <h1>体验课程</h1>
           <p>专业高效的课程，免费体验</p>
           <div class="btn-box">
-            <button type="button" name="button" class="more-btn">体验</button>
+            <button type="button" name="button" class="more-btn">更多</button>
           </div>
         </div>
       </li>
@@ -20,15 +20,15 @@
         <span class="anima-icon"></span>
         <div class="class-instru">
           <h1>体验课程</h1>
-          <p>专业高效的课程，免费体验</p>
+          <p>超50+CMA精选案例；提高论述题掌握程</p>
           <div class="btn-box">
             <button type="button" name="button" class="ty-btn">体验</button>
           </div>
         </div>
-        <img src="@/assets/images/index/banner.jpg" alt="">
+        <img class="ci-img" src="@/assets/images/index/undraw_podcast_q6p7.png" alt="">
       </li>
       <li class="class-item class-item03">
-        <img src="@/assets/images/index/banner.jpg" alt="">
+        <img class="ci-img" src="@/assets/images/index/undraw_prototyping_process_rswj.png" alt="">
         <div class="class-instru">
           <h1>体验课程</h1>
           <p>专业高效的课程，免费体验</p>
@@ -47,14 +47,13 @@
             <button type="button" name="button" class="zb-tbn">正在直播</button>
           </div>
         </div>
-        <img src="@/assets/images/index/banner.jpg" alt="">
+        <img class="ci-img" src="@/assets/images/index/undraw_setup_wizard_r6mr.png" alt="">
       </li>
     </ul>
     <!-- cma咨询 -->
     <div class="cma-consultation">
-      <img src="@/assets/images/index/cma-title-bg.png" alt="" width="100%">
       <div class="w-wrap clearfix">
-        <img src="@/assets/images/index/banner.jpg" alt="" class="cma-img fl">
+        <div class="cma-txt-bg fl">CMA咨询</div>
         <ul class="txt-item fl">
           <li>了解CMA最新资讯、备考信息、课程信息</li>
           <li>7月CMA考试费用高吗？考下CMA要多少钱？</li>
@@ -68,41 +67,42 @@
     <div class="partners-wrap">
       <div class="w-wrap">
         <div class="part-tit">
-          <img src="@/assets/images/index/banner.jpg" alt="">
+          <img src="@/assets/images/index/tit_icon.png" alt="">
           <span class="part-icon">合作伙伴</span>
         </div>
-        <ul class="part-list clearfix">
+        <img class="hzhb-img" src="@/assets/images/index/hzhb.png" alt="" >
+        <!-- <ul class="part-list clearfix">
           <li class="part-item">
-            <img src="@/assets/images/index/banner.jpg" alt="" >
+            <img src="@/assets/images/index/banner.png" alt="" >
           </li>
           <li class="part-item">
-            <img src="@/assets/images/index/banner.jpg" alt="" >
+            <img src="@/assets/images/index/banner.png" alt="" >
           </li>
           <li class="part-item">
-            <img src="@/assets/images/index/banner.jpg" alt="" >
+            <img src="@/assets/images/index/banner.png" alt="" >
           </li>
           <li class="part-item">
-            <img src="@/assets/images/index/banner.jpg" alt="" >
+            <img src="@/assets/images/index/banner.png" alt="" >
           </li>
           <li class="part-item">
-            <img src="@/assets/images/index/banner.jpg" alt="" >
+            <img src="@/assets/images/index/banner.png" alt="" >
           </li>
           <li class="part-item">
-            <img src="@/assets/images/index/banner.jpg" alt="" >
+            <img src="@/assets/images/index/banner.png" alt="" >
           </li>
           <li class="part-item">
-            <img src="@/assets/images/index/banner.jpg" alt="" >
+            <img src="@/assets/images/index/banner.png" alt="" >
           </li>
           <li class="part-item">
-            <img src="@/assets/images/index/banner.jpg" alt="" >
+            <img src="@/assets/images/index/banner.png" alt="" >
           </li>
           <li class="part-item">
-            <img src="@/assets/images/index/banner.jpg" alt="" >
+            <img src="@/assets/images/index/banner.png" alt="" >
           </li>
           <li class="part-item">
-            <img src="@/assets/images/index/banner.jpg" alt="" >
+            <img src="@/assets/images/index/banner.png" alt="" >
           </li>
-        </ul>
+        </ul> -->
       </div>
     </div>
   </div>
@@ -150,8 +150,9 @@ export default {
     &.class-item01{
       height: 234px;
     }
-    img{
-      @include wh(199, 150);
+    .ci-img{
+      width: 220px;
+      height: auto;
     }
     .class-instru{
       h1{
@@ -160,6 +161,7 @@ export default {
         line-height: 35px;
       }
       p{
+        line-height: 20px;
         color: $col999;
         margin-top: 5px;
       }
@@ -167,18 +169,20 @@ export default {
   }
   .anima-icon{
     position: absolute;
-    width: 139px;
-    height: 139px;
-    background: #0f0;
+    width: 202px;
+    height: 100%;
     .class-item02 &{
-      width: 100px;
-      height: 90px;
-      right: 38px;
-      top: -27px;
+      right: -26px;
+      top: -62px;
+      background: url('../assets/images/index/undraw_icon01.png') no-repeat center;
+      background-size: contain;
     }
     .class-item04 &{
-      left: -139px;
-      top: -32px;
+      width: 285px;
+      left: -192px;
+      top: -36px;
+      background: url('../assets/images/index/undraw_icon02.png') no-repeat center;
+      background-size: contain;
     }
   }
   .btn-box{
@@ -199,14 +203,30 @@ export default {
       }
     }
   }
+  // .ci-img{
+  //   @include wh(220, 133);
+  //   .class-item02 &{
+  //     @include wh(220, 150);
+  //   }
+  //   .class-item03 &{
+  //     @include wh(220, 170);
+  //   }
+  //   .class-item04 &{
+  //     @include wh(220, 165);
+  //   }
+  // }
   // cma咨询
   .cma-consultation{
     background: #ffffff;
     padding-bottom: 85px;
-    .cma-img{
-      @include wh(306, 236);
+    .cma-txt-bg{
+      @include whl(190, 210, 210);
       margin-left: 62px;
       margin-right: 47px;
+      padding-left: 82px;
+      font-size: 26px;
+      background: url('../assets/images/index/cma_icon.png') no-repeat center;
+      background-size: contain;
     }
     .txt-item{
       li{
@@ -220,6 +240,12 @@ export default {
   .partners-wrap{
     text-align: center;
     background: $colfff;
+    .hzhb-img{
+      width: 100%;
+      padding-top: 29px;
+      padding-bottom: 52px;
+      display: block;
+    }
   }
   .part-tit{
     font-size: 26px;
@@ -229,26 +255,25 @@ export default {
       @include wh(75, 47);
       display: inline-block;
       vertical-align: middle;
-      background:linear-gradient(129deg,rgba(255,231,145,1) 0%,rgba(255,168,119,1) 100%);
     }
     span{
       margin-left: -38px;
     }
   }
-  .part-list{
-    padding: 36px 5px;
-    li{
-      border: 1px solid $col999;
-      text-align: center;
-      @include whl(226, 98, 98);
-      float: left;
-      margin: 5px;
-      img{
-        vertical-align: middle;
-        margin-top: -3px;
-        width: 90%;
-        height: 90%;
-      }
-    }
-  }
+  // .part-list{
+  //   padding: 36px 5px;
+  //   li{
+  //     border: 1px solid $col999;
+  //     text-align: center;
+  //     @include whl(226, 98, 98);
+  //     float: left;
+  //     margin: 5px;
+  //     img{
+  //       vertical-align: middle;
+  //       margin-top: -3px;
+  //       width: 90%;
+  //       height: 90%;
+  //     }
+  //   }
+  // }
 </style>

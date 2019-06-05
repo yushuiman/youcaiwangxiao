@@ -5,18 +5,18 @@
         <div class="head-list fl">
           <img src="@/assets/images/global/yc-logo.png" alt="logo" class="yc-logo fl">
           <ul class="item-list fl">
-            <li class="curren"><router-link to="/">首页</router-link></li>
-            <li><router-link to="/class">课程</router-link></li>
-            <li><router-link to="/question">题库</router-link></li>
-            <li><router-link to="/zhibo">直播</router-link></li>
-            <li><router-link to="/answer">答疑</router-link></li>
-            <li><router-link to="/zixun">咨询</router-link></li>
-            <li><router-link to="/app">App</router-link></li>
+            <li :class="isChange == 'shouye' ? 'on_change' : ''" @click="onChange('shouye')"><router-link to="/">首页</router-link></li>
+            <li :class="isChange == 'kecheng' ? 'on_change' : ''" @click="onChange('kecheng')"><router-link to="/class">课程</router-link></li>
+            <li :class="isChange == 'tiku' ? 'on_change' : ''" @click="onChange('tiku')"><router-link to="/question">题库</router-link></li>
+            <li :class="isChange == 'liveing' ? 'on_change' : ''" @click="onChange('liveing')"><router-link to="/zhibo">直播</router-link></li>
+            <li :class="isChange == 'dayi' ? 'on_change' : ''" @click="onChange('dayi')"><router-link to="/answer">答疑</router-link></li>
+            <li :class="isChange == 'zixun' ? 'on_change' : ''" @click="onChange('zixun')"><router-link to="/zixun">咨询</router-link></li>
+            <li :class="isChange == 'app' ? 'on_change' : ''" @click="onChange('liveing')"><router-link to="/app">App</router-link></li>
           </ul>
         </div>
         <div class="login-wrap fr">
           <div class="login-l fl">
-            <router-link to="/login">登录</router-link>|
+            <router-link to="/login">登录</router-link> |
             <router-link to="/login">注册</router-link>
             <a class="learen-btn">学习中心</a>
           </div>
@@ -31,10 +31,23 @@
   </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+  computed: {
+    isChange () {
+      return this.$store.state.is_change
+    }
+  },
+  methods: {
+    // ...mapMutations({
+    // increase: 'increase'// 将 `this.increase()` 映射为 `this.$store.commit('increase')`
+    ...mapMutations({
+      setChange: 'setChange'
+    }),
+    onChange (navName) {
+      console.log(2232)
+      this.setChange(navName)
+    }
   }
 }
 </script>
@@ -44,6 +57,7 @@ export default {
     width: 100%;
     .head-w {
       @include whl(1300, 70, 70);
+      overflow: hidden;
       margin: 0 auto;
     }
   }
@@ -57,20 +71,33 @@ export default {
       font-size: 14px;
       padding: 0 21px;
       float: left;
+      box-sizing: border-box;
       a{
         color: $col333;
         display: block;
+        // border-top: 4px solid transparent;
       }
-      &.curren{
-        a{
+      &.on_change{
+        a {
           color: $blueColor;
-          border-top: 4px solid $blueColor;
+          // border-top: 4px solid $blueColor;
         }
+      }
+      .tab-item{
+        &.router-link-exact-active {
+          color: $blueColor;
+          // border-top: 4px solid $blueColor;
+        }
+        // a{
+        //   color: $blueColor;
+        //   border-top: 4px solid $blueColor;
+        // }
       }
     }
   }
 
   .login-l{
+    color: $blueColor;
     a{
       color: $blueColor;
       display: inline-block;
