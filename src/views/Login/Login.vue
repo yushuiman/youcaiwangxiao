@@ -73,7 +73,7 @@
           <div class="read">
             <Checkbox v-model="single">我已同意并阅读</Checkbox>
             <span class="Agreement" @click="modal1 = true">《用户注册协议》</span>
-            <Modal
+            <!-- <Modal
               v-model="modal1"
               footer-hide = "false"
               width="1200">
@@ -154,7 +154,7 @@
               <div class="content">
 
               </div>
-            </Modal>
+            </Modal> -->
           </div>
           <i-button type="primary" class="registered" @click="webReg">注册</i-button>
           <div class="yc-bot">优财智业（北京）科技发展有限公司</div>
@@ -500,24 +500,25 @@ export default {
       } else if (this.single === false) {
         this.$Message.error('请仔细阅读用户注册协议')
       } else {
-        this.$axios.post('/web/Register/webReg', { 'mobile': Encrypt(this.form2.mobile), 'password': this.form2.text_pwd, 'pass': this.form2.confirm_pwd, 'mobilecode': this.form2.code }).then(res => {
-          console.log(res)
-          if (res.data.code === 200) {
-            this.$store.commit('user/setToken', res.data.data)
-            this.$Message.success('注册成功')
-            this.is_forget = 'finish'
-            this.form2.mobile = ''
-            this.form2.confirm_pwd = ''
-            this.form2.text_pwd = ''
-            this.form2.code = ''
-          } else if (res.data.code === 406) {
-            this.$store.commit('user/setToken', res.data.data)
-            this.$Message.error('账号 or 密码错误')
-          } else if (res.data.code === 408) {
-            this.$store.commit('user/setToken', res.data.data)
-            this.$Message.error('验证码错误')
-          }
-        })
+        console.log('注册接口')
+        // this.$axios.post('/web/Register/webReg', { 'mobile': Encrypt(this.form2.mobile), 'password': this.form2.text_pwd, 'pass': this.form2.confirm_pwd, 'mobilecode': this.form2.code }).then(res => {
+        //   console.log(res)
+        //   if (res.data.code === 200) {
+        //     this.$store.commit('user/setToken', res.data.data)
+        //     this.$Message.success('注册成功')
+        //     this.is_forget = 'finish'
+        //     this.form2.mobile = ''
+        //     this.form2.confirm_pwd = ''
+        //     this.form2.text_pwd = ''
+        //     this.form2.code = ''
+        //   } else if (res.data.code === 406) {
+        //     this.$store.commit('user/setToken', res.data.data)
+        //     this.$Message.error('账号 or 密码错误')
+        //   } else if (res.data.code === 408) {
+        //     this.$store.commit('user/setToken', res.data.data)
+        //     this.$Message.error('验证码错误')
+        //   }
+        // })
       }
     },
     // 语音验证码
@@ -608,8 +609,8 @@ export default {
     margin: 0 auto;
     position: relative;
     padding-top: 50px;
+    @extend %bg-img;
     background-image: url('../../assets/images/login/back3.png');
-    background-size:100% 100%;
     display: flex;
     justify-content: center;
   }

@@ -1,30 +1,35 @@
 <template>
   <div>
-    <header class="head-wrap">
-      <div class="head-w">
-        <div class="head-list fl">
-          <img src="@/assets/images/global/yc-logo.png" alt="logo" class="yc-logo fl">
-          <ul class="item-list fl">
-            <li :class="isChange == 'shouye' ? 'on_change' : ''" @click="onChange('shouye')"><router-link to="/">首页</router-link></li>
-            <li :class="isChange == 'kecheng' ? 'on_change' : ''" @click="onChange('kecheng')"><router-link to="/class">课程</router-link></li>
-            <li :class="isChange == 'tiku' ? 'on_change' : ''" @click="onChange('tiku')"><router-link to="/question">题库</router-link></li>
-            <li :class="isChange == 'liveing' ? 'on_change' : ''" @click="onChange('liveing')"><router-link to="/zhibo">直播</router-link></li>
-            <li :class="isChange == 'dayi' ? 'on_change' : ''" @click="onChange('dayi')"><router-link to="/answer">答疑</router-link></li>
-            <li :class="isChange == 'zixun' ? 'on_change' : ''" @click="onChange('zixun')"><router-link to="/zixun">咨询</router-link></li>
-            <li :class="isChange == 'app' ? 'on_change' : ''" @click="onChange('liveing')"><router-link to="/app">App</router-link></li>
-          </ul>
-        </div>
-        <div class="login-wrap fr">
-          <div class="login-l fl">
-            <router-link to="/login">登录</router-link> |
-            <router-link to="/login">注册</router-link>
-            <a class="learen-btn">学习中心</a>
+    <header>
+      <div class="head-wrap">
+        <div class="head-w">
+          <div class="head-list fl">
+            <img src="@/assets/images/global/yc-logo.png" alt="logo" class="yc-logo fl">
+            <ul class="item-list fl">
+              <li :class="isChange == 'shouye' ? 'on_change' : ''" @click="onChange('shouye')"><router-link to="/">首页</router-link></li>
+              <li :class="isChange == 'kecheng' ? 'on_change' : ''" @click="onChange('kecheng')"><router-link to="/class">课程</router-link></li>
+              <li :class="isChange == 'tiku' ? 'on_change' : ''" @click="onChange('tiku')"><router-link to="/question">题库</router-link></li>
+              <li :class="isChange == 'liveing' ? 'on_change' : ''" @click="onChange('liveing')"><router-link to="/zhibo">直播</router-link></li>
+              <li :class="isChange == 'dayi' ? 'on_change' : ''" @click="onChange('dayi')"><router-link to="/answer">答疑</router-link></li>
+              <li :class="isChange == 'zixun' ? 'on_change' : ''" @click="onChange('zixun')"><router-link to="/zixun">咨询</router-link></li>
+              <li :class="isChange == 'app' ? 'on_change' : ''" @click="onChange('liveing')"><router-link to="/app">App</router-link></li>
+            </ul>
           </div>
-          <div class="login-r fr">
-            <img src="@/assets/images/global/email-icon.png" alt="email" class="email-icon">
-            <img src="@/assets/images/global/head-logo-moren.png" alt="头像" class="head-logo">
+          <div class="login-wrap fr">
+            <div class="login-l fl">
+              <router-link to="/login">登录</router-link> |
+              <router-link to="/login">注册</router-link>
+              <a class="learen-btn">学习中心</a>
+            </div>
+            <div class="login-r fr">
+              <img src="@/assets/images/global/email-icon.png" alt="email" class="email-icon">
+              <img src="@/assets/images/global/head-logo-moren.png" alt="头像" class="head-logo">
+            </div>
           </div>
         </div>
+      </div>
+      <div class="" style="height: 71px;">
+
       </div>
     </header>
 
@@ -55,6 +60,9 @@ export default {
   @import "../assets/scss/app";
   .head-wrap{
     width: 100%;
+    position: fixed;
+    background: $colfff;
+    z-index: 10;
     .head-w {
       @include whl(1300, 70, 70);
       overflow: hidden;

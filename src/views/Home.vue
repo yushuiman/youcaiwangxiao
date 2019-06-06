@@ -52,6 +52,7 @@
     </ul>
     <!-- cma咨询 -->
     <div class="cma-consultation">
+      <img src="@/assets/images/index/cma-title-bg.png" alt="">
       <div class="w-wrap clearfix">
         <div class="cma-txt-bg fl">CMA咨询</div>
         <ul class="txt-item fl">
@@ -125,7 +126,7 @@ export default {
 </script>
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../assets/scss/app";
-  .banner-wrap{
+  .index-wrap{
     img{
       width: 100%;
     }
@@ -174,15 +175,15 @@ export default {
     .class-item02 &{
       right: -26px;
       top: -62px;
-      background: url('../assets/images/index/undraw_icon01.png') no-repeat center;
-      background-size: contain;
+      @extend %bg-img;
+      background-image: url('../assets/images/index/undraw_icon01.png');
     }
     .class-item04 &{
       width: 285px;
       left: -192px;
       top: -36px;
-      background: url('../assets/images/index/undraw_icon02.png') no-repeat center;
-      background-size: contain;
+      @extend %bg-img;
+      background-image: url('../assets/images/index/undraw_icon02.png');
     }
   }
   .btn-box{
@@ -220,13 +221,13 @@ export default {
     background: #ffffff;
     padding-bottom: 85px;
     .cma-txt-bg{
-      @include whl(190, 210, 210);
+      @include whl(272, 210, 192);
       margin-left: 62px;
       margin-right: 47px;
       padding-left: 82px;
       font-size: 26px;
-      background: url('../assets/images/index/cma_icon.png') no-repeat center;
-      background-size: contain;
+      @extend %bg-img;
+      background-image: url('../assets/images/index/cma_icon.png');
     }
     .txt-item{
       li{
