@@ -4,7 +4,7 @@
     <footer id="footer">
       <div class="footer-wrap">
         <div class="footer-top w-wrap">
-          <img src="@/assets/images/global/yc-logo.png" alt="logo" class="yc-logo">
+          <img src="@/assets/images/global/yc-logo-gray.png" alt="logo" class="yc-logo">
         </div>
         <div class="footer_center">
           <div class="w-wrap clearfix">

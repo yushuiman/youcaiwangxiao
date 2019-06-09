@@ -265,15 +265,6 @@ import { Encrypt } from '@/plugins/crypto'
 import { mapActions } from 'vuex'
 
 export default {
-  head () {
-    return this.$setTdk('秦猪猪', '我是一头幸福的小猪猪', '猪')
-  },
-  fetch ({ store, app }) {
-    store.commit('footer/setType', false)
-  },
-  asyncData () {
-
-  },
   data () {
     return {
       Ws: '',
@@ -479,6 +470,7 @@ export default {
       } else if (this.form.password.length < 6 || this.form.password.length > 16) {
         this.$Message.error('密码必须为6-16位哦~~')
       } else {
+        console.log(232)
         this.handleLogin({ 'mobile': Encrypt(this.form.mobile), 'password': this.form.password }).then(res => {
           setTimeout(() => {
             this.$router.push('/')

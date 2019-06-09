@@ -5,7 +5,7 @@ import store from './store/'
 import './assets/scss/common.css'
 import Iview from 'iview'
 import ElementUI from 'element-ui'
-// import 'element-ui/lib/theme-chalk/index.css'
+import 'element-ui/lib/theme-chalk/index.css'
 Vue.config.productionTip = false
 
 Vue.use(Iview)
@@ -15,3 +15,4 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+Vue.prototype.$Message = ElementUI.Message

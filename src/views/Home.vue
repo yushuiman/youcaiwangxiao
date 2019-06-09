@@ -170,17 +170,17 @@ export default {
   }
   .anima-icon{
     position: absolute;
-    width: 202px;
-    height: 100%;
+    height: auto;
     .class-item02 &{
+      @include wh(202, 177);
       right: -26px;
-      top: -62px;
+      top: -38px;
       @extend %bg-img;
       background-image: url('../assets/images/index/undraw_icon01.png');
     }
     .class-item04 &{
-      width: 285px;
-      left: -192px;
+      @include wh(285, 287);
+      left: -202px;
       top: -36px;
       @extend %bg-img;
       background-image: url('../assets/images/index/undraw_icon02.png');
