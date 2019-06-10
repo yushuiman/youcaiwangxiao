@@ -108,11 +108,15 @@
     </div>
   </div>
 </template>
-
 <script>
 // @ is an alias to /src
-import { couAnswerList } from '@/api/Answer.js'
+import { couAnswerList } from '@/api/'
 export default {
+  data () {
+    return {
+
+    }
+  },
   name: 'home',
   mounted () {
     couAnswerList().then(res => {

@@ -262,7 +262,7 @@ import success from '@/assets/images/login/success.png'
 // 加密 解密
 import { Encrypt } from '@/plugins/crypto'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 
 export default {
   data () {
@@ -289,6 +289,8 @@ export default {
       is_forget: 'log-reg',
       isLogin: 'login',
       show: true,
+      /* 不可以点击 */
+      disabled: false,
       show2: true,
       show3: true,
       count: '',
@@ -299,8 +301,8 @@ export default {
       timer3: null,
       dialogFormVisible: false,
       form: {
-        mobile: '',
-        password: ''
+        mobile: '18810399514',
+        password: 'qwe123'
       },
       form2: {
         mobile: '',
@@ -320,9 +322,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      handleLogin: 'user/handleLogin'
-    }),
+    ...mapActions(['handleLogin']),
+    ...mapMutations([
+      'SET_TOKEN',
+      'SET_USERNAME',
+      'SET_MOBILE',
+      'SET_USERID',
+      'SET_HEAD']),
     onMouseOver: function () {
       this.is_show = 1
     },
@@ -375,17 +381,23 @@ export default {
                   this.timer = null
                 }
               }, 1000)
-              this.$store.commit('user/setToken', res.data.data)
+              /* 保存token */
+              this.SET_TOKEN(res.data.data)
+              /*  this.$store.commit('user/setToken', res.data.data); */
               this.form2.mobile = ''
               this.form2.password = ''
             } else if (res.data.code === 406) {
-              this.$store.commit('user/setToken', res.data.data)
+              /* 保存token */
+              this.SET_TOKEN(res.data.data)
+              /* this.$store.commit('user/setToken', res.data.data) */
             } else if (res.data.code === 407) {
               this.disabled = true
               this.show = true
               clearInterval(this.timer)
               this.timer = null
-              this.$store.commit('user/setToken', res.data.data)
+              /* 保存token */
+              this.SET_TOKEN(res.data.data)
+              /* this.$store.commit('user/setToken', res.data.data) */
               this.$Message.error('该手机号已注册')
             }
           })
@@ -470,7 +482,6 @@ export default {
       } else if (this.form.password.length < 6 || this.form.password.length > 16) {
         this.$Message.error('密码必须为6-16位哦~~')
       } else {
-        console.log(232)
         this.handleLogin({ 'mobile': Encrypt(this.form.mobile), 'password': this.form.password }).then(res => {
           setTimeout(() => {
             this.$router.push('/')
