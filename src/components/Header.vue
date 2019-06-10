@@ -12,41 +12,51 @@
               <li :class="isChange ==='liveing' ? 'on_change' : ''" @click="onChange('liveing')"><router-link to="/zhibo">直播</router-link></li>
               <li :class="isChange === 'dayi' ? 'on_change' : ''" @click="onChange('dayi')"><router-link to="/answer">答疑</router-link></li>
               <li :class="isChange === 'zixun' ? 'on_change' : ''" @click="onChange('zixun')"><router-link to="/zixun">咨询</router-link></li>
-              <li :class="isChange ==='app' ? 'on_change' : ''" @click="onChange('liveing')"><router-link to="/app">App</router-link></li>
+              <li :class="isChange ==='app' ? 'on_change' : ''" @click="onChange('app')"><router-link to="/app">App</router-link></li>
             </ul>
           </div>
           <div class="login-wrap fr">
-            <div class="login-l fl">
+            <div class="login-l fl" v-if="!token">
               <router-link to="/login">登录</router-link> |
               <router-link to="/login">注册</router-link>
-              <a class="learen-btn">学习中心</a>
             </div>
-            <div class="login-r fr">
+            <a class="learen-btn fl">学习中心</a>
+            <div class="login-r fr" v-if="token">
               <img src="../assets/images/global/email-icon.png" alt="email" class="email-icon">
               <img src="../assets/images/global/head-logo-moren.png" alt="头像" class="head-logo">
             </div>
           </div>
         </div>
       </div>
-      <div class="" style="height: 71px;">
-
-      </div>
+      <div class="fixed-head"></div>
     </header>
-
   </div>
 </template>
 <script>
+import { getToken } from '@/libs/utils'
 import { mapMutations } from 'vuex'
 export default {
+  data () {
+    return {
+      token: getToken()
+    }
+  },
+  mounted () {
+    console.log(this.token)
+    if (this.token) {
+    } else {
+      console.log(2323322)
+    }
+  },
   computed: {
     isChange () {
-      return this.$store.state.is_change
+      return this.$store.state.nav.is_change
     }
   },
   methods: {
-    ...mapMutations(['SET_CHANGE']),
+    ...mapMutations(['setChange']),
     onChange (navName) {
-      this.SET_CHANGE(navName)
+      this.setChange(navName)
     }
   }
 }
@@ -63,6 +73,9 @@ export default {
       overflow: hidden;
       margin: 0 auto;
     }
+  }
+  .fixed-head{
+    height: 70px;
   }
   .yc-logo{
     @include wh(130, 34);
@@ -99,30 +112,32 @@ export default {
     }
   }
 
+  .login-wrap{
+    @include display_flex(flex);
+    @extend %alignitem_center;
+    text-align: center;
+  }
   .login-l{
     color: $blueColor;
     a{
       color: $blueColor;
       display: inline-block;
       margin: 0 3px;
-      &.learen-btn{
-        @include whl(100, 28, 28);
-        border-radius: 14px;
-        color: $colfff;
-        background: $blueColor;
-        margin-left: 19px;
-        margin-right: 33px;
-        text-align: center;
-      }
     }
   }
+  .learen-btn{
+    @include whl(100, 28, 28);
+    border-radius: 14px;
+    color: $colfff;
+    background: $blueColor;
+    margin-left: 16px;
+  }
   .login-r{
-    padding: 20px 0;
     img{
-      float: left;
+      vertical-align: middle;
       &.email-icon{
         @include wh(18, 14);
-        margin: 8px 31px 8px 0;
+        margin: 0 31px;
       }
       &.head-logo{
         @include wh(30, 30);

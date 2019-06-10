@@ -1,16 +1,16 @@
 <template>
   <section>
-     <div class="course_main_horizontal_con">
-            <div class="course_main_horizontal_img">
-                <img :src="items.pc_img" alt="">
-            </div>
-            <div class="course_main_horizontal_right">
-                <div class="course_name">{{ items.name }}</div>
-                <div class="course-info">{{ items.name }}</div>
-                <div class="course_teacher">讲师：{{ items.teacher_name }} <span class="course_type">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? items.price : item.billing_status == 3 ? '积分兑换' : '等级进入' }}</span></div>
-                <div class="course_time">有效期：<span> 720天</span> <p>查看详情</p> </div>
-            </div>
-        </div>
+    <div class="course_main_horizontal_con">
+      <div class="course_main_horizontal_img">
+        <img :src="items.pc_img" alt="">
+      </div>
+      <div class="course_main_horizontal_right">
+        <div class="course_name">{{ items.name }}</div>
+        <div class="course-info">{{ items.name }}</div>
+        <div class="course_teacher">讲师：{{ items.teacher_name }} <span class="course_type">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? items.price : item.billing_status == 3 ? '积分兑换' : '等级进入' }}</span></div>
+        <div class="course_time">有效期：<span> 720天</span> <p>查看详情</p> </div>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -24,17 +24,17 @@ export default {
   },
   data() {
     return {
-      
+
     }
   },
   computed: {
-   
+
   },
   mounted() {
-    
+
   },
   methods: {
-    
+
   }
 };
 </script>
@@ -104,4 +104,3 @@ export default {
     margin-left: 480px;
  }
 </style>
-

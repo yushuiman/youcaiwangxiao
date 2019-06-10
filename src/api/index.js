@@ -7,17 +7,3 @@ export const couAnswerList = (data) => {
     method: 'post'
   })
 }
-export const handleLoginRes = (data) => {
-  return axios.request({
-    url: '/web/Login/accountLogin',
-    data,
-    method: 'post'
-  })
-}
-export const outLogin = (data) => {
-  return axios.request({
-    url: '/web/Login/accountLogin',
-    data,
-    method: 'post'
-  })
-}

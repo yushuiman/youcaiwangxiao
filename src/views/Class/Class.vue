@@ -107,13 +107,13 @@
 <script>
 import courseOne from '@/components/courseOne.vue'
 import courseTwo from '@/components/courseTwo.vue'
-// import WebSocket from '@/plugins/web-socket'
+// import WebSocket from '@/libs/web-socket'
 import duoxuan from '@/assets/images/course/duoxuan.png'
 import duoxuan2 from '@/assets/images/course/duoxuan2.png'
 import duoxuan2x from '@/assets/images/course/duoxuan2x.png'
 import duoxuan1 from '@/assets/images/course/duoxuan(1).png'
 // // 加密 解密
-import { Encrypt, Decrypt } from '@/plugins/crypto'
+import { Encrypt, Decrypt } from '@/libs/crypto'
 
 // const initWS = () => {
 //   return new WebSocket(ws => {
@@ -188,7 +188,7 @@ export default {
       likeArr: [
         {
           'pc_img': require('@/assets/images/course/duoxuan.png'),
-          'name': 'sfsfsdnsjdk',
+          'name': '速度速度速度速度发生的多sfsfsdnsjdk',
           'teacher_name': 'wang',
           'price': '1888000'
         },
@@ -379,19 +379,10 @@ export default {
       }
     }
   }
-  // <div class="course-main-left">
-  //   <div v-if="arrangement === 1">
-  //     <course-two v-for="(val, index) in courseList" :key="index" :items="val"></course-two>
-  //   </div>
-  //   <div class="course-main-horizontal" v-if="arrangement == 2">
-  //     <course-one v-for="(val, index) in courseList" :key="index" :items="val"></course-one>
-  //   </div>
-  // </div>
-
   .course-main {
     @include display_flex(flex);
     @extend %justify-content;
-    padding-top: 19px;
+    padding: 19px 0;
   }
   .course-main-left {
     @include c3(flex, 1);
@@ -414,6 +405,7 @@ export default {
   }
   .course_main_info {
     margin: 0px 13px;
+
   }
   .course_main_info p:nth-of-type(1) {
     font-size: 16px;
@@ -448,8 +440,9 @@ export default {
   .course_main_info p:nth-of-type(3) span {
     color: #FF9B3A;
   }
+
   .course-main-right {
-    @include wh(298, 457);
+    width: 298px;
     padding: 0 9px;
     background: $colfff;
     border-radius: 4px;
@@ -467,35 +460,17 @@ export default {
     }
   }
   .like-list {
+    height: 86px;
     padding: 11px 0;
     @include display_flex(flex);
     @extend %alignitem_center;
     border-top: 1px solid $borderColor;
+    box-sizing: border-box;
     img{
       width: 100%;
       height: 60px;
       margin-right: 6px;
     }
-    .like-info{
-      p{
-
-      }
-    }
-  }
-  .like-list p:nth-of-type(1) {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 12px;
-  }
-  .like-list p:nth-of-type(2) {
-    font-size: 10px;
-    margin-top: 5px;
-  }
-  .like-list p:nth-of-type(3) {
-    font-size: 16px;
-    margin-top: 2px;
-    color: #FF9B3A;
   }
   .like-list img {
     width:110px;
@@ -505,5 +480,19 @@ export default {
   .like-info {
     width: 148px;
     margin-left: 7px;
+    p{
+      line-height: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      &:nth-child(2){
+        color: $col999;
+        font-size: 12px;
+      }
+      &:nth-child(3){
+        color: #FF9B3A;
+        font-size: 16px;
+      }
+    }
   }
 </style>

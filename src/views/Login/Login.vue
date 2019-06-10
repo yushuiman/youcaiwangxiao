@@ -15,11 +15,11 @@
           <div class="description">优财网校—打造案例式教学 能考会用</div>
           <div class="tel">
             <img :src="phone" alt="">
-            <input v-model="form.mobile" placeholder="请输入手机号" />
+            <input v-model.trim="form.mobile" placeholder="请输入手机号" maxlength="11" />
           </div>
           <div class="tel">
             <img :src="password" alt="">
-            <input type="password" v-model="form.password" placeholder="请输入密码">
+            <input type="password" v-model.trim="form.password" placeholder="请输入密码">
           </div>
           <div class="forget" @click="is_forget = 'forget'">忘记密码 ?</div>
           <i-button type="primary" shape="circle" class="log" @click="accountLogin">登录</i-button>
@@ -203,7 +203,7 @@
       <!-- 忘记密码 -->
       <div class="forget-pwd"  v-if="is_forget == 'forget'">
         <div class="logo_img3">
-          <img :src="logo_img" alt="">
+          <img :src="logoImg" alt="">
         </div>
         <div class="description2">优财网校—打造案例式教学 能考会用</div>
         <div class="tel">
@@ -245,7 +245,7 @@
   </div>
 </template>
 <script>
-// import WebSocket from '@/plugins/web-socket'
+// import WebSocket from '@/libs/web-socket'
 import logoImg from '@/assets/images/login/logo-yc.png'
 import phone from '@/assets/images/login/User.png'
 import password from '@/assets/images/login/mim.png'
@@ -258,11 +258,10 @@ import icon2 from '@/assets/images/login/icon2.png'
 import Bookend from '@/assets/images/login/Bookend.png'
 import code from '@/assets/images/login/code.png'
 import success from '@/assets/images/login/success.png'
-
+import { mapActions } from 'vuex'
 // 加密 解密
-import { Encrypt } from '@/plugins/crypto'
-
-import { mapActions, mapMutations } from 'vuex'
+import { Encrypt } from '@/libs/crypto'
+import { getSmsCode, webReg, voice, resetPaw, quickLogin, wxLogin, forgetPaw } from '@/api/login'
 
 export default {
   data () {
@@ -322,13 +321,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['handleLogin']),
-    ...mapMutations([
-      'SET_TOKEN',
-      'SET_USERNAME',
-      'SET_MOBILE',
-      'SET_USERID',
-      'SET_HEAD']),
+    ...mapActions([
+      'handleLogin'
+    ]),
+
     onMouseOver: function () {
       this.is_show = 1
     },
@@ -342,8 +338,7 @@ export default {
       this.is_show2 = 2
     },
     wx_login () {
-      this.$axios.post('/web/images/login/wxLogin').then((res) => {
-        console.log(res)
+      wxLogin().then((res) => {
         if (res.data.code === 200) {
           window.open(res.data.data)
         }
@@ -351,20 +346,19 @@ export default {
     },
     sendText () {
       this.Ws.send(222)
-      console.log(this.Ws.send)
     },
     // 注册--获取验证码
     getCode () {
       const TIME_COUNT = 60
+      const re = /^1(3|4|5|7|8)\d{9}$/
       if (this.form2.mobile === '') {
         this.$Message.error('请输入手机号')
-      } else {
+      } else if (re.test(this.form2.mobile)) {
         if (!this.timer) {
           this.count = TIME_COUNT
           this.show = false
           this.disabled = true
-          this.$axios.post('/web/Register/getSmsCode', { 'mobile': Encrypt(this.form2.mobile), 'state': 1 }).then(res => {
-            console.log(res)
+          getSmsCode({ mobile: Encrypt(this.form2.mobile), state: 1 }).then(res => {
             if (res.data.code === 200) {
               this.timer = setInterval(() => {
                 if (this.count > 0 && this.count <= TIME_COUNT) {
@@ -381,27 +375,25 @@ export default {
                   this.timer = null
                 }
               }, 1000)
-              /* 保存token */
-              this.SET_TOKEN(res.data.data)
-              /*  this.$store.commit('user/setToken', res.data.data); */
-              this.form2.mobile = ''
+
               this.form2.password = ''
-            } else if (res.data.code === 406) {
+            } else if (res.data.code === 405) {
               /* 保存token */
-              this.SET_TOKEN(res.data.data)
-              /* this.$store.commit('user/setToken', res.data.data) */
+              this.$Message.error('短信发送失败，请检查手机信息功能')
+              this.form2.mobile = ''
             } else if (res.data.code === 407) {
               this.disabled = true
               this.show = true
               clearInterval(this.timer)
               this.timer = null
               /* 保存token */
-              this.SET_TOKEN(res.data.data)
-              /* this.$store.commit('user/setToken', res.data.data) */
               this.$Message.error('该手机号已注册')
+              this.form2.mobile = ''
             }
           })
         }
+      } else {
+        this.$Message.error('该手机号不符合格式')
       }
     },
     // 忘记密码--获取验证码
@@ -414,8 +406,7 @@ export default {
           this.count2 = TIME_COUNT2
           this.show2 = false
           this.disabled = true
-          this.$axios.post('/web/images/login/forgetPaw', { 'mobile': Encrypt(this.form3.mobile) }).then(res => {
-            console.log(res)
+          forgetPaw({ mobile: Encrypt(this.form3.mobile) }).then(res => {
             if (res.data.code === 200) {
               this.timer2 = setInterval(() => {
                 if (this.count2 > 0 && this.count2 <= TIME_COUNT2) {
@@ -447,8 +438,7 @@ export default {
           this.count3 = TIME_COUNT3
           this.show3 = false
           this.disabled = true
-          this.$axios.post('/web/Register/getSmsCode', { 'mobile': Encrypt(this.form4.mobile), 'state': 2 }).then(res => {
-            console.log(res)
+          getSmsCode({ mobile: Encrypt(this.form4.mobile), state: 2 }).then(res => {
             if (res.data.code === 200) {
               this.timer3 = setInterval(() => {
                 if (this.count3 > 0 && this.count3 <= TIME_COUNT3) {
@@ -482,7 +472,7 @@ export default {
       } else if (this.form.password.length < 6 || this.form.password.length > 16) {
         this.$Message.error('密码必须为6-16位哦~~')
       } else {
-        this.handleLogin({ 'mobile': Encrypt(this.form.mobile), 'password': this.form.password }).then(res => {
+        this.handleLogin({ mobile: Encrypt(this.form.mobile), password: this.form.password }).then(data => {
           setTimeout(() => {
             this.$router.push('/')
           }, 1000)
@@ -503,62 +493,57 @@ export default {
       } else if (this.single === false) {
         this.$Message.error('请仔细阅读用户注册协议')
       } else {
-        console.log('注册接口')
-        // this.$axios.post('/web/Register/webReg', { 'mobile': Encrypt(this.form2.mobile), 'password': this.form2.text_pwd, 'pass': this.form2.confirm_pwd, 'mobilecode': this.form2.code }).then(res => {
-        //   console.log(res)
-        //   if (res.data.code === 200) {
-        //     this.$store.commit('user/setToken', res.data.data)
-        //     this.$Message.success('注册成功')
-        //     this.is_forget = 'finish'
-        //     this.form2.mobile = ''
-        //     this.form2.confirm_pwd = ''
-        //     this.form2.text_pwd = ''
-        //     this.form2.code = ''
-        //   } else if (res.data.code === 406) {
-        //     this.$store.commit('user/setToken', res.data.data)
-        //     this.$Message.error('账号 or 密码错误')
-        //   } else if (res.data.code === 408) {
-        //     this.$store.commit('user/setToken', res.data.data)
-        //     this.$Message.error('验证码错误')
-        //   }
-        // })
+        webReg({ 'mobile': Encrypt(this.form2.mobile), 'password': this.form2.text_pwd, 'pass': this.form2.confirm_pwd, 'mobilecode': this.form2.code }).then(res => {
+          if (res.data.code === 200) {
+            this.$store.commit('setToken', res.data.data)
+            this.$Message.success('注册成功')
+            this.is_forget = 'finish'
+            this.form2.mobile = ''
+            this.form2.confirm_pwd = ''
+            this.form2.text_pwd = ''
+            this.form2.code = ''
+          } else if (res.data.code === 406) {
+            this.$store.commit('setToken', res.data.data)
+            this.$Message.error('账号 or 密码错误')
+          } else if (res.data.code === 408) {
+            this.$store.commit('setToken', res.data.data)
+            this.$Message.error('验证码错误')
+          }
+        })
       }
     },
     // 语音验证码
     voice () {
-      this.$axios.post('/web/Register/voice', { 'mobile': Encrypt(this.form2.mobile) }).then(res => {
-        console.log(res)
+      voice({ mobile: Encrypt(this.form2.mobile) }).then(res => {
         if (res.data.code === 200) {
-          this.$store.commit('user/setToken', res.data.data)
+          this.$store.commit('setToken', res.data.data)
           this.$Message.success('语音电话拨打成功，请注意接听')
         } else if (res.data.code === 408) {
-          this.$store.commit('user/setToken', res.data.data)
+          this.$store.commit('setToken', res.data.data)
           this.$Message.error('验证码错误')
         }
       })
     },
     // 快捷登录语音验证
     voice2 () {
-      this.$axios.post('/web/Register/voice', { 'mobile': Encrypt(this.form4.mobile) }).then(res => {
-        console.log(res)
+      voice({ 'mobile': Encrypt(this.form4.mobile) }).then(res => {
         if (res.data.code === 200) {
-          this.$store.commit('user/setToken', res.data.data)
+          this.$store.commit('setToken', res.data.data)
           this.$Message.success('语音电话拨打成功，请注意接听')
         } else if (res.data.code === 408) {
-          this.$store.commit('user/setToken', res.data.data)
+          this.$store.commit('setToken', res.data.data)
           this.$Message.error('验证码错误')
         }
       })
     },
     // 忘记密码语音验证
     voice3 () {
-      this.$axios.post('/web/Register/voice', { 'mobile': Encrypt(this.form3.mobile) }).then(res => {
-        console.log(res)
+      voice({ 'mobile': Encrypt(this.form3.mobile) }).then(res => {
         if (res.data.code === 200) {
-          this.$store.commit('user/setToken', res.data.data)
+          this.$store.commit('setToken', res.data.data)
           this.$Message.success('语音电话拨打成功，请注意接听')
         } else if (res.data.code === 408) {
-          this.$store.commit('user/setToken', res.data.data)
+          this.$store.commit('setToken', res.data.data)
           this.$Message.error('验证码错误')
         }
       })
@@ -573,8 +558,7 @@ export default {
       } else if (this.form3.new_pwd.length < 6 || this.form3.new_pwd.length > 16) {
         this.$Message.error('密码必须为6-16位哦~~')
       } else {
-        this.$axios.post('/web/images/login/resetPaw', { 'mobile': Encrypt(this.form3.mobile), 'password': this.form3.new_pwd, 'verifycode': this.form3.code }).then(res => {
-          console.log(res)
+        resetPaw({ 'mobile': Encrypt(this.form3.mobile), 'password': this.form3.new_pwd, 'verifycode': this.form3.code }).then(res => {
           if (res.data.code === 200) {
             this.count2 = 0
             this.show2 = true
@@ -592,8 +576,7 @@ export default {
       } else if (!re.test(this.form4.mobile)) {
         this.$Message.error('手机号错误')
       } else {
-        this.$axios.post('/web/images/login/quickLogin', { 'mobile': Encrypt(this.form4.mobile), 'mobilecode': this.form4.code }).then(res => {
-          console.log(res)
+        quickLogin({ 'mobile': Encrypt(this.form4.mobile), 'mobilecode': this.form4.code }).then(res => {
           if (res.data.code === 200) {
             this.$Message.success('登录成功')
           }

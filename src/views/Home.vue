@@ -108,23 +108,21 @@
     </div>
   </div>
 </template>
+
 <script>
-// @ is an alias to /src
-import { couAnswerList } from '@/api/'
+import { getToken } from '@/libs/utils'
 export default {
   data () {
     return {
-
+      token: getToken()
     }
   },
-  name: 'home',
   mounted () {
-    couAnswerList().then(res => {
-      let rep = res.data
-      if (rep.code === 200) {
-        console.log(rep.data)
-      }
-    })
+    // if (this.token) {
+    //   console.log(323)
+    // } else {
+    //   console.log(2323322)
+    // }
   }
 }
 </script>
