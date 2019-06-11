@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import { getToken } from '@/libs/utils'
 // import { Spin } from 'iview'
 class HttpRequest {
   constructor (baseUrl = baseURL) {
@@ -10,7 +10,7 @@ class HttpRequest {
     const config = {
       baseURL: this.baseUrl,
       headers: {
-        // 'token': getToken()
+        'token': getToken()
       }
     }
     return config

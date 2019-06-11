@@ -76,9 +76,9 @@
       </div>
     </div>
     <!-- 课程内容 -->
-    <div class="course-main w-wrap">
+    <div class="course-main w-wrap clearfix">
       <!-- 课程列表 左 -->
-      <div class="course-main-left">
+      <div class="course-main-left fl">
         <div v-if="arrangement === 1">
           <course-two v-for="(val, index) in courseList" :key="index" :items="val"></course-two>
         </div>
@@ -87,7 +87,7 @@
         </div>
       </div>
       <!-- 猜你喜欢 右 -->
-      <div class="course-main-right">
+      <div class="course-main-right fr">
         <div class="like-title">
           <img src="@/assets/images/course/like.png" alt="">
           <span>猜你喜欢</span>
@@ -162,7 +162,7 @@ export default {
       courseList: [
         {
           id: '2',
-          name: '课程包名称课程包名称',
+          name: '1课程包名称课程包名称1课程包名称课程包名称',
           teacher_name: '王强',
           pc_img: duoxuan,
           billing_status: 1,
@@ -170,8 +170,32 @@ export default {
         },
         {
           id: '2',
-          name: '课程包名称课程包名称',
+          name: '1课程包名称课程包名称1课程包名称课程包名称',
+          teacher_name: '王王王强',
+          pc_img: duoxuan,
+          billing_status: 1,
+          price: '10800'
+        },
+        {
+          id: '2',
+          name: '1课程包名称课程包名称1课程包名称课程包名称',
+          teacher_name: '王王强',
+          pc_img: duoxuan,
+          billing_status: 1,
+          price: '10800'
+        },
+        {
+          id: '2',
+          name: '3课程包名称课程包名称',
           teacher_name: '王强',
+          pc_img: duoxuan,
+          billing_status: 1,
+          price: '10800'
+        },
+        {
+          id: '3',
+          name: '3课程包名称课程包名称',
+          teacher_name: '王王强',
           pc_img: duoxuan,
           billing_status: 1,
           price: '10800'
@@ -260,7 +284,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   .class-tj-bg{
     background: $colfff;
@@ -380,66 +404,81 @@ export default {
     }
   }
   .course-main {
-    @include display_flex(flex);
-    @extend %justify-content;
     padding: 19px 0;
   }
-  .course-main-left {
-    @include c3(flex, 1);
-    @include display_flex(flex);
+  .course-main-left{
+    width: 900px;
   }
-  .course_main_con {
-    height: 192px;
-    width: 211px;
-    background-color: #fff;
-    margin-right: 19px;
-    margin-bottom: 30px;
+  .course-main-con{
+    width: 279px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    .course-main-con-img{
+      width: 100%;
+      height: 157px;
+      display: block;
+      border-radius: 10px 10px 0px 0px;
+    }
+    .course-main-info{
+      padding: 13px 13px 15px;
+      border-radius: 0px 0px 10px 10px;
+      background: $colfff;
+      .ci-title{
+        font-size: 16px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .ci-teacher-day{
+        padding: 10px 0;
+        color: $col999;
+        span{
+          margin-right: 20px;
+        }
+      }
+      .ci-pay-free{
+        @include whl(56, 23, 23);
+        text-align: center;
+        display: inline-block;
+        background: #FFF1E4;
+        color: #FF8915;
+        border-radius: 4px;
+      }
+    }
   }
-  .course_main_con img {
-    width: 211px;
-    height: 112px;
-  }
-  .course_main_con .course_main_con_img {
-    width: 211px;
-    height: 112px;
-  }
-  .course_main_info {
-    margin: 0px 13px;
-
-  }
-  .course_main_info p:nth-of-type(1) {
-    font-size: 16px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .course_main_info p:nth-of-type(2) {
-    font-size: 14px;
-    color: #666666;
-    margin-top: 6px;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .course_main_info p .fire {
-    width:50px;
-    height:20px;
-    font-size: 12px;
-    background:rgba(255,232,210,1);
-    border-radius:4px;
-    color: #FF9B3A;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .course_main_info p:nth-of-type(3) {
-    font-size: 12px;
-    color: #999999;
-  }
-  .course_main_info p:nth-of-type(3) span {
-    color: #FF9B3A;
-  }
+  // .course-main-info p:nth-of-type(1) {
+  //   font-size: 16px;
+  //   overflow: hidden;
+  //   text-overflow: ellipsis;
+  //   white-space: nowrap;
+  // }
+  // .course-main-info p:nth-of-type(2) {
+  //   font-size: 14px;
+  //   color: #666666;
+  //   margin-top: 6px;
+  //   margin-bottom: 4px;
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: space-between;
+  // }
+  // .course-main-info p .fire {
+  //   width:50px;
+  //   height:20px;
+  //   font-size: 12px;
+  //   background:rgba(255,232,210,1);
+  //   border-radius:4px;
+  //   color: #FF9B3A;
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  // }
+  // .course-main-info p:nth-of-type(3) {
+  //   font-size: 12px;
+  //   color: #999999;
+  // }
+  // .course-main-info p:nth-of-type(3) span {
+  //   color: #FF9B3A;
+  // }
 
   .course-main-right {
     width: 298px;

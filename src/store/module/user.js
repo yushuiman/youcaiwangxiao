@@ -1,5 +1,7 @@
 import { accountLogin, outLogin, getUserInfo } from '@/api/login'
+
 import { setToken, getToken } from '@/libs/utils'
+
 import { Message } from 'element-ui'
 
 export default {
@@ -36,10 +38,13 @@ export default {
     // 登录
     handleLogin ({ commit }, { mobile, password }) {
       return new Promise((resolve, reject) => {
-        accountLogin({ mobile, password }).then(res => {
+        accountLogin({
+          mobile,
+          password
+        }).then(res => {
           const data = res.data
           if (data.code === 200) {
-            commit('setToken', data.data)
+            commit('setToken', data.data.token)
             Message.success('登录成功!')
             resolve(data.data)
           } else if (data.code === 403) {
@@ -73,10 +78,11 @@ export default {
     // 获取用户相关信息
     getUserInfo ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(res => {
+        getUserInfo().then(res => {
           const data = res.data
-          commit('setAvator', data.data.head_img)
-          commit('setUserName', data.data.truename)
+          console.log(data)
+          commit('setAvator', data.data.head)
+          commit('setUserName', data.data.username)
           commit('setUserId', data.data.id)
           commit('setGroupId', data.data.group_id)
           resolve(data.data)

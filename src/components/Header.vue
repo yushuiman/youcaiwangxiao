@@ -16,12 +16,12 @@
             </ul>
           </div>
           <div class="login-wrap fr">
-            <div class="login-l fl" v-if="!token">
+            <div class="login-l fl">
               <router-link to="/login">登录</router-link> |
               <router-link to="/login">注册</router-link>
             </div>
             <a class="learen-btn fl">学习中心</a>
-            <div class="login-r fr" v-if="token">
+            <div class="login-r fr">
               <img src="../assets/images/global/email-icon.png" alt="email" class="email-icon">
               <img src="../assets/images/global/head-logo-moren.png" alt="头像" class="head-logo">
             </div>
@@ -34,15 +34,16 @@
 </template>
 <script>
 import { getToken } from '@/libs/utils'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 export default {
   data () {
     return {
       token: getToken()
     }
   },
+
   mounted () {
-    console.log(this.token)
+    // console.log(this.$store.state.user)
     if (this.token) {
     } else {
       console.log(2323322)
@@ -54,7 +55,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setChange']),
+    ...mapActions([
+      'getUserInfo'
+    ]),
+    ...mapMutations([
+      'setChange'
+    ]),
     onChange (navName) {
       this.setChange(navName)
     }

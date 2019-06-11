@@ -230,7 +230,7 @@
       <!-- 欢迎页 -->
       <div class="finish" v-if="is_forget == 'finish'">
         <div class="logo_img">
-          <img :src="logo_img" alt="">
+          <img :src="logoImg" alt="">
         </div>
         <div class="description">优财网校—打造案例式教学 能考会用</div>
         <div class="success">
@@ -320,11 +320,12 @@ export default {
       }
     }
   },
+  mounted () {
+  },
   methods: {
     ...mapActions([
       'handleLogin'
     ]),
-
     onMouseOver: function () {
       this.is_show = 1
     },
