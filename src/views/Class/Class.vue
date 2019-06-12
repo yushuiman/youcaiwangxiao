@@ -77,7 +77,7 @@
     <!-- 课程内容 -->
     <div class="course-main w-wrap clearfix">
       <!-- 课程列表 左 -->
-      <div class="course-main-left fl">
+      <div class="course-main-left fl" :data="tableData">
         <div class="course-main-con fl" v-for="(items, index) in tableData" :key="index" @click="goClassDetails(items.id)">
           <img :src="items.pc_img" alt="" class="course-main-con-img">
           <div class="course-main-info">
@@ -111,7 +111,7 @@
         </div>
       </div>
     </div>
-    <el-row :span="24">
+    <!-- <el-row :span="24">
       <div class="pagination">
         <el-pagination
           background
@@ -123,7 +123,18 @@
           @current-change='handleCurrentChange'>
         </el-pagination>
       </div>
-    </el-row>
+    </el-row> -->
+    <div style="padding: 20px; text-align: center;">
+      <Page
+      :total="total"
+      @on-change="onChange"
+      @on-page-size-change="onPageSizeChange"
+      :current="form.page"
+      :page-size="form.limit"
+      size="small"
+      :class-name='cxs'
+      />
+    </div>
   </div>
 </template>
 <script>
@@ -136,7 +147,7 @@ import duoxuan2x from '@/assets/images/course/duoxuan2x.png'
 import duoxuan1 from '@/assets/images/course/duoxuan(1).png'
 // // 加密 解密
 import { Decrypt, Encrypt } from '@/libs/crypto'
-
+import { courseListRes } from '@/api/class'
 // const initWS = () => {
 //   return new WebSocket(ws => {
 //     ws.onmessage(data => {
@@ -163,17 +174,18 @@ export default {
         pageSize: 10, // 1页显示多少条
         layout: 'prev, pager, next' // 翻页属性
       },
+      total: 1,
       className: '中文part1',
       arrangement: 1,
       agmet_img: 1,
       agmet_img2: 1,
       form: {
         class_id: '',
-        billing_status: '全部',
+        billing_status: '',
         multiple: '',
         popularity: '',
         pricesort: '',
-        limit: 20,
+        limit: 6,
         page: 1
       },
       type: [
@@ -268,15 +280,34 @@ export default {
     }
   },
   mounted () {
+    this.getData(this.form)
     // this.Ws = initWS(this)
   },
   created () {
-    this.getInfoList()
   },
   methods: {
+    onChange (val) {
+      this.form.page = val
+      this.getData(this.form)
+    },
+    onPageSizeChange (val) {
+      this.form.limit = val
+      this.getData(this.form)
+    },
     // 跳转到课程详情页
-    goClassDetails () {
-      this.$router.push('/classDetail')
+    goClassDetails (id) {
+      this.$router.push(`/classDetail?courseId=${'id'}`)
+    },
+    // 获取数据
+    getData (form) {
+      courseListRes(form).then(data => {
+        const res = data.data.data
+        // this.tableData = data;
+        this.tableData = res.data
+        this.total = res.total
+        console.log(this.form.total)
+        // this.setPaginations()
+      })
     },
     handleCurrentChange (page) {
       // 当前页
@@ -288,37 +319,18 @@ export default {
       this.tableData = table.filter((item, index) => {
         return index < this.paginations.pageSize
       })
-    },
-    handleSizeChange (pageSize) {
-      // 切换size
-      this.paginations.page_index = 1
-      this.paginations.pageSize = pageSize
-      this.tableData = this.allTableData.filter((item, index) => {
-        return index < pageSize
-      })
+      console.log(this.paginations.pageSize)
+      // this.getInfoList(page)
     },
     setPaginations () {
       // 总页数
-      this.paginations.total = this.allTableData.length
+      this.paginations.total = this.paginations.pageSize * this.total
       this.paginations.page_index = 1
       // 设置每页显示8条
       this.paginations.pageSize = 6
       // 设置默认分页数据
       this.tableData = this.allTableData.filter((item, index) => {
         return index < this.paginations.pageSize
-      })
-    },
-    // 获取数据
-    getInfoList () {
-      this.$axios.get('https://www.easy-mock.com/mock/5bee2bf96b3691268016a10f/getInfoList').then(res => {
-        if (res.data.status === 1) {
-          const data = res.data.data
-          console.log(data)
-          // this.tableData = data;
-          this.allTableData = data
-          // this.gethowpages();
-          this.setPaginations()
-        }
       })
     },
 
@@ -357,13 +369,10 @@ export default {
 }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .pagination {
-    text-align: center;
-    margin: 50px 0 50px 0;
-    height: 50px;
-  }
+  @import "../../assets/scss/iview.css";
+  // @import '../../../node_modules/iview/dist/styles/iview.css';
   .class-tj-bg{
     background: $colfff;
     &.class-zh{
@@ -505,6 +514,10 @@ export default {
     width: 279px;
     margin-right: 20px;
     margin-bottom: 20px;
+    border-radius: 0px 0px 10px 10px;
+    &:hover{
+      background: $colfff;
+    }
     .course-main-con-img{
       width: 100%;
       height: 157px;
@@ -513,8 +526,6 @@ export default {
     }
     .course-main-info{
       padding: 13px 13px 15px;
-      border-radius: 0px 0px 10px 10px;
-      background: $colfff;
       .ci-title{
         font-size: 16px;
         @extend %singleline-ellipsis;

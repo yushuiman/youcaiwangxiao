@@ -115,6 +115,13 @@ export default {
         //   border-top: 4px solid $blueColor;
         // }
       }
+      &:hover{
+        box-shadow:0px 0px 9px 1px rgba(193,193,193,0.54);
+        border-top: 1px solid $blueColor;
+        border-top-left-radius: 1px;
+        border-top-right-radius: 1px;
+        box-sizing: border-box;
+      }
     }
   }
 

@@ -43,18 +43,24 @@
     <div class="cl-three-wrap clearfix">
       <div class="clt-list-info-l fl">
         <div class="clt-tab">
-          <span>课程简介</span>
-          <span>课程大纲</span>
-          <span>课程咨询</span>
+          <span @click="tabChoose('kcjj')" :class="{'on': isChoose == 'kcjj'}">课程简介</span>
+          <span @click="tabChoose('kjdg')" :class="{'on': isChoose == 'kjdg'}">课程大纲</span>
         </div>
-        <div class="">
-
+        <div class="clt-main">
+          <div class="clt-jianjie" v-show="isChoose == 'kcjj'">
+            <img src="@/assets/images/course/teacher-icon.png" alt="" width="100%">
+          </div>
+          <div class="clt-kcdg" v-show="isChoose == 'kjdg'">
+              课程大纲内容内容
+              课程大纲内容内容
+              课程大纲内容内容
+          </div>
         </div>
       </div>
       <div class="clt-else-info-r fr">
         <div class="course-main-right">
           <div class="like-title">
-            <img src="@/assets/images/course/teacher-icon.png" alt="">
+            <img class="tc-icon" src="@/assets/images/course/teacher-icon.png" alt="">
             <span>老师姓名</span>
           </div>
           <div class="cl-teacher">
@@ -73,7 +79,7 @@
         </div>
         <div class="course-main-right course-main-student">
           <div class="like-title">
-            <img src="@/assets/images/course/student-icon.png" alt="">
+            <img class="stu-icon" src="@/assets/images/course/student-icon.png" alt="">
             <span>学员心声</span>
           </div>
           <div class="like-list" v-for="(item,index) in likeArr" :key="index">
@@ -86,7 +92,7 @@
         </div>
         <div class="course-main-right">
           <div class="like-title">
-            <img src="@/assets/images/course/like.png" alt="">
+            <img class="li-icon" src="@/assets/images/course/like.png" alt="">
             <span>猜你喜欢</span>
           </div>
           <div class="like-list" v-for="(item,index) in likeArr" :key="index">
@@ -106,6 +112,7 @@
 export default {
   data () {
     return {
+      isChoose: 'kcjj',
       likeArr: [
         {
           'pc_img': require('@/assets/images/course/duoxuan.png'),
@@ -128,9 +135,13 @@ export default {
 
   },
   mounted () {
+    this.classList()
   },
   methods: {
-
+    tabChoose (type) {
+      this.isChoose = type
+      console.log(this.isChoose)
+    }
   }
 }
 </script>
@@ -346,10 +357,15 @@ export default {
     border-top: 1px solid $borderColor;
     box-sizing: border-box;
     img{
-      width: 110px;
-      height: 60px;
+      @include wh(110, 60);
       border-radius:4px;
       margin-right: 7px;
+      &.tc-icon{
+        @include wh(16, 19);
+      }
+      &.stu-icon{
+        @include wh(18, 18);
+      }
     }
     .course-main-student &{
       img{

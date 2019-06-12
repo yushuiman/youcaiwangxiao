@@ -22,7 +22,7 @@
             <input type="password" v-model.trim="form.password" placeholder="请输入密码">
           </div>
           <div class="forget" @click="is_forget = 'forget'">忘记密码 ?</div>
-          <i-button type="primary" shape="circle" class="log" @click="accountLogin">登录</i-button>
+          <i-button type="primary" class="log" @click="accountLogin">登录</i-button>
           <div class="line">
             <span class="line-lr"></span>
             <span>or</span>
@@ -730,6 +730,7 @@ export default {
     height:50px;
     background:rgba(88,199,255,1);
     border-radius:25px;
+    color: $colfff;
     margin: 40px 0px 20px 10px;
   }
   .line {
