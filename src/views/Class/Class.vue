@@ -5,8 +5,7 @@
       <div class="cl-aleary-tj">
         <div class="w-wrap class-com">
           <span class="cl-txt">已选条件</span>
-          <div class="cla-list">
-            <span><router-link to="/foundList"><em>中文全科</em></router-link><i class="del-cion"></i></span>
+          <div class="cl-list cla-list">
             <span><em>中文全23科</em><i class="del-cion"></i></span>
             <span><em>中文全we科</em><i class="del-cion"></i></span>
           </div>
@@ -17,22 +16,22 @@
         <div class="w-wrap class-com">
           <span class="cl-txt">科目:</span>
           <div class="cl-list">
-            <span class="curren">中文全科</span>
+            <span>中文全科</span>
             <span>英文全科</span>
             <span>中文全科part-1</span>
-            <span class="curren">中文全科</span>
+            <span>中文全科</span>
             <span>英文全科</span>
             <span>中文全科part-1</span>
-            <span class="curren">中文全科</span>
+            <span>中文全科</span>
             <span>英文全科</span>
             <span>中文全科part-1</span>
-            <span class="curren">中文全科</span>
+            <span>中文全科</span>
             <span>英文全科</span>
             <span>中文全科part-1</span>
-            <span class="curren">中文全科</span>
+            <span>中文全科</span>
             <span>英文全科</span>
             <span>中文全科part-1</span>
-            <span class="curren">中文全科</span>
+            <span>中文全科</span>
             <span>英文全科</span>
             <span>中文全科part-1</span>
           </div>
@@ -84,6 +83,7 @@
           <div class="course-main-info">
             <p class="ci-title">{{items.email}}</p>
             <p class="ci-teacher-day"><span>讲师：{{items.email}}</span>有效期：730天</p>
+            <span class="ci-pay-free">免费课</span>
             <!-- <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? items.price : item.billing_status == 3 ? '积分兑换' : '等级进入' }}</span> -->
           </div>
         </div>
@@ -359,13 +359,6 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-
-  @import "../../assets/scss/app";
-  .pagination {
-    text-align: center;
-    margin: 50px 0 50px 0;
-    height: 50px;
-  }
   .pagination {
     text-align: center;
     margin: 50px 0 50px 0;
@@ -381,7 +374,7 @@ export default {
     padding: 6px 0;
     line-height: 40px;
     @include display_flex(flex);
-    @extend %alignitem_center;
+    // @extend %alignitem_center;
     border-bottom: 1px solid $borderColor;
     box-sizing: border-box;
     .class-bx &, .class-zh &, .cl-aleary-tj &{
@@ -389,6 +382,11 @@ export default {
     }
     .cl-aleary-tj &{
       padding: 10px 0;
+      @extend %alignitem_center;
+    }
+    .class-zh &{
+      line-height: 50px;
+      padding: 0;
     }
   }
   .cl-txt{
@@ -408,6 +406,7 @@ export default {
       margin-right: 21px;
       box-sizing: border-box;
       display: inline-block;
+      margin: 5px 0;
       em, i{
         float: left;
         display: inline-block;
@@ -421,9 +420,13 @@ export default {
       i{
         float: right;
         width: 27px;
-        background: $blueColor;
+        background-color: $blueColor;
         border-top-right-radius: 3px;
         border-bottom-right-radius: 3px;
+        @extend %bg-img;
+        text-align: center;
+        background-image: url('../../assets/images/course/del-icon.png');
+        background-size: 60% 60%;
       }
     }
   }
@@ -458,13 +461,17 @@ export default {
     i{
       display: inline-block;
       vertical-align: middle;
+      margin-top: -3px;
+      margin-left: 5px;
       &.hot-icon{
-        @include wh(12, 18);
-        background: #0f0;
+        @include wh(9, 20);
+        @extend %bg-img;
+        background-image: url('../../assets/images/course/hot-top-icon.png');
       }
       &.price-icon{
-        @include wh(18, 26);
-        background: #f00;
+        @include wh(10, 16);
+        @extend %bg-img;
+        background-image: url('../../assets/images/course/price-moren-icon.png');
       }
     }
     input{
@@ -552,7 +559,7 @@ export default {
     height: 86px;
     padding: 11px 0;
     @include display_flex(flex);
-    @extend %alignitem_center;
+    // @extend %alignitem_center;
     border-top: 1px solid $borderColor;
     box-sizing: border-box;
     img{
@@ -562,19 +569,20 @@ export default {
     }
   }
   .like-list img {
-    width:110px;
-    height:60px;
+    width: 110px;
+    height: 60px;
     border-radius:4px;
   }
   .like-info {
     width: 148px;
     margin-left: 7px;
     p{
-      line-height: 20px;
       @extend %singleline-ellipsis;
       &:nth-child(2){
         color: $col999;
         font-size: 12px;
+        margin-top: 8px;
+        margin-bottom: 7px;
       }
       &:nth-child(3){
         color: #FF9B3A;

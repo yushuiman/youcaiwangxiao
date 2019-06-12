@@ -54,7 +54,7 @@
       <div class="clt-else-info-r fr">
         <div class="course-main-right">
           <div class="like-title">
-            <img src="@/assets/images/course/like.png" alt="">
+            <img src="@/assets/images/course/teacher-icon.png" alt="">
             <span>老师姓名</span>
           </div>
           <div class="cl-teacher">
@@ -73,7 +73,7 @@
         </div>
         <div class="course-main-right course-main-student">
           <div class="like-title">
-            <img src="@/assets/images/course/like.png" alt="">
+            <img src="@/assets/images/course/student-icon.png" alt="">
             <span>学员心声</span>
           </div>
           <div class="like-list" v-for="(item,index) in likeArr" :key="index">
@@ -183,9 +183,13 @@ export default {
       margin-top: -17px;
       text-align: center;
       i{
-        @include wh(13, 12);
-        background: #ffffff;
+        @include wh(14, 16);
+        @extend %bg-img;
+        background-image: url('../../assets/images/course/video-icon.png');
         display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+        margin-top: -3px;
       }
     }
     .cdi-jieshao{
@@ -217,16 +221,19 @@ export default {
         @include wh(13, 16);
         display: inline-block;
         vertical-align: middle;
+        margin-top: -3px;
         @extend %bg-img;
         margin-right: 10px;
         &.icon-server{
-          background-image: url('../../assets/images/index/undraw_icon01.png');
+          background-image: url('../../assets/images/course/people-icon.png');
         }
         &.icon-answer{
-
+          @include wh(14, 13);
+          background-image: url('../../assets/images/course/new-icon.png');
         }
         &.icon-fanzhuan{
-
+          @include wh(14, 14);
+          background-image: url('../../assets/images/course/fanzhuan-icon.png');
         }
       }
     }
@@ -322,7 +329,6 @@ export default {
     box-sizing: border-box;
     .like-title{
       @include lh(39, 39);
-      color: $col666;
       margin-bottom: 4px;
       img{
         @include wh(20, 20);
@@ -404,6 +410,10 @@ export default {
     p{
       padding-top: 9px;
       padding-bottom: 7px;
+    }
+    span{
+      color: $col999;
+      font-size: 12px;
     }
   }
   .cl-t-detail{
