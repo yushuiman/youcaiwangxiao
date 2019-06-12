@@ -96,34 +96,10 @@
       </div>
 
       <!-- 猜你喜欢 右 -->
-      <div class="course-main-right fr">
-        <div class="like-title">
-          <img src="@/assets/images/course/like.png" alt="">
-          <span>猜你喜欢</span>
-        </div>
-        <div class="like-list" v-for="(item,index) in likeArr" :key="index">
-          <img :src="item.pc_img" alt="">
-          <div class="like-info">
-            <p>{{item.name}}</p>
-            <p>讲师: {{item.teacher_name}}</p>
-            <p>￥ {{item.price}}</p>
-          </div>
-        </div>
+      <div class="fr">
+        <like-list :likeArr="likeArr"></like-list>
       </div>
     </div>
-    <!-- <el-row :span="24">
-      <div class="pagination">
-        <el-pagination
-          background
-          v-if='paginations.total > 0'
-          :page-size="paginations.pageSize"
-          :layout="paginations.layout"
-          :total="paginations.total"
-          :current-page.sync='paginations.page_index'
-          @current-change='handleCurrentChange'>
-        </el-pagination>
-      </div>
-    </el-row> -->
     <div style="padding: 20px; text-align: center;">
       <Page
       :total="total"
@@ -132,7 +108,6 @@
       :current="form.page"
       :page-size="form.limit"
       size="small"
-      :class-name='cxs'
       />
     </div>
   </div>
@@ -141,13 +116,14 @@
 // import courseOne from '@/components/courseOne.vue'
 // import courseTwo from '@/components/courseTwo.vue'
 // import WebSocket from '@/libs/web-socket'
+import likeList from '@/components/likeList.vue'
 import duoxuan from '@/assets/images/course/duoxuan.png'
 import duoxuan2 from '@/assets/images/course/duoxuan2.png'
 import duoxuan2x from '@/assets/images/course/duoxuan2x.png'
 import duoxuan1 from '@/assets/images/course/duoxuan(1).png'
 // // 加密 解密
 import { Decrypt, Encrypt } from '@/libs/crypto'
-import { courseListRes } from '@/api/class'
+import { courseList, guessLike } from '@/api/class'
 // const initWS = () => {
 //   return new WebSocket(ws => {
 //     ws.onmessage(data => {
@@ -159,12 +135,22 @@ import { courseListRes } from '@/api/class'
 export default {
   data () {
     return {
+      likeArr: [], // 猜你喜欢
+      tableData: [], // 课程列表
+      form: {
+        class_id: '',
+        billing_status: '',
+        multiple: '',
+        popularity: '',
+        pricesort: '',
+        limit: 6,
+        page: 1
+      },
       duoxuan1,
       duoxuan,
       duoxuan2x,
       duoxuan2,
       // 每页存放的数据
-      tableData: [],
       // 所有的数据
       allTableData: [],
       // 需要给分页组件传的信息
@@ -179,15 +165,6 @@ export default {
       arrangement: 1,
       agmet_img: 1,
       agmet_img2: 1,
-      form: {
-        class_id: '',
-        billing_status: '',
-        multiple: '',
-        popularity: '',
-        pricesort: '',
-        limit: 6,
-        page: 1
-      },
       type: [
         {
           type_name: '全部',
@@ -228,148 +205,72 @@ export default {
         {
           'class_name': '3sefsfsfsfsdnsjdk'
         }
-      ],
-      likeArr: [
-        {
-          'pc_img': require('@/assets/images/course/duoxuan.png'),
-          'name': '速度速度速度速度发生的多sfsfsdnsjdk',
-          'teacher_name': 'wang',
-          'price': '1888000'
-        },
-        {
-          'pc_img': require('@/assets/images/course/duoxuan.png'),
-          'name': 'sfsfsdnsjdk',
-          'teacher_name': 'wang',
-          'price': '1888000'
-        }
       ]
+
     }
   },
   components: {
+    likeList
     // courseOne,
     // courseTwo
   },
   computed: {
-    classNamea () {
-      if (this.form.class_id) {
-        let cla = ''
-        this.subject_type.forEach(val => {
-          if (val.id === this.form.class_id) {
-            cla = val.class_name
-          }
-        })
-        return cla
-      } else {
-        return '全部'
-      }
-    }
+
   },
   watch: {
     form: {
       handler (newVal, oldVal) {
-        // list 接口
-        this.$axios.post('/web/images/course/images/courseList', this.form)
-        // .then((res) => {
-        //     if (res.data.code === 200) {
-        // this.courseList = res.data.data.data
-        // console.log(this.courseList);
-        //     }
-        // })
+        this.getCourseList(this.form)
       },
       deep: true
     }
   },
   mounted () {
-    this.getData(this.form)
+    this.getCourseList(this.form) // 课程列表 默认第一页，6条数据
+    this.getGuessLike() // 猜你喜欢
     // this.Ws = initWS(this)
-  },
-  created () {
   },
   methods: {
     onChange (val) {
       this.form.page = val
-      this.getData(this.form)
+      this.getCourseList(this.form)
     },
     onPageSizeChange (val) {
       this.form.limit = val
-      this.getData(this.form)
+      this.getCourseList(this.form)
     },
     // 跳转到课程详情页
     goClassDetails (id) {
       this.$router.push(`/classDetail?courseId=${'id'}`)
     },
     // 获取数据
-    getData (form) {
-      courseListRes(form).then(data => {
+    getCourseList (form) {
+      courseList(form).then(data => {
         const res = data.data.data
         // this.tableData = data;
         this.tableData = res.data
         this.total = res.total
-        console.log(this.form.total)
         // this.setPaginations()
       })
     },
-    handleCurrentChange (page) {
-      // 当前页
-      let sortnum = this.paginations.pageSize * (page - 1)
-      let table = this.allTableData.filter((item, index) => {
-        return index >= sortnum
-      })
-      // 设置默认分页数据
-      this.tableData = table.filter((item, index) => {
-        return index < this.paginations.pageSize
-      })
-      console.log(this.paginations.pageSize)
-      // this.getInfoList(page)
-    },
-    setPaginations () {
-      // 总页数
-      this.paginations.total = this.paginations.pageSize * this.total
-      this.paginations.page_index = 1
-      // 设置每页显示8条
-      this.paginations.pageSize = 6
-      // 设置默认分页数据
-      this.tableData = this.allTableData.filter((item, index) => {
-        return index < this.paginations.pageSize
+    // 猜你喜欢
+    getGuessLike () {
+      guessLike().then(data => {
+        const res = data.data
+        this.likeArr = res.data
       })
     },
-
-    /* //计算一共多少页
-      gethowpages() {
-        let pagesTotal = 0;
-        let len = this.allTableData.length;
-        let pagenum = len % 6;//得到余数
-        if (pagenum !== 0) {
-          pagesTotal = Math.floor((len / 6)) + 1;
-          console.log(pagesTotal + "总数")
-        } else {
-          pagesTotal = len / 6;
-          console.log(pagesTotal)
-        }
-
-      }, */
     sendText () {
       this.Ws.send(222)
       console.log(this.Ws.send)
       console.log(Encrypt('123'))
       console.log(Decrypt(Encrypt('亲猪猪')))
-    },
-    onChangePage (val) {
-
-    },
-    getSubject (wor) {
-      this.$axios.post('/web/images/course/images/courseList', this.form).then((res) => {
-        if (res.data.code === 200) {
-          this.courseList = res.data.data.data
-          console.log(this.courseList)
-        }
-      })
     }
   }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   @import "../../assets/scss/iview.css";
   // @import '../../../node_modules/iview/dist/styles/iview.css';
@@ -544,60 +445,6 @@ export default {
         background: #FFF1E4;
         color: #FF8915;
         border-radius: 4px;
-      }
-    }
-  }
-
-  .course-main-right {
-    width: 298px;
-    padding: 0 9px;
-    background: $colfff;
-    border-radius: 4px;
-    box-sizing: border-box;
-    .like-title{
-      @include lh(39, 39);
-      color: $col666;
-      margin-bottom: 4px;
-      img{
-        @include wh(20, 20);
-        margin-right: 7px;
-        vertical-align: middle;
-        margin-top: -3px;
-      }
-    }
-  }
-  .like-list {
-    height: 86px;
-    padding: 11px 0;
-    @include display_flex(flex);
-    // @extend %alignitem_center;
-    border-top: 1px solid $borderColor;
-    box-sizing: border-box;
-    img{
-      width: 100%;
-      height: 60px;
-      margin-right: 6px;
-    }
-  }
-  .like-list img {
-    width: 110px;
-    height: 60px;
-    border-radius:4px;
-  }
-  .like-info {
-    width: 148px;
-    margin-left: 7px;
-    p{
-      @extend %singleline-ellipsis;
-      &:nth-child(2){
-        color: $col999;
-        font-size: 12px;
-        margin-top: 8px;
-        margin-bottom: 7px;
-      }
-      &:nth-child(3){
-        color: #FF9B3A;
-        font-size: 16px;
       }
     }
   }

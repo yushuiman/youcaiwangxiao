@@ -82,60 +82,38 @@
             <img class="stu-icon" src="@/assets/images/course/student-icon.png" alt="">
             <span>学员心声</span>
           </div>
-          <div class="like-list" v-for="(item,index) in likeArr" :key="index">
+          sdsdfsdjfsdkfsd
+          <!-- <div class="like-list" v-for="(item,index) in likeArr" :key="index">
             <img :src="item.pc_img" alt="">
             <div class="like-info">
               <p class="sl-txt student-name">{{item.name}}</p>
               <p class="student-name-instr">讲师: {{item.teacher_name}}</p>
             </div>
-          </div>
+          </div> -->
         </div>
-        <div class="course-main-right">
-          <div class="like-title">
-            <img class="li-icon" src="@/assets/images/course/like.png" alt="">
-            <span>猜你喜欢</span>
-          </div>
-          <div class="like-list" v-for="(item,index) in likeArr" :key="index">
-            <img :src="item.pc_img" alt="">
-            <div class="like-info">
-              <p class="sl-txt">{{item.name}}</p>
-              <p class="sl-txt col">讲师: {{item.teacher_name}}</p>
-              <p class="price">￥ {{item.price}}</p>
-            </div>
-          </div>
-        </div>
+        <!-- 猜你喜欢 -->
+        <like-list></like-list>
       </div>
     </div>
   </div>
 </template>
 <script>
+import likeList from '@/components/likeList.vue'
+// import { guessLike } from '@/api/class'
 export default {
   data () {
     return {
-      isChoose: 'kcjj',
-      likeArr: [
-        {
-          'pc_img': require('@/assets/images/course/duoxuan.png'),
-          'name': '速度速度速度速度发生的多sfsfsdnsjdk',
-          'teacher_name': 'wang时尚大方收到尽快发货速度加快恢复上课的护肤开始倒海翻江可视电话水电费可视电话发可视电话反馈收到回复',
-          'price': '1888000'
-        },
-        {
-          'pc_img': require('@/assets/images/course/duoxuan.png'),
-          'name': 'sfsfsdnsjdk',
-          'teacher_name': 'wang',
-          'price': '1888000'
-        }
-      ]
+      isChoose: 'kcjj'
     }
   },
   components: {
+    likeList
   },
   computed: {
 
   },
   mounted () {
-    this.classList()
+    // this.getGuessLike() // 猜你喜欢
   },
   methods: {
     tabChoose (type) {
@@ -329,7 +307,7 @@ export default {
     }
   }
   .clt-else-info-r{
-    padding: 49px;
+    padding-top: 49px;
   }
   .course-main-right {
     width: 298px;
