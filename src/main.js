@@ -6,6 +6,7 @@ import './assets/scss/common.css'
 import Iview from 'iview'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import axios from 'axios'
 Vue.config.productionTip = false
 
 Vue.use(Iview)
@@ -16,3 +17,4 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 Vue.prototype.$Message = ElementUI.Message
+Vue.prototype.$axios = axios

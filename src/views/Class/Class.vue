@@ -6,7 +6,7 @@
         <div class="w-wrap class-com">
           <span class="cl-txt">已选条件</span>
           <div class="cla-list">
-            <span><em>中文全科</em><i class="del-cion"></i></span>
+            <span><router-link to="/foundList"><em>中文全科</em></router-link><i class="del-cion"></i></span>
             <span><em>中文全23科</em><i class="del-cion"></i></span>
             <span><em>中文全we科</em><i class="del-cion"></i></span>
           </div>
@@ -79,13 +79,22 @@
     <div class="course-main w-wrap clearfix">
       <!-- 课程列表 左 -->
       <div class="course-main-left fl">
-        <div v-if="arrangement === 1">
-          <course-two v-for="(val, index) in courseList" :key="index" :items="val"></course-two>
+        <div class="course-main-con fl" v-for="(items, index) in tableData" :key="index" @click="goClassDetails(items.id)">
+          <img :src="items.pc_img" alt="" class="course-main-con-img">
+          <div class="course-main-info">
+            <p class="ci-title">{{items.email}}</p>
+            <p class="ci-teacher-day"><span>讲师：{{items.email}}</span>有效期：730天</p>
+            <!-- <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? items.price : item.billing_status == 3 ? '积分兑换' : '等级进入' }}</span> -->
+          </div>
         </div>
-        <div class="course-main-horizontal" v-if="arrangement == 2">
-          <course-one v-for="(val, index) in courseList" :key="index" :items="val"></course-one>
-        </div>
+        <!-- <div v-if="arrangement === 1">
+           <course-two v-for="(val, index) in courseList" :key="index" :items="val"></course-two>
+         </div>
+         <div clasies="course-main-horizontal" v-if="arrangement === 2">
+           <course-one v-for="(val, index) in courseList" :key="index" :items="val"></course-one>
+         </div>-->
       </div>
+
       <!-- 猜你喜欢 右 -->
       <div class="course-main-right fr">
         <div class="like-title">
@@ -95,25 +104,38 @@
         <div class="like-list" v-for="(item,index) in likeArr" :key="index">
           <img :src="item.pc_img" alt="">
           <div class="like-info">
-              <p>{{item.name}}</p>
-              <p>讲师: {{item.teacher_name}}</p>
-              <p>￥ {{item.price}}</p>
+            <p>{{item.name}}</p>
+            <p>讲师: {{item.teacher_name}}</p>
+            <p>￥ {{item.price}}</p>
           </div>
         </div>
       </div>
     </div>
+    <el-row :span="24">
+      <div class="pagination">
+        <el-pagination
+          background
+          v-if='paginations.total > 0'
+          :page-size="paginations.pageSize"
+          :layout="paginations.layout"
+          :total="paginations.total"
+          :current-page.sync='paginations.page_index'
+          @current-change='handleCurrentChange'>
+        </el-pagination>
+      </div>
+    </el-row>
   </div>
 </template>
 <script>
-import courseOne from '@/components/courseOne.vue'
-import courseTwo from '@/components/courseTwo.vue'
+// import courseOne from '@/components/courseOne.vue'
+// import courseTwo from '@/components/courseTwo.vue'
 // import WebSocket from '@/libs/web-socket'
 import duoxuan from '@/assets/images/course/duoxuan.png'
 import duoxuan2 from '@/assets/images/course/duoxuan2.png'
 import duoxuan2x from '@/assets/images/course/duoxuan2x.png'
 import duoxuan1 from '@/assets/images/course/duoxuan(1).png'
 // // 加密 解密
-import { Encrypt, Decrypt } from '@/libs/crypto'
+import { Decrypt, Encrypt } from '@/libs/crypto'
 
 // const initWS = () => {
 //   return new WebSocket(ws => {
@@ -130,7 +152,17 @@ export default {
       duoxuan,
       duoxuan2x,
       duoxuan2,
-      total: 0,
+      // 每页存放的数据
+      tableData: [],
+      // 所有的数据
+      allTableData: [],
+      // 需要给分页组件传的信息
+      paginations: {
+        page_index: 1, // 当前位于哪页
+        total: 0, // 总数
+        pageSize: 10, // 1页显示多少条
+        layout: 'prev, pager, next' // 翻页属性
+      },
       className: '中文part1',
       arrangement: 1,
       agmet_img: 1,
@@ -162,7 +194,7 @@ export default {
       courseList: [
         {
           id: '2',
-          name: '1课程包名称课程包名称1课程包名称课程包名称',
+          name: '课程包名称课程包名称',
           teacher_name: '王强',
           pc_img: duoxuan,
           billing_status: 1,
@@ -170,32 +202,8 @@ export default {
         },
         {
           id: '2',
-          name: '1课程包名称课程包名称1课程包名称课程包名称',
-          teacher_name: '王王王强',
-          pc_img: duoxuan,
-          billing_status: 1,
-          price: '10800'
-        },
-        {
-          id: '2',
-          name: '1课程包名称课程包名称1课程包名称课程包名称',
-          teacher_name: '王王强',
-          pc_img: duoxuan,
-          billing_status: 1,
-          price: '10800'
-        },
-        {
-          id: '2',
-          name: '3课程包名称课程包名称',
+          name: '课程包名称课程包名称',
           teacher_name: '王强',
-          pc_img: duoxuan,
-          billing_status: 1,
-          price: '10800'
-        },
-        {
-          id: '3',
-          name: '3课程包名称课程包名称',
-          teacher_name: '王王强',
           pc_img: duoxuan,
           billing_status: 1,
           price: '10800'
@@ -226,8 +234,8 @@ export default {
     }
   },
   components: {
-    courseOne,
-    courseTwo
+    // courseOne,
+    // courseTwo
   },
   computed: {
     classNamea () {
@@ -262,7 +270,72 @@ export default {
   mounted () {
     // this.Ws = initWS(this)
   },
+  created () {
+    this.getInfoList()
+  },
   methods: {
+    // 跳转到课程详情页
+    goClassDetails () {
+      this.$router.push('/classDetail')
+    },
+    handleCurrentChange (page) {
+      // 当前页
+      let sortnum = this.paginations.pageSize * (page - 1)
+      let table = this.allTableData.filter((item, index) => {
+        return index >= sortnum
+      })
+      // 设置默认分页数据
+      this.tableData = table.filter((item, index) => {
+        return index < this.paginations.pageSize
+      })
+    },
+    handleSizeChange (pageSize) {
+      // 切换size
+      this.paginations.page_index = 1
+      this.paginations.pageSize = pageSize
+      this.tableData = this.allTableData.filter((item, index) => {
+        return index < pageSize
+      })
+    },
+    setPaginations () {
+      // 总页数
+      this.paginations.total = this.allTableData.length
+      this.paginations.page_index = 1
+      // 设置每页显示8条
+      this.paginations.pageSize = 6
+      // 设置默认分页数据
+      this.tableData = this.allTableData.filter((item, index) => {
+        return index < this.paginations.pageSize
+      })
+    },
+    // 获取数据
+    getInfoList () {
+      this.$axios.get('https://www.easy-mock.com/mock/5bee2bf96b3691268016a10f/getInfoList').then(res => {
+        if (res.data.status === 1) {
+          const data = res.data.data
+          console.log(data)
+          // this.tableData = data;
+          this.allTableData = data
+          // this.gethowpages();
+          this.setPaginations()
+        }
+      })
+    },
+
+    /* //计算一共多少页
+      gethowpages() {
+        let pagesTotal = 0;
+        let len = this.allTableData.length;
+        let pagenum = len % 6;//得到余数
+        if (pagenum !== 0) {
+          pagesTotal = Math.floor((len / 6)) + 1;
+          console.log(pagesTotal + "总数")
+        } else {
+          pagesTotal = len / 6;
+          console.log(pagesTotal)
+        }
+
+      }, */
     sendText () {
       this.Ws.send(222)
       console.log(this.Ws.send)
@@ -284,8 +357,20 @@ export default {
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
+
+  @import "../../assets/scss/app";
+  .pagination {
+    text-align: center;
+    margin: 50px 0 50px 0;
+    height: 50px;
+  }
+  .pagination {
+    text-align: center;
+    margin: 50px 0 50px 0;
+    height: 50px;
+  }
   .class-tj-bg{
     background: $colfff;
     &.class-zh{
@@ -425,9 +510,7 @@ export default {
       background: $colfff;
       .ci-title{
         font-size: 16px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        @extend %singleline-ellipsis;
       }
       .ci-teacher-day{
         padding: 10px 0;
@@ -446,39 +529,6 @@ export default {
       }
     }
   }
-  // .course-main-info p:nth-of-type(1) {
-  //   font-size: 16px;
-  //   overflow: hidden;
-  //   text-overflow: ellipsis;
-  //   white-space: nowrap;
-  // }
-  // .course-main-info p:nth-of-type(2) {
-  //   font-size: 14px;
-  //   color: #666666;
-  //   margin-top: 6px;
-  //   margin-bottom: 4px;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: space-between;
-  // }
-  // .course-main-info p .fire {
-  //   width:50px;
-  //   height:20px;
-  //   font-size: 12px;
-  //   background:rgba(255,232,210,1);
-  //   border-radius:4px;
-  //   color: #FF9B3A;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  // }
-  // .course-main-info p:nth-of-type(3) {
-  //   font-size: 12px;
-  //   color: #999999;
-  // }
-  // .course-main-info p:nth-of-type(3) span {
-  //   color: #FF9B3A;
-  // }
 
   .course-main-right {
     width: 298px;
@@ -521,9 +571,7 @@ export default {
     margin-left: 7px;
     p{
       line-height: 20px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      @extend %singleline-ellipsis;
       &:nth-child(2){
         color: $col999;
         font-size: 12px;

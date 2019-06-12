@@ -25,18 +25,78 @@
       </div>
       <div class="cdi-wrap-r fr">
         <h2 class="cdi-tit">CMA中文高清网课全科（新钢）</h2>
-        <p class="cdi-instr">优质的速度发生的看风使舵尽快发货sdfkskjdhf水电费水电费sfdf 是否收到</p>
-        <p class="cdi-teacher">讲师：</p>
+        <p class="cdi-instr">优质的速度发生的看优质的速度发生的看质的速度发生的看风使舵尽快发货sdfkskjdhf水电费水电费sfdf优质的速度发生的看风使舵尽快发货sdfkskjdhf水电费水电费sfdf 是否收到</p>
+        <p class="cdi-teacher">讲饿死师：</p>
         <div class="cdi-type">
           <span>VIP视频</span>
           <span>VIP题库</span>
           <span>有效期：730天</span>
         </div>
         <p class="cdi-buy-people">12333人购买<span>9993次播放</span></p>
-        <p class="cdi-price">¥1888000</p>
+        <p class="cdi-price"><em>¥</em>1888000</p>
         <div class="cdi-buy-consult">
           <button type="button" name="button" class="buy-btn">立即购买</button>
           <button type="button" name="button" class="consult-btn">在线咨询</button>
+        </div>
+      </div>
+    </div>
+    <div class="cl-three-wrap clearfix">
+      <div class="clt-list-info-l fl">
+        <div class="clt-tab">
+          <span>课程简介</span>
+          <span>课程大纲</span>
+          <span>课程咨询</span>
+        </div>
+        <div class="">
+
+        </div>
+      </div>
+      <div class="clt-else-info-r fr">
+        <div class="course-main-right">
+          <div class="like-title">
+            <img src="@/assets/images/course/like.png" alt="">
+            <span>老师姓名</span>
+          </div>
+          <div class="cl-teacher">
+            <img src="@/assets/images/course/like.png" alt="">
+            <p>带困</p>
+            <span>书山有路勤为径</span>
+          </div>
+          <div class="cl-t-detail">
+            <p class="cl-t-tit">讲师简介：</p>
+            <p class="cl-t-info">优财特约实战讲师；<br />
+              资深财务管理顾问高级财务咨询顾问；<br />
+              市金融与财务协会理事；<br />
+              10年大型企业财务经理工作经验；<br />
+              多年高级讲师及咨询师；</p>
+          </div>
+        </div>
+        <div class="course-main-right course-main-student">
+          <div class="like-title">
+            <img src="@/assets/images/course/like.png" alt="">
+            <span>学员心声</span>
+          </div>
+          <div class="like-list" v-for="(item,index) in likeArr" :key="index">
+            <img :src="item.pc_img" alt="">
+            <div class="like-info">
+              <p class="sl-txt student-name">{{item.name}}</p>
+              <p class="student-name-instr">讲师: {{item.teacher_name}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="course-main-right">
+          <div class="like-title">
+            <img src="@/assets/images/course/like.png" alt="">
+            <span>猜你喜欢</span>
+          </div>
+          <div class="like-list" v-for="(item,index) in likeArr" :key="index">
+            <img :src="item.pc_img" alt="">
+            <div class="like-info">
+              <p class="sl-txt">{{item.name}}</p>
+              <p class="sl-txt col">讲师: {{item.teacher_name}}</p>
+              <p class="price">￥ {{item.price}}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -46,7 +106,20 @@
 export default {
   data () {
     return {
-
+      likeArr: [
+        {
+          'pc_img': require('@/assets/images/course/duoxuan.png'),
+          'name': '速度速度速度速度发生的多sfsfsdnsjdk',
+          'teacher_name': 'wang时尚大方收到尽快发货速度加快恢复上课的护肤开始倒海翻江可视电话水电费可视电话发可视电话反馈收到回复',
+          'price': '1888000'
+        },
+        {
+          'pc_img': require('@/assets/images/course/duoxuan.png'),
+          'name': 'sfsfsdnsjdk',
+          'teacher_name': 'wang',
+          'price': '1888000'
+        }
+      ]
     }
   },
   components: {
@@ -66,6 +139,10 @@ export default {
   @import "../../assets/scss/app";
   .class-detail-wrap{
     padding-bottom: 19px;
+    .class-detail-info{
+      background: $colfff;
+      border-radius:10px;
+    }
   }
   .nav-title{
     @include lh(44, 44);
@@ -74,9 +151,11 @@ export default {
     width: 650px;
     position: relative;
     .cdi-video{
+      height: 364px;
       .cdi-img{
         width: 100%;
-        height: 364px;
+        height: 100%;
+        display: block;
       }
     }
   }
@@ -86,6 +165,7 @@ export default {
     top: 0;
     width: 100%;
     height: 100%;
+    height: 364px;
     color: $colfff;
     background:rgba(0,0,0,.5);
     .cdi-tit{
@@ -100,7 +180,7 @@ export default {
       top: 50%;
       left: 50%;
       margin-left: -75px;
-      margin-top: -17;
+      margin-top: -17px;
       text-align: center;
       i{
         @include wh(13, 12);
@@ -124,15 +204,30 @@ export default {
       }
     }
   }
-  // <span><i class="icon-server"></i>1对1服务</span>
-  // <span><i class="icon-answer"></i>在线答疑</span>
-  // <span><i class="icon-fanzhuan"></i>翻转课堂</span>
   .cdi-special{
     @include lh(47, 47);
+    padding: 0 22px;
     span{
       color: $col666;
+      margin-left: 36px;
+      &:nth-child(1){
+        margin-left: 29px;
+      }
       i{
+        @include wh(13, 16);
+        display: inline-block;
+        vertical-align: middle;
+        @extend %bg-img;
+        margin-right: 10px;
+        &.icon-server{
+          background-image: url('../../assets/images/index/undraw_icon01.png');
+        }
+        &.icon-answer{
 
+        }
+        &.icon-fanzhuan{
+
+        }
       }
     }
   }
@@ -140,5 +235,186 @@ export default {
     width: 549px;
     padding: 30px 20px;
     box-sizing: border-box;
+    .cdi-tit{
+      font-size: 24px;
+      font-weight:bold;
+    }
+    .cdi-instr{
+      margin-top: 8px;
+      margin-bottom: 12px;
+      color: $col999;
+      max-height: 40px;
+      line-height: 20px;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+    .cdi-teacher{
+      font-size: 16px;
+    }
+    .cdi-type{
+      padding-top: 29px;
+      padding-bottom: 16px;
+      span{
+        display: inline-block;
+        padding: 8px 11px;
+        background: #D2EEFF;
+        border-radius: 4px;
+        color: $blueColor;
+        margin-right: 20px;
+      }
+    }
+    .cdi-buy-people{
+      color: $col666;
+      span{
+        margin-left: 21px;
+      }
+    }
+    .cdi-price{
+      padding-top: 34px;
+      padding-bottom: 24px;
+      font-size: 20px;
+      font-weight:bold;
+      color: #FF9B3A;
+      em{
+        font-size: 14px;
+      }
+    }
+    .cdi-buy-consult{
+      button{
+        @include whl(130, 40, 40);
+        border-radius: 20px;
+        font-size: 18px;
+        box-sizing: border-box;
+        &.buy-btn{
+          text-align: center;
+          background: #FF9B3A;
+          color: $colfff;
+          margin-right: 20px;
+        }
+        &.consult-btn{
+          border: 1px solid #0267FF;
+          color: #0267FF;
+        }
+      }
+    }
+  }
+  .clt-tab{
+    @include lh(49, 49);
+    span{
+      padding: 0 21px;
+      display: inline-block;
+      &.on{
+        color: $blueColor;
+      }
+    }
+  }
+  .clt-else-info-r{
+    padding: 49px;
+  }
+  .course-main-right {
+    width: 298px;
+    padding: 0 9px;
+    margin-bottom: 20px;
+    background: $colfff;
+    border-radius: 4px;
+    box-sizing: border-box;
+    .like-title{
+      @include lh(39, 39);
+      color: $col666;
+      margin-bottom: 4px;
+      img{
+        @include wh(20, 20);
+        margin-right: 7px;
+        vertical-align: middle;
+        margin-top: -3px;
+      }
+    }
+  }
+  .like-list {
+    // height: 86px;
+    padding: 11px 0;
+    @include display_flex(flex);
+    @extend %alignitem_center;
+    border-top: 1px solid $borderColor;
+    box-sizing: border-box;
+    img{
+      width: 110px;
+      height: 60px;
+      border-radius:4px;
+      margin-right: 7px;
+    }
+    .course-main-student &{
+      img{
+        width: 60px;
+        border-radius: 100%;
+      }
+    }
+  }
+  .like-info {
+    flex: 1;
+    p{
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 1;
+      &.col{
+        color: $col999;
+        font-size: 12px;
+        margin-top: 7px;
+        margin-bottom: 8px;
+      }
+      &.sl-txt{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 1;
+        max-height: 20px;
+      }
+      &.price{
+        color: #FF9B3A;
+        font-size: 16px;
+      }
+      &.student-name, &.student-name-instr{
+        line-height: 30px;
+      }
+      &.student-name{
+        max-height: 30px;
+      }
+      &.student-name-instr{
+        max-height: 90px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 3;
+      }
+    }
+  }
+  .cl-teacher{
+    text-align: center;
+    padding-top: 16px;
+    padding-bottom: 14px;
+    border-top: 1px solid $borderColor;
+    border-bottom: 1px solid $borderColor;
+    img{
+      @include wh(80, 80);
+      border-radius: 100%;
+    }
+    p{
+      padding-top: 9px;
+      padding-bottom: 7px;
+    }
+  }
+  .cl-t-detail{
+    padding: 13px 0;
+    .cl-t-tit{
+      margin-bottom: 8px;
+    }
+    .cl-t-info{
+      line-height: 30px;
+      font-size: 12px;
+      color: $col999;
+    }
   }
 </style>
