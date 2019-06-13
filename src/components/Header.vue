@@ -43,11 +43,10 @@ export default {
   },
 
   mounted () {
-    // console.log(this.$store.state.user)
-    if (this.token) {
-    } else {
-      console.log(2323322)
-    }
+    // console.log(this.$store.state.nav.)
+    // if (this.$store.state.route.name === 'classVideo') {
+    //
+    // }
   },
   computed: {
     isChange () {

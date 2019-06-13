@@ -1,15 +1,13 @@
 <template>
   <div class="class-detail-wrap w-wrap">
     <div class="nav-title">
-      <Breadcrumb separator=">">
-        <BreadcrumbItem to="/">首页</BreadcrumbItem>
-        <BreadcrumbItem to="/class">课程</BreadcrumbItem>
-        <BreadcrumbItem>课程详情</BreadcrumbItem>
-      </Breadcrumb>
+      <router-link to="/">首页</router-link><i>></i>
+      <router-link to="/class">课程</router-link><i>></i>
+      <span class="curren">课程详情高清</span>
     </div>
     <div class="class-detail-info clearfix">
       <div class="cdi-wrap-l fl">
-        <div class="cdi-video">
+        <div class="cdi-video" @click="playVideo">
           <img class="cdi-img" src="@/assets/images/index/banner.png" alt="">
           <div class="cdi-opa">
             <p class="cdi-tit">标题</p>
@@ -171,7 +169,6 @@
 </template>
 <script>
 import likeList from '@/components/likeList.vue'
-// import { guessLike } from '@/api/class'
 export default {
   data () {
     return {
@@ -200,12 +197,15 @@ export default {
 
   },
   mounted () {
-    // this.getGuessLike() // 猜你喜欢
+    // this.getSubjects() // 科目列表
   },
   methods: {
     tabChoose (type) {
       this.isChoose = type
       console.log(this.isChoose)
+    },
+    playVideo () {
+      this.$router.push('/classVideo')
     }
   }
 }
@@ -214,16 +214,20 @@ export default {
 <style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../assets/scss/app";
   .nav-title{
-    .ivu-breadcrumb{
-      .ivu-breadcrumb a {
-        color: #515a6e;
-        transition: color .2s ease-in-out;
+    color: $col999;
+    @include lh(44, 44);
+    i{
+      margin: 0 8px;
+      font-family: Consolas,Menlo,Courier,monospace;
+    }
+    a{
+      color: $col999;
+      &:hover{
+        color: $blueColor;
       }
-      span{
-        .ivu-breadcrumb-item-separator{
-          margin: 0 8px;
-        }
-      }
+    }
+    span{
+      color: $col666;
     }
   }
   .class-detail-wrap{
@@ -232,9 +236,6 @@ export default {
       background: $colfff;
       border-radius:10px;
     }
-  }
-  .nav-title{
-    @include lh(44, 44);
   }
   .cdi-wrap-l{
     width: 650px;

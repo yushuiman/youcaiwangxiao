@@ -14,3 +14,10 @@ export const guessLike = (data) => {
     method: 'post'
   })
 }
+export const subjects = (data) => {
+  return axios.request({
+    url: '/web/Course/subjects',
+    data,
+    method: 'post'
+  })
+}

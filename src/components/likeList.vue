@@ -39,7 +39,6 @@ export default {
     getGuessLike () {
       guessLike().then(data => {
         const res = data.data
-        console.log(res)
         this.likeArr = res.data
       })
     }

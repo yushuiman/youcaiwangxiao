@@ -3,37 +3,21 @@
     <div class="class-choose">
       <!-- 已选条件 -->
       <div class="cl-aleary-tj">
-        <div class="w-wrap class-com">
+        <div class="w-wrap class-com" v-if="alearyChoose.length">
           <span class="cl-txt">已选条件</span>
           <div class="cl-list cla-list">
             <span><em>中文全23科</em><i class="del-cion"></i></span>
-            <span><em>中文全we科</em><i class="del-cion"></i></span>
+            <span><em>{{classNamea}}</em><i class="del-cion"></i></span>
           </div>
         </div>
+        <div class="w-wrap class-com" v-else></div>
       </div>
       <!-- 科目 -->
       <div class="class-subject class-tj-bg">
         <div class="w-wrap class-com">
           <span class="cl-txt">科目:</span>
           <div class="cl-list">
-            <span>中文全科</span>
-            <span>英文全科</span>
-            <span>中文全科part-1</span>
-            <span>中文全科</span>
-            <span>英文全科</span>
-            <span>中文全科part-1</span>
-            <span>中文全科</span>
-            <span>英文全科</span>
-            <span>中文全科part-1</span>
-            <span>中文全科</span>
-            <span>英文全科</span>
-            <span>中文全科part-1</span>
-            <span>中文全科</span>
-            <span>英文全科</span>
-            <span>中文全科part-1</span>
-            <span>中文全科</span>
-            <span>英文全科</span>
-            <span>中文全科part-1</span>
+            <span :class="form.class_id == item.id ? 'curren' : ''" @click="screenCourse(form.class_id = item.id)" v-for="(item,index) in subject_type" :key="index">{{item.class_name}}</span>
           </div>
         </div>
       </div>
@@ -42,9 +26,8 @@
         <div class="w-wrap class-com">
           <span class="cl-txt">类型:</span>
           <div class="cl-list">
-            <span>收费</span>
-            <span>免费</span>
-            <span>中文全科part-1</span>
+            <span :class="{'curren': form.billing_status == 1}" @click="screenCourse(form.billing_status = 1)">免费</span>
+            <span :class="{'curren': form.billing_status == 2}" @click="screenCourse(form.billing_status = 2)">收费</span>
           </div>
         </div>
       </div>
@@ -53,8 +36,8 @@
         <div class="w-wrap class-com">
           <span class="cl-txt">班型:</span>
           <div class="cl-list">
-            <span>远程课程</span>
-            <span>面授课程</span>
+            <span :class="{'curren': form.ym == 1}" @click="screenCourse('班型', form.ym = 1)">远程课程</span>
+            <span :class="{'curren': form.ym == 2}" @click="screenCourse('班型', form.ym = 2)">面授课程</span>
           </div>
         </div>
       </div>
@@ -64,8 +47,8 @@
       <div class="w-wrap class-com">
         <div class="cl-list cl-list-zh">
           <span class="curren">综合</span>
-          <span>人气<i class="hot-icon"></i></span>
-          <span>价格<i class="price-icon"></i></span>
+          <span @click="screenCourse('人气')">人气<i :class="[form.popularity == 1 ? 'hot-top-icon' : 'hot-down-icon']"></i></span>
+          <span @click="screenCourse('价格')">价格<i class="price-icon" :class="{'price-top-icon': form.pricesort==1, 'price-down-icon': form.pricesort==2}"></i></span>
           <input type="text" name="" placeholder="3232">
           <span class="lianjie-icon">-</span>
           <input type="text" name="" placeholder="¥">
@@ -77,22 +60,15 @@
     <!-- 课程内容 -->
     <div class="course-main w-wrap clearfix">
       <!-- 课程列表 左 -->
-      <div class="course-main-left fl" :data="tableData">
-        <div class="course-main-con fl" v-for="(items, index) in tableData" :key="index" @click="goClassDetails(items.id)">
+      <div class="course-main-left fl">
+        <div class="course-main-con fl" v-for="(items, index) in courseList" :key="index" @click="goClassDetails(items.id)">
           <img :src="items.pc_img" alt="" class="course-main-con-img">
           <div class="course-main-info">
             <p class="ci-title">{{items.email}}</p>
             <p class="ci-teacher-day"><span>讲师：{{items.email}}</span>有效期：730天</p>
-            <span class="ci-pay-free">免费课</span>
-            <!-- <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? items.price : item.billing_status == 3 ? '积分兑换' : '等级进入' }}</span> -->
+            <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? items.price : item.billing_status == 3 ? '积分兑换' : '等级进入' }}</span>
           </div>
         </div>
-        <!-- <div v-if="arrangement === 1">
-           <course-two v-for="(val, index) in courseList" :key="index" :items="val"></course-two>
-         </div>
-         <div clasies="course-main-horizontal" v-if="arrangement === 2">
-           <course-one v-for="(val, index) in courseList" :key="index" :items="val"></course-one>
-         </div>-->
       </div>
 
       <!-- 猜你喜欢 右 -->
@@ -117,13 +93,9 @@
 // import courseTwo from '@/components/courseTwo.vue'
 // import WebSocket from '@/libs/web-socket'
 import likeList from '@/components/likeList.vue'
-import duoxuan from '@/assets/images/course/duoxuan.png'
-import duoxuan2 from '@/assets/images/course/duoxuan2.png'
-import duoxuan2x from '@/assets/images/course/duoxuan2x.png'
-import duoxuan1 from '@/assets/images/course/duoxuan(1).png'
 // // 加密 解密
 import { Decrypt, Encrypt } from '@/libs/crypto'
-import { courseList, guessLike } from '@/api/class'
+import { courseList, guessLike, subjects } from '@/api/class'
 // const initWS = () => {
 //   return new WebSocket(ws => {
 //     ws.onmessage(data => {
@@ -136,7 +108,8 @@ export default {
   data () {
     return {
       likeArr: [], // 猜你喜欢
-      tableData: [], // 课程列表
+      courseList: [], // 课程列表
+      total: 1,
       form: {
         class_id: '',
         billing_status: '',
@@ -144,60 +117,29 @@ export default {
         popularity: '',
         pricesort: '',
         limit: 6,
-        page: 1
+        page: 1,
+        ym: ''
       },
-      duoxuan1,
-      duoxuan,
-      duoxuan2x,
-      duoxuan2,
-      // 每页存放的数据
-      // 所有的数据
-      allTableData: [],
-      // 需要给分页组件传的信息
-      paginations: {
-        page_index: 1, // 当前位于哪页
-        total: 0, // 总数
-        pageSize: 10, // 1页显示多少条
-        layout: 'prev, pager, next' // 翻页属性
-      },
-      total: 1,
+      alearyChoose: ['2323', 332], // 已选条件
+      subjectsArr: [], // 科目
+      selId: '',
+      typeInfo: [
+        {
+          freePay: '收费',
+          courseWay: '远程课程'
+        },
+        {
+          freePay: '免费',
+          courseWay: '面授课程'
+        }
+      ],
+
       className: '中文part1',
       arrangement: 1,
       agmet_img: 1,
       agmet_img2: 1,
-      type: [
-        {
-          type_name: '全部',
-          type_id: 3
-        },
-        {
-          type_name: '收费',
-          type_id: 1
-        },
-        {
-          type_name: '免费',
-          type_id: 2
-        }
-      ],
+
       subject_color: '',
-      courseList: [
-        {
-          id: '2',
-          name: '课程包名称课程包名称',
-          teacher_name: '王强',
-          pc_img: duoxuan,
-          billing_status: 1,
-          price: '10800'
-        },
-        {
-          id: '2',
-          name: '课程包名称课程包名称',
-          teacher_name: '王强',
-          pc_img: duoxuan,
-          billing_status: 1,
-          price: '10800'
-        }
-      ],
       subject_type: [
         {
           'class_name': 'sfsfsdnsjdk'
@@ -211,26 +153,63 @@ export default {
   },
   components: {
     likeList
-    // courseOne,
-    // courseTwo
   },
   computed: {
-
-  },
-  watch: {
-    form: {
-      handler (newVal, oldVal) {
-        this.getCourseList(this.form)
-      },
-      deep: true
+    classNamea () {
+      if (this.form.class_id) {
+        let cla = ''
+        this.subject_type.forEach(val => {
+          if (val.id === this.form.class_id) {
+            cla = val.class_name
+          }
+        })
+        return cla
+      } else {
+        return ''
+      }
     }
   },
+  // watch: {
+  //   form: {
+  //     handler (newVal, oldVal) {
+  //       this.getCourseList(this.form)
+  //     },
+  //     deep: true
+  //   }
+  // },
   mounted () {
     this.getCourseList(this.form) // 课程列表 默认第一页，6条数据
     this.getGuessLike() // 猜你喜欢
+    this.getSubjects() // 科目
     // this.Ws = initWS(this)
   },
   methods: {
+    // 条件筛选
+    screenCourse (type, val) {
+      if (type === '班型') {
+        return
+      }
+      if (type === '人气') {
+        if (this.form.popularity === 1) {
+          this.form.popularity = ''
+        } else {
+          this.form.popularity = 1
+        }
+      }
+      if (type === '价格') {
+        if (this.form.pricesort === 1) {
+          this.form.pricesort = 2
+        } else {
+          this.form.pricesort = 1
+        }
+      }
+      this.getCourseList(this.form)
+    },
+    // 跳转到课程详情页
+    goClassDetails (id) {
+      this.$router.push(`/classDetail?courseId=${'id'}`)
+    },
+    // 分页
     onChange (val) {
       this.form.page = val
       this.getCourseList(this.form)
@@ -239,18 +218,12 @@ export default {
       this.form.limit = val
       this.getCourseList(this.form)
     },
-    // 跳转到课程详情页
-    goClassDetails (id) {
-      this.$router.push(`/classDetail?courseId=${'id'}`)
-    },
     // 获取数据
-    getCourseList (form) {
-      courseList(form).then(data => {
+    getCourseList () {
+      courseList(this.form).then(data => {
         const res = data.data.data
-        // this.tableData = data;
-        this.tableData = res.data
+        this.courseList = res.data
         this.total = res.total
-        // this.setPaginations()
       })
     },
     // 猜你喜欢
@@ -260,9 +233,15 @@ export default {
         this.likeArr = res.data
       })
     },
+    // 科目
+    getSubjects () {
+      subjects().then(data => {
+        const res = data.data
+        this.subject_type = res.data
+      })
+    },
     sendText () {
       this.Ws.send(222)
-      console.log(this.Ws.send)
       console.log(Encrypt('123'))
       console.log(Decrypt(Encrypt('亲猪猪')))
     }
@@ -276,7 +255,7 @@ export default {
   // @import '../../../node_modules/iview/dist/styles/iview.css';
   .class-tj-bg{
     background: $colfff;
-    &.class-zh{
+    &.class-zh, &.class-subject-mt{
       margin-top: 20px;
     }
   }
@@ -373,15 +352,25 @@ export default {
       vertical-align: middle;
       margin-top: -3px;
       margin-left: 5px;
-      &.hot-icon{
+      @extend %bg-img;
+      &.hot-down-icon, &.hot-top-icon{
         @include wh(9, 20);
-        @extend %bg-img;
+        background-image: url('../../assets/images/course/hot-down-icon.png');
+      }
+      &.hot-top-icon{
         background-image: url('../../assets/images/course/hot-top-icon.png');
       }
       &.price-icon{
         @include wh(10, 16);
-        @extend %bg-img;
         background-image: url('../../assets/images/course/price-moren-icon.png');
+      }
+      &.price-top-icon{
+        @include wh(10, 16);
+        background-image: url('../../assets/images/course/price-top-icon.png');
+      }
+      &.price-down-icon{
+        @include wh(10, 16);
+        background-image: url('../../assets/images/course/price-down-icon.png');
       }
     }
     input{
