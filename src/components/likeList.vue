@@ -1,5 +1,5 @@
 <template>
-  <div class="course-like-main">
+  <div class="course-like-main" :class="{'styw': isW=278}">
     <div class="like-title">
       <img src="@/assets/images/course/like.png" alt="">
       <span>猜你喜欢</span>
@@ -20,6 +20,11 @@ import { guessLike } from '@/api/class'
 export default {
   data () {
     return {
+      props: {
+        isW: {
+          type: String
+        }
+      },
       likeArr: []
     }
   },
@@ -27,7 +32,6 @@ export default {
 
   },
   mounted () {
-    console.log(323)
     this.getGuessLike()
   },
   methods: {
@@ -35,6 +39,7 @@ export default {
     getGuessLike () {
       guessLike().then(data => {
         const res = data.data
+        console.log(res)
         this.likeArr = res.data
       })
     }
@@ -61,6 +66,9 @@ export default {
         margin-top: -3px;
       }
     }
+    &.styw{
+      width: 278px;
+    }
   }
   .like-list {
     height: 86px;
@@ -81,10 +89,13 @@ export default {
     border-radius:4px;
   }
   .like-info {
-    width: 148px;
+    flex: 1;
     margin-left: 7px;
     p{
-      @extend %singleline-ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 1;
       &:nth-child(2){
         color: $col999;
         font-size: 12px;

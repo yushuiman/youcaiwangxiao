@@ -1,7 +1,11 @@
 <template>
   <div class="class-detail-wrap w-wrap">
     <div class="nav-title">
-      首页>课程>课程详情
+      <Breadcrumb separator=">">
+        <BreadcrumbItem to="/">首页</BreadcrumbItem>
+        <BreadcrumbItem to="/class">课程</BreadcrumbItem>
+        <BreadcrumbItem>课程详情</BreadcrumbItem>
+      </Breadcrumb>
     </div>
     <div class="class-detail-info clearfix">
       <div class="cdi-wrap-l fl">
@@ -51,9 +55,78 @@
             <img src="@/assets/images/course/teacher-icon.png" alt="" width="100%">
           </div>
           <div class="clt-kcdg" v-show="isChoose == 'kjdg'">
-              课程大纲内容内容
-              课程大纲内容内容
-              课程大纲内容内容
+            <el-row class="tac">
+              <el-col :span="24">
+                <el-menu
+                  default-active="2"
+                  class="el-menu-vertical-demo"
+                  @open="handleOpen"
+                  @close="handleClose">
+                  <div class="el-menu-title fsbold">
+                    <i class="elt-icon elt-icon-01"></i>h1标题
+                  </div>
+                  <el-submenu index="1">
+                    <template slot="title">
+                      <i class="elt-icon elt-icon-02"></i>
+                      <span>导航一</span>
+                    </template>
+                    <el-menu-item class="menu-item" index="1-1"><i class="elt-icon elt-icon-play"></i>选项1</el-menu-item>
+                    <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
+                  </el-submenu>
+                  <el-submenu index="2">
+                    <template slot="title">
+                      <i class="elt-icon elt-icon-02"></i>
+                      <span>导航二</span>
+                    </template>
+                    <el-menu-item class="menu-item" index="1-1"><i class="elt-icon elt-icon-play"></i>选项1</el-menu-item>
+                    <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
+                  </el-submenu>
+                  <el-submenu index="3">
+                    <template slot="title">
+                      <i class="elt-icon elt-icon-02"></i>
+                      <span>导航三</span>
+                    </template>
+                    <el-menu-item class="menu-item" index="1-1"><i class="elt-icon elt-icon-play"></i>选项1</el-menu-item>
+                    <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
+                  </el-submenu>
+                </el-menu>
+              </el-col>
+              <el-col :span="24">
+                <el-menu
+                  default-active="2"
+                  class="el-menu-vertical-demo"
+                  @open="handleOpen"
+                  @close="handleClose">
+                  <div class="el-menu-title fsbold">
+                    <i class="elt-icon elt-icon-01"></i>h1标题
+                  </div>
+                  <el-submenu index="1">
+                    <template slot="title">
+                      <i class="elt-icon elt-icon-02"></i>
+                      <span>导航一</span>
+                    </template>
+                    <el-menu-item class="menu-item" index="1-1"><i class="elt-icon elt-icon-play"></i>选项1</el-menu-item>
+                    <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
+                  </el-submenu>
+                  <el-submenu index="2">
+                    <template slot="title">
+                      <i class="elt-icon elt-icon-02"></i>
+                      <span>导航二</span>
+                    </template>
+                    <el-menu-item class="menu-item" index="1-1"><i class="elt-icon elt-icon-play"></i>选项1</el-menu-item>
+                    <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
+                  </el-submenu>
+                  <el-submenu index="3">
+                    <template slot="title">
+                      <i class="elt-icon elt-icon-02"></i>
+                      <span>导航三</span>
+                    </template>
+                    <el-menu-item class="menu-item" index="1-1"><i class="elt-icon elt-icon-play"></i>选项1</el-menu-item>
+                    <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
+                  </el-submenu>
+                </el-menu>
+              </el-col>
+            </el-row>
           </div>
         </div>
       </div>
@@ -82,17 +155,16 @@
             <img class="stu-icon" src="@/assets/images/course/student-icon.png" alt="">
             <span>学员心声</span>
           </div>
-          sdsdfsdjfsdkfsd
-          <!-- <div class="like-list" v-for="(item,index) in likeArr" :key="index">
+          <div class="like-list" v-for="(item,index) in likeArr2" :key="index">
             <img :src="item.pc_img" alt="">
             <div class="like-info">
               <p class="sl-txt student-name">{{item.name}}</p>
-              <p class="student-name-instr">讲师: {{item.teacher_name}}</p>
+              <p class="student-instr">讲师: {{item.teacher_name}}</p>
             </div>
-          </div> -->
+          </div>
         </div>
         <!-- 猜你喜欢 -->
-        <like-list></like-list>
+        <like-list :isW="isW"></like-list>
       </div>
     </div>
   </div>
@@ -103,7 +175,22 @@ import likeList from '@/components/likeList.vue'
 export default {
   data () {
     return {
-      isChoose: 'kcjj'
+      isW: 278,
+      isChoose: 'kcjj',
+      likeArr2: [
+        {
+          'pc_img': require('@/assets/images/course/duoxuan.png'),
+          'name': '速度速度速度速度发生的多sfsfsdnsjdk',
+          'teacher_name': 'wang时尚大方收到尽快发货速度加快恢复上课的护肤开始倒海翻江可视电话水电费可视电话发可视电话反馈收到回复',
+          'price': '1888000'
+        },
+        {
+          'pc_img': require('@/assets/images/course/duoxuan.png'),
+          'name': 'sfsfsdnsjdk',
+          'teacher_name': 'wang',
+          'price': '1888000'
+        }
+      ]
     }
   },
   components: {
@@ -126,6 +213,19 @@ export default {
 
 <style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../assets/scss/app";
+  .nav-title{
+    .ivu-breadcrumb{
+      .ivu-breadcrumb a {
+        color: #515a6e;
+        transition: color .2s ease-in-out;
+      }
+      span{
+        .ivu-breadcrumb-item-separator{
+          margin: 0 8px;
+        }
+      }
+    }
+  }
   .class-detail-wrap{
     padding-bottom: 19px;
     .class-detail-info{
@@ -306,11 +406,14 @@ export default {
       }
     }
   }
+  .clt-kcdg{
+    width: 902px;
+  }
   .clt-else-info-r{
     padding-top: 49px;
   }
   .course-main-right {
-    width: 298px;
+    width: 278px;
     padding: 0 9px;
     margin-bottom: 20px;
     background: $colfff;
@@ -328,7 +431,6 @@ export default {
     }
   }
   .like-list {
-    // height: 86px;
     padding: 11px 0;
     @include display_flex(flex);
     @extend %alignitem_center;
@@ -355,39 +457,34 @@ export default {
   .like-info {
     flex: 1;
     p{
+      line-height: 20px;
+      max-height: 20px;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       overflow: hidden;
       -webkit-line-clamp: 1;
-      &.col{
+      // &.col{
+      //   color: $col999;
+      //   font-size: 12px;
+      //   margin-top: 7px;
+      //   margin-bottom: 8px;
+      // }
+      // &.sl-txt{
+      //   display: -webkit-box;
+      //   -webkit-box-orient: vertical;
+      //   overflow: hidden;
+      //   -webkit-line-clamp: 1;
+      //   max-height: 20px;
+      // }
+      // &.price{
+      //   color: #FF9B3A;
+      //   font-size: 16px;
+      // }
+      &.student-instr{
+        max-height: 60px;
+        -webkit-line-clamp: 3;
         color: $col999;
         font-size: 12px;
-        margin-top: 7px;
-        margin-bottom: 8px;
-      }
-      &.sl-txt{
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        -webkit-line-clamp: 1;
-        max-height: 20px;
-      }
-      &.price{
-        color: #FF9B3A;
-        font-size: 16px;
-      }
-      &.student-name, &.student-name-instr{
-        line-height: 30px;
-      }
-      &.student-name{
-        max-height: 30px;
-      }
-      &.student-name-instr{
-        max-height: 90px;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        -webkit-line-clamp: 3;
       }
     }
   }
@@ -416,9 +513,53 @@ export default {
       margin-bottom: 8px;
     }
     .cl-t-info{
-      line-height: 30px;
+      line-height: 20px;
       font-size: 12px;
       color: $col999;
+    }
+  }
+  .el-menu{
+    .el-submenu{
+      border-bottom: 1px solid $borderColor;
+      .el-menu-item{
+        padding-left: 20px!important;
+      }
+    }
+  }
+  .el-menu-title, .el-submenu__title{
+    line-height: 50px;
+    padding-left: 20px;
+    border-bottom: 1px solid $borderColor;
+    &.fsbold{
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+  .elt-icon{
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -3px;
+    margin-right: 11px;
+    @extend %bg-img;
+    background-size: contain;
+    &.elt-icon-01{
+      @include wh(17, 16);
+      margin-left: 2.5px;
+      background-image: url('../../assets/images/course/neau-1.png');
+    }
+    &.elt-icon-02{
+      @include wh(22, 22);
+      background-image: url('../../assets/images/course/neau-2.png');
+    }
+    &.elt-icon-play, &.elt-icon-stop{
+      @include wh(8, 12);
+      margin-left: 7px;
+      background-image: url('../../assets/images/course/play-icon.png');
+    }
+    &.elt-icon-stop{
+      @include wh(10, 12);
+      margin-left: 6px;
+      background-image: url('../../assets/images/course/stop-icon.png');
     }
   }
 </style>

@@ -15,7 +15,7 @@ html * {
 
 html, body {
   height: 100%;
-  font-family: PingFangSC-Regular, sans-serif;
+  font-family: "微软雅黑","Microsoft YaHei",Helvetica,STHeiTi,Arial,sans-serif;
   min-height: 100%;
   line-height: 1;
 }
@@ -276,11 +276,4 @@ input[type='search'] {
 .w-wrap {
   width: 1200px;
   margin: 0 auto;
-}
-
-.y-pop-com {
-  -webkit-transform: translate3d(0, -50%, 0);
-  -moz-transform: translate(0, -50%);
-  -o-transform: translate(0, -50%);
-  transform: translate(0, -50%);
 }
