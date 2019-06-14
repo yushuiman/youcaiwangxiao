@@ -2,6 +2,7 @@
   <div id="app">
     <div id="nav">
       <Header/>
+<RightSlider></RightSlider>
     </div>
     <router-view/>
     <Footer/>
@@ -11,12 +12,14 @@
 // @ is an alias to /src
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
+import RightSlider from '@/components/RightSlider'
 
 export default {
   name: 'home',
   components: {
     Header,
-    Footer
+    Footer,
+    RightSlider
   },
   created () {
     // 在页面加载时读取localStorage里的状态信息

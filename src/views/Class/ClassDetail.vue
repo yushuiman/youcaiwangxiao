@@ -57,9 +57,7 @@
               <el-col :span="24">
                 <el-menu
                   default-active="2"
-                  class="el-menu-vertical-demo"
-                  @open="handleOpen"
-                  @close="handleClose">
+                  class="el-menu-vertical-demo">
                   <div class="el-menu-title fsbold">
                     <i class="elt-icon elt-icon-01"></i>h1标题
                   </div>
@@ -88,13 +86,9 @@
                     <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
                   </el-submenu>
                 </el-menu>
-              </el-col>
-              <el-col :span="24">
                 <el-menu
                   default-active="2"
-                  class="el-menu-vertical-demo"
-                  @open="handleOpen"
-                  @close="handleClose">
+                  class="el-menu-vertical-demo">
                   <div class="el-menu-title fsbold">
                     <i class="elt-icon elt-icon-01"></i>h1标题
                   </div>
@@ -153,13 +147,13 @@
             <img class="stu-icon" src="@/assets/images/course/student-icon.png" alt="">
             <span>学员心声</span>
           </div>
-          <div class="like-list" v-for="(item,index) in likeArr2" :key="index">
+          <!-- <div class="like-list" v-for="(item,index) in likeArr2" :key="index">
             <img :src="item.pc_img" alt="">
             <div class="like-info">
               <p class="sl-txt student-name">{{item.name}}</p>
               <p class="student-instr">讲师: {{item.teacher_name}}</p>
             </div>
-          </div>
+          </div> -->
         </div>
         <!-- 猜你喜欢 -->
         <like-list :isW="isW"></like-list>
@@ -202,7 +196,6 @@ export default {
   methods: {
     tabChoose (type) {
       this.isChoose = type
-      console.log(this.isChoose)
     },
     playVideo () {
       this.$router.push('/classVideo')

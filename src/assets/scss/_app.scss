@@ -531,7 +531,27 @@ $bgColor:#F3F6FF;
     max-height: $h;
   }
 }
-
+// 背景图片
+@mixin bg_img($w,$h,$url){
+  width: $w*1px;
+  height: $h*1px;
+  display: inline-block;
+  background-image: url($url);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center center;
+  span{
+    width: $w;
+    height: $h;
+    display: table-cell;
+    vertical-align: middle;
+  }
+  img{
+    margin: 0 auto;
+    max-width: $w;
+    max-height: $h;
+  }
+}
 %bg-img {
   background-repeat: no-repeat;
   background-size: 100% 100%;

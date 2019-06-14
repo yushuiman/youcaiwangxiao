@@ -73,7 +73,7 @@
 
       <!-- 猜你喜欢 右 -->
       <div class="fr">
-        <like-list :likeArr="likeArr"></like-list>
+        <like-list></like-list>
       </div>
     </div>
     <div style="padding: 20px; text-align: center;">
@@ -95,7 +95,7 @@
 import likeList from '@/components/likeList.vue'
 // // 加密 解密
 import { Decrypt, Encrypt } from '@/libs/crypto'
-import { courseList, guessLike, subjects } from '@/api/class'
+import { courseList, subjects } from '@/api/class'
 // const initWS = () => {
 //   return new WebSocket(ws => {
 //     ws.onmessage(data => {
@@ -179,7 +179,6 @@ export default {
   // },
   mounted () {
     this.getCourseList(this.form) // 课程列表 默认第一页，6条数据
-    this.getGuessLike() // 猜你喜欢
     this.getSubjects() // 科目
     // this.Ws = initWS(this)
   },
@@ -224,13 +223,6 @@ export default {
         const res = data.data.data
         this.courseList = res.data
         this.total = res.total
-      })
-    },
-    // 猜你喜欢
-    getGuessLike () {
-      guessLike().then(data => {
-        const res = data.data
-        this.likeArr = res.data
       })
     },
     // 科目
