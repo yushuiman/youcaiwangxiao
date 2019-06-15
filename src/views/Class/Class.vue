@@ -206,7 +206,7 @@ export default {
     },
     // 跳转到课程详情页
     goClassDetails (id) {
-      this.$router.push(`/classDetail?courseId=${'id'}`)
+      this.$router.push({ path: '/classDetail', query: { course_id: id } })
     },
     // 分页
     onChange (val) {

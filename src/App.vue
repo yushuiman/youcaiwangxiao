@@ -2,7 +2,7 @@
   <div id="app">
     <div id="nav">
       <Header/>
-<RightSlider></RightSlider>
+      <RightSlider/>
     </div>
     <router-view/>
     <Footer/>

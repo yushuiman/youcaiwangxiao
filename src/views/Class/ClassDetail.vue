@@ -3,18 +3,18 @@
     <div class="nav-title">
       <router-link to="/">首页</router-link><i>></i>
       <router-link to="/class">课程</router-link><i>></i>
-      <span class="curren">课程详情高清</span>
+      <span class="curren">{{isntroduction.name}}</span>
     </div>
     <div class="class-detail-info clearfix">
       <div class="cdi-wrap-l fl">
         <div class="cdi-video" @click="playVideo">
-          <img class="cdi-img" src="@/assets/images/index/banner.png" alt="">
+          <img class="cdi-img" :src="isntroduction.pc_img" alt="">
           <div class="cdi-opa">
-            <p class="cdi-tit">标题</p>
+            <p class="cdi-tit">{{isntroduction.name}}</p>
             <span class="cdi-play-btn"><i></i>免费试听</span>
             <div class="cdi-jieshao">
-              <img src="@/assets/images/index/banner.png" alt="">
-              介绍sdsdnfsdns释放速度速度是亮点
+              <img :src="isntroduction.pc_img" alt="">
+              <span>{{isntroduction.description}}</span>
             </div>
           </div>
         </div>
@@ -26,16 +26,16 @@
         </div>
       </div>
       <div class="cdi-wrap-r fr">
-        <h2 class="cdi-tit">CMA中文高清网课全科（新钢）</h2>
-        <p class="cdi-instr">优质的速度发生的看优质的速度发生的看质的速度发生的看风使舵尽快发货sdfkskjdhf水电费水电费sfdf优质的速度发生的看风使舵尽快发货sdfkskjdhf水电费水电费sfdf 是否收到</p>
-        <p class="cdi-teacher">讲饿死师：</p>
+        <h2 class="cdi-tit">{{isntroduction.name}}</h2>
+        <p class="cdi-instr">{{isntroduction.description}} 是否收到</p>
+        <p class="cdi-teacher">讲师：{{isntroduction.teacher_name}}</p>
         <div class="cdi-type">
           <span>VIP视频</span>
           <span>VIP题库</span>
-          <span>有效期：730天</span>
+          <span>有效期：{{isntroduction.study_days}}天</span>
         </div>
-        <p class="cdi-buy-people">12333人购买<span>9993次播放</span></p>
-        <p class="cdi-price"><em>¥</em>1888000</p>
+        <p class="cdi-buy-people">{{isntroduction.join_num}}人购买<span>9993次播放</span></p>
+        <p class="cdi-price"><em>¥</em>{{isntroduction.price}}</p>
         <div class="cdi-buy-consult">
           <button type="button" name="button" class="buy-btn">立即购买</button>
           <button type="button" name="button" class="consult-btn">在线咨询</button>
@@ -50,52 +50,22 @@
         </div>
         <div class="clt-main">
           <div class="clt-jianjie" v-show="isChoose == 'kcjj'">
-            <img src="@/assets/images/course/teacher-icon.png" alt="" width="100%">
+            <img :src="isntroduction.brief_img" alt="" width="100%">
           </div>
           <div class="clt-kcdg" v-show="isChoose == 'kjdg'">
             <el-row class="tac">
               <el-col :span="24">
                 <el-menu
                   default-active="2"
-                  class="el-menu-vertical-demo">
+                  class="el-menu-vertical-demo" v-for="(item, index) in courseCatalogInfo" :key="index">
                   <div class="el-menu-title fsbold">
-                    <i class="elt-icon elt-icon-01"></i>h1标题
+                    <i class="elt-icon elt-icon-01"></i>{{item.section_name}}
                   </div>
-                  <el-submenu index="1">
+                  <!-- {{item.videos}} -->
+                  <el-submenu index="1" v-for="(val, index) in item.videos" :key="index">
                     <template slot="title">
                       <i class="elt-icon elt-icon-02"></i>
-                      <span>导航一</span>
-                    </template>
-                    <el-menu-item class="menu-item" index="1-1"><i class="elt-icon elt-icon-play"></i>选项1</el-menu-item>
-                    <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
-                  </el-submenu>
-                  <el-submenu index="2">
-                    <template slot="title">
-                      <i class="elt-icon elt-icon-02"></i>
-                      <span>导航二</span>
-                    </template>
-                    <el-menu-item class="menu-item" index="1-1"><i class="elt-icon elt-icon-play"></i>选项1</el-menu-item>
-                    <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
-                  </el-submenu>
-                  <el-submenu index="3">
-                    <template slot="title">
-                      <i class="elt-icon elt-icon-02"></i>
-                      <span>导航三</span>
-                    </template>
-                    <el-menu-item class="menu-item" index="1-1"><i class="elt-icon elt-icon-play"></i>选项1</el-menu-item>
-                    <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
-                  </el-submenu>
-                </el-menu>
-                <el-menu
-                  default-active="2"
-                  class="el-menu-vertical-demo">
-                  <div class="el-menu-title fsbold">
-                    <i class="elt-icon elt-icon-01"></i>h1标题
-                  </div>
-                  <el-submenu index="1">
-                    <template slot="title">
-                      <i class="elt-icon elt-icon-02"></i>
-                      <span>导航一</span>
+                      <span>{{val.video_name}}</span>
                     </template>
                     <el-menu-item class="menu-item" index="1-1"><i class="elt-icon elt-icon-play"></i>选项1</el-menu-item>
                     <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
@@ -147,13 +117,6 @@
             <img class="stu-icon" src="@/assets/images/course/student-icon.png" alt="">
             <span>学员心声</span>
           </div>
-          <!-- <div class="like-list" v-for="(item,index) in likeArr2" :key="index">
-            <img :src="item.pc_img" alt="">
-            <div class="like-info">
-              <p class="sl-txt student-name">{{item.name}}</p>
-              <p class="student-instr">讲师: {{item.teacher_name}}</p>
-            </div>
-          </div> -->
         </div>
         <!-- 猜你喜欢 -->
         <like-list :isW="isW"></like-list>
@@ -162,26 +125,15 @@
   </div>
 </template>
 <script>
+import { courseIntroduction, secvCatalog, courseCatalog } from '@/api/class'
 import likeList from '@/components/likeList.vue'
 export default {
   data () {
     return {
       isW: 278,
       isChoose: 'kcjj',
-      likeArr2: [
-        {
-          'pc_img': require('@/assets/images/course/duoxuan.png'),
-          'name': '速度速度速度速度发生的多sfsfsdnsjdk',
-          'teacher_name': 'wang时尚大方收到尽快发货速度加快恢复上课的护肤开始倒海翻江可视电话水电费可视电话发可视电话反馈收到回复',
-          'price': '1888000'
-        },
-        {
-          'pc_img': require('@/assets/images/course/duoxuan.png'),
-          'name': 'sfsfsdnsjdk',
-          'teacher_name': 'wang',
-          'price': '1888000'
-        }
-      ]
+      isntroduction: {}, // 课程简介
+      courseCatalogInfo: {} // 课程大纲（目录 章节）
     }
   },
   components: {
@@ -191,12 +143,43 @@ export default {
 
   },
   mounted () {
-    // this.getSubjects() // 科目列表
+    this.getCourseIntroduction() // 课程简介
+    this.getSecvCatalog() // 课程大纲（目录 章节）
+    this.getCourseCatalog() // 不知道
   },
   methods: {
+    // 课程简介
+    getCourseIntroduction () {
+      courseIntroduction({
+        package_id: 2
+      }).then(data => {
+        const res = data.data
+        this.isntroduction = res.data
+      })
+    },
+    // 课程大纲(目录，章节)
+    getSecvCatalog () {
+      secvCatalog({
+        course_id: this.$route.query.course_id
+      }).then(data => {
+        const res = data.data
+        this.courseCatalogInfo = res.data
+      })
+    },
+    // 不知道
+    getCourseCatalog () {
+      courseCatalog({
+        package_id: 2
+      }).then(data => {
+        // const res = data.data
+        // console.log(res)
+      })
+    },
+    // tab切换 (课程简介 课程大纲)
     tabChoose (type) {
       this.isChoose = type
     },
+    // 跳转到播放页面
     playVideo () {
       this.$router.push('/classVideo')
     }
@@ -283,11 +266,27 @@ export default {
       @include lh(48, 48);
       background: rgba(0, 0, 0, .67);
       padding: 0 20px;
+      display: flex;
+      align-items: center;
       img{
         @include wh(40, 40);
-        vertical-align: middle;
         border-radius: 100%;
-        margin-right: 30px;
+        margin-right: 10px;
+      }
+      span{
+        width: 87%;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+      }
+      &:after{
+        position: absolute;
+        content: '>';
+        top: 0;
+        right: 20px;
+        font-size: 20px;
+        margin-left: 10px;
       }
     }
   }

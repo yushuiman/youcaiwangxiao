@@ -4,7 +4,7 @@
       <li class="try-item">
         <i class="r-icon"></i>
         <p class="r-txt">试听<br />课程</p>
-        <div class="r_try com-show">
+        <div class="com-show r-try">
           <div class="com-btn">免费领取</div>
         </div>
       </li>
@@ -139,6 +139,21 @@ export default {
     color: #666666;
     background: #ffffff;
     display: none;
+    &.r-try{
+      top: 21.5px;
+    }
+    &.r-service{
+      top: -15px;
+    }
+    &.r-hotline{
+      top: 9.5px;
+    }
+    &.r-weixin{
+      top: -42.5px;
+    }
+    &.r-qq{
+      top: -12px;
+    }
     p{
       line-height: 20px;
     }
@@ -158,7 +173,7 @@ export default {
     color: #ffffff;
     display: inline-block;
     margin-top: 6px;
-    .r_try &{
+    .r-try &{
       margin-top: 0;
     }
     .r-qq &{
