@@ -3,11 +3,12 @@
     <div class="class-choose">
       <!-- 已选条件 -->
       <div class="cl-aleary-tj">
-        <div class="w-wrap class-com" v-if="alearyChoose.length">
+        <div class="w-wrap class-com" v-if="classNamea != '' || form.billing_status != '' || form.ym != ''">
           <span class="cl-txt">已选条件</span>
           <div class="cl-list cla-list">
-            <span><em>中文全23科</em><i class="del-cion"></i></span>
-            <span><em>{{classNamea}}</em><i class="del-cion"></i></span>
+            <span v-if="classNamea != ''"><em>{{classNamea}}</em><i class="del-cion" @click="delChoose('科目')"></i></span>
+            <span v-if="form.billing_status != ''"><em>{{form.billing_status == 1 ? '免费': '收费'}}</em><i class="del-cion" @click="delChoose('类型')"></i></span>
+            <span v-if="form.ym != ''"><em>{{form.ym == 1 ? '远程课程': '面授课程'}}</em><i class="del-cion" @click="delChoose('班型')"></i></span>
           </div>
         </div>
         <div class="w-wrap class-com" v-else></div>
@@ -49,11 +50,11 @@
           <span class="curren">综合</span>
           <span @click="screenCourse('人气')">人气<i :class="[form.popularity == 1 ? 'hot-top-icon' : 'hot-down-icon']"></i></span>
           <span @click="screenCourse('价格')">价格<i class="price-icon" :class="{'price-top-icon': form.pricesort==1, 'price-down-icon': form.pricesort==2}"></i></span>
-          <input type="text" name="" placeholder="3232">
+          <input type="number" name="" placeholder="¥" v-model.number="priceStart">
           <span class="lianjie-icon">-</span>
-          <input type="text" name="" placeholder="¥">
-          <button type="button" name="button" class="sure-btn">确认</button>
-          <button type="button" name="button" class="clear-btn">清空</button>
+          <input type="number" name="" placeholder="¥" v-model.number="priceEnd">
+          <button type="button" name="button" class="sure-btn" @click="screenCourse('确认价格')">确认</button>
+          <button type="button" name="button" class="clear-btn" @click="screenCourse('清空价格')">清空</button>
         </div>
       </div>
     </div>
@@ -119,10 +120,10 @@ export default {
         limit: 6,
         page: 1,
         ym: ''
-      },
+      }, // 课程列表 默认第一页 显示6个
+      priceStart: '', // 价格筛选
+      priceEnd: '', // 价格筛选
       alearyChoose: ['2323', 332], // 已选条件
-      subjectsArr: [], // 科目
-      selId: '',
       typeInfo: [
         {
           freePay: '收费',
@@ -133,21 +134,16 @@ export default {
           courseWay: '面授课程'
         }
       ],
-
-      className: '中文part1',
-      arrangement: 1,
-      agmet_img: 1,
-      agmet_img2: 1,
-
-      subject_color: '',
       subject_type: [
         {
-          'class_name': 'sfsfsdnsjdk'
+          'id': 3,
+          'class_name': '当时的'
         },
         {
-          'class_name': '3sefsfsfsfsdnsjdk'
+          'id': 2,
+          'class_name': 'sdcs都是'
         }
-      ]
+      ] // 筛选科目列表
 
     }
   },
@@ -178,16 +174,13 @@ export default {
   //   }
   // },
   mounted () {
-    this.getCourseList(this.form) // 课程列表 默认第一页，6条数据
+    this.getCourseList() // 课程列表 默认第一页，6条数据
     this.getSubjects() // 科目
     // this.Ws = initWS(this)
   },
   methods: {
     // 条件筛选
     screenCourse (type, val) {
-      if (type === '班型') {
-        return
-      }
       if (type === '人气') {
         if (this.form.popularity === 1) {
           this.form.popularity = ''
@@ -202,7 +195,42 @@ export default {
           this.form.pricesort = 1
         }
       }
-      this.getCourseList(this.form)
+      if (type === '班型') {
+        return
+      }
+      if (type === '清空价格') {
+        this.priceStart = ''
+        this.priceEnd = ''
+      }
+      if (type === '确认价格' || type === '清空价格') {
+        this.form.price_start = this.priceStart
+        this.form.price_end = this.priceEnd
+      }
+      this.getCourseList()
+    },
+    // 条件删除
+    delChoose (type) {
+      // if (type === '科目') {
+      //   this.form.class_id = ''
+      // }
+      // if (type === '类型') {
+      //   this.form.billing_status = ''
+      // }
+      // if (type === '班型') {
+      //   this.form.ym = ''
+      // }
+      switch (type) {
+        case '科目':
+          this.form.class_id = ''
+          break
+        case '类型':
+          this.form.billing_status = ''
+          break
+        case '班型':
+          this.form.ym = ''
+          break
+      }
+      this.getCourseList()
     },
     // 跳转到课程详情页
     goClassDetails (id) {
@@ -211,11 +239,11 @@ export default {
     // 分页
     onChange (val) {
       this.form.page = val
-      this.getCourseList(this.form)
+      this.getCourseList()
     },
     onPageSizeChange (val) {
       this.form.limit = val
-      this.getCourseList(this.form)
+      this.getCourseList()
     },
     // 获取数据
     getCourseList () {

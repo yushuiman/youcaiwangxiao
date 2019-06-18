@@ -100,7 +100,12 @@
 </template>
 <script>
 export default {
-
+  data(){
+    return{
+    }
+  },
+  mounted(){
+  }
 }
 </script>
 <style scoped lang="scss" rel="stylesheet/scss">

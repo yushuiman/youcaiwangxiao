@@ -43,10 +43,6 @@ export default {
   },
 
   mounted () {
-    // console.log(this.$store.state.nav.)
-    // if (this.$store.state.route.name === 'classVideo') {
-    //
-    // }
   },
   computed: {
     isChange () {
@@ -72,7 +68,7 @@ export default {
     width: 100%;
     position: fixed;
     background: $colfff;
-    z-index: 10;
+    z-index: 1000;
     .head-w {
       @include whl(1300, 70, 70);
       overflow: hidden;

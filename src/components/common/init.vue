@@ -1,24 +1,17 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <Header v-if="headerFooterShow" />
-      <RightSlider/>
-    </div>
-    <router-view/>
-    <Footer v-if="header_show" />
+  <div class="wrap">
+    <Header/>
+    <RightSlider/>
+    <Footer/>
   </div>
 </template>
 <script>
-// @ is an alias to /src
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import RightSlider from '@/components/RightSlider'
-
 export default {
-  name: 'home',
-  data(){
-    return{
-      headerFooterShow: true, //header footer显示
+  data () {
+    return {
       header_show: true
     }
   },
@@ -26,11 +19,6 @@ export default {
     Header,
     Footer,
     RightSlider
-  },
-  mounted(){
-    if(this.$route.name === 'classVideo'){
-      this.headerFooterShow = false
-    }
   },
   created () {
     // 在页面加载时读取localStorage里的状态信息
@@ -40,7 +28,12 @@ export default {
       sessionStorage.setItem('is_change', JSON.stringify(this.$store.state))
     })
   },
-  methods:{
+  mounted(){
+    if(this.$route.name === 'classVideo'){
+      this.headerFooterShow = false
+    }
+  },
+  methods: {
     //是否显示头部
     header (bool) {
       this.header_show = bool;
@@ -52,5 +45,6 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+
+<style>
 </style>

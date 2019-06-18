@@ -42,9 +42,37 @@ export const courseCatalog = (data) => { // 课程大纲
     method: 'post'
   })
 }
+export const videoPlayback = (data) => { // 视频播放
+  return axios.request({
+    url: '/web/Course/videoPlayback',
+    data,
+    method: 'post'
+  })
+}
+export const videoCredentials = (data) => { // 获取视频凭证
+  return axios.request({
+    url: '/web/Course/videoCredentials',
+    params: data,
+    method: 'get'
+  })
+}
 export const answerList = (data) => { // 问答列表
   return axios.request({
     url: '/web/Course/answerList',
+    data,
+    method: 'post'
+  })
+}
+export const answerSub = (data) => { // 问题提交
+  return axios.request({
+    url: '/web/Course/answerSub',
+    data,
+    method: 'post'
+  })
+}
+export const answerDetails = (data) => { // 问题详情
+  return axios.request({
+    url: '/web/Course/answerDetails',
     data,
     method: 'post'
   })

@@ -7,7 +7,7 @@
     </div>
     <div class="class-detail-info clearfix">
       <div class="cdi-wrap-l fl">
-        <div class="cdi-video" @click="playVideo">
+        <div class="cdi-video" @click="playVideo()">
           <img class="cdi-img" :src="isntroduction.pc_img" alt="">
           <div class="cdi-opa">
             <p class="cdi-tit">{{isntroduction.name}}</p>
@@ -54,37 +54,27 @@
           </div>
           <div class="clt-kcdg" v-show="isChoose == 'kjdg'">
             <el-row class="tac">
-              <el-col :span="24">
+              <el-col :span="24" v-for="(item, index) in courseCatalogInfo" :key="index">
                 <el-menu
                   default-active="2"
-                  class="el-menu-vertical-demo" v-for="(item, index) in courseCatalogInfo" :key="index">
-                  <div class="el-menu-title fsbold">
-                    <i class="elt-icon elt-icon-01"></i>{{item.section_name}}
-                  </div>
-                  <!-- {{item.videos}} -->
-                  <el-submenu index="1" v-for="(val, index) in item.videos" :key="index">
-                    <template slot="title">
-                      <i class="elt-icon elt-icon-02"></i>
-                      <span>{{val.video_name}}</span>
+                  class="el-menu-vertical-demo">
+                  <el-submenu :index="'' + index+1">
+                    <template slot="title" >
+                      <i class="elt-icon elt-icon-01"></i>
+                      {{item.name}}
                     </template>
-                    <el-menu-item class="menu-item" index="1-1"><i class="elt-icon elt-icon-play"></i>选项1</el-menu-item>
-                    <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
-                  </el-submenu>
-                  <el-submenu index="2">
-                    <template slot="title">
-                      <i class="elt-icon elt-icon-02"></i>
-                      <span>导航二</span>
-                    </template>
-                    <el-menu-item class="menu-item" index="1-1"><i class="elt-icon elt-icon-play"></i>选项1</el-menu-item>
-                    <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
-                  </el-submenu>
-                  <el-submenu index="3">
-                    <template slot="title">
-                      <i class="elt-icon elt-icon-02"></i>
-                      <span>导航三</span>
-                    </template>
-                    <el-menu-item class="menu-item" index="1-1"><i class="elt-icon elt-icon-play"></i>选项1</el-menu-item>
-                    <el-menu-item index="1-2"><i class="elt-icon elt-icon-stop"></i>选项2</el-menu-item>
+                    <el-submenu :index="'1-'+ index+1" v-for="(val, index) in courseSections" :key="index">
+                      <template slot="title">
+                        <i class="elt-icon elt-icon-02"></i>
+                        <span>{{val.section_name}}</span>
+                      </template>
+                      <el-menu-item :index="'1-1'+ index+1" v-for="(v, index) in val.videos" :key="index"
+                      @click="playVideo(val, v.video_id)">
+                        <i class="elt-icon elt-icon-play"></i>
+                        <span>{{v.video_name}}</span>
+                        <em class="free-pay">免费试听</em>
+                      </el-menu-item>
+                    </el-submenu>
                   </el-submenu>
                 </el-menu>
               </el-col>
@@ -132,8 +122,11 @@ export default {
     return {
       isW: 278,
       isChoose: 'kcjj',
+      courseSectionsShow: false,
       isntroduction: {}, // 课程简介
-      courseCatalogInfo: {} // 课程大纲（目录 章节）
+      courseCatalogInfo: [], // 课程大纲（目录）
+      courseSections: [] // 课程大纲（章节 video）
+
     }
   },
   components: {
@@ -144,8 +137,8 @@ export default {
   },
   mounted () {
     this.getCourseIntroduction() // 课程简介
-    this.getSecvCatalog() // 课程大纲（目录 章节）
-    this.getCourseCatalog() // 不知道
+    this.getCourseCatalog() // 课程大纲（目录）
+    this.getSecvCatalog()
   },
   methods: {
     // 课程简介
@@ -157,22 +150,24 @@ export default {
         this.isntroduction = res.data
       })
     },
-    // 课程大纲(目录，章节)
-    getSecvCatalog () {
-      secvCatalog({
-        course_id: this.$route.query.course_id
+    // 课程大纲（目录）
+    getCourseCatalog () {
+      courseCatalog({
+        package_id: this.$route.query.course_id
       }).then(data => {
         const res = data.data
         this.courseCatalogInfo = res.data
       })
     },
-    // 不知道
-    getCourseCatalog () {
-      courseCatalog({
-        package_id: 2
+    // 课程大纲(章节 video)
+    getSecvCatalog (courseId, index) {
+      // console.log(courseId)
+      // this.courseSectionsShow = index
+      secvCatalog({
+        course_id: 1
       }).then(data => {
-        // const res = data.data
-        // console.log(res)
+        const res = data.data
+        this.courseSections = res.data
       })
     },
     // tab切换 (课程简介 课程大纲)
@@ -180,8 +175,16 @@ export default {
       this.isChoose = type
     },
     // 跳转到播放页面
-    playVideo () {
-      this.$router.push('/classVideo')
+    playVideo (val, videoId) {
+      this.$router.push({ path: '/classVideo',
+        query: {
+          video_id: videoId,
+          section_id: val.section_id,
+          course_id: val.course_id,
+          package_id: this.isntroduction.id,
+          is_zheng: this.isntroduction.is_zheng
+        }
+      })
     }
   }
 }
@@ -189,6 +192,27 @@ export default {
 
 <style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../assets/scss/app";
+  .el-col-24:last-child{
+    .el-menu{
+      border: 0;
+    }
+  }
+  .el-menu{
+    border-bottom: 1px solid #EFEFEF;
+  }
+  .el-menu .el-submenu {
+    border-bottom: 1px solid #EFEFEF;
+    &:last-child{
+      border: 0;
+    }
+  }
+  .el-submenu .el-menu-item{
+    // background: #FAFAFA;
+  }
+  .free-pay{
+    float: right;
+    color: $col666;
+  }
   .nav-title{
     color: $col999;
     @include lh(44, 44);
@@ -401,6 +425,7 @@ export default {
   }
   .clt-kcdg{
     width: 902px;
+    background: $colfff;
   }
   .clt-else-info-r{
     padding-top: 49px;
@@ -514,9 +539,9 @@ export default {
   .el-menu{
     .el-submenu{
       border-bottom: 1px solid $borderColor;
-      .el-menu-item{
-        padding-left: 20px!important;
-      }
+      // .el-menu-item{
+      //   padding-left: 20px!important;
+      // }
     }
   }
   .el-menu-title, .el-submenu__title{

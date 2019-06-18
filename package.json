@@ -16,6 +16,8 @@
     "js-cookie": "^2.2.0",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
+    "vue-aliplayer": "^0.0.8",
+    "vue-pdf": "^4.0.7",
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1"
   },
