@@ -53,32 +53,7 @@
             <img :src="isntroduction.brief_img" alt="" width="100%">
           </div>
           <div class="clt-kcdg" v-show="isChoose == 'kjdg'">
-            <el-row class="tac">
-              <el-col :span="24" v-for="(item, index) in courseCatalogInfo" :key="index">
-                <el-menu
-                  default-active="2"
-                  class="el-menu-vertical-demo">
-                  <el-submenu :index="'' + index+1">
-                    <template slot="title" >
-                      <i class="elt-icon elt-icon-01"></i>
-                      {{item.name}}
-                    </template>
-                    <el-submenu :index="'1-'+ index+1" v-for="(val, index) in courseSections" :key="index">
-                      <template slot="title">
-                        <i class="elt-icon elt-icon-02"></i>
-                        <span>{{val.section_name}}</span>
-                      </template>
-                      <el-menu-item :index="'1-1'+ index+1" v-for="(v, index) in val.videos" :key="index"
-                      @click="playVideo(val, v.video_id)">
-                        <i class="elt-icon elt-icon-play"></i>
-                        <span>{{v.video_name}}</span>
-                        <em class="free-pay">免费试听</em>
-                      </el-menu-item>
-                    </el-submenu>
-                  </el-submenu>
-                </el-menu>
-              </el-col>
-            </el-row>
+            <course-list :course_id="this.$route.query.course_id"></course-list>
           </div>
         </div>
       </div>
@@ -88,19 +63,21 @@
             <img class="tc-icon" src="@/assets/images/course/teacher-icon.png" alt="">
             <span>老师姓名</span>
           </div>
-          <div class="cl-teacher">
-            <img src="@/assets/images/course/like.png" alt="">
-            <p>带困</p>
-            <span>书山有路勤为径</span>
-          </div>
-          <div class="cl-t-detail">
-            <p class="cl-t-tit">讲师简介：</p>
-            <p class="cl-t-info">优财特约实战讲师；<br />
-              资深财务管理顾问高级财务咨询顾问；<br />
-              市金融与财务协会理事；<br />
-              10年大型企业财务经理工作经验；<br />
-              多年高级讲师及咨询师；</p>
-          </div>
+          <swiper :options="swiperOptionRec">
+            <swiper-slide v-for="(item, index) in teacehr" :key="index">
+              <div class="cl-teacher">
+                <img :src="item.pictrue" alt="">
+                <p>{{item.teacher_name}}</p>
+                <span>{{item.teacher_title}}</span>
+              </div>
+              <div class="cl-t-detail">
+                <p class="cl-t-tit">讲师简介：</p>
+                <p class="cl-t-info">{{item.introduce}}</p>
+              </div>
+            </swiper-slide>
+            <div class="swiper-button-prev" slot="button-prev"></div>
+            <div class="swiper-button-next" slot="button-next"></div>
+          </swiper>
         </div>
         <div class="course-main-right course-main-student">
           <div class="like-title">
@@ -115,76 +92,58 @@
   </div>
 </template>
 <script>
-import { courseIntroduction, secvCatalog, courseCatalog } from '@/api/class'
+import 'swiper/dist/css/swiper.css'
+import { courseIntroduction } from '@/api/class'
+import courseList from '@/components/class/courseList.vue'
 import likeList from '@/components/likeList.vue'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
   data () {
     return {
       isW: 278,
       isChoose: 'kcjj',
-      courseSectionsShow: false,
       isntroduction: {}, // 课程简介
-      courseCatalogInfo: [], // 课程大纲（目录）
-      courseSections: [] // 课程大纲（章节 video）
-
+      teacehr: [], // 教师信息
+      swiperOptionRec: {
+        autoplay: {
+          delay: 3000
+        },
+        // paginationClickable: true,
+        // touchMoveStopPropagation: false,
+        // autoplayDisableOnInteraction: false,
+        // loop: true,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
+        }
+      }
     }
   },
   components: {
-    likeList
+    likeList,
+    courseList,
+    swiper,
+    swiperSlide
   },
   computed: {
-
   },
   mounted () {
     this.getCourseIntroduction() // 课程简介
-    this.getCourseCatalog() // 课程大纲（目录）
-    this.getSecvCatalog()
   },
   methods: {
     // 课程简介
     getCourseIntroduction () {
       courseIntroduction({
-        package_id: 2
-      }).then(data => {
-        const res = data.data
-        this.isntroduction = res.data
-      })
-    },
-    // 课程大纲（目录）
-    getCourseCatalog () {
-      courseCatalog({
         package_id: this.$route.query.course_id
       }).then(data => {
         const res = data.data
-        this.courseCatalogInfo = res.data
-      })
-    },
-    // 课程大纲(章节 video)
-    getSecvCatalog (courseId, index) {
-      // console.log(courseId)
-      // this.courseSectionsShow = index
-      secvCatalog({
-        course_id: 1
-      }).then(data => {
-        const res = data.data
-        this.courseSections = res.data
+        this.isntroduction = res.data
+        this.teacehr = res.data.teacehr
       })
     },
     // tab切换 (课程简介 课程大纲)
     tabChoose (type) {
       this.isChoose = type
-    },
-    // 跳转到播放页面
-    playVideo (val, videoId) {
-      this.$router.push({ path: '/classVideo',
-        query: {
-          video_id: videoId,
-          section_id: val.section_id,
-          course_id: val.course_id,
-          package_id: this.isntroduction.id,
-          is_zheng: this.isntroduction.is_zheng
-        }
-      })
     }
   }
 }
@@ -192,27 +151,6 @@ export default {
 
 <style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../assets/scss/app";
-  .el-col-24:last-child{
-    .el-menu{
-      border: 0;
-    }
-  }
-  .el-menu{
-    border-bottom: 1px solid #EFEFEF;
-  }
-  .el-menu .el-submenu {
-    border-bottom: 1px solid #EFEFEF;
-    &:last-child{
-      border: 0;
-    }
-  }
-  .el-submenu .el-menu-item{
-    // background: #FAFAFA;
-  }
-  .free-pay{
-    float: right;
-    color: $col666;
-  }
   .nav-title{
     color: $col999;
     @include lh(44, 44);
@@ -481,23 +419,6 @@ export default {
       -webkit-box-orient: vertical;
       overflow: hidden;
       -webkit-line-clamp: 1;
-      // &.col{
-      //   color: $col999;
-      //   font-size: 12px;
-      //   margin-top: 7px;
-      //   margin-bottom: 8px;
-      // }
-      // &.sl-txt{
-      //   display: -webkit-box;
-      //   -webkit-box-orient: vertical;
-      //   overflow: hidden;
-      //   -webkit-line-clamp: 1;
-      //   max-height: 20px;
-      // }
-      // &.price{
-      //   color: #FF9B3A;
-      //   font-size: 16px;
-      // }
       &.student-instr{
         max-height: 60px;
         -webkit-line-clamp: 3;
@@ -536,48 +457,9 @@ export default {
       color: $col999;
     }
   }
-  .el-menu{
-    .el-submenu{
-      border-bottom: 1px solid $borderColor;
-      // .el-menu-item{
-      //   padding-left: 20px!important;
-      // }
-    }
-  }
-  .el-menu-title, .el-submenu__title{
-    line-height: 50px;
-    padding-left: 20px;
-    border-bottom: 1px solid $borderColor;
-    &.fsbold{
-      font-size: 16px;
-      font-weight: bold;
-    }
-  }
-  .elt-icon{
-    display: inline-block;
-    vertical-align: middle;
-    margin-top: -3px;
-    margin-right: 11px;
-    @extend %bg-img;
+  .swiper-button-prev, .swiper-button-next{
+    width: 17px;
+    height: 28px;
     background-size: contain;
-    &.elt-icon-01{
-      @include wh(17, 16);
-      margin-left: 2.5px;
-      background-image: url('../../assets/images/course/neau-1.png');
-    }
-    &.elt-icon-02{
-      @include wh(22, 22);
-      background-image: url('../../assets/images/course/neau-2.png');
-    }
-    &.elt-icon-play, &.elt-icon-stop{
-      @include wh(8, 12);
-      margin-left: 7px;
-      background-image: url('../../assets/images/course/play-icon.png');
-    }
-    &.elt-icon-stop{
-      @include wh(10, 12);
-      margin-left: 6px;
-      background-image: url('../../assets/images/course/stop-icon.png');
-    }
   }
 </style>

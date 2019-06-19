@@ -33,7 +33,7 @@ export default {
     },
     height: {
       type: String,
-      default: '320px'
+      default: '100%'
     },
     controlBarVisibility: {
       type: String,
@@ -52,10 +52,6 @@ export default {
       default: ''
     },
     playauth: {
-      type: String,
-      default: ''
-    },
-    source: {
       type: String,
       default: ''
     },
@@ -89,6 +85,10 @@ export default {
     },
     autoPlayDelayDisplayText: {
       type: String
+    },
+    endPlay: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -98,7 +98,7 @@ export default {
       instance: null
     }
   },
-  created () {
+  mounted () {
     if (window.Aliplayer !== undefined) {
       // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
       this.scriptTagStatus = 2
@@ -108,7 +108,7 @@ export default {
       this.insertScriptTag()
     }
   },
-  mounted () {
+  created () {
     if (window.Aliplayer !== undefined) {
       // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
       this.scriptTagStatus = 2
@@ -162,7 +162,6 @@ export default {
             useFlashPrism: _this.useFlashPrism,
             vid: _this.vid,
             playauth: _this.playauth,
-            source: _this.source,
             cover: _this.cover,
             x5_video_position: _this.x5_video_position,
             x5_type: _this.x5_type,
@@ -212,6 +211,7 @@ export default {
        * 暂停视频
        */
     pause: function () {
+      console.log('暂停')
       this.instance.pause()
     },
     /**
@@ -287,6 +287,58 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
   @import url('https://g.alicdn.com/de/prismplayer/2.8.2/skins/default/aliplayer-min.css');
+  .prism-big-play-btn{
+    /* display: none!important; */
+  }
+  .prism-player .prism-progress .prism-progress-played{
+    background: #F99111!important;
+  }
+  .prism-player .prism-progress:hover{
+  }
+  .prism-progress-cursor{
+    background: none!important;
+    display: none!important;
+  }
+  .prism-progress-cursor img, .cursor-hover img{
+    display: none!important;
+  }
+  /* .prism-player .prism-progress .prism-progress-cursor img{
+    display: none!important;
+  } */
+  .prism-player .prism-play-btn{
+    /* background: #f00; */
+  }
+  .prism-player .prism-progress{
+    background: #000000!important;
+  }
+  .prism-player .prism-progress .prism-progress-loaded{
+    background: #4A4A4A!important;
+  }
+  .prism-player .prism-play-btn.playing:hover{
+    /* background: #ffffff; */
+  }
+  .prism-player .prism-play-btn:hover{
+    background: #f0f;
+  }
+  .prism-player .prism-big-play-btn{
+    border: 2px solid #F99111;
+    border-radius: 100%;
+    z-index: 12;
+  }
+  .prism-player .prism-big-play-btn:hover{
+    border: 2px solid #F99111;
+    background-size: contain;
+    background: url('../../assets/images/video/play-btn-icon.png') no-repeat;
+  }
+  .outter{
+    /* display: none!important; */
+  }
+  .prism-player .prism-big-play-btn .outter{
+    border: 0;
+    background: none;
+  }
+  .big-playbtn-hover-animation{
+  }
 </style>

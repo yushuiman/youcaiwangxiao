@@ -9,67 +9,62 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
+      meta: { showHeader: true }
     },
     {
       path: '/class',
       name: 'class',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ '@/views/Class/Class.vue')
+      component: () => import(/* webpackChunkName: "about" */ '@/views/Class/Class.vue'),
+      meta: { showHeader: true }
     },
     {
       path: '/classDetail',
       name: 'classDetail',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ '@/views/Class/ClassDetail.vue')
+      component: () => import(/* webpackChunkName: "about" */ '@/views/Class/ClassDetail.vue'),
+      meta: { showHeader: true }
     },
     {
       path: '/classVideo',
       name: 'classVideo',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ '@/views/Video/Video.vue')
+      component: () => import('@/views/Video/Video.vue'),
+      meta: { showHeader: false }
     },
     {
       path: '/question',
       name: 'question',
-      component: () => import(/* webpackChunkName: "about" */ '@/views/Question/Question' +
-      '.vue')
+      component: () => import('@/views/Question/Question.vue'),
+      meta: { showHeader: true }
     },
     {
       path: '/answer',
       name: 'answer',
-      component: () => import(/* webpackChunkName: "about" */ '@/views/Answer/Answer' +
-      '.vue')
+      component: () => import('@/views/Answer/Answer.vue'),
+      meta: { showHeader: true }
     },
     {
       path: '/zhibo',
       name: 'zhibo',
-      component: () => import(/* webpackChunkName: "about" */ '@/views/Zhibo/Zhibo' +
-      '.vue')
+      component: () => import('@/views/Zhibo/Zhibo.vue'),
+      meta: { showHeader: true }
     },
     {
       path: '/zixun',
       name: 'zixun',
-      component: () => import(/* webpackChunkName: "about" */ '@/views/Zixun/Zixun' +
-      '.vue')
+      component: () => import('@/views/Zixun/Zixun.vue'),
+      meta: { showHeader: true }
     },
     {
       path: '/app',
       name: 'app',
-      component: () => import(/* webpackChunkName: "about" */ '@/views/App/App' +
-      '.vue')
+      component: () => import('@/views/App/App.vue'),
+      meta: { showHeader: true }
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import(/* webpackChunkName: "about" */ '@/views/Login/Login' +
-      '.vue')
+      component: () => import('@/views/Login/Login.vue'),
+      meta: { showHeader: true }
     }
   ]
 })

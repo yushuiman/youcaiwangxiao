@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <Header v-if="headerFooterShow" />
+      <Header />
       <RightSlider/>
     </div>
     <router-view/>
@@ -9,7 +9,6 @@
   </div>
 </template>
 <script>
-// @ is an alias to /src
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import RightSlider from '@/components/RightSlider'

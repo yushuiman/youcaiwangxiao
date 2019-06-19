@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header>
+    <header v-show="$route.meta.showHeader">
       <div class="head-wrap">
         <div class="head-w">
           <div class="head-list fl">

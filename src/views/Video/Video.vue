@@ -19,129 +19,60 @@
         </ul>
       </div>
       <div class="video-info-c fl">
-        <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth" :height="height"></ali-player>
+        <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"
+          :playStatus="playStatus" @getVideoPlayback1="getVideoPlayback1"
+        ></ali-player>
       </div>
-      <div class="video-info-r fr">
+      <div class="video-info-r video-info-zjml fr" v-if="showBox == '课程<br />切换'">
         <div class="close-box" @click="closeModel()">
-          <i class="close-icon">关闭</i>
+          <i class="close-icon"></i>
         </div>
         <h1 class="vc-title">章节目录</h1>
-        <el-row class="tac">
-          <el-col :span="24">
-            <el-menu
-              default-active="2"
-              class="el-menu-vertical-demo"
-              background-color="#1D1F21"
-              text-color="#E6E6E6"
-              active-text-color="#F99111">
-              <el-submenu index="1">
-                <template slot="title">
-                  <span>导航一</span>
-                </template>
-                <el-menu-item index="1-1">
-                  <i class="el-video-icon"></i>
-                  <span>P1期中测试-2018年11月-艾瑞</span>
-                  <i class="el-dot-icon"></i>
-                </el-menu-item>
-                <el-menu-item index="1-2">
-                  <i class="el-video-icon"></i>
-                  <span>2019年4月考期P1成本管理1</span>
-                  <i class="el-dot-icon el-dot-now"></i>
-                </el-menu-item>
-                <el-menu-item index="1-3">
-                  <i class="el-video-icon play-icon"></i>
-                  <span>2019年4月考期 规划、预算编制与预测</span>
-                  <i class="el-dot-icon el-dot-see"></i>
-                </el-menu-item>
-              </el-submenu>
-              <el-submenu index="2">
-                <template slot="title">
-                  <span>导航二</span>
-                </template>
-                <el-menu-item index="2-1">
-                  <i class="el-video-icon"></i>
-                  <span>P1期中测试-2018年11月-艾瑞</span>
-                  <i class="el-dot-icon"></i>
-                </el-menu-item>
-                <el-menu-item index="2-2">
-                  <i class="el-video-icon"></i>
-                  <span>2019年4月考期P1成本管理1</span>
-                  <i class="el-dot-icon el-dot-now"></i>
-                </el-menu-item>
-                <el-menu-item index="2-3">
-                  <i class="el-video-icon play-icon"></i>
-                  <span>2019年4月考期 规划、预算编制与预测</span>
-                  <i class="el-dot-icon el-dot-see"></i>
-                </el-menu-item>
-              </el-submenu>
-            </el-menu>
-          </el-col>
-        </el-row>
+        <course-list :package_id="this.$route.query.package_id"></course-list>
       </div>
       <!-- 课程 答疑 讲义 -->
       <div class="three-main">
-        <div class="video-course-wrap vid-kcqh" v-if="showBox == '课程<br />切换'">
-          <h1 class="vc-title">套餐内课程</h1>
-          <div class="vc-list" v-for="(item, index) in courseList" :key="index">
-            <img :src="item.pc_img" alt="">
-            <div class="c-info">
-              <h2>{{item.name}}</h2>
-              <p>讲师: {{item.teacher_name}}</p>
-            </div>
-          </div>
-        </div>
+        <!-- <course-list v-if="showBox == '课程<br />切换'"></course-list> -->
         <div class="video-course-wrap vid-dy" v-if="showBox == '答疑'">
           <!--提问-->
           <div class="ask" v-if="playCourseInfo.is_zheng == 1">
             <div class="close-box" @click="closeModel()">
-              <i class="close-icon">关闭</i>
+              <i class="close-icon"></i>
             </div>
             <h1 class="vc-title">提问题</h1>
-            <textarea autofocus v-model="textdata" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"
-              v-on:focus="stopPlay()" v-on:blur="goPlay() "></textarea>
+            <textarea autofocus v-model="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"
+              v-on:focus="stopPlay()" v-on:blur="goPlay()"></textarea>
             <div class="submitAnswer">
-              <!-- <i class="upload"></i> -->
-              <input type="file" @change="selectImgs()" multiple accept="image/*" ref="file">
+              <i class="uploadImg"></i>
+              <!-- <input type="file" @change="selectImgs()" multiple accept="image/*" ref="file"> -->
               <button class="submit" @click="answerSubmit()">提交</button>
             </div>
           </div>
           <div class="close-box" @click="closeModel()" v-else>
-            <i class="close-icon">关闭</i>
+            <i class="close-icon"></i>
           </div>
           <!--其他问题-->
           <div class="others">
             <h1 class="vc-title">本节其他问题</h1>
             <ul class="othq-list">
-              <li class="othq-item">
+              <li class="othq-item" v-for="(item, index) in answerList" :key="index">
                 <div class="othq-item-t">
-                  <img src="" alt="" class="head-logo">
+                  <img :src="item.head" alt="" class="head-logo">
                   <div class="othq-info">
-                    <h3>都开始</h3>
-                    <p>14分钟前</p>
+                    <h3>{{item.username}}</h3>
+                    <p>{{item.create_time}}</p>
                   </div>
-                  <span class="othq-huifu">老师已回复</span>
+                  <span class="othq-huifu">{{item.reply_name}}</span>
                 </div>
-                <p class="othq-txt" :class="!isopen ? 'sl' : ''">的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货</p>
-                <div class="open-txt" @click="isopen=!isopen">{{isopen ? '收起' : '展开'}}</div>
-              </li>
-              <li class="othq-item">
-                <div class="othq-item-t">
-                  <img src="" alt="" class="head-logo">
-                  <div class="othq-info">
-                    <h3>都开始</h3>
-                    <p>14分钟前</p>
-                  </div>
-                  <span class="othq-huifu">老师已回复</span>
-                </div>
-                <p class="othq-txt" :class="!isopen ? 'sl' : ''">递谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货</p>
-                <div class="open-txt" @click="isopen=!isopen">{{isopen ? '收起' : '展开'}}</div>
+                <p class="othq-txt" :class="!openIdx ? 'sl' : ''">的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货</p>
+                <div class="open-txt" @click="openShow(index)">{{openIdx ? '收起' : '展开'}}</div>
               </li>
             </ul>
           </div>
         </div>
         <div class="video-course-wrap vid-jy" v-if="showBox == '讲义'">
           <div class="close-box" @click="closeModel()">
-            <i class="close-icon">关闭</i>
+            <i class="close-icon"></i>
           </div>
           <h1 class="vc-title">讲义</h1>
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="750px"></iframe>
@@ -150,43 +81,25 @@
     </div>
   </div>
 </template>
-<script src="https://g.alicdn.com/de/prismplayer/2.8.2/aliplayer-min.js"></script>
 <script>
-import aliPlayer from '@/components/aliPlayer'
+import aliPlayer from '@/components/video/aliPlayer'
+import courseList from '@/components/video/courseList'
 import { videoPlayback, answerList, answerSub, videoCredentials, answerDetails } from '@/api/class'
 export default {
   data () {
     return {
       selMenu: 3,
-      showBox: '答疑',
-      courseList: [
-        {
-          pc_img: '23232323',
-          name: '史蒂夫可视电话反馈收到回复',
-          teacher_name: '1wefwefefs'
-        },
-        {
-          pc_img: '23232323',
-          name: '说的话说的三闾大夫',
-          teacher_name: '2wefwefefs'
-        },
-        {
-          pc_img: '23232323',
-          name: '23ewe3',
-          teacher_name: '3wefwefefs'
-        }
-      ],
+      showBox: '课程<br />切换',
       vinfo: ['课程<br />切换', '答疑', '讲义'],
-      textdata: '',
+      quiz: '',
       isopen: false,
-      VideoId: '',  // 视频VideoId
-      height: '600px',
+      VideoId: '', // 视频VideoId
       videoCredentials: {
         handouts: '', // 讲义
         playauth: '', // 获取视频凭证
-        collect:'',
-        watch_time:'',
-        Title:''
+        collect: '',
+        watch_time: '',
+        Title: ''
       },
       playCourseInfo: {
         video_id: this.$route.query.video_id,
@@ -194,21 +107,29 @@ export default {
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
         is_zheng: this.$route.query.is_zheng
-      }
+      },
+      answerList: [],
+      openIdx: '',
+      playStatus: true // 停止播放
     }
   },
   components: {
-    aliPlayer
+    aliPlayer,
+    courseList
   },
   computed: {
 
   },
   mounted () {
-    this.getVideoPlayback()
-    // this.getAnswerDetails()
-    this.$emit('header', false)
+    this.getVideoPlayback(this.$route.query.video_id)
   },
   methods: {
+    openShow (index) {
+      this.openIdx = index
+    },
+    getVideoPlayback1 () {
+      console.log('1234567u8i9o0')
+    },
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
       this.selMenu = index
@@ -221,9 +142,9 @@ export default {
       this.showBox = ''
     },
     // 获取视频凭证
-    getVideoPlayback () {
+    getVideoPlayback (id) {
       videoPlayback({
-        video_id: this.$route.query.video_id
+        video_id: id
       }).then(data => {
         const res = data.data
         this.VideoId = res.data.VideoId
@@ -232,27 +153,24 @@ export default {
         videoCredentials(dataForm).then(data => {
           let res = data.data
           this.videoCredentials = res.data
-          // this.playauth = res.data.playAuth
-          // this.handouts = res.data.handouts
         })
       })
     },
     // 问题提交
     answerSubmit () {
-      let data = Object.assign({ quiz: 4, video_time: 5, quiz_image: 'dfsdfsdfsd' }, this.playCourseInfo)
-      answerSub({
-        data
-      }).then(data => {
-
+      let data = Object.assign({ quiz: this.quiz, video_time: 5, quiz_image: 'dfsdfsdfsd' }, this.playCourseInfo)
+      answerSub(data).then(data => {
+        this.getAnswerList()
       })
     },
     // 问题列表
     getAnswerList () {
       answerList(this.playCourseInfo).then(data => {
-        // console.log(data)
+        const res = data.data
+        this.answerList = res.data
       })
     },
-    // answerDetails
+    // 问题详情
     getAnswerDetails () {
       answerDetails({
         answer_id: '2'
@@ -262,10 +180,12 @@ export default {
     },
     // 答疑
     stopPlay () {
-      console.log('停止')
+      this.playStatus = false
+      console.log('this.playStatus:' + this.playStatus)
     },
     goPlay () {
-      console.log('继续')
+      this.playStatus = true
+      console.log('this.playStatus:' + this.playStatus)
     }
   }
 }
@@ -319,7 +239,7 @@ export default {
     }
     .video-info-r{
       width: 495px;
-      height: 890px;
+      height: 869px;
     }
   }
   .vinfo-ul{
@@ -400,7 +320,7 @@ export default {
     position: absolute;
     top: 20px;
     background: #26292C;
-    z-index: 9;
+    z-index: 12;
     padding: 0 20px;
     box-sizing: border-box;
     &.vid-kcqh{
@@ -410,7 +330,7 @@ export default {
     }
     &.vid-jy, &.vid-dy{
       width: 495px;
-      height: 890px;
+      height: 869px;
       top: 0;
       right: 0;
       background: #ffffff;
@@ -429,6 +349,10 @@ export default {
     .others{
       padding: 0 20px;
     }
+  }
+  .othq-list{
+    height: 480px;
+    overflow-y: scroll;
   }
   .vc-list{
     padding-bottom: 30px;
@@ -455,10 +379,11 @@ export default {
   .close-box{
     text-align: right;
     padding-top: 25px;
-    padding-right: 23px;
     .close-icon{
-      @include wh(12, 12);
-      background: #f00;
+      @include bg_img(27, 28, '../../assets/images/video/close-icon.png');
+    }
+    .video-info-zjml &{
+      padding-right: 20px;
     }
   }
   .texta {
@@ -475,9 +400,12 @@ export default {
   .submitAnswer{
     padding: 20px 0;
     text-align: right;
-    // upload{
-    //
-    // }
+    .uploadImg{
+      @include bg_img(23, 18, '../../assets/images/video/upload-img-icon.png');
+      margin-top: -3px;
+      margin-right: 14px;
+      vertical-align: middle;
+    }
     .ivu-upload-input{
       width: 100px!important;
       height: 40px!important;
