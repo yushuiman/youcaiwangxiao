@@ -19,56 +19,20 @@
         </ul>
       </div>
       <div class="video-info-c fl">
-        <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"
-          :playStatus="playStatus" @getVideoPlayback1="getVideoPlayback1"
-        ></ali-player>
+        <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
       </div>
-      <div class="video-info-r video-info-zjml fr" v-if="showBox == '课程<br />切换'">
+      <div class="video-info-r video-info-zjml fr">
         <div class="close-box" @click="closeModel()">
           <i class="close-icon"></i>
         </div>
         <h1 class="vc-title">章节目录</h1>
-        <course-list :package_id="this.$route.query.package_id"></course-list>
+        <course-list :showBox="showBox" :package_id="this.$route.query.package_id" :is_zheng="playCourseInfo.is_zheng" @getVideoPlayback="getVideoPlayback()"></course-list>
       </div>
       <!-- 课程 答疑 讲义 -->
       <div class="three-main">
         <!-- <course-list v-if="showBox == '课程<br />切换'"></course-list> -->
         <div class="video-course-wrap vid-dy" v-if="showBox == '答疑'">
-          <!--提问-->
-          <div class="ask" v-if="playCourseInfo.is_zheng == 1">
-            <div class="close-box" @click="closeModel()">
-              <i class="close-icon"></i>
-            </div>
-            <h1 class="vc-title">提问题</h1>
-            <textarea autofocus v-model="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"
-              v-on:focus="stopPlay()" v-on:blur="goPlay()"></textarea>
-            <div class="submitAnswer">
-              <i class="uploadImg"></i>
-              <!-- <input type="file" @change="selectImgs()" multiple accept="image/*" ref="file"> -->
-              <button class="submit" @click="answerSubmit()">提交</button>
-            </div>
-          </div>
-          <div class="close-box" @click="closeModel()" v-else>
-            <i class="close-icon"></i>
-          </div>
-          <!--其他问题-->
-          <div class="others">
-            <h1 class="vc-title">本节其他问题</h1>
-            <ul class="othq-list">
-              <li class="othq-item" v-for="(item, index) in answerList" :key="index">
-                <div class="othq-item-t">
-                  <img :src="item.head" alt="" class="head-logo">
-                  <div class="othq-info">
-                    <h3>{{item.username}}</h3>
-                    <p>{{item.create_time}}</p>
-                  </div>
-                  <span class="othq-huifu">{{item.reply_name}}</span>
-                </div>
-                <p class="othq-txt" :class="!openIdx ? 'sl' : ''">的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货的白谁的粉丝沈德符的返回快递发货</p>
-                <div class="open-txt" @click="openShow(index)">{{openIdx ? '收起' : '展开'}}</div>
-              </li>
-            </ul>
-          </div>
+          <answer :playCourseInfo="playCourseInfo"></answer>
         </div>
         <div class="video-course-wrap vid-jy" v-if="showBox == '讲义'">
           <div class="close-box" @click="closeModel()">
@@ -84,15 +48,15 @@
 <script>
 import aliPlayer from '@/components/video/aliPlayer'
 import courseList from '@/components/video/courseList'
-import { videoPlayback, answerList, answerSub, videoCredentials, answerDetails } from '@/api/class'
+import answer from '@/components/video/answer'
+import uploadImg from '@/components/video/uploadImg'
+import { videoPlayback, videoCredentials } from '@/api/class'
 export default {
   data () {
     return {
       selMenu: 3,
-      showBox: '课程<br />切换',
+      showBox: '答疑',
       vinfo: ['课程<br />切换', '答疑', '讲义'],
-      quiz: '',
-      isopen: false,
       VideoId: '', // 视频VideoId
       videoCredentials: {
         handouts: '', // 讲义
@@ -108,35 +72,27 @@ export default {
         package_id: this.$route.query.package_id,
         is_zheng: this.$route.query.is_zheng
       },
-      answerList: [],
-      openIdx: '',
       playStatus: true // 停止播放
     }
   },
   components: {
     aliPlayer,
-    courseList
+    courseList,
+    answer,
+    uploadImg
   },
   computed: {
 
   },
+
   mounted () {
     this.getVideoPlayback(this.$route.query.video_id)
   },
   methods: {
-    openShow (index) {
-      this.openIdx = index
-    },
-    getVideoPlayback1 () {
-      console.log('1234567u8i9o0')
-    },
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
       this.selMenu = index
       this.showBox = val
-      if (val === '答疑') {
-        this.getAnswerList()
-      }
     },
     closeModel () {
       this.showBox = ''
@@ -155,38 +111,8 @@ export default {
           this.videoCredentials = res.data
         })
       })
-    },
-    // 问题提交
-    answerSubmit () {
-      let data = Object.assign({ quiz: this.quiz, video_time: 5, quiz_image: 'dfsdfsdfsd' }, this.playCourseInfo)
-      answerSub(data).then(data => {
-        this.getAnswerList()
-      })
-    },
-    // 问题列表
-    getAnswerList () {
-      answerList(this.playCourseInfo).then(data => {
-        const res = data.data
-        this.answerList = res.data
-      })
-    },
-    // 问题详情
-    getAnswerDetails () {
-      answerDetails({
-        answer_id: '2'
-      }).then(data => {
-        // console.log(data)
-      })
-    },
-    // 答疑
-    stopPlay () {
-      this.playStatus = false
-      console.log('this.playStatus:' + this.playStatus)
-    },
-    goPlay () {
-      this.playStatus = true
-      console.log('this.playStatus:' + this.playStatus)
     }
+
   }
 }
 </script>
@@ -248,7 +174,7 @@ export default {
   .vinfo-item{
     padding: 30px 0;
     text-align: center;
-    &:hover,&.curren{
+    &:hover, &.curren{
       background: #26292C;
     }
     .txt{
@@ -277,9 +203,6 @@ export default {
     .video-info-r &{
       color: #E6E6E6;
       padding-left: 20px;
-    }
-    .vid-kcqh &{
-      color: #E6E6E6;
     }
   }
   .el-video-icon{
@@ -340,20 +263,8 @@ export default {
       padding: 0;
       background: #F8FAFC;
     }
-    .ask {
-      padding: 0 20px;
-      margin-bottom: 12px;
-      background: #ffffff;
-      box-shadow: 0px 15px 10px -15px rgba(0,0,0,0.2) inset;
-    }
-    .others{
-      padding: 0 20px;
-    }
   }
-  .othq-list{
-    height: 480px;
-    overflow-y: scroll;
-  }
+
   .vc-list{
     padding-bottom: 30px;
     padding-left: 30px;
@@ -384,94 +295,6 @@ export default {
     }
     .video-info-zjml &{
       padding-right: 20px;
-    }
-  }
-  .texta {
-    resize: none;
-    width: 455px;
-    height: 114px;
-    color: rgba(199, 199, 199, 1);
-    padding: 7px 12px;
-    border: 1px solid rgba(102, 102, 102, 1);
-    border-radius: 8px;
-    color: $col333;
-    box-sizing: border-box;
-  }
-  .submitAnswer{
-    padding: 20px 0;
-    text-align: right;
-    .uploadImg{
-      @include bg_img(23, 18, '../../assets/images/video/upload-img-icon.png');
-      margin-top: -3px;
-      margin-right: 14px;
-      vertical-align: middle;
-    }
-    .ivu-upload-input{
-      width: 100px!important;
-      height: 40px!important;
-    }
-    .submit {
-      width: 77px;
-      height: 30px;
-      line-height: 30px;
-      background: rgba(249, 145, 17, 1);
-      border-radius: 20px;
-      font-size: 16px;
-      color: $colfff;
-    }
-  }
-
-  .upload {
-    display: inline-block;
-    width: 22px;
-    height: 18px;
-    background-color: red;
-    position: absolute;
-    bottom: 26px;
-    left: 361px;
-  }
-
-  .othq-item{
-    padding: 15px 20px;
-    margin-bottom: 10px;
-    background: $colfff;
-    box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.2);
-    border-radius: 8px;
-    .othq-txt{
-      line-height: 20px;
-      color: #4A4A4A;
-      &.sl{
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        -webkit-line-clamp: 2;
-      }
-    }
-    .open-txt{
-      font-size: 13px;
-      color: $blueColor;
-      text-align: right;
-      margin-top: 5px;
-    }
-  }
-  .othq-item-t{
-    padding-bottom: 5px;
-    display: flex;
-    align-items: center;
-    line-height: 26px;
-    .head-logo{
-      @include wh(40, 40);
-      border-radius: 100%;
-      margin-right: 10px;
-    }
-    p{
-      font-size: 12px;
-      color: $col999;
-    }
-    .othq-huifu{
-      flex: 1;
-      text-align: right;
-      color: #F99111;
     }
   }
 </style>

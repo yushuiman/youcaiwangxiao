@@ -261,3 +261,327 @@ a[disabled] {
  color: #ccc;
  cursor: not-allowed
 }
+
+
+.uploadSty {
+  width: 23px;
+  height: 18px;
+  position: absolute;
+  right: 90px;
+  top: 25px;
+}
+.ivu-upload input[type=file] {
+    display: none;
+}
+.icon-upload{
+  width: 23px;
+  height: 18px;
+  background: url('../../assets/images/video/upload-img-icon.png') no-repeat center;
+  background-size: contain;
+}
+.ivu-modal {
+	width: auto;
+	margin: 0 auto;
+	position: relative;
+	outline: 0;
+	top: 100px
+}
+
+.ivu-modal-hidden {
+	display: none!important
+}
+
+.ivu-modal-wrap {
+	position: fixed;
+	overflow: auto;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1000;
+	-webkit-overflow-scrolling: touch;
+	outline: 0
+}
+
+.ivu-modal-wrap * {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: transparent
+}
+
+.ivu-modal-mask {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(55,55,55,.6);
+	height: 100%;
+	z-index: 1000
+}
+
+.ivu-modal-mask-hidden {
+	display: none
+}
+.course_img .demo-upload-list{
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  line-height: 80px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+  box-shadow: 0 1px 1px rgba(0,0,0,.2);
+  margin-right: 10px;
+}
+.course_img .demo-upload-list img{
+  width: 100%;
+}
+.course_img .demo-upload-list-cover{
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,.6);
+}
+.course_img .demo-upload-list:hover .demo-upload-list-cover{
+  display: block;
+}
+.course_img .demo-upload-list-cover i {
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  margin: 0 2px;
+}
+.ivu-icon-ios-eye-off-outline:before {
+	content: "\f1ba"
+}
+
+.ivu-icon-ios-eye-off:before {
+	content: "\f1bb"
+}
+
+.ivu-icon-ios-eye-outline:before {
+	content: "\f1bc"
+}
+
+.ivu-icon-ios-eye:before {
+	content: "\f1bd"
+}
+.ivu-icon-ios-trash-outline:before {
+	content: "\f2e1"
+}
+
+.ivu-icon-ios-trash:before {
+	content: "\f2e2"
+}
+.ivu-icon {
+    display: inline-block;
+    font-family: Ionicons;
+    speak: none;
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    text-rendering: auto;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    vertical-align: middle;
+}
+.ivu-modal-mask {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(55,55,55,.6);
+    height: 100%;
+    z-index: 1000;
+}
+.ivu-modal{
+  width: 520px;
+}
+.ivu-modal-content {
+    position: relative;
+    background-color: #fff;
+    border: 0;
+    border-radius: 6px;
+    background-clip: padding-box;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+.ivu-modal-close {
+    z-index: 1;
+    font-size: 12px;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    overflow: hidden;
+    cursor: pointer;
+}
+.ivu-modal-close .ivu-icon-ios-close {
+    font-size: 31px;
+    color: #999;
+    transition: color .2s ease;
+    position: relative;
+    top: 1px;
+}
+.ivu-icon-ios-close:before {
+    content: "\f178";
+}
+.ivu-modal-header {
+    border-bottom: 1px solid #e8eaec;
+    padding: 14px 16px;
+    line-height: 1;
+}
+.ivu-modal-header-inner {
+    display: inline-block;
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    font-size: 14px;
+    color: #17233d;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ivu-modal-body {
+    padding: 16px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+.ivu-modal-body img{
+  width: 100%;
+}
+.ivu-modal-footer {
+    display: none;
+}
+
+.ivu-icon-ios-alert-outline:before {
+	content: "\f107"
+}
+
+.ivu-icon-ios-alert:before {
+	content: "\f108"
+}
+.ivu-notice {
+	width: 335px;
+	margin-right: 24px;
+	position: fixed;
+	z-index: 1010
+}
+
+.ivu-notice-with-desc.ivu-notice-with-icon .ivu-notice-title {
+	margin-left: 51px
+}
+
+.ivu-notice-notice {
+	margin-bottom: 10px;
+	padding: 16px;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 1px 6px rgba(0,0,0,.2);
+	box-shadow: 0 1px 6px rgba(0,0,0,.2);
+	background: #fff;
+	line-height: 1;
+	position: relative;
+	overflow: hidden
+}
+
+.ivu-notice-notice-close {
+	position: absolute;
+	right: 8px;
+	top: 15px;
+	color: #999;
+	outline: 0
+}
+
+.ivu-notice-notice-close i {
+	font-size: 22px;
+	color: #999;
+	-webkit-transition: color .12s ease;
+	transition: color .12s ease;
+	position: relative;
+	top: -3px
+}
+
+.ivu-notice-notice-close i:hover {
+	color: #444
+}
+
+.ivu-notice-notice-content-with-render .ivu-notice-desc {
+	display: none
+}
+
+.ivu-notice-notice-with-desc .ivu-notice-notice-close {
+	top: 11px
+}
+
+.ivu-notice-content-with-render-notitle {
+	margin-left: 26px
+}
+
+.ivu-notice-title {
+	font-size: 14px;
+	line-height: 17px;
+	color: #17233d;
+	padding-right: 10px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap
+}
+
+.ivu-notice-with-desc .ivu-notice-title {
+	font-weight: 700;
+	margin-bottom: 8px
+}
+
+.ivu-notice-desc {
+	font-size: 12px;
+	color: #515a6e;
+	text-align: justify;
+	line-height: 1.5
+}
+
+.ivu-notice-with-desc.ivu-notice-with-icon .ivu-notice-desc {
+	margin-left: 51px
+}
+
+.ivu-notice-with-icon .ivu-notice-title {
+	margin-left: 26px
+}
+
+.ivu-notice-icon {
+	position: absolute;
+	top: -2px;
+	font-size: 16px
+}
+
+.ivu-notice-icon-success {
+	color: #19be6b
+}
+
+.ivu-notice-icon-info {
+	color: #2d8cf0
+}
+
+.ivu-notice-icon-warning {
+	color: #f90
+}
+
+.ivu-notice-icon-error {
+	color: #ed4014
+}
+
+.ivu-notice-with-desc .ivu-notice-icon {
+	font-size: 36px;
+	top: -6px
+}
+
+.ivu-notice-custom-content {
+	position: relative
+}

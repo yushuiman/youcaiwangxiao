@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <div id="nav">
-      <Header />
+      <Header/>
       <RightSlider/>
     </div>
-    <router-view/>
-    <Footer v-if="header_show" />
+    <router-view v-if="isAlive"/>
+    <Footer/>
   </div>
 </template>
 <script>
@@ -15,10 +15,14 @@ import RightSlider from '@/components/RightSlider'
 
 export default {
   name: 'home',
-  data(){
-    return{
-      headerFooterShow: true, //header footer显示
-      header_show: true
+  data () {
+    return {
+      isAlive: true
+    }
+  },
+  provide () {
+    return {
+      reload: this.reload
     }
   },
   components: {
@@ -26,10 +30,8 @@ export default {
     Footer,
     RightSlider
   },
-  mounted(){
-    if(this.$route.name === 'classVideo'){
-      this.headerFooterShow = false
-    }
+  mounted () {
+
   },
   created () {
     // 在页面加载时读取localStorage里的状态信息
@@ -39,14 +41,12 @@ export default {
       sessionStorage.setItem('is_change', JSON.stringify(this.$store.state))
     })
   },
-  methods:{
-    //是否显示头部
-    header (bool) {
-      this.header_show = bool;
-    },
-    //是否显示底部
-    footer (bool) {
-      this.footer_show = bool;
+  methods: {
+    reload () {
+      this.isAlive = false
+      this.$nextTick(function () {
+        this.isAlive = true
+      })
     }
   }
 }

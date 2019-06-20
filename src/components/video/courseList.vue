@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="video-course-wrap vid-kcqh">
+    <div class="video-course-wrap vid-kcqh" v-if="showBox == '课程<br />切换'">
       <h1 class="vc-title">套餐内课程</h1>
       <div class="vc-list" v-for="(item, index) in packageList" :key="index" @click="getSecvCatalog(item)">
         <img :src="item.pc_img" alt="">
@@ -37,9 +37,14 @@
 <script>
 import { courseCatalog, secvCatalog } from '@/api/class'
 export default {
+  inject: ['reload'],
   props: {
     package_id: {
       type: String
+    },
+    showBox: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -47,30 +52,18 @@ export default {
       courseCatalogInfo: [], // 课程大纲（目录）
       courseSections: [], // 课程大纲（章节 video）
       secvCatalogArr: [],
-      packageList: [
-        {
-          pc_img: '23232323',
-          name: '史蒂夫可视电话反馈收到回复',
-          teacher_name: '1wefwefefs'
-        },
-        {
-          pc_img: '23232323',
-          name: '说的话说的三闾大夫',
-          teacher_name: '2wefwefefs'
-        },
-        {
-          pc_img: '23232323',
-          name: '23ewe3',
-          teacher_name: '3wefwefefs'
-        }
-      ],
+      packageList: [],
       curIndex: ''
     }
   },
   mounted () {
     this.getCourseCatalog() // 课程大纲（目录）
+    this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
   },
   methods: {
+    handleReload () {
+      this.reload() // 在想要刷新页面的时候调用reload方法
+    },
     // 课程大纲（目录）
     getCourseCatalog () {
       courseCatalog({
@@ -82,6 +75,12 @@ export default {
     },
     // 课程大纲(章节 video)
     getSecvCatalog (item, idx) {
+      this.$router.replace({ path: 'classVideo',
+        query: {
+          ...this.$route.query,
+          course_id: item.course_id
+        }
+      })
       for (var i = 0; i < this.secvCatalogArr.length; i++) {
         if (item.name === this.secvCatalogArr[i].type) {
           this.courseSections = this.secvCatalogArr[i].courseSections
@@ -99,20 +98,26 @@ export default {
         })
       })
     },
+    // 初始化展示章节
+    initSecvCatalog () {
+      secvCatalog({
+        course_id: this.$route.query.course_id
+      }).then(data => {
+        const res = data.data
+        this.courseSections = res.data
+      })
+    },
     // 跳转到播放页面
     playVideo (val, v) {
-      console.log(23232323)
-      // window.location.href = '#/' + this.baseInfo.activesRoute
-      // this.$emit('getVideoPlayback1', v.video_id)
-      // this.$router.push({ path: '/classVideo',
-      //   query: {
-      //     package_id: this.package_id,
-      //     course_id: this.$route.query.course_id,
-      //     section_id: val.section_id,
-      //     video_id: v.video_id
-      //     // is_zheng: item.is_zhengke
-      //   }
-      // })
+      this.$emit('getVideoPlayback', v.video_id)
+      this.$router.replace({ path: 'classVideo',
+        query: {
+          ...this.$route.query,
+          section_id: val.section_id,
+          video_id: v.video_id
+        }
+      })
+      this.handleReload()
     }
   }
 }

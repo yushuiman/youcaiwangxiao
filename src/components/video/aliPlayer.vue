@@ -304,23 +304,19 @@ export default {
   .prism-progress-cursor img, .cursor-hover img{
     display: none!important;
   }
-  /* .prism-player .prism-progress .prism-progress-cursor img{
-    display: none!important;
-  } */
-  .prism-player .prism-play-btn{
-    /* background: #f00; */
-  }
   .prism-player .prism-progress{
     background: #000000!important;
   }
   .prism-player .prism-progress .prism-progress-loaded{
     background: #4A4A4A!important;
   }
-  .prism-player .prism-play-btn.playing:hover{
-    /* background: #ffffff; */
+  .prism-player .prism-play-btn.playing:hover {
+    background: url('../../assets/images/video/smallpausehover.png') no-repeat;
+    background-size: contain;
   }
-  .prism-player .prism-play-btn:hover{
-    background: #f0f;
+  .prism-player .prism-play-btn,.prism-player .prism-play-btn:hover{
+    background: url('../../assets/images/video/play-btn-hover-icon.png') no-repeat;
+    background-size: contain;
   }
   .prism-player .prism-big-play-btn{
     border: 2px solid #F99111;
@@ -339,6 +335,16 @@ export default {
     border: 0;
     background: none;
   }
-  .big-playbtn-hover-animation{
+  .prism-player .prism-volume-control{
+    background: none;
+  }
+  .prism-player .prism-volume-control .volume-value{
+    background: #F99111;
+  }
+  .prism-player .prism-volume-control .volume-cursor{
+    background: #999999;
+  }
+  .prism-player .prism-volume-control .volume-cursor:hover{
+    background: #F99111;
   }
 </style>

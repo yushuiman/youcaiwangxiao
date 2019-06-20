@@ -23,3 +23,4 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 Vue.prototype.$Message = ElementUI.Message
+Vue.prototype.$Notice = Iview.Notice

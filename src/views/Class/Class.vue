@@ -71,7 +71,6 @@
           </div>
         </div>
       </div>
-
       <!-- 猜你喜欢 右 -->
       <div class="fr">
         <like-list></like-list>

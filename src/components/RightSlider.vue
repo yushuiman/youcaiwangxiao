@@ -91,7 +91,7 @@ export default {
     position: fixed;
     top: 180px;
     right: 0;
-    z-index: 10;
+    z-index: 13;
     background: rgba(0,0,0,.5);
   }
   .slider-list {
