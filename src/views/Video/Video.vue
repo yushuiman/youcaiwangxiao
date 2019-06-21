@@ -21,12 +21,12 @@
       <div class="video-info-c fl">
         <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
       </div>
-      <div class="video-info-r video-info-zjml fr">
+      <div class="video-info-r video-info-zjml fr" v-if="showBox == '课程<br />切换'">
         <div class="close-box" @click="closeModel()">
           <i class="close-icon"></i>
         </div>
         <h1 class="vc-title">章节目录</h1>
-        <course-list :showBox="showBox" :package_id="this.$route.query.package_id" :is_zheng="playCourseInfo.is_zheng" @getVideoPlayback="getVideoPlayback()"></course-list>
+        <course-list :package_id="this.$route.query.package_id" :is_zheng="playCourseInfo.is_zheng" @getVideoPlayback="getVideoPlayback()"></course-list>
       </div>
       <!-- 课程 答疑 讲义 -->
       <div class="three-main">
@@ -49,13 +49,13 @@
 import aliPlayer from '@/components/video/aliPlayer'
 import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
-import uploadImg from '@/components/video/uploadImg'
 import { videoPlayback, videoCredentials } from '@/api/class'
 export default {
   data () {
     return {
+      backCount: 0,
       selMenu: 3,
-      showBox: '答疑',
+      showBox: '课程<br />切换',
       vinfo: ['课程<br />切换', '答疑', '讲义'],
       VideoId: '', // 视频VideoId
       videoCredentials: {
@@ -78,8 +78,7 @@ export default {
   components: {
     aliPlayer,
     courseList,
-    answer,
-    uploadImg
+    answer
   },
   computed: {
 

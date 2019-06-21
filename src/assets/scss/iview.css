@@ -403,9 +403,6 @@ a[disabled] {
     height: 100%;
     z-index: 1000;
 }
-.ivu-modal{
-  width: 520px;
-}
 .ivu-modal-content {
     position: relative;
     background-color: #fff;

@@ -7,15 +7,15 @@
       </div>
       <h1 class="vc-title">提问题</h1>
       <textarea autofocus v-model="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"
-        v-on:focus="stopPlay()" v-on:blur="goPlay()"></textarea>
+        v-on:focus="send()" v-on:blur="goPlay()"></textarea>
       <div class="submitAnswer clearfix">
         <div class="course_img fl">
           <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
             <template>
               <img :src="item.url">
               <div class="demo-upload-list-cover">
-                <Icon type="ios-eye-outline" @click.native="handleView(item.url)">s</Icon>
-                <Icon type="ios-trash-outline" @click.native="handleRemove3(item)">sdfs</Icon>
+                <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                <Icon type="ios-trash-outline" @click.native="handleRemove3(item)"></Icon>
               </div>
             </template>
           </div>
@@ -59,11 +59,26 @@
             </div>
             <span class="othq-huifu" v-if="item.reply_status == 1">{{item.reply_name}}</span>
           </div>
-          <p class="othq-txt" :class="isopen ? 'sl' : ''">{{item.quiz}}</p>
-          <div class="quiz-image-list">
-            <img :src="val" alt="" v-for="(val, index) in item.quiz_image" :key="index">
+          <p class="othq-txt sl" :class="item.openFlag ? 'sl' : ''">{{item.quiz}}</p>
+          <div class="quiz-image-list course_img">
+            <div class="demo-upload-list" v-for="(val, index) in item.quiz_image" :key="index">
+              <template>
+                <img :src="val">
+                <div class="demo-upload-list-cover">
+                  <Icon type="ios-eye-outline" @click.native="handleView(val)"></Icon>
+                </div>
+              </template>
+            </div>
+            <!-- <img :src="val" alt="" v-for="(val, index) in item.quiz_image" :key="index"> -->
           </div>
-          <div class="open-txt" @click="openShow(index)">{{openIdx == index ? '展开' : '收起'}}</div>
+          <Modal title="图片预览" v-model="visible">
+            <img :src="imgUrl" v-if="visible" style="width: 100%">
+          </Modal>
+          <div class="open-txt" @click="openShow(item.openFlag, index)">
+            {{'openFlag:' + item.openFlag}}
+            {{'index:'+ index}}
+            {{item.openFlag ? '收起':'展开'}}
+          </div>
         </li>
       </ul>
     </div>
@@ -72,6 +87,7 @@
 
 <script>
 import { answerList, answerSub, answerDetails } from '@/api/class'
+import { EventBus } from '@/event-bus.js'
 export default {
   props: {
     playCourseInfo: {
@@ -93,13 +109,17 @@ export default {
       visible: false,
       imgUrl: '',
       uploadList: [],
-      errorTs: false
+      errorTs: false,
+      playStatus: true
     }
   },
   mounted () {
     this.getAnswerList()
   },
   methods: {
+    send () {
+      EventBus.$emit('stopPlay', this.playStatus)
+    },
     handleView (url) {
       this.imgUrl = url
       this.visible = true
@@ -161,7 +181,15 @@ export default {
       answerList(this.playCourseInfo).then(data => {
         const res = data.data
         this.answerList = res.data
+        this.answerList.map((val, index) => {
+          val.openFlag = false
+        })
       })
+    },
+    // 展开收起
+    openShow (currentOpenFlag, index) {
+      this.answerList[index].openFlag = !currentOpenFlag
+      console.log(currentOpenFlag)
     },
     // 问题详情
     getAnswerDetails () {
@@ -171,18 +199,12 @@ export default {
         // console.log(data)
       })
     },
-    // 展开收起
-    openShow (index) {
-      this.openIdx = index
-    },
     // 答疑
     stopPlay () {
       this.playStatus = false
-      console.log('this.playStatus:' + this.playStatus)
     },
     goPlay () {
       this.playStatus = true
-      console.log('this.playStatus:' + this.playStatus)
     }
   }
 }
@@ -211,7 +233,7 @@ export default {
     height: 480px;
     overflow-y: scroll;
     &.has-img{
-      height: 416px;
+      height: 410px;
     }
   }
   .close-box{

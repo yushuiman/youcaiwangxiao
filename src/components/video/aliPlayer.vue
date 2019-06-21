@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { EventBus } from '@/event-bus.js'
 export default {
   name: 'Aliplayer',
   props: {
@@ -95,7 +96,8 @@ export default {
     return {
       playerId: 'aliplayer_' + Math.random() * 100000000000000000,
       scriptTagStatus: 0,
-      instance: null
+      instance: null,
+      playStatus: ''
     }
   },
   mounted () {
@@ -107,6 +109,11 @@ export default {
       // 如果全局对象不存在，说明编辑器代码还没有加载完成，需要加载编辑器代码
       this.insertScriptTag()
     }
+    EventBus.$on('stopPlay', info => {
+      this.$nextTick(() => {
+        this.playStatus = info
+      })
+    })
   },
   created () {
     if (window.Aliplayer !== undefined) {
@@ -116,6 +123,9 @@ export default {
     } else {
       // 如果全局对象不存在，说明编辑器代码还没有加载完成，需要加载编辑器代码
       this.insertScriptTag()
+    }
+    if (this.playStatus) {
+      console.log('暂停播放')
     }
   },
   methods: {
@@ -206,6 +216,9 @@ export default {
        */
     play: function () {
       this.instance.play()
+      if (this.playStatus) {
+        console.log(233233232)
+      }
     },
     /**
        * 暂停视频
@@ -346,5 +359,17 @@ export default {
   }
   .prism-player .prism-volume-control .volume-cursor:hover{
     background: #F99111;
+  }
+  .prism-player .prism-volume .volume-icon:hover{
+    background: url('../../assets/images/video/volumehover.png') no-repeat;
+    background-size: contain;
+  }
+  .prism-player .prism-volume .volume-icon.mute{
+    background: url('../../assets/images/video/volumemutehover.png') no-repeat;
+    background-size: contain;
+  }
+  .prism-player .prism-volume .volume-icon.mute:hover{
+    background: url('../../assets/images/video/volumemutehover.png') no-repeat;
+    background-size: contain;
   }
 </style>

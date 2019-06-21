@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="video-course-wrap vid-kcqh" v-if="showBox == '课程<br />切换'">
+    <div class="video-course-wrap vid-kcqh">
       <h1 class="vc-title">套餐内课程</h1>
       <div class="vc-list" v-for="(item, index) in packageList" :key="index" @click="getSecvCatalog(item)">
         <img :src="item.pc_img" alt="">
