@@ -30,7 +30,7 @@
               type="drag"
               action="/upload/Index/uploadImage"
               name="image"
-              class="uploadSty">
+              class="uploadSty" style="border: 0!important;">
               <Button class="icon-upload"></Button>
           </Upload>
           <Modal title="图片预览" v-model="visible">
@@ -59,7 +59,7 @@
             </div>
             <span class="othq-huifu" v-if="item.reply_status == 1">{{item.reply_name}}</span>
           </div>
-          <p class="othq-txt sl" :class="item.openFlag ? 'sl' : ''">{{item.quiz}}</p>
+          <p class="othq-txt" :class="!item.openFlag? 'sl' : ''">{{item.quiz}}</p>
           <div class="quiz-image-list course_img">
             <div class="demo-upload-list" v-for="(val, index) in item.quiz_image" :key="index">
               <template>
@@ -69,14 +69,11 @@
                 </div>
               </template>
             </div>
-            <!-- <img :src="val" alt="" v-for="(val, index) in item.quiz_image" :key="index"> -->
           </div>
           <Modal title="图片预览" v-model="visible">
             <img :src="imgUrl" v-if="visible" style="width: 100%">
           </Modal>
           <div class="open-txt" @click="openShow(item.openFlag, index)">
-            {{'openFlag:' + item.openFlag}}
-            {{'index:'+ index}}
             {{item.openFlag ? '收起':'展开'}}
           </div>
         </li>
@@ -162,6 +159,9 @@ export default {
     handlePreview (file) {
       console.log(file)
     },
+    closeModel () {
+      this.$emit('closeModel')
+    },
     // 问题提交
     answerSubmit () {
       if (this.quiz.length < 5) {
@@ -189,7 +189,7 @@ export default {
     // 展开收起
     openShow (currentOpenFlag, index) {
       this.answerList[index].openFlag = !currentOpenFlag
-      console.log(currentOpenFlag)
+      this.$forceUpdate()
     },
     // 问题详情
     getAnswerDetails () {
@@ -212,7 +212,7 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  @import "../../assets/scss/iview.css";
+  // @import "../../assets/scss/iview.css";
   // @import "../../../node_modules/iview/dist/styles/iview.css";
   .vc-title{
     padding-top: 18px;
@@ -222,12 +222,12 @@ export default {
   }
   .ask {
     padding: 0 20px;
-    margin-bottom: 12px;
     background: #ffffff;
     box-shadow: 0px 15px 10px -15px rgba(0,0,0,0.2) inset;
   }
   .others{
-    padding: 0 20px;
+    padding: 12px 20px 0 20px;
+    background: #F8FAFC;
   }
   .othq-list{
     height: 480px;
@@ -268,7 +268,7 @@ export default {
     }
     .errorTxt{
       position: absolute;
-      top: 5px;
+      top: 3px;
       left: 0px;
       color: $col999;
     }
@@ -317,10 +317,71 @@ export default {
     }
   }
   .quiz-image-list{
+    padding-top: 6px;
     img{
       width: 80px;
       height: 80px;
       margin-right: 10px;
     }
   }
+  // iview
+  .course_img .demo-upload-list{
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  line-height: 80px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+  box-shadow: 0 1px 1px rgba(0,0,0,.2);
+  margin-right: 10px;
+}
+.course_img .demo-upload-list img{
+  width: 100%;
+}
+.course_img .demo-upload-list-cover{
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,.6);
+}
+.course_img .demo-upload-list:hover .demo-upload-list-cover{
+  display: block;
+}
+.course_img .demo-upload-list-cover i {
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  margin: 0 2px;
+}
+.uploadSty {
+  width: 23px;
+  height: 18px;
+  position: absolute;
+  right: 90px;
+  top: 25px;
+}
+
+.uploadSty .ivu-upload-drag,
+.uploadSty .ivu-btn {
+  border: 0;
+  padding: 0;
+  border-radius: 0;
+}
+
+.ivu-upload input[type=file] {
+  display: none;
+}
+
+.icon-upload {
+  width: 23px;
+  height: 18px;
+  background: url('../../assets/images/video/upload-img-icon.png') no-repeat center;
+  background-size: contain;
+}
 </style>

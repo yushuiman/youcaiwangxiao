@@ -28,19 +28,29 @@
         <h1 class="vc-title">章节目录</h1>
         <course-list :package_id="this.$route.query.package_id" :is_zheng="playCourseInfo.is_zheng" @getVideoPlayback="getVideoPlayback()"></course-list>
       </div>
+      <div class="video-info-r fr" v-if="showBox == '答疑'">
+        <answer :playCourseInfo="playCourseInfo" @closeModel="closeModel"></answer>
+      </div>
+      <div class="video-info-r fr" v-if="showBox == '讲义'">
+        <div class="close-box" @click="closeModel()">
+            <i class="close-icon"></i>
+          </div>
+          <h1 class="vc-title">讲义</h1>
+          <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="745px"></iframe>
+      </div>
       <!-- 课程 答疑 讲义 -->
       <div class="three-main">
         <!-- <course-list v-if="showBox == '课程<br />切换'"></course-list> -->
-        <div class="video-course-wrap vid-dy" v-if="showBox == '答疑'">
-          <answer :playCourseInfo="playCourseInfo"></answer>
-        </div>
-        <div class="video-course-wrap vid-jy" v-if="showBox == '讲义'">
+        <!-- <div class="video-course-wrap vid-dy" v-if="showBox == '答疑'">
+          <answer :playCourseInfo="playCourseInfo" @closeModel="closeModel"></answer>
+        </div> -->
+        <!-- <div class="video-course-wrap vid-jy" v-if="showBox == '讲义'">
           <div class="close-box" @click="closeModel()">
             <i class="close-icon"></i>
           </div>
           <h1 class="vc-title">讲义</h1>
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="750px"></iframe>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -163,8 +173,10 @@ export default {
       margin-top: 20px;
     }
     .video-info-r{
+      // padding: 0 20px;
       width: 495px;
       height: 869px;
+      box-sizing: border-box;
     }
   }
   .vinfo-ul{

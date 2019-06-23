@@ -8,14 +8,12 @@ import router from './router/'
 import store from './store/'
 import Iview from 'iview'
 import ElementUI from 'element-ui'
-import VueAliplayer from 'vue-aliplayer'
 import VueAwesomeSwiper from 'vue-awesome-swiper' // swiper
-// import 'swiper/dist/css/swiper.css'
+import 'iview/dist/styles/iview.css'
 Vue.config.productionTip = false
 
 Vue.use(Iview)
 Vue.use(ElementUI)
-Vue.use(VueAliplayer)
 Vue.use(VueAwesomeSwiper)
 new Vue({
   router,

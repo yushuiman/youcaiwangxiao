@@ -1,35 +1,6 @@
-html {
-  color: #333333;
-  background-color: #F3F6FF;
-  font-size: 14px;
-  overflow-y: auto;
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%
-}
-
-html * {
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none
-}
-
-html, body {
-  height: 100%;
-  font-family: "微软雅黑","Microsoft YaHei",Helvetica,STHeiTi,Arial,sans-serif;
-  min-height: 100%;
-  line-height: 1;
-}
-
-body, body * {
-  max-height: 100000000px;
-}
-
-body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td, hr, button, article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
-  margin: 0;
-  padding: 0
-}
-
-input, select, textarea {
+input,
+select,
+textarea {
   font-size: 100%
 }
 
@@ -38,11 +9,13 @@ table {
   border-spacing: 0
 }
 
-fieldset, img {
+fieldset,
+img {
   border: 0
 }
 
-abbr, acronym {
+abbr,
+acronym {
   border: 0;
   font-variant: normal
 }
@@ -51,29 +24,45 @@ del {
   text-decoration: line-through
 }
 
-address, caption, cite, code, dfn, em, th, var {
+address,
+caption,
+cite,
+code,
+dfn,
+em,
+th,
+var {
   font-style: normal;
   font-weight: 500;
 }
 
-ol, ul {
+ol,
+ul {
   list-style: none;
 }
 
-caption, th {
+caption,
+th {
   text-align: left;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-size: 100%;
   font-weight: 500;
 }
 
-q:before, q:after {
+q:before,
+q:after {
   content: '';
 }
 
-sub, sup {
+sub,
+sup {
   font-size: 75%;
   line-height: 0;
   position: relative;
@@ -88,7 +77,8 @@ sub {
   bottom: -0.25em;
 }
 
-ins, a {
+ins,
+a {
   text-decoration: none;
 }
 
@@ -96,13 +86,17 @@ button {
   border: none;
 }
 
-button, html input[type='button'], input[type='reset'], input[type='submit'] {
+button,
+html input[type='button'],
+input[type='reset'],
+input[type='submit'] {
   -webkit-appearance: button;
   text-transform: none;
   outline: none;
 }
 
-input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
   color: #999;
 }
 
@@ -118,7 +112,8 @@ textarea {
   vertical-align: top;
 }
 
-button, input {
+button,
+input {
   line-height: normal;
 }
 
@@ -127,7 +122,8 @@ select {
   outline: 0;
 }
 
-textarea.fixAndroidKeyboard:focus, input.fixAKeyboard:focus {
+textarea.fixAndroidKeyboard:focus,
+input.fixAKeyboard:focus {
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   -webkit-user-modify: read-write-plaintext-only;
 }
@@ -136,7 +132,12 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px white inset !important;
 }
 
-input[type=submit], input[type=reset], input[type=button], input[type=checkbox], button, label {
+input[type=submit],
+input[type=reset],
+input[type=button],
+input[type=checkbox],
+button,
+label {
   cursor: pointer;
   user-select: none;
   -ms-user-select: none;
@@ -152,7 +153,8 @@ input[type=submit] {
   user-modify: read-plaintext-only;
 }
 
-input[type='search']::-webkit-search-cancel-button, input[type='search']::-webkit-search-decoration {
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 

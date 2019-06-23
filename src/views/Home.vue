@@ -199,7 +199,9 @@ export default {
       color: $colfff;
       text-align: center;
       border-radius: 18px;
-      box-shadow: 0px 2px 14px 0px rgba(165,209,255,1);
+      &:hover{
+        box-shadow: 0px 2px 14px 0px rgba(165,209,255,1);
+      }
       &.zb-tbn{
         background: #D5E6FF;
         color: $blueColor;
