@@ -80,7 +80,6 @@ export default {
       return new Promise((resolve, reject) => {
         getUserInfo().then(res => {
           const data = res.data
-          console.log(data)
           commit('setAvator', data.data.head)
           commit('setUserName', data.data.username)
           commit('setUserId', data.data.id)

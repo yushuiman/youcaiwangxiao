@@ -16,14 +16,14 @@
             </ul>
           </div>
           <div class="login-wrap fr">
-            <div class="login-l fl">
+            <div class="login-l fl" v-if="!this.token">
               <router-link to="/login">登录</router-link> |
               <router-link to="/login">注册</router-link>
             </div>
             <a class="learen-btn fl">学习中心</a>
-            <div class="login-r fr">
+            <div class="login-r fr" v-if="this.token">
               <img src="../assets/images/global/email-icon.png" alt="email" class="email-icon">
-              <img src="../assets/images/global/head-logo-moren.png" alt="头像" class="head-logo">
+              <img :src="headeLogo" alt="头像" class="head-logo">
             </div>
           </div>
         </div>
@@ -38,11 +38,15 @@ import { mapMutations, mapActions } from 'vuex'
 export default {
   data () {
     return {
-      token: getToken()
+      token: getToken(),
+      headeLogo: this.$store.state.user.avatorImgPath
     }
   },
 
   mounted () {
+    if (this.token) {
+      this.getUserInfo()
+    }
   },
   computed: {
     isChange () {
@@ -149,6 +153,7 @@ export default {
       }
       &.head-logo{
         @include wh(30, 30);
+        border-radius: 100%;
       }
     }
   }

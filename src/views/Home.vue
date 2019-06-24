@@ -118,11 +118,7 @@ export default {
     }
   },
   mounted () {
-    // if (this.token) {
-    //   console.log(323)
-    // } else {
-    //   console.log(2323322)
-    // }
+
   }
 }
 </script>
