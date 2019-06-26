@@ -70,7 +70,6 @@
       <discuss-self v-if="showPlateModal == '3'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></discuss-self>
       <error-section v-if="showPlateModal == '4'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></error-section>
       <lianxi-self v-if="showPlateModal == '5'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></lianxi-self>
-      <group-lianxi v-if="showPlateModal == '6'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></group-lianxi>
     </Modal>
     <!-- 预测评估 学员排名 -->
     <div class="qt-wrap-r fr">
@@ -125,7 +124,6 @@ import jieduanTest from '../../components/questions/jieduanTest'
 import discussSelf from '../../components/questions/discussSelf'
 import errorSection from '../../components/questions/errorSection'
 import lianxiSelf from '../../components/questions/lianxiSelf'
-import groupLianxi from '../../components/questions/groupLianxi'
 import { mapState } from 'vuex'
 // import Cookies from 'js-cookie'
 export default {
@@ -185,8 +183,7 @@ export default {
     jieduanTest,
     discussSelf,
     errorSection,
-    lianxiSelf,
-    groupLianxi
+    lianxiSelf
   },
   computed: {
     ...mapState({

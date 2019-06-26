@@ -1,5 +1,5 @@
 <template>
-  <div class="jieduan-test">
+  <div class="jieduan-test height-com">
     <div class="com-bg diff-easy">
       试卷难度：简单
       <i class="star-icon star-easy-icon"></i>中等
@@ -7,12 +7,12 @@
       <i class="star-icon star-diff-icon"></i>
     </div>
     <ul class="jd-test-list">
-      <li class="jd-test-item" v-for="(v, index) in courseList" :key="index">
+      <li class="jd-test-item" v-for="(v, index) in courseList" :key="index" @click="goDoPotic(v)">
         <div>
           <i class="star-icon" :class="{'star-diff-icon': v.difficulty == 'A', 'star-middle-icon': v.difficulty == 'B', 'star-easy-icon': v.difficulty == 'C'}"></i>
           <span>{{v.paper_name}}</span>
         </div>
-        <button class="btn-com" @click="goDoPotic(v)">去做题</button>
+        <button class="btn-com do-potic-btn">去做题</button>
       </li>
     </ul>
   </div>
@@ -57,12 +57,6 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .com-bg{
-    margin-top: -2px;
-    background: #F3F6FF;
-    color: $col666;
-    padding: 12px 14px;
-  }
   .star-icon{
     margin-left: 11px;
     margin-right: 39px;
@@ -78,29 +72,15 @@ export default {
       @include bg-img(16, 15, '../../assets/images/questions/star-diff.png');
     }
   }
-  // <ul class="jd-test-list">
-  //     <li class="jd-test-item">
-  //       <i class="star-icon star-easy-icon"></i>
-  //       <p>第一章 对外财务报告决策</p>
-  //       <button>去做题</button>
-  //     </li>
-  //   </ul>
-  .jd-test-list{
-    padding-top: 10px;
-  }
   .jd-test-item{
     display: flex;
-    padding: 10px 14px;
+    padding: 10px 30px;
     align-items: center;
     justify-content: space-between;
     font-size: 18px;
     .star-icon{
       margin-left: 0;
       margin-right: 17px;
-    }
-    .btn-com{
-      width: 69px;
-      height: 24px;
     }
   }
 </style>

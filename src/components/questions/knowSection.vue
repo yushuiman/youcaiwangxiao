@@ -1,9 +1,9 @@
 <template>
-  <div class="zsd-section-wrap">
+  <div class="zsd-section-wrap height-com">
     <div class="com-bg">
       <div class="mode-tab">
-        <span :class="{'curren':getQuestion.paper_type == 1 }" @click="doMode(1)"><i></i>练习模式</span>
-        <span :class="{'curren':getQuestion.paper_type == 2 }" @click="doMode(2)"><i></i>考试模式</span>
+        <span :class="{'curren':getQuestion.paper_mode == 1 }" @click="doMode(1)"><i></i>练习模式</span>
+        <span :class="{'curren':getQuestion.paper_mode == 2 }" @click="doMode(2)"><i></i>考试模式</span>
       </div>
       <div class="order-sel">
         <button class="btn-com" :class="{'curren': getQuestion.num == 15}" @click="orderDoNum(15)">随机15道</button>
@@ -11,27 +11,27 @@
       </div>
     </div>
     <!-- 知识点章节 -->
-    <Row style="padding-top: 6px;">
+    <Row>
       <Col span="24">
         <Menu accordion width="100%">
           <Submenu :name="index+1" v-for="(item, index) in sectionList" :key="index">
             <template slot="title" >
               <div class="menu-title">
-                <div class="menu-section-title" style="color:#333333; font-size: 18px;">{{item.section_name}}</div>
+                <div class="menu-section-title">{{item.section_name}}</div>
                 <div>
                   <Progress
                     :percent="Number(item.correct)"
                     :stroke-width="10"
                     stroke-color="#0267FF"
                     hide-info style="width: 142px;"/>
-                  <span style="margin-right: 40px; width: 68px; display: inline-block;text-align:right;">{{item.correct}}%</span>
+                  <span style="margin-right: 30px; width: 68px; display: inline-block;text-align:right;">{{item.correct}}%</span>
                 </div>
               </div>
             </template>
-            <MenuItem :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key">
-              <div style="display: flex; justify-content: space-between;" @click="getKnow(item, val, key)">
-                <div style="color:#666666; font-size: 16px;">{{val.knob_name}}</div>
-                <button class="btn-com" style="width: 69px; height: 24px;">去做题</button>
+            <MenuItem :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key" style="padding-left: 60px;">
+              <div class="menu-jie-title" @click="getKnow(item, val, key)">
+                <div>{{val.knob_name}}</div>
+                <button class="btn-com do-potic-btn">去做题</button>
               </div>
             </MenuItem>
           </Submenu>
@@ -43,16 +43,19 @@
       :width="795"
       draggable
       footer-hide
+      title="知识点练习"
       class="practiceModal">
-      <div slot="header" class="ivu-modal-header-inner" style="font-size: 26px; height: auto; line-height: 1;">
-        知识点练习
+      <div class="height-com">
+        <div class="com-bg">
+            请选择需要练习的知识点
+        </div>
+        <ul class="know-list">
+          <li v-for="(val, key) in knowList" :key="key" @click="goToPic(val)">
+            <span>{{val.know_name}}</span>
+            <button class="btn-com do-potic-btn">去做题</button>
+          </li>
+        </ul>
       </div>
-      <div class="com-bg">
-          请选择需要练习的知识点
-      </div>
-      <ul class="know-list">
-        <li v-for="(val, key) in knowList" :key="key" @click="goToPic(val)">{{val.know_name}}</li>
-      </ul>
     </Modal>
   </div>
 </template>
@@ -84,7 +87,8 @@ export default {
         user_id: this.user_id,
         plate_id: this.plate_id,
         num: 15, // 默认随机15道
-        paper_type: 1 // 默认练习模式
+        paper_mode: 1, // 默认练习模式
+        paper_type: 1 // 默认单选
       },
       KnowShow: false, // 知识点显示
       knowList: [] // 知识点
@@ -108,9 +112,9 @@ export default {
     // 选择练习考试模式
     doMode (type) {
       if (type === 1) {
-        this.getQuestion.paper_type = 1
+        this.getQuestion.paper_mode = 1
       } else if (type === 2) {
-        this.getQuestion.paper_type = 2
+        this.getQuestion.paper_mode = 2
       }
     },
     // 做题数量
@@ -150,10 +154,6 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   .com-bg{
-    margin-top: -2px;
-    background: #F3F6FF;
-    color: $col666;
-    padding: 12px 20px;
     .zsd-section-wrap &{
       display: flex;
       justify-content: space-between;
@@ -206,27 +206,28 @@ export default {
       }
     }
   }
-  .know-list{
-    min-height: 600px;
-    max-height: 800px;
-    overflow-y: scroll;
-    li{
-      padding: 14px 24px;
-      font-size: 18px;
-    }
-  }
   // iview
   .menu-title{
     display: flex;
     justify-content: space-between;
   }
-  .ivu-menu-vertical.ivu-menu-light:after,.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after{
-    width: 0;
+  .menu-jie-title{
+    display: flex;
+    justify-content: space-between;
   }
-  .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
-    background: #FAFAFA;
-  }
-  .ivu-menu-vertical .ivu-menu-item, .ivu-menu-vertical .ivu-menu-submenu-title{
-    padding: 10px 6px;
+  .menu-section-title, .menu-jie-title{
+    color: $col333;
+    font-size: 18px;
+    div{
+      color: $col666;
+      font-size: 16px;
+    }
+    span{
+      font-size: 16px;
+      color: $col666;
+      em{
+        color: #f00;
+      }
+    }
   }
 </style>

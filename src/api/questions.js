@@ -37,7 +37,7 @@ export const getSection = (data) => { // 知识点练习章节
   })
 }
 
-export const getKnow = (data) => { // 知识点练习-知识点
+export const getKnow = (data) => { // 知识点练习\高频错题-知识点
   return axios.request({
     url: '/web/Question/getKnow',
     data,
@@ -47,6 +47,13 @@ export const getKnow = (data) => { // 知识点练习-知识点
 export const getCourse = (data) => { // 阶段测试、论述题自测章
   return axios.request({
     url: '/web/Question/getCourse',
+    data,
+    method: 'post'
+  })
+}
+export const getErrorsection = (data) => { // 高频错题章节
+  return axios.request({
+    url: '/web/Question/getErrorsection',
     data,
     method: 'post'
   })

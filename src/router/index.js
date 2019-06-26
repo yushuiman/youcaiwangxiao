@@ -37,6 +37,14 @@ export default new Router({
       meta: { showHeader: true }
     },
     {
+      path: '/dopotic',
+      name: 'dopotic',
+      component: () => import('@/views/Question/DoPotic.vue'),
+      meta: {
+        showHeader: true
+      }
+    },
+    {
       path: '/answer',
       name: 'answer',
       component: () => import('@/views/Answer/Answer.vue'),
