@@ -2,12 +2,12 @@
   <div class="zsd-section-wrap height-com">
     <div class="com-bg">
       <div class="mode-tab">
-        <span :class="{'curren':getQuestion.paper_mode == 1 }" @click="doMode(1)"><i></i>练习模式</span>
-        <span :class="{'curren':getQuestion.paper_mode == 2 }" @click="doMode(2)"><i></i>考试模式</span>
+        <span :class="{'curren':getPoticData.paper_mode == 1 }" @click="doMode(1)"><i></i>练习模式</span>
+        <span :class="{'curren':getPoticData.paper_mode == 2 }" @click="doMode(2)"><i></i>考试模式</span>
       </div>
       <div class="order-sel">
-        <button class="btn-com" :class="{'curren': getQuestion.num == 15}" @click="orderDoNum(15)">随机15道</button>
-        <button class="btn-com" :class="{'curren': getQuestion.num == 30}" @click="orderDoNum(30)">随机30道</button>
+        <button class="btn-com" :class="{'curren': getPoticData.num == 15}" @click="orderDoNum(15)">随机15道</button>
+        <button class="btn-com" :class="{'curren': getPoticData.num == 30}" @click="orderDoNum(30)">随机30道</button>
       </div>
     </div>
     <!-- 知识点章节 -->
@@ -77,7 +77,7 @@ export default {
   data () {
     return {
       sectionList: [], // 知识点章节
-      getQuestion: {
+      getPoticData: {
         course_id: this.course_id,
         paper_id: '',
         section_id: '',
@@ -112,31 +112,31 @@ export default {
     // 选择练习考试模式
     doMode (type) {
       if (type === 1) {
-        this.getQuestion.paper_mode = 1
+        this.getPoticData.paper_mode = 1
       } else if (type === 2) {
-        this.getQuestion.paper_mode = 2
+        this.getPoticData.paper_mode = 2
       }
     },
     // 做题数量
     orderDoNum (num) {
       if (num === 15) {
-        this.getQuestion.num = 15
+        this.getPoticData.num = 15
       } else if (num === 30) {
-        this.getQuestion.num = 30
+        this.getPoticData.num = 30
       }
     },
     // 知识点显示
     getKnow (item, val, index) {
       this.KnowShow = true
-      this.getQuestion.section_id = item.section_id
-      this.getQuestion.knob_id = val.knob_id
+      this.getPoticData.section_id = item.section_id
+      this.getPoticData.knob_id = val.knob_id
       this.getKnowList()
     },
     // 知识点数据
     getKnowList () {
       getKnow({
-        section_id: this.getQuestion.section_id,
-        knob_id: this.getQuestion.knob_id
+        section_id: this.getPoticData.section_id,
+        knob_id: this.getPoticData.knob_id
       }).then(data => {
         const res = data.data
         this.knowList = res.data
@@ -144,8 +144,8 @@ export default {
     },
     // 去做题
     goToPic ({ id }) {
-      this.getQuestion.know_id = id
-      console.log('跳转做题页')
+      this.getPoticData.know_id = id
+      this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }
 }

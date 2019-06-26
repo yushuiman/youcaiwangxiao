@@ -25,13 +25,29 @@ export default {
     course_id: {
       type: Number
     },
+    user_id: {
+      type: Number
+    },
     plate_id: {
       type: Number
     }
   },
   data () {
     return {
-      courseList: []
+      courseList: [],
+      getPoticData: {
+        course_id: this.course_id,
+        paper_id: '',
+        section_id: '',
+        knob_id: '', // 节id
+        know_id: '', // 知识点id
+        mock_id: '',
+        user_id: this.user_id,
+        plate_id: this.plate_id,
+        num: '', // 默认随机15道
+        paper_mode: '', // 默认练习模式
+        paper_type: 1 // 默认单选
+      }
     }
   },
   mounted () {
@@ -49,7 +65,8 @@ export default {
     },
     // 去做题
     goDoPotic (v) {
-      console.log('做题页')
+      this.getPoticData.paper_id = v.paper_id
+      this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }
 }

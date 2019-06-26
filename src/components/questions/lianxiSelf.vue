@@ -34,11 +34,11 @@
       class="practiceModal">
       <div class="height-com">
         <div class="com-bg menu-jie-title">
-          请选择需要练习的知识点（最多选三个）<button class="btn-com do-potic-btn">去做题</button>
+          请选择需要练习的知识点（最多选三个）<button class="btn-com do-potic-btn" @click="goToPic()">去做题</button>
         </div>
         <ul class="know-list">
-          <li v-for="(val, key) in knowList" :key="key" @click="goToPic(val)">
-            <span><label class="check"></label>{{val.know_name}}</span>
+          <li v-for="(val, key) in knowList" :key="key" @click="multipleChoices(val, key)">
+            <span><label class="check" :class="{'checked': val.flag}"></label>{{val.know_name}}</span>
           </li>
         </ul>
       </div>
@@ -55,13 +55,16 @@ export default {
     },
     user_id: {
       type: Number
+    },
+    plate_id: {
+      type: Number
     }
   },
   data () {
     return {
       sectionList: [], // 知识点章节
       numArr: [5, 10, 15, 20, 25, 30], // 随即题数
-      getQuestion: {
+      getPoticData: {
         course_id: this.course_id,
         paper_id: '',
         section_id: '',
@@ -70,12 +73,14 @@ export default {
         mock_id: '',
         user_id: this.user_id,
         plate_id: this.plate_id,
-        num: 5, // 默认随机15道
-        paper_mode: 1, // 默认练习模式
+        num: '', // 默认随机15道
+        paper_mode: '', // 默认练习模式
         paper_type: 1 // 默认单选
       },
       KnowShow: false, // 知识点显示
-      knowList: [] // 知识点
+      knowList: [], // 知识点
+      selId: false,
+      knowIdArr: []
     }
   },
   components: {
@@ -96,24 +101,38 @@ export default {
     // 知识点显示
     getKnow (item, val, index) {
       this.KnowShow = true
-      this.getQuestion.section_id = item.section_id
-      this.getQuestion.knob_id = val.knob_id
+      this.getPoticData.section_id = item.section_id
+      this.getPoticData.knob_id = val.knob_id
       this.getKnowList()
     },
     // 知识点数据
     getKnowList () {
       getKnow({
-        section_id: this.getQuestion.section_id,
-        knob_id: this.getQuestion.knob_id
+        section_id: this.getPoticData.section_id,
+        knob_id: this.getPoticData.knob_id
       }).then(data => {
         const res = data.data
         this.knowList = res.data
+        this.knowList.map((val, index) => {
+          val.flag = false
+        })
       })
     },
+    // 多选
+    multipleChoices ({ flag, id }, index) {
+      this.knowList[index].flag = !flag
+      this.$forceUpdate()
+      if (this.knowList[index].flag) {
+        this.knowIdArr.push(id)
+      } else {
+        this.knowIdArr.splice(index, 1)
+      }
+      console.log(this.knowIdArr)
+    },
     // 去做题
-    goToPic ({ id }) {
-      this.getQuestion.know_id = id
-      console.log('跳转做题页')
+    goToPic () {
+      // this.getPoticData.know_id = id
+      // this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }
 }
@@ -149,5 +168,8 @@ export default {
     vertical-align: middle;
     margin-top: -3px;
     margin-right: 10px;
+    &.checked{
+      border: 1px solid #f00;
+    }
   }
 </style>

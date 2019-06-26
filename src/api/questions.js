@@ -14,7 +14,7 @@ export const questionIndex = (data) => { // 做题数。正确率，平均分
     method: 'post'
   })
 }
-export const getPlate = (data) => { // 板块
+export const getPlate = (data) => { // 板块 没有用到 前端写死了
   return axios.request({
     url: '/web/Question/getPlate',
     data,

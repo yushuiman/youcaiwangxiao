@@ -54,12 +54,18 @@ export default {
   props: {
     course_id: {
       type: Number
+    },
+    user_id: {
+      type: Number
+    },
+    plate_id: {
+      type: Number
     }
   },
   data () {
     return {
       errorSecList: [], // 知识点章节
-      getQuestion: {
+      getPoticData: {
         course_id: this.course_id,
         paper_id: '',
         section_id: '',
@@ -68,8 +74,8 @@ export default {
         mock_id: '',
         user_id: this.user_id,
         plate_id: this.plate_id,
-        num: 15, // 默认随机15道
-        paper_mode: 1, // 默认练习模式
+        num: '', // 默认随机15道
+        paper_mode: '', // 默认练习模式
         paper_type: 1 // 默认单选
       },
       KnowShow: false, // 知识点显示
@@ -94,15 +100,15 @@ export default {
     // 知识点显示
     getKnow (item, val, index) {
       this.KnowShow = true
-      this.getQuestion.section_id = item.section_id
-      this.getQuestion.knob_id = val.knob_id
+      this.getPoticData.section_id = item.section_id
+      this.getPoticData.knob_id = val.knob_id
       this.getKnowList()
     },
     // 知识点数据
     getKnowList () {
       getKnow({
-        section_id: this.getQuestion.section_id,
-        knob_id: this.getQuestion.knob_id
+        section_id: this.getPoticData.section_id,
+        knob_id: this.getPoticData.knob_id
       }).then(data => {
         const res = data.data
         this.knowList = res.data
@@ -110,8 +116,8 @@ export default {
     },
     // 去做题
     goToPic ({ id }) {
-      this.getQuestion.know_id = id
-      console.log('跳转做题页')
+      this.getPoticData.know_id = id
+      this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }
 }
