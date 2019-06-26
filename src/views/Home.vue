@@ -189,7 +189,8 @@ export default {
     button{
       float: left;
       margin-right: 15px;
-      @include whl(95, 29, 29);
+      @include wh(95, 29);
+      line-height: normal;
       background: $blueColor;
       font-size: $fs16;
       color: $colfff;

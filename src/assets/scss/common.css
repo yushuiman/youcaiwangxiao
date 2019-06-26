@@ -197,3 +197,16 @@ input[type='search'] {
   width: 1200px;
   margin: 0 auto;
 }
+.btn-com {
+  width: 79px;
+  height: 32px;
+  border-radius: 16px;
+  font-size: 16px;
+  text-align: center;
+  background: none;
+  border: 1px solid rgba(2, 103, 255, 1);
+  color: #0267FF;
+}
+.btn-com:hover {
+  box-shadow: 0px 2px 11px 0px rgba(0, 113, 230, 0.65);
+}

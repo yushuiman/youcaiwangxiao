@@ -1,13 +1,14 @@
 import { accountLogin, outLogin, getUserInfo } from '@/api/login'
 
 import { setToken, getToken } from '@/libs/utils'
-
+// import Cookies from 'js-cookie'
+// import config from '@/config'
 import { Message } from 'element-ui'
 
 export default {
   state: {
     userName: '',
-    userId: '',
+    user_id: '',
     groupId: '',
     avatorImgPath: '',
     token: getToken(),
@@ -18,7 +19,7 @@ export default {
       state.avatorImgPath = avatorPath
     },
     setUserId (state, id) {
-      state.userId = id
+      state.user_id = id
     },
     setGroupId (state, id) {
       state.groupId = id
@@ -84,6 +85,9 @@ export default {
           commit('setUserName', data.data.username)
           commit('setUserId', data.data.id)
           commit('setGroupId', data.data.group_id)
+          // Cookies.set('user_id', data.data.id, {
+          //   expires: config.cookieExpires || 1
+          // })
           resolve(data.data)
         }).catch(err => {
           reject(err)

@@ -13,27 +13,27 @@
           <div class="qta-item qta-item01">
             <span class="tit">做题数</span>
             <p class="record">{{questionResult.total_num}}<em>道</em></p>
-            <p class="compare">同类考生平均答题量<span>793</span>道<br>已击败<span>33%</span>同类考生</p>
+            <p class="compare">同类考生平均答题量<span>{{questionResult.avgtu}}</span>道<br>已击败<span>{{questionResult.donerank}}%</span>同类考生</p>
           </div>
         </Col>
         <Col span="8">
           <div class="qta-item qta-item02">
             <span class="tit">正确率</span>
             <p class="record">{{questionResult.accuracy}}<em>%</em></p>
-            <p class="compare">同类考生平均正确率<span>79%</span><br>已击败<span>33%</span>同类考生</p>
+            <p class="compare">同类考生平均正确率<span>{{questionResult.avgra}}%</span><br>已击败<span>{{questionResult.beatrank}}%</span>同类考生</p>
           </div>
         </Col>
         <Col span="8">
           <div class="qta-item qta-item03">
             <span class="tit">平均分</span>
             <p class="record">{{questionResult.score}}<em>分</em></p>
-            <p class="compare">层同类考生平均分<span>79%</span><br>已击败<span>33%</span>同类考生</p>
+            <p class="compare">同类考生平均分<span>{{questionResult.avgav}}分</span><br>已击败<span>{{questionResult.pingrank}}%</span>同类考生</p>
           </div>
         </Col>
       </Row>
       <!-- 知识点练习 阶段测试 论述题自测 冲刺 -->
       <Row class="practice-wrap">
-        <Col span="12" class="practice-item" v-for="(item, index) in practiceInfo.slice(0, 4)" :key="index">
+        <Col span="12" class="practice-item" v-for="(item, index) in plateList.slice(0, 4)" :key="index">
           <div class="prt-info-com prt-info" :class="['prt-info-0' + (index+1)]">
             <div class="prt-flex">
               <i class="prt-icon"></i>
@@ -42,33 +42,45 @@
                 <p>{{item.describe}}</p>
               </div>
             </div>
-            <button class="prt-btn qt-com">去做题</button>
+            <button class="prt-btn btn-com" @click="doQuestions(item)">去做题</button>
           </div>
         </Col>
       </Row>
       <!-- 系统高频错题 自助练习 组卷模拟 -->
       <Row class="practice-wrap">
-        <Col span="8" class="practice-item" v-for="(item, index) in practiceInfo.slice(4, 7)" :key="index">
+        <Col span="8" class="practice-item" v-for="(item, index) in plateList.slice(4, 7)" :key="index">
           <div class="prt-info-com prt-info-three" :class="['prt-info-0' + (index+5)]" >
             <div class="prt-txt">
               <h2>{{item.title}}</h2>
               <p>{{item.describe}}</p>
             </div>
-            <button class="prt-btn qt-com">去做题</button>
+            <button class="prt-btn btn-com" @click="doQuestions(item)">去做题</button>
           </div>
         </Col>
       </Row>
     </div>
+    <!-- 6大板块弹窗 -->
+    <Modal v-model="visible"
+      :width="795"
+      footer-hide
+      class="practiceModal">
+      <div slot="header" class="ivu-modal-header-inner" style="font-size: 26px; height: auto; line-height: 1;">
+        {{plateTitle}}
+      </div>
+      <know-section v-if="showPlateModal == '1'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></know-section>
+      <jieduan-test v-if="showPlateModal == '2'" :course_id="course_id" :plate_id="showPlateModal"></jieduan-test>
+      <discuss-self v-if="showPlateModal == '3'" :course_id="course_id" :plate_id="showPlateModal"></discuss-self>
+    </Modal>
     <!-- 预测评估 学员排名 -->
     <div class="qt-wrap-r fr">
       <div class="qt-wrap-r-top">
         <div class="calculate-info">
           <div class="cal-tit">
             <span>预测分</span>
-            <button class="qt-com">能力评估</button>
+            <button class="btn-com">能力评估</button>
           </div>
           <div class="cal-num">
-            82<em>分</em>
+            {{questionResult.ycfen}}<em>分</em>
           </div>
         </div>
         <ul class="my-question">
@@ -90,20 +102,12 @@
         <div class="students-rank">
           <div class="stu-rank-title">学员排名</div>
           <ul class="stu-rank-list">
-            <li class="stu-rank-item">
-              <span class="sturi-num">1</span>
-              <img src="" alt="" class="sturi-head">
+            <li class="stu-rank-item" :class="['stu-rank-item0' + (index+1)]" v-for="(item, index) in studentsRankList" :key="index">
+              <span class="sturi-num">{{index+1}}</span>
+              <img :src="item.head" alt="" class="sturi-head">
               <div class="sturi-info">
-                <h2>某某某</h2>
-                <p>做题数量14334道</p>
-              </div>
-            </li>
-            <li class="stu-rank-item">
-              <span class="sturi-num">1</span>
-              <img src="" alt="" class="sturi-head">
-              <div class="sturi-info">
-                <h2>某某某</h2>
-                <p>做题数量14334道</p>
+                <h2>{{item.username}}</h2>
+                <p>做题数量{{item.total_num}}道</p>
               </div>
             </li>
           </ul>
@@ -114,77 +118,114 @@
 </template>
 
 <script>
-import { getProject, questionIndex } from '@/api/questions'
+import { getProject, questionIndex, studentsRanking } from '@/api/questions'
+import knowSection from '../../components/questions/knowSection'
+import jieduanTest from '../../components/questions/jieduanTest'
+import discussSelf from '../../components/questions/discussSelf'
 import { mapState } from 'vuex'
+// import Cookies from 'js-cookie'
 export default {
   data () {
     return {
-      projectArr: ['中文part1', '中文part2', '中文part3', '中文part4'],
+      projectArr: [], // 科目
       selIdx: 0,
       subjectId: '',
-      practiceInfo: [
+      course_id: '',
+      // user_id: Cookies.get('user_id'),
+      plateList: [
         {
+          id: 1,
           title: '知识点练习',
           describe: '针对章节，详细考点'
         },
         {
+          id: 2,
           title: '阶段测试',
           describe: '以章节纬度阶段测试'
         },
         {
+          id: 3,
           title: '论述题自测',
           describe: '精准答案对比'
         },
         {
+          id: 7,
           title: '冲刺训练营',
           describe: '集中冲刺'
         },
         {
+          id: 4,
           title: '系统高频错题',
           describe: '高频历史错题'
         },
         {
+          id: 5,
           title: '自助练习',
           describe: '学习知识点自定义'
         },
         {
+          id: 6,
           title: '组卷模考',
           describe: '适用于考前冲刺'
         }
       ],
+      visible: false,
+      showPlateModal: '', // 显示弹窗对应模块
+      plateTitle: '', // 显示弹窗对应模块title问案
       questionResult: {}, // 正确率，做题数，平均分
       studentsRankList: [] // 学生排名
     }
   },
+  components: {
+    knowSection,
+    jieduanTest,
+    discussSelf
+  },
   computed: {
     ...mapState({
-      userId: state => state.user.userId
+      user_id: state => state.user.user_id
     })
   },
-
   mounted () {
-    this.projectInfo()
+    this.projectList()
   },
   methods: {
     // 展示课程
-    projectInfo () {
-      getProject({ user_id: this.userId }).then(data => {
+    projectList () {
+      getProject({ user_id: this.user_id }).then(data => {
         const res = data.data
         this.projectArr = res.data
-        // this.subjectId = res.data[0].id
         this.getQuestionIndex(res.data[0].id, this.selIdx)
       })
     },
     // 课程对应正确率，做题数，平均分
     getQuestionIndex (id, index) {
+      this.course_id = id
       this.selIdx = index
       questionIndex({
-        user_id: this.userId,
-        course_id: id
+        user_id: this.user_id,
+        course_id: this.course_id
       }).then(data => {
         const res = data.data
         this.questionResult = res.data
+        this.getStudentsRanking(this.course_id) // 学员排名
       })
+    },
+    // 学员排名
+    getStudentsRanking (id) {
+      studentsRanking({
+        course_id: id,
+        limit: 10
+      }).then(data => {
+        const res = data.data
+        this.studentsRankList = res.data
+      })
+    },
+    // 去做题 展示对应模块题库
+    doQuestions ({ id, title }) {
+      this.plateTitle = title
+      this.showPlateModal = id
+      this.visible = true
     }
   }
 }
@@ -192,6 +233,7 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
+  // @import "../../assets/scss/iview";
   .question-wrap{
     padding: 20px 0;
     .qt-wrap-l{
@@ -236,13 +278,32 @@ export default {
     color: $colfff;
     box-sizing: border-box;
     text-align: center;
+    position: relative;
+    &:after{
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      content: "";
+    }
+    &.qta-item01{
+      &:after{
+        @include bg-img(285, 67, '../../assets/images/questions/wave-bg01.png');
+      }
+    }
     &.qta-item02{
+      &:after{
+        @include bg-img(285, 78, '../../assets/images/questions/wave-bg02.png');
+      }
       .tit{
         color: #8686FF;
       }
       background: linear-gradient(141deg,rgba(155,145,255,1) 0%,rgba(126,130,255,1) 100%);
     }
     &.qta-item03{
+      &:after{
+        @include bg-img(285, 93, '../../assets/images/questions/wave-bg03.png');
+      }
       background: linear-gradient(150deg,rgba(255,147,147,1) 0%,rgba(255,79,79,1) 100%);
       .tit{
         color: #FF6565;
@@ -259,11 +320,11 @@ export default {
       font-size: 16px;
     }
     .record{
-      font-size: 30px;
+      font-size: 36px;
       font-weight: bold;
       padding: 13px 0;
       em{
-        font-size: 14px;
+        font-size: 16px;
       }
     }
     .compare{
@@ -286,10 +347,11 @@ export default {
   .prt-info-three{
     background-color: #ffffff;
     background-repeat: no-repeat;
-    background-size: 83px 127px;
-    background-position: right bottom;
+    background-position: right 50px;
+    background-size: 80px 103px;
     &.prt-info-05{
       background-image: url('../../assets/images/questions/practice-icon05.png');
+      background-size: 91px 102px;
     }
     &.prt-info-06{
       background-image: url('../../assets/images/questions/practice-icon06.png');
@@ -332,18 +394,7 @@ export default {
       color: $col999;
     }
   }
-  .qt-com{
-    width: 79px;
-    height: 32px;
-    line-height: 32px;
-    border-radius: 16px;
-    text-align: center;
-    background: none;
-    border: 1px solid rgba(2,103,255,1);
-    color: $blueColor;
-    &:hover{
-      box-shadow:0px 2px 11px 0px rgba(0,113,230,0.65);
-    }
+  .btn-com{
     .prt-info &{
       color: $colfff;
       background: rgba(24,116,253,1);
@@ -353,13 +404,13 @@ export default {
     }
     .cal-tit &{
       width: 75px;
-      height: 22px;
-      line-height: 22px;
+      height: 24px;
       &:hover{
         box-shadow: 0 0 0 0 transparent;
       }
     }
   }
+
   // 预测评估 答题记录 错题 收藏
   .qt-wrap-r-top, .qt-wrap-r-bottom{
     background: #ffffff;
@@ -444,13 +495,22 @@ export default {
     font-size: 14px;
     color: $col999;
     .stu-rank-item01 &{
+      color: transparent;
       @include bg-img(24, 24, '../../assets/images/questions/rank-icon01.png');
     }
     .stu-rank-item02 &{
-      @include bg-img(24, 24, '../../assets/images/questions/rank-icon01.png');
+      color: transparent;
+      @include bg-img(24, 24, '../../assets/images/questions/rank-icon02.png');
     }
     .stu-rank-item03 &{
-      @include bg-img(24, 24, '../../assets/images/questions/rank-icon01.png');
+      color: transparent;
+      @include bg-img(24, 24, '../../assets/images/questions/rank-icon03.png');
     }
+  }
+  .ivu-modal-header-inner,.ivu-modal-header{
+    padding: 6px 10px;
+  }
+  .ivu-modal-close{
+    top: 16px;
   }
 </style>

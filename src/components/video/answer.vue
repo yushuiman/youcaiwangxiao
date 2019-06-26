@@ -277,7 +277,7 @@ export default {
     padding: 15px 20px;
     margin-bottom: 10px;
     background: $colfff;
-    box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 2px 8px -4px rgba(0,0,0,0.2);
     border-radius: 8px;
     .othq-txt{
       line-height: 20px;
@@ -324,7 +324,7 @@ export default {
       margin-right: 10px;
     }
   }
-  // iview
+  // iview 上传图片
   .course_img .demo-upload-list{
   display: inline-block;
   width: 80px;

@@ -75,8 +75,8 @@
                 <p class="cl-t-info">{{item.introduce}}</p>
               </div>
             </swiper-slide>
-            <div class="swiper-button-prev" slot="button-prev"></div>
-            <div class="swiper-button-next" slot="button-next"></div>
+            <!-- <div class="swiper-button-prev" slot="button-prev"></div>
+            <div class="swiper-button-next" slot="button-next"></div> -->
           </swiper>
         </div>
         <div class="course-main-right course-main-student">
@@ -106,16 +106,19 @@ export default {
       teacehr: [], // 教师信息
       swiperOptionRec: {
         autoplay: {
-          delay: 3000
+          delay: 3000,
+          disableOnInteraction: false
         },
+        loop: true
+        // stopPropagation: true
         // paginationClickable: true,
-        // touchMoveStopPropagation: false,
-        // autoplayDisableOnInteraction: false,
-        // loop: true,
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev'
-        }
+        // touchMoveStopPropagation: true
+        // autoplayDisableOnInteraction: false
+        // loop: true
+        // navigation: {
+        //   nextEl: '.swiper-button-next',
+        //   prevEl: '.swiper-button-prev'
+        // }
       }
     }
   },
@@ -237,6 +240,7 @@ export default {
       }
       span{
         width: 87%;
+        height: 48px;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 1;
@@ -457,9 +461,9 @@ export default {
       color: $col999;
     }
   }
-  .swiper-button-prev, .swiper-button-next{
-    width: 17px;
-    height: 28px;
-    background-size: contain;
-  }
+  // .swiper-button-prev, .swiper-button-next{
+  //   width: 17px;
+  //   height: 28px;
+  //   background-size: contain;
+  // }
 </style>

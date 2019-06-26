@@ -14,30 +14,46 @@ export const questionIndex = (data) => { // 做题数。正确率，平均分
     method: 'post'
   })
 }
-export const subjects = (data) => { // 筛选科目
+export const getPlate = (data) => { // 板块
   return axios.request({
-    url: '/web/Course/subjects',
+    url: '/web/Question/getPlate',
     data,
     method: 'post'
   })
 }
-export const courseIntroduction = (data) => { // 课程简介
+export const studentsRanking = (data) => { // 学院排名
   return axios.request({
-    url: '/web/Course/courseIntroduction',
+    url: '/web/Question/studentsRanking',
     data,
     method: 'post'
   })
 }
-export const secvCatalog = (data) => { // 课程大纲（目录，章节）
+
+export const getSection = (data) => { // 知识点练习章节
   return axios.request({
-    url: '/web/Course/secvCatalog',
+    url: '/web/Question/getSection',
     data,
     method: 'post'
   })
 }
-export const courseCatalog = (data) => { // 课程大纲
+
+export const getKnow = (data) => { // 知识点练习-知识点
   return axios.request({
-    url: '/web/Course/courseCatalog',
+    url: '/web/Question/getKnow',
+    data,
+    method: 'post'
+  })
+}
+export const getCourse = (data) => { // 阶段测试、论述题自测章
+  return axios.request({
+    url: '/web/Question/getCourse',
+    data,
+    method: 'post'
+  })
+}
+export const topicList = (data) => { // 6大板块拿题
+  return axios.request({
+    url: '/web/Question/topicList',
     data,
     method: 'post'
   })

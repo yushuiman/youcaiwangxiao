@@ -563,6 +563,24 @@ $bgColor:#F3F6FF;
   ::-moz-placeholder          {@content}
   :-ms-input-placeholder      {@content}
 }
+.btn-com {
+  width: 79px;
+  height: 32px;
+  border-radius: 16px;
+  text-align: center;
+  background: none;
+  border: 1px solid rgba(2, 103, 255, 1);
+  color: #0267FF;
+}
+@mixin btn_com($w, $h, $bg, $boder, $bordius, $col) {
+  width: $w;
+  height: $h;
+  text-align: center;
+  background: $bg;
+  border: 1px solid $boder;
+  border-radius: $bordius;
+  color: $col;
+}
 
 /* BEM
  -------------------------- */

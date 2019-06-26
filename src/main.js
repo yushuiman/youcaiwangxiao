@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import './assets/scss/common.css'
 // import 'swiper/dist/css/swiper.css'
 import 'element-ui/lib/theme-chalk/index.css'

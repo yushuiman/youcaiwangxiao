@@ -188,6 +188,9 @@ export default {
     &:hover, &.curren{
       background: #26292C;
     }
+    // &.curren{
+    //   background: #ffffff;
+    // }
     .txt{
       color: $col999;
       line-height: 18px;
@@ -302,7 +305,7 @@ export default {
     text-align: right;
     padding-top: 25px;
     .close-icon{
-      @include bg_img(27, 28, '../../assets/images/video/close-icon.png');
+      @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
     }
     .video-info-zjml &{
       padding-right: 20px;

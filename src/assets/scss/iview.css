@@ -1,3 +1,4 @@
+/* 课程分页 */
 .ivu-page-item {
   display: inline-block;
   vertical-align: middle;
@@ -40,6 +41,10 @@
 .ivu-page-disabled a {
   color: #666666;
 }
+/* 题库modal */
+/* .practiceModal .ivu-modal-body {
+  padding: 0!important;
+} */
 /* a {
  color: #2d8cf0;
  background: 0 0;

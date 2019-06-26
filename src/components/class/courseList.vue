@@ -19,7 +19,7 @@
             </template>
             <el-menu-item :index="'1-1'+ index+1" v-for="(v, index) in val.videos" :key="index"
             @click="playVideo(item, val, v)">
-              <i class="elt-icon elt-icon-play"></i>
+              <i class="elt-icon elt-icon-stop"></i>
               <span>{{v.video_name}}</span>
               <em class="free-pay">免费试听</em>
             </el-menu-item>

@@ -1,0 +1,232 @@
+<template>
+  <div class="zsd-section-wrap">
+    <div class="com-bg">
+      <div class="mode-tab">
+        <span :class="{'curren':getQuestion.paper_type == 1 }" @click="doMode(1)"><i></i>练习模式</span>
+        <span :class="{'curren':getQuestion.paper_type == 2 }" @click="doMode(2)"><i></i>考试模式</span>
+      </div>
+      <div class="order-sel">
+        <button class="btn-com" :class="{'curren': getQuestion.num == 15}" @click="orderDoNum(15)">随机15道</button>
+        <button class="btn-com" :class="{'curren': getQuestion.num == 30}" @click="orderDoNum(30)">随机30道</button>
+      </div>
+    </div>
+    <!-- 知识点章节 -->
+    <Row style="padding-top: 6px;">
+      <Col span="24">
+        <Menu accordion width="100%">
+          <Submenu :name="index+1" v-for="(item, index) in sectionList" :key="index">
+            <template slot="title" >
+              <div class="menu-title">
+                <div class="menu-section-title" style="color:#333333; font-size: 18px;">{{item.section_name}}</div>
+                <div>
+                  <Progress
+                    :percent="Number(item.correct)"
+                    :stroke-width="10"
+                    stroke-color="#0267FF"
+                    hide-info style="width: 142px;"/>
+                  <span style="margin-right: 40px; width: 68px; display: inline-block;text-align:right;">{{item.correct}}%</span>
+                </div>
+              </div>
+            </template>
+            <MenuItem :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key">
+              <div style="display: flex; justify-content: space-between;" @click="getKnow(item, val, key)">
+                <div style="color:#666666; font-size: 16px;">{{val.knob_name}}</div>
+                <button class="btn-com" style="width: 69px; height: 24px;">去做题</button>
+              </div>
+            </MenuItem>
+          </Submenu>
+        </Menu>
+      </Col>
+    </Row>
+    <!-- 知识点 -->
+    <Modal v-model="KnowShow"
+      :width="795"
+      draggable
+      footer-hide
+      class="practiceModal">
+      <div slot="header" class="ivu-modal-header-inner" style="font-size: 26px; height: auto; line-height: 1;">
+        知识点练习
+      </div>
+      <div class="com-bg">
+          请选择需要练习的知识点
+      </div>
+      <ul class="know-list">
+        <li v-for="(val, key) in knowList" :key="key" @click="goToPic(val)">{{val.know_name}}</li>
+      </ul>
+    </Modal>
+  </div>
+</template>
+<script>
+import { getSection, getKnow } from '@/api/questions'
+
+export default {
+  props: {
+    course_id: {
+      type: Number
+    },
+    user_id: {
+      type: Number
+    },
+    plate_id: {
+      type: Number
+    }
+  },
+  data () {
+    return {
+      sectionList: [], // 知识点章节
+      getQuestion: {
+        course_id: this.course_id,
+        paper_id: '',
+        section_id: '',
+        knob_id: '', // 节id
+        know_id: '', // 知识点id
+        mock_id: '',
+        user_id: this.user_id,
+        plate_id: this.plate_id,
+        num: 15, // 默认随机15道
+        paper_type: 1 // 默认练习模式
+      },
+      KnowShow: false, // 知识点显示
+      knowList: [] // 知识点
+    }
+  },
+  components: {
+  },
+  mounted () {
+    this.getSectionList()
+  },
+  methods: {
+    getSectionList (val) {
+      getSection({
+        user_id: this.user_id,
+        course_id: this.course_id
+      }).then(data => {
+        const res = data.data
+        this.sectionList = res.data
+      })
+    },
+    // 选择练习考试模式
+    doMode (type) {
+      if (type === 1) {
+        this.getQuestion.paper_type = 1
+      } else if (type === 2) {
+        this.getQuestion.paper_type = 2
+      }
+    },
+    // 做题数量
+    orderDoNum (num) {
+      if (num === 15) {
+        this.getQuestion.num = 15
+      } else if (num === 30) {
+        this.getQuestion.num = 30
+      }
+    },
+    // 知识点显示
+    getKnow (item, val, index) {
+      this.KnowShow = true
+      this.getQuestion.section_id = item.section_id
+      this.getQuestion.knob_id = val.knob_id
+      this.getKnowList()
+    },
+    // 知识点数据
+    getKnowList () {
+      getKnow({
+        section_id: this.getQuestion.section_id,
+        knob_id: this.getQuestion.knob_id
+      }).then(data => {
+        const res = data.data
+        this.knowList = res.data
+      })
+    },
+    // 去做题
+    goToPic ({ id }) {
+      this.getQuestion.know_id = id
+      console.log('跳转做题页')
+    }
+  }
+}
+</script>
+
+<style scoped lang="scss" rel="stylesheet/scss">
+  @import "../../assets/scss/app";
+  .com-bg{
+    margin-top: -2px;
+    background: #F3F6FF;
+    color: $col666;
+    padding: 12px 20px;
+    .zsd-section-wrap &{
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  .mode-tab{
+    span{
+      font-size: 18px;
+      margin-right: 34px;
+      i{
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        border-radius: 100%;
+        box-sizing: border-box;
+        margin-right: 12px;
+        border: 1px solid $blueColor;
+        vertical-align: middle;
+        margin-top: -3px;
+        position: relative;
+      }
+      &.curren{
+        i{
+          &:after{
+            position: absolute;
+            content: "";
+            left: 50%;
+            top: 50%;
+            margin-left: -4px;
+            margin-top: -4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 100%;
+            background: $blueColor;
+          }
+        }
+      }
+    }
+  }
+  .order-sel{
+    text-align: center;
+    .btn-com{
+      width: 90px;
+      height: 26px;
+      margin-left: 20px;
+      border-radius: 14px;
+      &.curren{
+        background: $blueColor;
+        color: $colfff;
+      }
+    }
+  }
+  .know-list{
+    min-height: 600px;
+    max-height: 800px;
+    overflow-y: scroll;
+    li{
+      padding: 14px 24px;
+      font-size: 18px;
+    }
+  }
+  // iview
+  .menu-title{
+    display: flex;
+    justify-content: space-between;
+  }
+  .ivu-menu-vertical.ivu-menu-light:after,.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after{
+    width: 0;
+  }
+  .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
+    background: #FAFAFA;
+  }
+  .ivu-menu-vertical .ivu-menu-item, .ivu-menu-vertical .ivu-menu-submenu-title{
+    padding: 10px 6px;
+  }
+</style>

@@ -93,7 +93,7 @@ export default {
     right: 0;
     z-index: 13;
     background: rgba(0,0,0,.5);
-    display: none;
+    // display: none;
   }
   .slider-list {
     li{
