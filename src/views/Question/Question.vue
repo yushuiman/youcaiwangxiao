@@ -77,7 +77,7 @@
       <div class="qt-wrap-r-top">
         <div class="calculate-info">
           <div class="cal-tit">
-            <span>预测分</span>
+            <h2 class="title-com">我的排名</h2>
             <button class="btn-com">能力评估</button>
           </div>
           <div class="cal-num">
@@ -101,7 +101,7 @@
       </div>
       <div class="qt-wrap-r-bottom">
         <div class="students-rank">
-          <div class="stu-rank-title">学员排名</div>
+          <h2 class="stu-rank-title title-com">学员排名</h2>
           <ul class="stu-rank-list">
             <li class="stu-rank-item" :class="['stu-rank-item0' + (index+1)]" v-for="(item, index) in studentsRankList" :key="index">
               <span class="sturi-num">{{index+1}}</span>
@@ -416,6 +416,9 @@ export default {
         box-shadow: 0 0 0 0 transparent;
       }
     }
+    .prt-info-com &:hover{
+      box-shadow: 0px 2px 11px 0px rgba(0, 113, 230, 0.65);
+    }
   }
 
   // 预测评估 答题记录 错题 收藏
@@ -428,6 +431,7 @@ export default {
   .cal-tit{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     span{
       font-size: 18px;
     }

@@ -91,7 +91,12 @@ export default {
         paper_type: 1 // 默认单选
       },
       KnowShow: false, // 知识点显示
-      knowList: [] // 知识点
+      knowList: [], // 知识点
+      titleObj: {
+        zhang: '',
+        jie: '',
+        dian: ''
+      } // 做题页title
     }
   },
   components: {
@@ -130,6 +135,8 @@ export default {
       this.KnowShow = true
       this.getPoticData.section_id = item.section_id
       this.getPoticData.knob_id = val.knob_id
+      this.titleObj.zhang = item.section_name
+      this.titleObj.jie = val.knob_name
       this.getKnowList()
     },
     // 知识点数据
@@ -143,8 +150,10 @@ export default {
       })
     },
     // 去做题
-    goToPic ({ id }) {
-      this.getPoticData.know_id = id
+    goToPic (v) {
+      this.getPoticData.know_id = v.id
+      this.titleObj.dian = v.know_name
+      window.localStorage.setItem('titleObj', JSON.stringify(this.titleObj))
       this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }

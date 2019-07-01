@@ -197,3 +197,13 @@ input[type='search'] {
   width: 1200px;
   margin: 0 auto;
 }
+/* 做题页 只有一个样式需要覆盖 所有没有新建css */
+.progress-info .ivu-progress-inner {
+  background: none;
+  border: 1px solid #2d8cf0;
+}
+/* 后面封装右边样式  */
+/* .title-com {
+  font-size: 18px;
+  color: #333333;
+} */

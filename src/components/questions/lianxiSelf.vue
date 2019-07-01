@@ -2,7 +2,9 @@
   <div class="lianxi-self-wrap height-com">
     <div class="com-bg menu-jie-title">
       <span>请选择需要练习的章节</span>
-      <button class="btn-com do-potic-btn" v-for="(num, index) in numArr" :key="index">{{num}}</button>
+      <div class="order-sel">
+        <button class="btn-com" :class="{'curren': selNum == index}" v-for="(num, index) in numArr" :key="index" @click="orderDoNum(num, index)">{{num}}</button>
+      </div>
     </div>
     <Row>
       <Col span="24">
@@ -34,11 +36,16 @@
       class="practiceModal">
       <div class="height-com">
         <div class="com-bg menu-jie-title">
-          请选择需要练习的知识点（最多选三个）<button class="btn-com do-potic-btn" @click="goToPic()">去做题</button>
+          请选择需要练习的知识点（最多选三个）<button class="btn-com do-potic-btn" v-if="this.knowIdArr.length>0" @click="goToPic()">去做题</button>
         </div>
         <ul class="know-list">
           <li v-for="(val, key) in knowList" :key="key" @click="multipleChoices(val, key)">
-            <span><label class="check" :class="{'checked': val.flag}"></label>{{val.know_name}}</span>
+            <span>
+              <label class="check" :class="{'checked': knowIdArr.indexOf(val.id)>=0}">
+                <Icon type="md-checkmark" v-if="knowIdArr.indexOf(val.id)>=0"/>
+              </label>
+              {{val.know_name}}
+            </span>
           </li>
         </ul>
       </div>
@@ -73,13 +80,13 @@ export default {
         mock_id: '',
         user_id: this.user_id,
         plate_id: this.plate_id,
-        num: '', // 默认随机15道
-        paper_mode: '', // 默认练习模式
-        paper_type: 1 // 默认单选
+        num: 5, // 默认随机15道
+        paper_type: 2 // 默认自助多选
       },
       KnowShow: false, // 知识点显示
       knowList: [], // 知识点
       selId: false,
+      selNum: 0,
       knowIdArr: []
     }
   },
@@ -107,32 +114,37 @@ export default {
     },
     // 知识点数据
     getKnowList () {
+      this.knowIdArr = []
       getKnow({
         section_id: this.getPoticData.section_id,
         knob_id: this.getPoticData.knob_id
       }).then(data => {
         const res = data.data
         this.knowList = res.data
-        this.knowList.map((val, index) => {
-          val.flag = false
-        })
       })
     },
+    // 做题数量
+    orderDoNum (num, index) {
+      this.selNum = index
+      this.getPoticData.num = num
+    },
     // 多选
-    multipleChoices ({ flag, id }, index) {
-      this.knowList[index].flag = !flag
-      this.$forceUpdate()
-      if (this.knowList[index].flag) {
-        this.knowIdArr.push(id)
+    multipleChoices ({ id }, index) {
+      let idIndex = this.knowIdArr.indexOf(id)
+      if (idIndex >= 0) {
+        this.knowIdArr.splice(idIndex, 1)
       } else {
-        this.knowIdArr.splice(index, 1)
+        if (this.knowIdArr.length >= 3) {
+          this.$Message.warning('最多选择3个')
+          return
+        }
+        this.knowIdArr.push(id)
       }
-      console.log(this.knowIdArr)
+      this.getPoticData.know_id = this.knowIdArr.join(',')
     },
     // 去做题
     goToPic () {
-      // this.getPoticData.know_id = id
-      // this.$router.push({ path: '/dopotic', query: this.getPoticData })
+      this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }
 }
@@ -168,8 +180,23 @@ export default {
     vertical-align: middle;
     margin-top: -3px;
     margin-right: 10px;
+    position: relative;
     &.checked{
-      border: 1px solid #f00;
+      border: 1px solid $blueColor;
+      // i{
+      //   display: inline-block;
+      // }
+    }
+  }
+  .order-sel{
+    .btn-com{
+      width: 58px;
+      height: 25px;
+      margin-left: 20px;
+      &.curren{
+        background: $blueColor;
+        color: $colfff;
+      }
     }
   }
 </style>

@@ -22,7 +22,7 @@
 }
 
 .btn-com:hover {
-    box-shadow: 0px 2px 11px 0px rgba(0, 113, 230, 0.65);
+    /* box-shadow: 0px 2px 11px 0px rgba(0, 113, 230, 0.65); */
 }
 .do-potic-btn{
     width: 69px!important;
@@ -33,6 +33,10 @@
     justify-content: space-between;
     padding: 10px 30px;
     font-size: 18px;
+}
+.title-com{
+    font-size: 18px;
+    color: #333333;
 }
  .ivu-menu-vertical.ivu-menu-light:after,
  .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after {
@@ -69,3 +73,11 @@
  .ivu-modal-close{
      top: 18px;
  }
+ .ivu-icon-md-checkmark {
+     margin-top: -18px;
+ }
+ .ivu-icon-md-checkmark:before {
+     color: #0267ff;
+ }
+
+ 

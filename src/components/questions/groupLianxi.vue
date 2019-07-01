@@ -4,7 +4,7 @@
       请选择需要练习的章节
     </div>
     <ul class="jd-test-list">
-      <li class="jd-test-item" v-for="(v, index) in sectionList" :key="index" @click="goDoPotic(v)">
+      <li class="jd-test-item" v-for="(v, index) in volumeList" :key="index" @click="goToPic(v)">
         <span>{{v.section_name}}</span>
         <button class="btn-com do-potic-btn">去做题</button>
       </li>
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { getSection } from '@/api/questions'
+import { volumeList } from '@/api/questions'
 export default {
   props: {
     course_id: {
@@ -28,25 +28,38 @@ export default {
   },
   data () {
     return {
-      sectionList: []
+      volumeList: [],
+      getPoticData: {
+        course_id: this.course_id,
+        paper_id: '',
+        section_id: '',
+        knob_id: '', // 节id
+        know_id: '', // 知识点id
+        mock_id: '',
+        user_id: this.user_id,
+        plate_id: this.plate_id,
+        num: '', // 默认15道
+        paper_type: 1 // 默认单选
+      }
     }
   },
   mounted () {
-    this.getSectionList()
+    this.getVolumeList()
   },
   methods: {
-    getSectionList (val) {
-      getSection({
+    getVolumeList (val) {
+      volumeList({
         course_id: this.course_id,
         user_id: this.user_id
       }).then(data => {
         const res = data.data
-        this.sectionList = res.data
+        this.volumeList = res.data
       })
     },
     // 去做题
-    goDoPotic (v) {
-      console.log('做题页')
+    goToPic (v) {
+      this.getPoticData.mock_id = v.mock_id
+      this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }
 }

@@ -58,6 +58,13 @@ export const getErrorsection = (data) => { // 高频错题章节
     method: 'post'
   })
 }
+export const volumeList = (data) => { // 组卷列表
+  return axios.request({
+    url: '/web/Question/volumeList',
+    data,
+    method: 'post'
+  })
+}
 export const topicList = (data) => { // 6大板块拿题
   return axios.request({
     url: '/web/Question/topicList',
@@ -65,18 +72,11 @@ export const topicList = (data) => { // 6大板块拿题
     method: 'post'
   })
 }
-export const videoPlayback = (data) => { // 视频播放
+export const questionCollection = (data) => { // 收藏
   return axios.request({
-    url: '/web/Course/videoPlayback',
-    data,
-    method: 'post'
-  })
-}
-export const videoCredentials = (data) => { // 获取视频凭证
-  return axios.request({
-    url: '/web/Course/videoCredentials',
+    url: '/web/Question/questionCollection',
     params: data,
-    method: 'get'
+    method: 'post'
   })
 }
 export const answerList = (data) => { // 问答列表

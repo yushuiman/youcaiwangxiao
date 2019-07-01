@@ -7,7 +7,7 @@
       <i class="star-icon star-diff-icon"></i>
     </div>
     <ul class="jd-test-list">
-      <li class="jd-test-item" v-for="(v, index) in courseList" :key="index" @click="goDoPotic(v)">
+      <li class="jd-test-item" v-for="(v, index) in courseList" :key="index" @click="goToPic(v)">
         <div>
           <i class="star-icon" :class="{'star-diff-icon': v.difficulty == 'A', 'star-middle-icon': v.difficulty == 'B', 'star-easy-icon': v.difficulty == 'C'}"></i>
           <span>{{v.paper_name}}</span>
@@ -45,9 +45,13 @@ export default {
         user_id: this.user_id,
         plate_id: this.plate_id,
         num: '', // 默认随机15道
-        paper_mode: '', // 默认练习模式
         paper_type: 1 // 默认单选
-      }
+      },
+      titleObj: {
+        zhang: '',
+        jie: '',
+        dian: ''
+      } // 做题页title
     }
   },
   mounted () {
@@ -64,8 +68,10 @@ export default {
       })
     },
     // 去做题
-    goDoPotic (v) {
+    goToPic (v) {
       this.getPoticData.paper_id = v.paper_id
+      this.titleObj.zhang = v.paper_name
+      window.localStorage.setItem('titleObj', JSON.stringify(this.titleObj))
       this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }
