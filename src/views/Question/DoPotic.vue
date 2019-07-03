@@ -14,7 +14,7 @@
             </Col>
           </Row>
         </div>
-        <potic-list :topics="topics" :total="total" :getQuestion="getQuestion" @doPoticInfo="doPoticInfo" :ID="ID"></potic-list>
+        <potic-list ref="poticWrap" :topics="topics" :total="total" :getQuestion="getQuestion" @doPoticInfo="doPoticInfo" :ID="ID"></potic-list>
       </div>
       <div class="dptic-wrap-r fr">
         <div class="right-top-wrap">
@@ -24,17 +24,9 @@
             <span class="topic-num"><em data-v-680035d5="">{{percentNum}}</em>/{{total}}</span>
           </div>
           <ul class="dopic-status">
-            <li class="dopstu-item dopstu-item-01">
+            <li class="dopstu-item dopstu-item-01" :class="['dopstu-item-0' + (index+1)]" v-for="(v, index) in stsTxtArr" :key="index" @click="submitAnswers(v)">
               <span><i class="dopstu-icon"></i></span>
-              <p>暂停</p>
-            </li>
-            <li class="dopstu-item dopstu-item-02">
-              <span><i class="dopstu-icon"></i></span>
-              <p>保存</p>
-            </li>
-            <li class="dopstu-item dopstu-item-03">
-              <span><i class="dopstu-icon"></i></span>
-              <p>交卷</p>
+              <p>{{v}}</p>
             </li>
           </ul>
         </div>
@@ -42,23 +34,57 @@
           <div class="answer-card">
             <div class="title-com">
               <h2>答题卡</h2>
-              <div class="anscard-sts">
+              <div class="anscard-sts" v-if="getQuestion.paper_mode == 1">
                 <i class="green-bg"></i>已掌握
-                <i class="red-bg"></i>为掌握
+                <i class="red-bg"></i>未掌握
               </div>
             </div>
             <ul class="anscard-list clearfix" >
-              <li :class="{'blue-bg': item.selId}" v-for="(item, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">
+              <li :class="{'blue-bg': item.currenOption, 'red-bg': item.currenErrorRed, 'green-bg': item.currenRightGreen}" v-for="(item, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">
                 {{index+1}}
               </li>
-              <!-- <li class="green-bg">1</li>
-              <li class="red-bg">1</li>
-              <li class="blue-bg">1</li> -->
-
             </ul>
           </div>
         </div>
       </div>
+      <Modal v-model="visible"
+      :width="330"
+      :title="txtShow"
+      footer-hide
+      class>
+      <div class="stop-box" v-if="txtShow == '暂停'">
+        <img src="../../assets/images/questions/stop-time.jpg" alt="" width="100%">
+        <p>休息一下，马上回来</p>
+        <div>
+          <button class="btn-com">继续做题</button>
+        </div>
+      </div>
+      <div class="save-box" v-if="txtShow == '保存'">
+        <img src="../../assets/images/questions/save.jpg" alt="" width="100%">
+        <p>保存进度，下次继续</p>
+        <div>
+          <button class="btn-com">继续</button>
+          <button class="btn-com">保存</button>
+        </div>
+      </div>
+      <div class="jiaojuan-box" v-if="txtShow == '交卷'">
+        <img src="../../assets/images/questions/jiaojuan.jpg" alt="" width="100%">
+        <div v-if="percentNum != total">
+          <p>您还有试题没完成</p>
+          <div>
+            <button class="btn-com">继续</button>
+            <button class="btn-com" @click="jiaojuan">交卷</button>
+          </div>
+        </div>
+        <div v-else>
+          <p>确认提交试卷？</p>
+          <div>
+            <button class="btn-com">检查</button>
+            <button class="btn-com" @click="jiaojuan">交卷</button>
+          </div>
+        </div>
+      </div>
+    </Modal>
     </div>
     <div v-else>
       没有题
@@ -67,12 +93,15 @@
 </template>
 
 <script>
-import { topicList } from '@/api/questions'
+import { topicList, getPapers } from '@/api/questions'
 import poticList from '../../components/poticList/poticList'
 export default {
   data () {
     return {
-      topics: [],
+      stsTxtArr: ['暂停', '保存', '交卷'],
+      visible: false,
+      txtShow: '',
+      topics: [], // 题列表
       answer_time: '',
       total: '',
       title: '',
@@ -91,8 +120,26 @@ export default {
         paper_mode: this.$route.query.paper_mode,
         paper_type: this.$route.query.paper_type
       },
-      topicArr: [], // 已做题目
-      selId: false,
+      subTopics: {
+        user_id: this.$route.query.user_id,
+        status: 1, // 交卷状态 1完成2未完成
+        course_id: this.$route.query.course_id,
+        section_id: this.$route.query.section_id || 0,
+        knob_id: this.$route.query.knob_id || 0,
+        know_id: this.$route.query.know_id || 0,
+        paper_id: this.$route.query.paper_id || 0,
+        mock_id: this.$route.query.mock_id || 0,
+        plate_id: this.$route.query.plate_id,
+        used_time: 600,
+        paper_type: this.$route.query.paper_mode || 2, // 练习1 考试2
+        question_content: {
+          knob_id: this.$route.query.knob_id || 0,
+          know_id: this.$route.query.know_id || 0,
+          mock_id: this.$route.query.mock_id || 0,
+          paper_id: this.$route.query.plate_id,
+          question: []
+        } // 交卷信息
+      },
       ID: '#anchor-0',
       scrollTop: 0
     }
@@ -121,15 +168,18 @@ export default {
         this.$refs.fixedTit.style.width = ''
       }
     },
-    doPoticInfo (num = 0) {
-      this.percentNum = num
-      this.percent = this.percentNum / this.total * 100
-    },
     goAnchor (selector) {
       var anchor = this.$el.querySelector(selector)
       document.documentElement.scrollTop = anchor.offsetTop
     },
-    // 题
+    // 题list
+    doPoticInfo (num = 0, val) {
+      this.percentNum = num
+      if (val) {
+        this.subTopics.question_content.question = val
+      }
+      this.percent = this.percentNum / this.total * 100
+    },
     getTopicList () {
       topicList(this.getQuestion).then(data => {
         const res = data.data
@@ -138,20 +188,42 @@ export default {
         this.total = res.data.total
         this.title = res.data.title
         this.topics.map((val, index) => {
-          val.flag = false
-          val.currenOption = false
-          // console.log(val.options)
-          // val.options.map((v, index) => {
-          //   v.selOption = false
-          // })
-          // console.log(this.topics)
-          // val.options.selOption = false
+          val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
+          val.flag = false // 解析展开收起交互(练习模式)
+          val.currenOption = false // 点击当前题，不能重复选择(练习模式)
+          val.options.map((v, index) => {
+            v.selOption = false // 选择当前选项变蓝色，其他默认颜色，可以重复选择(除了练习模式，都是这个逻辑)
+          })
         })
-        // this.topics.options.map((val, index) => {
-        //   val.flag = false
-        //   // val.options.selOption = false
-        // })
-        this.doPoticInfo()
+        this.doPoticInfo() // 百分比
+      })
+    },
+    // 交卷 保存 暂停
+    submitAnswers (v) {
+      this.visible = true
+      this.txtShow = v
+    },
+    // 交卷
+    jiaojuan () {
+      this.visible = false
+      if (this.subTopics.question_content.question.length === 0) {
+        for (var j = 0; j < this.topics.length; j++) {
+          this.subTopics.question_content.question.push({
+            question_id: this.topics[j].ID,
+            true_options: this.topics[j].options[0].right,
+            user_answer: ''
+          })
+        }
+      }
+      if (this.percent === this.total) {
+        this.subTopics.status = 2
+      }
+      this.subGetPapers()
+    },
+    subGetPapers () {
+      getPapers(this.subTopics).then(data => {
+        const res = data.data
+        this.$router.push({ path: '/resultReport', query: { paper_id: res.data.paper_id } })
       })
     }
   }
@@ -189,10 +261,6 @@ export default {
   }
    // 封装end
   .dptic-title{
-    // position: fixed;
-    // left: 0;
-    // right:0;
-    // width: 895px;
     padding: 0 20px;
     @include lh(60, 60);
     border-radius: 8px;
@@ -258,12 +326,12 @@ export default {
       margin-top: -3px;
       margin-right: 6px;
       display: inline-block;
-      &.green-bg{
-        background: #47BF7F;
-      }
       &.red-bg{
         margin-left: 20px;
         background: #ED7171;
+      }
+      &.green-bg{
+        background: #47BF7F;
       }
     }
   }
@@ -279,17 +347,38 @@ export default {
       border: 1px solid $col666;
       border-radius: 14px;
       margin: 10px;
-      &.green-bg, &.red-bg, &.blue-bg{
+      &.blue-bg, &.red-bg, &.green-bg{
         border: 0;
         color: $colfff;
+      }
+      &.blue-bg{
+        background: #3485FF;
+      }
+      &.red-bg{
         background: #ED7171;
       }
       &.green-bg{
         background: #47BF7F;
       }
-      &.blue-bg{
-        background: #3485FF;
-      }
     }
   }
+  // modal
+  .stop-box{
+    // @include bg-img(795, 400, '../../assets/images/questions/stop-time.png');
+  }
+  .save-box{
+    // @include bg-img(795, 400, '../../assets/images/questions/save.png');
+  }
+  .jiaojuan-box{
+    // @include bg-img(795, 400, '../../assets/images/questions/jiaojuan.png');
+  }
+  // <div class="stop-box" v-if="txtShow == '暂停'">
+  //       地方换个卡地方换个卡都发挥更大发挥更开放1
+  //     </div>
+  //     <div class="save-box" v-if="txtShow == '保存'">
+  //       地方换个卡地方换个卡都发挥更大发挥更开放2
+  //     </div>
+  //     <div class="jiaojuan-box" v-if="txtShow == '交卷'">
+  //       地方换个卡地方换个卡都发挥更大发挥更开放3
+  //     </div>
 </style>

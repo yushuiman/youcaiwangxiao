@@ -70,6 +70,7 @@ export default {
     // 去做题
     goToPic (v) {
       this.getPoticData.paper_id = v.paper_id
+      // this.getPoticData.section_id = v.paper_id
       this.titleObj.zhang = v.paper_name
       window.localStorage.setItem('titleObj', JSON.stringify(this.titleObj))
       this.$router.push({ path: '/dopotic', query: this.getPoticData })

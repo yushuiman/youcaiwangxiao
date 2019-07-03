@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 尾部 -->
-    <footer id="footer">
+    <footer id="footer" v-show="$route.meta.showFooter">
       <div class="footer-wrap">
         <div class="footer-top w-wrap">
           <img src="@/assets/images/global/yc-logo-gray.png" alt="logo" class="yc-logo">
@@ -100,11 +100,11 @@
 </template>
 <script>
 export default {
-  data(){
-    return{
+  data () {
+    return {
     }
   },
-  mounted(){
+  mounted () {
   }
 }
 </script>

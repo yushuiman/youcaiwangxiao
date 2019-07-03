@@ -79,16 +79,16 @@ export const questionCollection = (data) => { // 收藏
     method: 'post'
   })
 }
-export const answerList = (data) => { // 问答列表
+export const getPapers = (data) => { // 交卷
   return axios.request({
-    url: '/web/Course/answerList',
+    url: '/web/Question/getPapers',
     data,
     method: 'post'
   })
 }
-export const answerSub = (data) => { // 问题提交
+export const resultsStati = (data) => { // 成绩统计
   return axios.request({
-    url: '/web/Course/answerSub',
+    url: '/web/Question/resultsStati ',
     data,
     method: 'post'
   })

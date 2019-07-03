@@ -355,6 +355,9 @@ export default {
       }
     }
   }
+  .clt-main{
+    width: 902px;
+  }
   .clt-tab{
     @include lh(49, 49);
     span{

@@ -16,22 +16,32 @@
           <img v-if="item.topic[3]" :src="item.topic[3]" alt="">
           <p v-if="item.topic[4]">{{item.topic[4]}}</p>
         </div>
-        <ul class="topic-opition">
+        <!-- 练习模式 -->
+        <ul class="topic-opition" v-if="getQuestion.paper_mode == 1" >
+          <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPoticPractice(item, v, index, key)">
+            <div class="opi-abcd">
+              <span :class="{'red-bg': v.errorRed, 'green-bg': v.rightGreen}">{{v.option}}</span>
+            </div>
+            <p>{{v.topic}}</p>
+          </li>
+        </ul>
+        <!-- 真题模式 -->
+        <ul class="topic-opition" v-else>
           <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPotic(item, v, index, key)">
             <div class="opi-abcd">
-              <!-- 'green-bg': currenSelOption!=v.right &&getQuestion.paper_mode == 1 }" -->
-              <span :class="{'blue-bg': v.currenSelOption}">{{v.option}}</span>
+              <span :class="{'blue-bg': v.selOption}">{{v.option}}</span>
             </div>
             <p>{{v.topic}}</p>
           </li>
         </ul>
       </div>
-      <div class="resolving" v-if="getQuestion.paper_mode == 1">
+      <!-- 练习模式打错才显示解析 -->
+      <div class="resolving" v-if="getQuestion.paper_mode == 1 && item.analysis">
         <span class="resolve-tit" @click="resolveToggle(item.flag, index)">{{item.flag ? '收起' : '解析'}}<Icon type="ios-arrow-down" :class="{'shouqi': item.flag}"/></span>
         <div class="resolve-detail" v-show="item.flag">
           <p class="right-resolve">
-            <span>正确答案<em class="right">A</em></span>
-            <span v-if="item.discuss_useranswer">你的答案<em>{{item.discuss_useranswer}}</em></span>
+            <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
+            <!-- <span v-if="item.discuss_useranswer">你的答案<em>{{item.discuss_useranswer}}</em></span> -->
           </p>
           <p class="instr-resolve"><span>解析：</span>的返回港口地方高考的发给客服电话个会发光</p>
           <img v-if="item.analysisPic" :src="item.analysisPic" alt="">
@@ -61,11 +71,10 @@ export default {
   },
   data () {
     return {
-      type: 0, // 收藏
-      percentNum: 0, // 已做题数
-      selId: false,
-      topicArr: [],
-      currenSelOption: ''
+      seletedAnswers: [],
+      currenSelOption: '',
+      questionContent: [], // 交卷：答题信息
+      otherquestion: [] // meiyouzuode
     }
   },
   computed: {
@@ -76,60 +85,112 @@ export default {
   mounted () {
   },
   methods: {
+    // 做题练习模式
+    doPoticPractice (item, val, index, key) {
+      if (item.currenOption === true) { // 练习模式：当前题选择以后不能再选
+        return
+      }
+      item.currenOption = true // 练习模式：当前题选择以后不能再选
+      item.options.forEach((v, index) => {
+        v.errorRed = false // 初始化答错状态
+        if (v.option === v.right) {
+          v.rightGreen = true // 遍历哪个是正确答案 对应添加rightGreen
+        }
+      })
+      if (val.option === val.right) { // 判断当前点击的选项是否正确
+        val.rightGreen = true // 答对绿色
+        item.currenRightGreen = true // 答对：右边选项卡对应添加绿色已掌握状态
+        this.$forceUpdate()
+      } else {
+        val.errorRed = true // 答错红色
+        item.currenErrorRed = true // 答错：右边选项卡对应添加红色未掌握状态
+        item.analysis = true // 答错，解析展示
+        this.$forceUpdate()
+      }
+      let num = this.topics.filter((v) => { // 已做题数
+        return v.currenOption
+      })
+      this.$emit('doPoticInfo', num.length, this.questionContent)
+      this.topics.map((v, index) => {
+        v.userOption = ''
+      })
+      item.userOption = val.option // 交卷用
+      for (var k = 0; k < this.questionContent.length; k++) {
+        if (item.ID === this.questionContent[k].question_id) {
+          this.questionContent[k].user_answer = this.topics[k].userOption
+          this.$emit('doPoticInfo', num.length, this.questionContent)
+          this.$forceUpdate()
+          return
+        }
+      }
+      for (var j = 0; j < this.topics.length; j++) {
+        this.questionContent.push({
+          question_id: this.topics[j].ID,
+          true_options: this.topics[j].options[0].right,
+          user_answer: this.topics[j].userOption
+        })
+      }
+      this.$forceUpdate()
+      this.$emit('doPoticInfo', num.length, this.questionContent)
+    },
+    // 做题考试模式
+    doPotic (item, val, index, key) {
+      item.options.forEach((v, index) => {
+        v.selOption = false // 初始化false
+      })
+      val.selOption = true // 点击当前选项true蓝色，else false
+      item.currenOption = true // 点击当前题 右边选项卡对应添加已做蓝色状态
+      let num = this.topics.filter((v) => { // 已做题数
+        return v.currenOption
+      })
+      this.$emit('doPoticInfo', num.length, this.questionContent)
+      this.topics.map((v, index) => {
+        v.userOption = ''
+      })
+      item.userOption = val.option // 交卷用
+      for (var k = 0; k < this.questionContent.length; k++) {
+        if (item.ID === this.questionContent[k].question_id) {
+          this.questionContent[k].user_answer = this.topics[k].userOption
+          this.$emit('doPoticInfo', num.length, this.questionContent)
+          this.$forceUpdate()
+          return
+        }
+      }
+      for (var j = 0; j < this.topics.length; j++) {
+        this.questionContent.push({
+          question_id: this.topics[j].ID,
+          true_options: this.topics[j].options[0].right,
+          user_answer: this.topics[j].userOption
+        })
+      }
+      this.$forceUpdate()
+      this.$emit('doPoticInfo', num.length, this.questionContent)
+    },
     // 解析展开收起
     resolveToggle (currentFlag, index) {
       this.topics[index].flag = !currentFlag
       this.$forceUpdate()
     },
-    // 做题
-    doPotic (item, val, index, key) {
-      item.selId = true // 解析用到
-      this.topics[index].currenOption = true
-      this.topics[index].options[key].currenSelOption = true
-      console.log(this.topics[index].options[key])
-      // if (this.topics[index].currenOption) {
-      //   this.topics[index].options.map((v, index) => {
-      //     v.flag = true
-      //   })
-      // }
-      for (var i = 0; i < this.topicArr.length; i++) {
-        if (item.ID === this.topicArr[i].questionId) {
-          this.topicArr[i].answerOption = val.option
-          this.$forceUpdate()
-          return
-        }
-      }
-      this.topicArr.push({
-        questionId: item.ID,
-        answerOption: val.option
-      })
-      this.$emit('doPoticInfo', this.topicArr.length)
-      // this.goAnchor('#anchor-' + index)
-    },
-    goAnchor (selector) {
-      var anchor = this.$el.querySelector(selector)
-      document.documentElement.scrollTop = anchor.offsetTop
-    },
     // 收藏
-    qtCollection ({ ID }) {
-      if (this.type === 0) {
-        this.type = 1
-        this.topics.map((val, index) => {
-          val.collection = 1
-        })
+    qtCollection (item) {
+      let { ID, collection } = item
+      if (parseInt(collection) === 1) {
+        item.collection = 0
       } else {
-        this.type = 0
-        this.topics.map((val, index) => {
-          val.collection = 0
-        })
+        item.collection = 1
       }
       questionCollection({
         user_id: this.getQuestion.user_id,
         course_id: this.getQuestion.course_id,
         question_id: ID,
-        type: this.type
+        type: item.collection
       }).then(data => {
       })
+    },
+    // scroll
+    goAnchor (selector) {
+      var anchor = this.$el.querySelector(selector)
+      document.documentElement.scrollTop = anchor.offsetTop
     }
   }
 }
@@ -202,6 +263,10 @@ export default {
           border: 1px solid $col666;
           margin-right: 26px;
           box-sizing: border-box;
+          &.blue-bg{
+            border: 1px solid #0267FF;
+            color: #0267FF;
+          }
           &.red-bg{
             border: 1px solid #ED7171;
             color: #ED7171;
@@ -209,11 +274,6 @@ export default {
           &.green-bg{
             border: 1px solid #0AAB55;
             color: #0AAB55;
-            background: #0AAB55;
-          }
-          &.blue-bg{
-            border: 1px solid #0267FF;
-            color: #0267FF;
           }
         }
       }

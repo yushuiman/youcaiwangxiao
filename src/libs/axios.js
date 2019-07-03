@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { getToken } from '@/libs/utils'
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+
 // import { Spin } from 'iview'
 class HttpRequest {
   constructor (baseUrl = baseURL) {

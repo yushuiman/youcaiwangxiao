@@ -28,7 +28,10 @@ export default new Router({
       path: '/classVideo',
       name: 'classVideo',
       component: () => import('@/views/Video/Video.vue'),
-      meta: { showHeader: false }
+      meta: {
+        showHeader: false,
+        showFooter: false
+      }
     },
     {
       path: '/question',
@@ -41,7 +44,18 @@ export default new Router({
       name: 'dopotic',
       component: () => import('@/views/Question/DoPotic.vue'),
       meta: {
-        showHeader: true
+        showHeader: true,
+        showFooter: false
+      }
+    },
+    // ResultReport
+    {
+      path: '/resultReport',
+      name: 'resultReport',
+      component: () => import('@/views/Question/ResultReport.vue'),
+      meta: {
+        showHeader: true,
+        showFooter: false
       }
     },
     {
