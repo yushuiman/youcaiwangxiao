@@ -18,25 +18,21 @@
           </li>
         </ul>
       </div>
-      <div class="video-info-c fl">
+      <div class="video-info-c fl" :class="{'rightSty': showBox == ''}">
         <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
       </div>
-      <div class="video-info-r video-info-zjml fr" v-if="showBox == '课程<br />切换'">
-        <div class="close-box" @click="closeModel()">
-          <i class="close-icon"></i>
-        </div>
-        <h1 class="vc-title">章节目录</h1>
-        <course-list :package_id="this.$route.query.package_id" :is_zheng="playCourseInfo.is_zheng" @getVideoPlayback="getVideoPlayback()"></course-list>
+      <div class="video-info-zjml fr" v-if="showBox == '课程<br />切换'">
+        <course-list :package_id="this.$route.query.package_id" :is_zheng="playCourseInfo.is_zheng" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback()"></course-list>
       </div>
       <div class="video-info-r fr" v-if="showBox == '答疑'">
         <answer :playCourseInfo="playCourseInfo" @closeModel="closeModel"></answer>
       </div>
       <div class="video-info-r fr" v-if="showBox == '讲义'">
         <div class="close-box" @click="closeModel()">
-            <i class="close-icon"></i>
-          </div>
-          <h1 class="vc-title">讲义</h1>
-          <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="745px"></iframe>
+          <i class="close-icon"></i>
+        </div>
+        <h1 class="vc-title">讲义</h1>
+        <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%"></iframe>
       </div>
       <!-- 课程 答疑 讲义 -->
       <div class="three-main">
@@ -158,25 +154,50 @@ export default {
     }
   }
   .video-main{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    top: 70px;
+    width: 100%;
+    // height: 100%;
     background: #1D1F21;
-    display: flex;
-    justify-content: space-between;
-    position: relative;
+    // background: #f00;
+    // display: flex;
+    // justify-content: space-between;
     .video-info-l{
       width: 60px;
     }
     .video-info-c{
-      flex: 1;
-      height: 849px;
+      position: absolute;
+      left: 61px;
+      top: 20px;
+      bottom: 20px;
+      // width: 100%;
+      right: 382px;
+      // height: 849px;
+      // height: 100%;
       background:rgba(0,0,0,1);
-      border-radius:10px;
-      margin-top: 20px;
+      border-radius: 10px;
+      box-sizing: border-box;
+      &.rightSty{
+        right: 0;
+      }
     }
     .video-info-r{
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
       // padding: 0 20px;
-      width: 495px;
-      height: 869px;
-      box-sizing: border-box;
+      width: 382px;
+      background: #F8FAFC;
+      // height: 869px;
+      // height: 100%;
+      // box-sizing: border-box;
+      box-shadow: 0px 15px 10px -15px rgba(0,0,0,0.2) inset;
+      &.video-info-zjml{
+        background: #1D1F21;
+      }
     }
   }
   .vinfo-ul{
@@ -215,8 +236,10 @@ export default {
     font-size: 20px;
     color: $col333;
     .video-info-r &{
-      color: #E6E6E6;
       padding-left: 20px;
+    }
+    .video-info-zjml &{
+      color: #E6E6E6;
     }
   }
   .el-video-icon{
@@ -263,11 +286,13 @@ export default {
     &.vid-kcqh{
       left: 60px;
       width: 386px;
-      height: 849px;
+      // height: 849px;
+      height: 100%;
     }
     &.vid-jy, &.vid-dy{
       width: 495px;
-      height: 869px;
+      // height: 869px;
+      height: 100%;
       top: 0;
       right: 0;
       background: #ffffff;
@@ -304,11 +329,9 @@ export default {
   .close-box{
     text-align: right;
     padding-top: 25px;
+    padding-right: 20px;
     .close-icon{
       @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
-    }
-    .video-info-zjml &{
-      padding-right: 20px;
     }
   }
 </style>

@@ -372,13 +372,4 @@ export default {
   .jiaojuan-box{
     // @include bg-img(795, 400, '../../assets/images/questions/jiaojuan.png');
   }
-  // <div class="stop-box" v-if="txtShow == '暂停'">
-  //       地方换个卡地方换个卡都发挥更大发挥更开放1
-  //     </div>
-  //     <div class="save-box" v-if="txtShow == '保存'">
-  //       地方换个卡地方换个卡都发挥更大发挥更开放2
-  //     </div>
-  //     <div class="jiaojuan-box" v-if="txtShow == '交卷'">
-  //       地方换个卡地方换个卡都发挥更大发挥更开放3
-  //     </div>
 </style>

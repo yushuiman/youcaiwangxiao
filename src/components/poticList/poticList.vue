@@ -1,8 +1,52 @@
 <template>
-  <div class="topic-main">
+  <!-- 解析模块 -->
+  <div class="topic-main" v-if="getQuestion.jiexi == 1">
     <div class="topic-list" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
       <div class="topic-top">
-        <span class="topic-num"><em>{{item.questionNumber}}</em>/{{total}}</span>
+        <span class="topic-num"><em>{{index+1}}</em>/{{topics.length}}</span>
+        <ul class="topic-error-sc">
+          <li><i class="dy"></i><p>答疑</p></li>
+          <li><i class="error"></i><p>纠错</p></li>
+          <li @click="qtCollection(item)"><i class="collect" :class="{'active': item.collection == 1}"></i><p>收藏</p></li>
+        </ul>
+      </div>
+      <div class="topic-item">
+        <div class="topic-title">
+          <p v-if="item.topic[0]">{{item.topic[0]}}</p>
+          <img v-if="item.topic[1]" :src="item.topic[1]" alt="">
+          <p v-if="item.topic[2]">{{item.topic[2]}}</p>
+          <img v-if="item.topic[3]" :src="item.topic[3]" alt="">
+          <p v-if="item.topic[4]">{{item.topic[4]}}</p>
+        </div>
+        <ul class="topic-opition">
+          <li class="tpc-opi" v-for="(v, key) in item.options" :key="key">
+            <div class="opi-abcd">
+              <span :class="{'red-bg': v.errorRed, 'green-bg': v.rightGreen}">{{v.option}}</span>
+            </div>
+            <p>{{v.topic}}</p>
+            <span class="eprone" v-if="v.eprone">{{item.eprone}}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="resolving">
+        <span class="resolve-tit" @click="resolveToggle(item.flag, index)">{{item.flag ? '收起' : '解析'}}<Icon type="ios-arrow-down" :class="{'shouqi': item.flag}"/></span>
+        <div class="resolve-detail" v-show="item.flag">
+          <p class="right-resolve">
+            <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
+            <span v-if="item.options[0].userOption">我的答案<em>{{item.options[0].userOption}}</em></span>
+            <span v-else>我的答案<em>未作答</em></span>
+          </p>
+          <p class="instr-resolve"><span>解析：</span>的返回港口地方高考的发给客服电话个会发光</p>
+          <img v-if="item.analysisPic" :src="item.analysisPic" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 真题/练习模块 -->
+  <div class="topic-main" v-else>
+    <div class="topic-list" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
+      <div class="topic-top">
+        <span class="topic-num"><em>{{index+1}}</em>/{{total}}</span>
         <ul class="topic-error-sc">
           <li><i class="error"></i><p>纠错</p></li>
           <li @click="qtCollection(item)"><i class="collect" :class="{'active': item.collection == 1}"></i><p>收藏</p></li>
@@ -17,7 +61,7 @@
           <p v-if="item.topic[4]">{{item.topic[4]}}</p>
         </div>
         <!-- 练习模式 -->
-        <ul class="topic-opition" v-if="getQuestion.paper_mode == 1" >
+        <ul class="topic-opition" v-if="getQuestion.paper_mode == 1">
           <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPoticPractice(item, v, index, key)">
             <div class="opi-abcd">
               <span :class="{'red-bg': v.errorRed, 'green-bg': v.rightGreen}">{{v.option}}</span>
@@ -41,7 +85,7 @@
         <div class="resolve-detail" v-show="item.flag">
           <p class="right-resolve">
             <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
-            <!-- <span v-if="item.discuss_useranswer">你的答案<em>{{item.discuss_useranswer}}</em></span> -->
+            <span v-if="item.userOption">我的答案<em>{{item.userOption}}</em></span>
           </p>
           <p class="instr-resolve"><span>解析：</span>的返回港口地方高考的发给客服电话个会发光</p>
           <img v-if="item.analysisPic" :src="item.analysisPic" alt="">
@@ -143,7 +187,6 @@ export default {
       let num = this.topics.filter((v) => { // 已做题数
         return v.currenOption
       })
-      this.$emit('doPoticInfo', num.length, this.questionContent)
       this.topics.map((v, index) => {
         v.userOption = ''
       })
@@ -151,8 +194,8 @@ export default {
       for (var k = 0; k < this.questionContent.length; k++) {
         if (item.ID === this.questionContent[k].question_id) {
           this.questionContent[k].user_answer = this.topics[k].userOption
-          this.$emit('doPoticInfo', num.length, this.questionContent)
           this.$forceUpdate()
+          this.$emit('doPoticInfo', num.length, this.questionContent)
           return
         }
       }
@@ -206,7 +249,7 @@ export default {
     padding: 0 30px;
   }
   .topic-top{
-    padding: 10px 0;
+    padding: 12px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -225,6 +268,9 @@ export default {
         color: $col999;
         font-size: 12px;
         margin-top: 2px;
+      }
+      .dy{
+        @include bg-img(20, 20, '../../assets/images/questions/answer-icon.png');
       }
       .error{
         @include bg-img(20, 20, '../../assets/images/questions/error-icon.png');
@@ -279,6 +325,11 @@ export default {
       }
       p{
         line-height: 22px;
+      }
+      .eprone{
+        color: $col999;
+        font-size: 16px;
+        margin-left: 50px;
       }
     }
   }

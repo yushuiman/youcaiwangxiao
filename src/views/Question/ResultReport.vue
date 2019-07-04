@@ -1,14 +1,52 @@
 <template>
-  <div>
-    <h2>测试报告</h2>
-    <div>
-      <div>
-        <img src="" alt="">
-      </div>
-      <div>
-        <div>结果正确率</div>
-        <div>
-          答题卡
+  <div class="result-wrap">
+    <div class="w-wrap">
+      <h2 class="r-title">测试报告</h2>
+      <div class="result-main">
+        <div class="result-left">
+          <img src="../../assets/images/questions/result-img.png" alt="">
+        </div>
+        <div class="result-right">
+          <h2 class="r-section-title">{{resultsInfo.paper_name}}</h2>
+          <div class="r-statistics">
+            <div class="result-water">
+              <div>{{resultsInfo.accuracy}}</div>
+              <p>正确率(%)</p>
+            </div>
+            <ul class="right-wrong-list">
+              <li class="rw-item">
+                <p><em>{{resultsInfo.true_num}}</em>道</p>
+                <span>做对</span>
+              </li>
+              <li class="rw-item">
+                <p><em>{{resultsInfo.false_num}}</em>道</p>
+                <span>做错</span>
+              </li>
+              <li class="rw-item">
+                <p><em>{{resultsInfo.as_num}}</em>/{{resultsInfo.question_num}}</p>
+                <span>已做/总题</span>
+              </li>
+            </ul>
+          </div>
+          <div class="r-statistics-card">
+            <div class="title-com">
+              <h2>答题卡</h2>
+              <div class="anscard-sts">
+                <i class="green-bg"></i>已掌握
+                <i class="red-bg"></i>未掌握
+                <i class="white-bg"></i>未做答
+              </div>
+            </div>
+            <div class="rsc-list">
+              <ul class="anscard-list clearfix" v-for="(item, index) in cardList" :key="index">
+                <li :class="{'red-bg': v.redCurren, 'green-bg': v.rightCurren}" v-for="(v, index) in item" :key="index">{{v.num}}</li>
+              </ul>
+            </div>
+            <div class="jiexi-btn">
+              <button class="btn-com all-btn" @click="viewAnalysis('2')">全部解析</button>
+              <button class="btn-com error-btn" @click="viewAnalysis('1')">错题解析</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -21,26 +59,8 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      subTopics: {
-        user_id: this.$route.query.user_id,
-        status: 1, // 交卷状态 1完成2未完成
-        course_id: this.$route.query.course_id,
-        section_id: this.$route.query.section_id || 0,
-        knob_id: this.$route.query.knob_id || 0,
-        know_id: this.$route.query.know_id || 0,
-        paper_id: this.$route.query.paper_id || 0,
-        mock_id: this.$route.query.mock_id || 0,
-        plate_id: this.$route.query.plate_id,
-        used_time: 600,
-        paper_type: this.$route.query.paper_mode || 2, // 练习1 考试2
-        question_content: {
-          knob_id: this.$route.query.knob_id || 0,
-          know_id: this.$route.query.know_id || 0,
-          mock_id: this.$route.query.mock_id || 0,
-          paper_id: this.$route.query.plate_id,
-          question: []
-        }
-      }
+      resultsInfo: {},
+      cardList: []
     }
   },
   computed: {
@@ -59,7 +79,29 @@ export default {
         user_id: this.user_id,
         paper_id: this.$route.query.paper_id
       }).then(data => {
-
+        const res = data.data
+        this.resultsInfo = res.data
+        let answerList = res.data.question_content
+        answerList.map((v, index) => {
+          v.num = index + 1
+          if (v.user_answer !== '' && v.user_answer === v.true_options) {
+            v.rightCurren = true
+          }
+          if (v.user_answer !== '' && v.user_answer !== v.true_options) {
+            v.redCurren = true
+          }
+        })
+        for (let i = 0; i < answerList.length; i += 10) {
+          this.cardList.push(answerList.slice(i, i + 10))
+        }
+      })
+    },
+    viewAnalysis (type) {
+      this.$router.push({ path: '/analysis',
+        query: {
+          paper_id: this.$route.query.paper_id,
+          type: type
+        }
       })
     }
   }
@@ -68,92 +110,94 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .do-potic-wrap{
-    padding: 20px 0;
+  .result-wrap{
+    position: absolute;
+    width: 100%;
+    top: 70px;
+    min-height: 100%;
+    background: url('../../assets/images/questions/result-bg.png') no-repeat center;
+    background-size: cover;
+  }
+  .r-title{
+    font-size: 28px;
+    padding-top: 46px;
+    padding-bottom: 20px;
+  }
+  .result-main{
+    display: flex;
+    height: 806px;
+    // margin-bottom: 46px;
+    background: rgba(255,255,255,1);
+    box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
+    border-radius: 10px;
     font-size: 18px;
     color: $col666;
-    .dptic-wrap-l{
-      width: 895px;
-    }
-    .dptic-wrap-r{
-      width: 285px;
-      position: fixed;
-      top: 90px;
-      margin-left: 915px;
+  }
+  .result-left{
+    width: 538px;
+    height: 100%;
+    img{
+      width: 100%;
+      height: 100%;
     }
   }
-  // 封装start
-  .right-top-wrap, .right-bottom-wrap{
-    background: $colfff;
-    margin-bottom: 20px;
-    padding: 20px;
+  .result-right{
+    padding: 36px 36px 0;
+    flex: 1;
+    position: relative;
+  }
+  .r-section-title{
+    font-size: 24px;
+  }
+  .r-statistics{
+    padding: 29px 24px 50px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .result-water{
+    width: 135px;
+    text-align: center;
+    div{
+      font-size: 50px;
+      line-height: 135px;
+      @include bg-img(135, 135, '../../assets/images/questions/result-water.png');
+    }
+    p{
+      margin-top: 10px;
+    }
+  }
+  .right-wrong-list{
+    display: flex;
+  }
+  .rw-item{
+    padding: 0 32px;
+    text-align: center;
+    p{
+      margin-bottom: 10px;
+      em{
+        font-size: 34px;
+      }
+    }
+    &:nth-child(1){
+      p{
+        color: #0AAB55;
+      }
+    }
+    &:nth-child(2){
+      p{
+        color: #E84342;
+      }
+    }
   }
   .title-com{
     font-size: 18px;
     color: $col333;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-  }
-   // 封装end
-  .dptic-title{
-    padding: 0 20px;
-    @include lh(60, 60);
-    border-radius: 8px;
-    background: $colfff;
-    margin-bottom: 20px;
-    box-sizing: border-box;
-    .menu-title{
-      color: $col333;
-      font-size: 20px;
-    }
-  }
-  .answer-time{
-    text-align: right;
-  }
- // 右边做题状态
-  .progress-info{
-    padding-top: 20px;
-    padding-bottom: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    .topic-num{
-     margin-left: 32px;
-    }
-  }
-  .dopic-status{
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-    padding: 0 20px;
-  }
-  .dopstu-item{
-    span{
-      height: 35px;
-      display: block;
-      i{
-        vertical-align: middle;
-      }
-    }
-    p{
-      color: $col999;
-      font-size: 14px;
-      margin-top: 10px;
-    }
-  }
-  .dopstu-icon{
-    .dopstu-item-01 &{
-      @include bg-img(35, 35, '../../assets/images/questions/do-prt-icon01.png');
-    }
-    .dopstu-item-02 &{
-      @include bg-img(30, 30, '../../assets/images/questions/do-prt-icon02.png');
-    }
-    .dopstu-item-03 &{
-      @include bg-img(31, 33, '../../assets/images/questions/do-prt-icon03.png');
-    }
   }
   .anscard-sts{
+    margin-left: 35px;
     i{
       width: 10px;
       height: 10px;
@@ -161,19 +205,25 @@ export default {
       vertical-align: middle;
       margin-top: -3px;
       margin-right: 6px;
+      margin-left: 20px;
       display: inline-block;
+      box-sizing: border-box;
       &.red-bg{
-        margin-left: 20px;
         background: #ED7171;
       }
       &.green-bg{
         background: #47BF7F;
       }
+      &.white-bg{
+        border: 1px solid $col666;
+      }
     }
   }
+  .rsc-list{
+    padding-top: 20px;
+    margin-left: -10px;
+  }
   .anscard-list{
-    padding-top: 10px;
-    height: 426px;
     li{
       float: left;
       width: 28px;
@@ -183,6 +233,9 @@ export default {
       border: 1px solid $col666;
       border-radius: 14px;
       margin: 10px;
+      &:nth-child(5){
+        margin-right: 60px;
+      }
       &.blue-bg, &.red-bg, &.green-bg{
         border: 0;
         color: $colfff;
@@ -198,23 +251,24 @@ export default {
       }
     }
   }
-  // modal
-  .stop-box{
-    // @include bg-img(795, 400, '../../assets/images/questions/stop-time.png');
+  .jiexi-btn{
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    text-align: right;
+    button{
+      width: 122px;
+      height: 36px;
+      line-height: 36px;
+      border-radius: 18px;
+      margin-left: 20px;
+      &.on{
+        background: #0066FF;
+      }
+    }
   }
-  .save-box{
-    // @include bg-img(795, 400, '../../assets/images/questions/save.png');
-  }
-  .jiaojuan-box{
-    // @include bg-img(795, 400, '../../assets/images/questions/jiaojuan.png');
-  }
-  // <div class="stop-box" v-if="txtShow == '暂停'">
-  //       地方换个卡地方换个卡都发挥更大发挥更开放1
-  //     </div>
-  //     <div class="save-box" v-if="txtShow == '保存'">
-  //       地方换个卡地方换个卡都发挥更大发挥更开放2
-  //     </div>
-  //     <div class="jiaojuan-box" v-if="txtShow == '交卷'">
-  //       地方换个卡地方换个卡都发挥更大发挥更开放3
-  //     </div>
+  // <div class="jiexi-btn">
+  //             <button class="btn-com all-btn">全部解析</button>
+  //             <button class="btn-com error-btn">错题解析</button>
+  //           </div>
 </style>

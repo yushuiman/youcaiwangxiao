@@ -334,7 +334,7 @@ export default {
   .prism-player .prism-big-play-btn{
     border: 2px solid #F99111;
     border-radius: 100%;
-    z-index: 12;
+    z-index: 112;
   }
   .prism-player .prism-big-play-btn:hover{
     border: 2px solid #F99111;

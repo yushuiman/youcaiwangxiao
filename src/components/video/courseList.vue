@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="rightCourseList">
     <div class="video-course-wrap vid-kcqh">
       <h1 class="vc-title">套餐内课程</h1>
       <div class="vc-list" v-for="(item, index) in packageList" :key="index" @click="getSecvCatalog(item)">
@@ -10,28 +10,34 @@
         </div>
       </div>
     </div>
-    <el-row class="tac">
-      <el-col :span="24">
-        <el-menu
-          default-active="2"
-          class="el-menu-vertical-demo"
-          background-color="#1D1F21"
-          text-color="#E6E6E6"
-          active-text-color="#F99111">
-          <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key">
-            <template slot="title">
-              <span>{{val.section_name}}</span>
-            </template>
-            <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
-            @click="playVideo(val, v)">
-              <i class="el-video-icon"></i>
-              <span>{{v.video_name}}</span>
-              <i class="el-dot-icon"></i>
-            </el-menu-item>
-          </el-submenu>
-        </el-menu>
-      </el-col>
-    </el-row>
+    <div class="video-info-r">
+      <div class="close-box" @click="closeModel()">
+        <i class="close-icon"></i>
+      </div>
+      <h1 class="vc-title">章节目录</h1>
+      <el-row class="tac">
+        <el-col :span="24">
+          <el-menu
+            default-active="2"
+            class="el-menu-vertical-demo"
+            background-color="#1D1F21"
+            text-color="#E6E6E6"
+            active-text-color="#F99111">
+            <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key">
+              <template slot="title">
+                <span>{{val.section_name}}</span>
+              </template>
+              <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
+              @click="playVideo(val, v)">
+                <i class="el-video-icon"></i>
+                <span>{{v.video_name}}</span>
+                <i class="el-dot-icon"></i>
+              </el-menu-item>
+            </el-submenu>
+          </el-menu>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 <script>
@@ -63,6 +69,10 @@ export default {
   methods: {
     handleReload () {
       this.reload() // 在想要刷新页面的时候调用reload方法
+    },
+    closeModel () {
+      // this.showBox = ''
+      this.$emit('closeModel', '')
     },
     // 课程大纲（目录）
     getCourseCatalog () {
@@ -127,29 +137,47 @@ export default {
   .video-course-wrap{
     position: absolute;
     top: 20px;
+    bottom: 20px;
     background: #26292C;
     z-index: 12;
-    padding: 0 20px;
+    // padding: 0 20px;
     box-sizing: border-box;
     &.vid-kcqh{
       left: 60px;
       width: 386px;
-      height: 849px;
+      // height: 100%;
+      // height: 849px;
       overflow-y: scroll;
     }
   }
+  .rightCourseList{
+    .video-info-r{
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 382px;
+    }
+  }
+  // .vc-title{
+  //   padding-top: 18px;
+  //   padding-bottom: 30px;
+  //   font-size: 20px;
+  //   color: $col333;
+  //   .vid-kcqh &{
+  //     color: #E6E6E6;
+  //   }
+  // }
   .vc-title{
     padding-top: 18px;
     padding-bottom: 30px;
+     padding-left: 20px;
     font-size: 20px;
-    color: $col333;
-    .vid-kcqh &{
-      color: #E6E6E6;
-    }
+    color: #E6E6E6;
   }
   .vc-list{
     padding-bottom: 30px;
-    padding-left: 30px;
+    padding-left: 20px;
     display: flex;
     align-items: center;
     img{
@@ -172,11 +200,9 @@ export default {
   .close-box{
     text-align: right;
     padding-top: 25px;
+    padding-right: 20px;
     .close-icon{
-      @include bg_img(27, 28, '../../assets/images/video/close-icon.png');
-    }
-    .video-info-zjml &{
-      padding-right: 20px;
+      @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
     }
   }
   .el-video-icon{

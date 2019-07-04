@@ -93,9 +93,9 @@ export const resultsStati = (data) => { // 成绩统计
     method: 'post'
   })
 }
-export const answerDetails = (data) => { // 问题详情
+export const questionParsing = (data) => { // 解析（全部，错题）
   return axios.request({
-    url: '/web/Course/answerDetails',
+    url: '/web/Question/questionParsing',
     data,
     method: 'post'
   })

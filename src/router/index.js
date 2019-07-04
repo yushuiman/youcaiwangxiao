@@ -48,11 +48,19 @@ export default new Router({
         showFooter: false
       }
     },
-    // ResultReport
     {
       path: '/resultReport',
       name: 'resultReport',
       component: () => import('@/views/Question/ResultReport.vue'),
+      meta: {
+        showHeader: true,
+        showFooter: false
+      }
+    },
+    {
+      path: '/analysis',
+      name: 'analysis',
+      component: () => import('@/views/Question/Analysis.vue'),
       meta: {
         showHeader: true,
         showFooter: false

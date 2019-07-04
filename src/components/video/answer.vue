@@ -33,8 +33,8 @@
               class="uploadSty" style="border: 0!important;">
               <Button class="icon-upload"></Button>
           </Upload>
-          <Modal title="图片预览" v-model="visible">
-            <img :src="imgUrl" v-if="visible" style="width: 100%">
+          <Modal title="图片预览" v-model="visible" :width="795">
+            <img :src="imgUrl" v-if="visible" style="width: 100%;">
           </Modal>
         </div>
         <div class="fr">
@@ -70,8 +70,8 @@
               </template>
             </div>
           </div>
-          <Modal title="图片预览" v-model="visible">
-            <img :src="imgUrl" v-if="visible" style="width: 100%">
+          <Modal title="图片预览" v-model="visible" :width="795">
+            <img :src="imgUrl" v-if="visible" style="width: 100%;">
           </Modal>
           <div class="open-txt" @click="openShow(item.openFlag, index)">
             {{item.openFlag ? '收起':'展开'}}
@@ -223,7 +223,6 @@ export default {
   .ask {
     padding: 0 20px;
     background: #ffffff;
-    box-shadow: 0px 15px 10px -15px rgba(0,0,0,0.2) inset;
   }
   .others{
     padding: 12px 20px 0 20px;
@@ -240,7 +239,7 @@ export default {
     text-align: right;
     padding-top: 25px;
     .close-icon{
-      @include bg_img(27, 28, '../../assets/images/video/close-icon.png');
+      @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
     }
   }
   .texta {
