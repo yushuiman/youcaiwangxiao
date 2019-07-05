@@ -97,7 +97,6 @@ export default {
       quiz: '', // 提问文案
       quiz_image: [], // 提问图片 以,号分割
       isopen: false,
-      openIdx: '',
       dialogImageUrl: '',
       dialogVisible: false,
       uploadImgList: [],

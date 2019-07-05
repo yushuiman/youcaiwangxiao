@@ -78,10 +78,10 @@
         <div class="calculate-info">
           <div class="cal-tit">
             <h2 class="title-com">我的排名</h2>
-            <button class="btn-com">能力评估</button>
+            <button class="btn-com" @click="nengLiPingGu">能力评估</button>
           </div>
           <div class="cal-num">
-            {{questionResult.ycfen}}<em>分</em>
+            {{questionResult.ranking}}
           </div>
         </div>
         <ul class="my-question">
@@ -218,6 +218,12 @@ export default {
         this.getStudentsRanking(this.course_id) // 学员排名
       })
     },
+    // 去做题 展示对应模块题库
+    doQuestions ({ id, title }) {
+      this.plateTitle = title
+      this.showPlateModal = id
+      this.visible = true
+    },
     // 学员排名
     getStudentsRanking (id) {
       studentsRanking({
@@ -228,12 +234,11 @@ export default {
         this.studentsRankList = res.data
       })
     },
-    // 去做题 展示对应模块题库
-    doQuestions ({ id, title }) {
-      this.plateTitle = title
-      this.showPlateModal = id
-      this.visible = true
+    nengLiPingGu () {
+      this.$router.push({ path: '/capacity-assessment', query: { course_id: this.course_id }
+      })
     }
+
   }
 }
 </script>
@@ -441,7 +446,7 @@ export default {
     height: 136px;
     line-height: 136px;
     text-align: center;
-    font-size: 20px;
+    font-size: 34px;
     background: url('../../assets/images/questions/yc-num.png') no-repeat center;
     background-size: contain;
     margin: 0 auto;
@@ -464,13 +469,13 @@ export default {
   }
   .mq-icon{
     .mq-item-01 &{
-      @include bg-img(33, 33, '../../assets/images/questions/yc-answer.png');
+      @include bg-img(33, 32, '../../assets/images/questions/yc-answer.png');
     }
     .mq-item-02 &{
       @include bg-img(28, 32, '../../assets/images/questions/yc-wrong.png');
     }
     .mq-item-03 &{
-      @include bg-img(36, 30, '../../assets/images/questions/yc-collection.png');
+      @include bg-img(36, 32, '../../assets/images/questions/yc-collection.png');
     }
   }
   .stu-rank-list{

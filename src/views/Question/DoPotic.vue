@@ -223,7 +223,7 @@ export default {
     subGetPapers () {
       getPapers(this.subTopics).then(data => {
         const res = data.data
-        this.$router.push({ path: '/resultReport', query: { paper_id: res.data.paper_id } })
+        this.$router.push({ path: '/result-report', query: { paper_id: res.data.paper_id } })
       })
     }
   }

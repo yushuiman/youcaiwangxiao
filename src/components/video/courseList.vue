@@ -85,7 +85,7 @@ export default {
     },
     // 课程大纲(章节 video)
     getSecvCatalog (item, idx) {
-      this.$router.replace({ path: 'classVideo',
+      this.$router.replace({ path: 'class-video',
         query: {
           ...this.$route.query,
           course_id: item.course_id
@@ -120,7 +120,7 @@ export default {
     // 跳转到播放页面
     playVideo (val, v) {
       this.$emit('getVideoPlayback', v.video_id)
-      this.$router.replace({ path: 'classVideo',
+      this.$router.replace({ path: 'class-video',
         query: {
           ...this.$route.query,
           section_id: val.section_id,

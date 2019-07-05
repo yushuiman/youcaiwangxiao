@@ -19,14 +19,14 @@ export default new Router({
       meta: { showHeader: true }
     },
     {
-      path: '/classDetail',
-      name: 'classDetail',
+      path: '/class-detail',
+      name: 'class-detail',
       component: () => import(/* webpackChunkName: "about" */ '@/views/Class/ClassDetail.vue'),
       meta: { showHeader: true }
     },
     {
-      path: '/classVideo',
-      name: 'classVideo',
+      path: '/class-video',
+      name: 'class-video',
       component: () => import('@/views/Video/Video.vue'),
       meta: {
         showHeader: false,
@@ -49,8 +49,8 @@ export default new Router({
       }
     },
     {
-      path: '/resultReport',
-      name: 'resultReport',
+      path: '/result-report',
+      name: 'result-report',
       component: () => import('@/views/Question/ResultReport.vue'),
       meta: {
         showHeader: true,
@@ -61,6 +61,15 @@ export default new Router({
       path: '/analysis',
       name: 'analysis',
       component: () => import('@/views/Question/Analysis.vue'),
+      meta: {
+        showHeader: true,
+        showFooter: false
+      }
+    },
+    {
+      path: '/capacity-assessment',
+      name: 'capacity-assessment',
+      component: () => import('@/views/Question/CapacityAssessment.vue'),
       meta: {
         showHeader: true,
         showFooter: false

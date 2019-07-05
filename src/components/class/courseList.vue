@@ -78,7 +78,7 @@ export default {
     },
     // 跳转到播放页面
     playVideo (item, val, v) {
-      this.$router.push({ path: '/classVideo',
+      this.$router.push({ path: '/class-video',
         query: {
           package_id: this.course_id,
           course_id: item.course_id,

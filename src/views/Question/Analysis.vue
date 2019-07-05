@@ -12,6 +12,9 @@
         <potic-list ref="poticWrap" :topics="topics" :getQuestion="getQuestion" ></potic-list>
       </div>
       <div class="dptic-wrap-r fr">
+        <div class="go-result-box">
+          <button class="btn-com" @click="goResult">查看报告</button>
+        </div>
         <div class="right-bottom-wrap">
           <div class="answer-card">
             <div class="title-com">
@@ -84,6 +87,9 @@ export default {
           })
         })
       })
+    },
+    goResult () {
+      this.$router.push({ path: '/result-report', query: { paper_id: this.$route.query.paper_id } })
     }
   }
 }
@@ -131,17 +137,18 @@ export default {
       font-size: 20px;
     }
   }
- // 右边做题状态
-  .progress-info{
-    padding-top: 20px;
-    padding-bottom: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    .topic-num{
-     margin-left: 32px;
+  .go-result-box{
+    text-align: center;
+    padding: 12px 0;
+    margin-bottom: 20px;
+    .btn-com{
+      width: 141px;
+      height: 37px;
+      border-radius: 19px;
+      font-size: 18px;
     }
   }
+ // 右边做题状态
   .anscard-sts{
     i{
       width: 10px;
