@@ -59,18 +59,18 @@
  .ivu-modal-body{
      padding: 0;
  }
-.ivu-modal-header{
+ .question-modal .ivu-modal-header {
     border-bottom: 0;
-     padding: 20px 30px;
+    padding: 20px 30px;
 }
-.ivu-modal-header-inner{
+ .question-modal .ivu-modal-header-inner {
     height: auto;
     line-height: 1;
     font-size: 26px;
     color: #333333;
     padding: 0;
  }
- .ivu-modal-close{
+.question-modal .ivu-modal-close {
      top: 18px;
  }
  .ivu-icon-md-checkmark {
@@ -79,5 +79,3 @@
  .ivu-icon-md-checkmark:before {
      color: #0267ff;
  }
-
- 

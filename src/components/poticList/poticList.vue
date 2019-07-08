@@ -5,7 +5,7 @@
       <div class="topic-top">
         <span class="topic-num"><em>{{index+1}}</em>/{{topics.length}}</span>
         <ul class="topic-error-sc">
-          <li><i class="dy"></i><p>答疑</p></li>
+          <li @click="answerQuestion(item)"><i class="dy"></i><p>答疑</p></li>
           <li><i class="error"></i><p>纠错</p></li>
           <li @click="qtCollection(item)"><i class="collect" :class="{'active': item.collection == 1}"></i><p>收藏</p></li>
         </ul>
@@ -229,6 +229,10 @@ export default {
         type: item.collection
       }).then(data => {
       })
+    },
+    // 答疑显示
+    answerQuestion ({ ID }) {
+      this.$emit('answerQuestion', true, ID)
     },
     // scroll
     goAnchor (selector) {

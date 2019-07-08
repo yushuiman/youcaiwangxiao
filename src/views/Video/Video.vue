@@ -18,13 +18,13 @@
           </li>
         </ul>
       </div>
-      <div class="video-info-c fl" :class="{'rightSty': showBox == ''}">
+      <div class="video-info-c fl" :class="{'rightSty': showBox == '','rightStyKc': showBox == '课程<br />切换'}">
         <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
       </div>
       <div class="video-info-zjml fr" v-if="showBox == '课程<br />切换'">
         <course-list :package_id="this.$route.query.package_id" :is_zheng="playCourseInfo.is_zheng" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback()"></course-list>
       </div>
-      <div class="video-info-r fr" v-if="showBox == '答疑'">
+      <div class="video-info-r video-info-day-r fr" v-if="showBox == '答疑'">
         <answer :playCourseInfo="playCourseInfo" @closeModel="closeModel"></answer>
       </div>
       <div class="video-info-r fr" v-if="showBox == '讲义'">
@@ -130,7 +130,6 @@ export default {
     background: $colfff;
     span{
       font-size: 16px;
-      // margin-left: 17px;
       font-weight:500;
     }
     a{
@@ -173,7 +172,7 @@ export default {
       top: 20px;
       bottom: 20px;
       // width: 100%;
-      right: 382px;
+      right: 495px;
       // height: 849px;
       // height: 100%;
       background:rgba(0,0,0,1);
@@ -182,6 +181,9 @@ export default {
       &.rightSty{
         right: 0;
       }
+      &.rightStyKc{
+        right: 382px;
+      }
     }
     .video-info-r{
       position: absolute;
@@ -189,15 +191,12 @@ export default {
       right: 0;
       bottom: 0;
       // padding: 0 20px;
-      width: 382px;
+      width: 495px;
       background: #F8FAFC;
       // height: 869px;
       // height: 100%;
       // box-sizing: border-box;
       box-shadow: 0px 15px 10px -15px rgba(0,0,0,0.2) inset;
-      &.video-info-zjml{
-        background: #1D1F21;
-      }
     }
   }
   .vinfo-ul{

@@ -9,7 +9,7 @@
             </Col>
           </Row>
         </div>
-        <potic-list ref="poticWrap" :topics="topics" :getQuestion="getQuestion" ></potic-list>
+        <potic-list ref="poticWrap" :topics="topics" :getQuestion="getQuestion" @answerQuestion="answerQuestion"></potic-list>
       </div>
       <div class="dptic-wrap-r fr">
         <div class="go-result-box">
@@ -31,12 +31,16 @@
         </div>
       </div>
     </div>
+    <Modal title="提问题" v-model="visibleAnswer" footer-hide :width="795">
+      <upload-img v-if="visibleAnswer" :getQuestion="getQuestion"></upload-img>
+    </Modal>
   </div>
 </template>
 
 <script>
 import { questionParsing } from '@/api/questions'
 import poticList from '../../components/poticList/poticList'
+import uploadImg from '../../components/uploadImg'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -45,12 +49,16 @@ export default {
       title: '',
       getQuestion: {
         paper_mode: '',
-        jiexi: 1
-      }
+        jiexi: 1,
+        question_id: '',
+        course_id: this.$route.query.course_id
+      },
+      visibleAnswer: false
     }
   },
   components: {
-    poticList
+    poticList,
+    uploadImg
   },
   computed: {
     ...mapState({
@@ -89,7 +97,16 @@ export default {
       })
     },
     goResult () {
-      this.$router.push({ path: '/result-report', query: { paper_id: this.$route.query.paper_id } })
+      this.$router.push({ path: '/result-report',
+        query: {
+          paper_id: this.$route.query.paper_id,
+          course_id: this.$route.query.course_id
+        }
+      })
+    },
+    answerQuestion (flag, qId) {
+      this.visibleAnswer = flag
+      this.getQuestion.question_id = qId
     }
   }
 }

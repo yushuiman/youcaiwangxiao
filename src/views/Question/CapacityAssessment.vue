@@ -11,10 +11,7 @@
           <div class="yc-record"><em>{{ycfen}}</em>分</div>
         </Col>
         <Col span="12">
-          <div>
-            <div id="main" ref="myEchart" style="width: 400px;height: 240px;"></div>
-            <!-- <chart ref="chart1" :options="orgOptions" :auto-resize="true" style="width:500px; height: 500px;"></chart> -->
-          </div>
+          <div ref="myEchart" style="width: 400px;height: 240px;"></div>
         </Col>
       </Row>
     </div>

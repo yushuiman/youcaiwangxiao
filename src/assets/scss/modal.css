@@ -1,0 +1,11 @@
+.dopic-modal .ivu-modal-body {
+    padding: 0;
+}
+.dopic-modal .ivu-modal-header,
+.dopic-modal .ivu-modal-close {
+    display: none;
+}
+.dopic-modal .ivu-modal-content {
+    border-radius: 0px;
+    background: none;
+}

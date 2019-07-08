@@ -4,12 +4,18 @@
       <div class="dptic-wrap-l fl">
         <div ref="fixedTit">
           <Row class="dptic-title">
-            <Col span="22">
+            <Col span="20">
               <span class="menu-title">{{title}}</span>
             </Col>
-            <Col span="2">
+            <Col span="4">
               <div class="answer-time">
-                {{answer_time}}
+                <count @countdownprogress="countdownprogress" @countdownend="countdownend" countdownpause="countdownpause" :time="answer_time">
+                  <template slot-scope="props" ref="countTime">
+                      0{{ props.totalHours }}:
+                      {{ props.minutes }}:
+                      {{ props.seconds }}
+                    </template>
+                </count>
               </div>
             </Col>
           </Row>
@@ -48,43 +54,40 @@
         </div>
       </div>
       <Modal v-model="visible"
-      :width="330"
-      :title="txtShow"
-      footer-hide
-      class>
-      <div class="stop-box" v-if="txtShow == '暂停'">
-        <img src="../../assets/images/questions/stop-time.jpg" alt="" width="100%">
-        <p>休息一下，马上回来</p>
-        <div>
-          <button class="btn-com">继续做题</button>
-        </div>
-      </div>
-      <div class="save-box" v-if="txtShow == '保存'">
-        <img src="../../assets/images/questions/save.jpg" alt="" width="100%">
-        <p>保存进度，下次继续</p>
-        <div>
-          <button class="btn-com">继续</button>
-          <button class="btn-com">保存</button>
-        </div>
-      </div>
-      <div class="jiaojuan-box" v-if="txtShow == '交卷'">
-        <img src="../../assets/images/questions/jiaojuan.jpg" alt="" width="100%">
-        <div v-if="percentNum != total">
-          <p>您还有试题没完成</p>
-          <div>
-            <button class="btn-com">继续</button>
-            <button class="btn-com" @click="jiaojuan">交卷</button>
+        :width="447"
+        :title="txtShow"
+        footer-hide
+        class="dopic-modal">
+        <div class="stop-box" v-if="txtShow == '暂停'">
+          <p>休息一下，马上回来</p>
+          <div class="btn-box">
+            <button class="btn-com" @click="goOnDopic">继续做题</button>
           </div>
         </div>
-        <div v-else>
-          <p>确认提交试卷？</p>
-          <div>
-            <button class="btn-com">检查</button>
-            <button class="btn-com" @click="jiaojuan">交卷</button>
+        <div class="save-box" v-if="txtShow == '保存'">
+          <p>保存进度，下次继续</p>
+          <div class="btn-box">
+            <button class="btn-com" @click="goOnDopic">继续</button>
+            <button class="btn-com" @click="saveDopic">保存</button>
           </div>
         </div>
-      </div>
-    </Modal>
+        <div class="jiaojuan-box" :class="{'jiaojuan-finish': percentNum == total}" v-if="txtShow == '交卷'">
+          <div v-if="percentNum != total">
+            <p>您还有试题没完成</p>
+            <div class="btn-box">
+              <button class="btn-com" @click="goOnDopic">继续</button>
+              <button class="btn-com" @click="jiaojuan">交卷</button>
+            </div>
+          </div>
+          <div v-else>
+            <p>确认提交试卷？</p>
+            <div class="btn-box">
+              <button class="btn-com" @click="goOnDopic">检查</button>
+              <button class="btn-com" @click="jiaojuan">交卷</button>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
     <div v-else>
       没有题
@@ -95,6 +98,7 @@
 <script>
 import { topicList, getPapers } from '@/api/questions'
 import poticList from '../../components/poticList/poticList'
+import count from '../../components/count'
 export default {
   data () {
     return {
@@ -130,7 +134,6 @@ export default {
         paper_id: this.$route.query.paper_id || 0,
         mock_id: this.$route.query.mock_id || 0,
         plate_id: this.$route.query.plate_id,
-        used_time: 600,
         paper_type: this.$route.query.paper_mode || 2, // 练习1 考试2
         question_content: {
           knob_id: this.$route.query.knob_id || 0,
@@ -141,11 +144,13 @@ export default {
         } // 交卷信息
       },
       ID: '#anchor-0',
-      scrollTop: 0
+      scrollTop: 0,
+      emitEvents: false
     }
   },
   components: {
-    poticList
+    poticList,
+    count
   },
   destroyed () {
     window.removeEventListener('scroll', this.scrollToTop)
@@ -183,10 +188,11 @@ export default {
     getTopicList () {
       topicList(this.getQuestion).then(data => {
         const res = data.data
-        this.topics = res.data.topics
-        this.answer_time = res.data.answer_time
-        this.total = res.data.total
-        this.title = res.data.title
+        let { topics, total, title } = res.data
+        this.topics = topics
+        this.total = total
+        this.title = title
+        this.answer_time = 5000
         this.topics.map((val, index) => {
           val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
           val.flag = false // 解析展开收起交互(练习模式)
@@ -202,6 +208,28 @@ export default {
     submitAnswers (v) {
       this.visible = true
       this.txtShow = v
+      if (v === '暂停') {
+        this.emitEvents = true
+      }
+    },
+    countdownend () {
+      // 倒计时结束
+      console.log('结束')
+    },
+    countdownprogress () {
+      console.log('倒计时-1')
+    },
+    countdownpause () {
+      console.log('暂停')
+    },
+    // 继续
+    goOnDopic () {
+      this.visible = false
+      // 开始倒计时
+    },
+    // 保存
+    saveDopic () {
+
     },
     // 交卷
     jiaojuan () {
@@ -218,12 +246,17 @@ export default {
       if (this.percent === this.total) {
         this.subTopics.status = 2
       }
-      this.subGetPapers()
+      // this.subGetPapers()
     },
     subGetPapers () {
       getPapers(this.subTopics).then(data => {
         const res = data.data
-        this.$router.push({ path: '/result-report', query: { paper_id: res.data.paper_id } })
+        this.$router.push({ path: '/result-report',
+          query: {
+            paper_id: res.data.paper_id,
+            course_id: this.getQuestion.course_id
+          }
+        })
       })
     }
   }
@@ -232,6 +265,7 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
+  @import "../../assets/scss/modal.css";
   .do-potic-wrap{
     padding: 20px 0;
     font-size: 18px;
@@ -363,13 +397,37 @@ export default {
     }
   }
   // modal
+  .stop-box,.save-box,.jiaojuan-box{
+    padding-top: 325px;
+    text-align: center;
+    p{
+      padding-top: 33px;
+      padding-bottom: 23px;
+      font-size: 22px;
+    }
+    .btn-box{
+      button{
+        width: 122px;
+        height: 36px;
+        border-radius: 18px;
+        margin: 0 21px;
+        &:last-child{
+          background: #0066FF;
+          color: $colfff;
+        }
+      }
+    }
+  }
   .stop-box{
-    // @include bg-img(795, 400, '../../assets/images/questions/stop-time.png');
+    @include bg-img(447, 465, '../../assets/images/questions/stop-time.png');
   }
   .save-box{
-    // @include bg-img(795, 400, '../../assets/images/questions/save.png');
+    @include bg-img(447, 465, '../../assets/images/questions/save.png');
   }
   .jiaojuan-box{
-    // @include bg-img(795, 400, '../../assets/images/questions/jiaojuan.png');
+    @include bg-img(447, 465, '../../assets/images/questions/jiaojuan-no-finish.png');
+    &.jiaojuan-finish{
+      @include bg-img(447, 465, '../../assets/images/questions/jiaojuan-finish.png');
+    }
   }
 </style>

@@ -60,18 +60,20 @@
       </Row>
     </div>
     <!-- 6大板块弹窗 -->
-    <Modal v-model="visible"
-      :width="795"
-      footer-hide
-      :title="plateTitle"
-      class="practiceModal">
-      <know-section v-if="showPlateModal == '1'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></know-section>
-      <jieduan-test v-if="showPlateModal == '2'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></jieduan-test>
-      <discuss-self v-if="showPlateModal == '3'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></discuss-self>
-      <error-section v-if="showPlateModal == '4'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></error-section>
-      <lianxi-self v-if="showPlateModal == '5'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></lianxi-self>
-      <group-lianxi v-if="showPlateModal == '6'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></group-lianxi>
-    </Modal>
+    <div class="question-modal">
+      <Modal v-model="visible"
+        :width="795"
+        footer-hide
+        :title="plateTitle"
+        class="practiceModal">
+        <know-section v-if="showPlateModal == '1'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></know-section>
+        <jieduan-test v-if="showPlateModal == '2'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></jieduan-test>
+        <discuss-self v-if="showPlateModal == '3'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></discuss-self>
+        <error-section v-if="showPlateModal == '4'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></error-section>
+        <lianxi-self v-if="showPlateModal == '5'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></lianxi-self>
+        <group-lianxi v-if="showPlateModal == '6'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></group-lianxi>
+      </Modal>
+    </div>
     <!-- 预测评估 学员排名 -->
     <div class="qt-wrap-r fr">
       <div class="qt-wrap-r-top">

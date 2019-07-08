@@ -107,3 +107,33 @@ export const abiAssess = (data) => { // 能力评估
     method: 'post'
   })
 }
+
+export const questionSub = (data) => { // 答疑提交
+  return axios.request({
+    url: '/web/Question/questionSub',
+    data,
+    method: 'post'
+  })
+}
+export const questionDetails = (data) => { // 答疑list
+  return axios.request({
+    url: '/web/Question/questionDetails',
+    data,
+    method: 'post'
+  })
+}
+export const getAnswerknow = (data) => { // 答疑知识点
+  return axios.request({
+    url: '/web/Question/getAnswerknow',
+    data,
+    method: 'post'
+  })
+}
+export const questionallAnswer = (data) => { // 答疑知识点
+  return axios.request({
+    url: '/web/Question/questionallAnswer',
+    data,
+    method: 'post'
+  })
+}
+// questionallAnswer

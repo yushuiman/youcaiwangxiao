@@ -30,8 +30,8 @@
               type="drag"
               action="/upload/Index/uploadImage"
               name="image"
-              class="uploadSty" style="border: 0!important;">
-              <Button class="icon-upload"></Button>
+              class="uploadSty">
+              <div class="icon-upload"></div>
           </Upload>
           <Modal title="图片预览" v-model="visible" :width="795">
             <img :src="imgUrl" v-if="visible" style="width: 100%;">
@@ -211,7 +211,7 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  // @import "../../assets/scss/iview.css";
+  @import "../../assets/scss/iview.css";
   // @import "../../../node_modules/iview/dist/styles/iview.css";
   .vc-title{
     padding-top: 18px;
@@ -224,11 +224,21 @@ export default {
     background: #ffffff;
   }
   .others{
+    width: 100%;
     padding: 12px 20px 0 20px;
     background: #F8FAFC;
+    position: absolute;
+    top: 295px;
+    left: 0;
+    bottom: 0;
+    box-sizing: border-box;
   }
   .othq-list{
-    height: 480px;
+    position: absolute;
+    width: 100%;
+    top: 68px;
+    left: 0;
+    bottom: 0;
     overflow-y: scroll;
     &.has-img{
       height: 410px;
@@ -243,7 +253,7 @@ export default {
   }
   .texta {
     resize: none;
-    width: 455px;
+    width: 100%;
     height: 114px;
     color: rgba(199, 199, 199, 1);
     padding: 7px 12px;
@@ -322,64 +332,4 @@ export default {
       margin-right: 10px;
     }
   }
-  // iview 上传图片
-  .course_img .demo-upload-list{
-  display: inline-block;
-  width: 80px;
-  height: 80px;
-  text-align: center;
-  line-height: 80px;
-  border-radius: 4px;
-  overflow: hidden;
-  background: #fff;
-  position: relative;
-  box-shadow: 0 1px 1px rgba(0,0,0,.2);
-  margin-right: 10px;
-}
-.course_img .demo-upload-list img{
-  width: 100%;
-}
-.course_img .demo-upload-list-cover{
-  display: none;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0,0,0,.6);
-}
-.course_img .demo-upload-list:hover .demo-upload-list-cover{
-  display: block;
-}
-.course_img .demo-upload-list-cover i {
-  color: #fff;
-  font-size: 20px;
-  cursor: pointer;
-  margin: 0 2px;
-}
-.uploadSty {
-  width: 23px;
-  height: 18px;
-  position: absolute;
-  right: 90px;
-  top: 25px;
-}
-
-.uploadSty .ivu-upload-drag,
-.uploadSty .ivu-btn {
-  border: 0;
-  padding: 0;
-  border-radius: 0;
-}
-
-.ivu-upload input[type=file] {
-  display: none;
-}
-
-.icon-upload {
-  width: 23px;
-  height: 18px;
-  background: url('../../assets/images/video/upload-img-icon.png') no-repeat center;
-  background-size: contain;
-}
 </style>

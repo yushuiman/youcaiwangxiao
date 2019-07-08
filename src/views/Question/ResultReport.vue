@@ -100,7 +100,8 @@ export default {
       this.$router.push({ path: '/analysis',
         query: {
           paper_id: this.$route.query.paper_id,
-          type: type
+          type: type,
+          course_id: this.$route.query.course_id
         }
       })
     }
