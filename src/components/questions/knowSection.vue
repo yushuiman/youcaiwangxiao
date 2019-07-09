@@ -141,6 +141,7 @@ export default {
     },
     // 知识点数据
     getKnowList () {
+      console.log(this.getPoticData)
       getKnow({
         section_id: this.getPoticData.section_id,
         knob_id: this.getPoticData.knob_id

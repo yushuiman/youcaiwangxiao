@@ -1,5 +1,5 @@
 <template>
-  <div class="questionsub-wrap">
+  <div>
     <!--提问题-->
     <div class="ask">
       <textarea autofocus v-model="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"></textarea>
@@ -59,6 +59,9 @@
               </template>
             </div>
           </div>
+          <div class="open-txt" @click="openShow(item, index)">
+            {{item.openFlag ? '收起':'展开'}}
+          </div>
           <!-- <div class="teacher-answer" v-if="replyList[item.Id] && item.openFlag">
             {{replyList[item.Id].reply_user_name}}
             <img :src="replyList[item.Id].head_img" alt="" class="head-logo">
@@ -69,7 +72,7 @@
               <div class="othq-item-t">
                 <img :src="replyList[item.Id].head_img" alt="" class="head-logo">
                 <div class="othq-info">
-                  <h3>{{replyList[item.Id].reply_user_name}}</h3>
+                  <h3>{{replyList[item.Id].reply_user_name}}<span class="teacher-light">老师</span></h3>
                   <p>{{replyList[item.Id].reply_times}}</p>
                 </div>
               </div>
@@ -86,9 +89,6 @@
               </div>
             </li>
           </ul>
-          <div class="open-txt" @click="openShow(item, index)">
-            {{item.openFlag ? '收起':'展开'}}
-          </div>
         </li>
       </ul>
     </div>
@@ -237,9 +237,9 @@ export default {
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-  @import "../assets/scss/app";
-  @import "../assets/scss/iview.css";
-  .questionsub-wrap{
+  @import "../../assets/scss/app";
+  @import "../../assets/scss/iview.css";
+  .ask{
     padding: 0 3px;
   }
   .vc-title{
@@ -257,7 +257,7 @@ export default {
     text-align: right;
     padding-top: 25px;
     .close-icon{
-      @include bg_img(15, 15, '../assets/images/video/close-icon.png');
+      @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
     }
   }
   .texta {
@@ -290,18 +290,24 @@ export default {
       color: $col999;
     }
   }
+  .others{
+    padding: 0 10px;
+  }
   .othq-list-teacher{
-    background: #f8f8f8;
+    border-top: 1px solid #E6E6E6;
+    margin-top: 15px;
     .othq-item{
+      padding: 20px 0;
+      margin-bottom: 0;
       box-shadow: 0px 0px 0px rgba(0,0,0,0);
       background: none;
     }
   }
   .othq-item{
-    padding: 15px 20px 5px;
-    margin-bottom: 10px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
     background: $colfff;
-    box-shadow: 0px 0px 8px rgba(0,0,0,.1);
+    box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.1);
     border-radius: 8px;
     .othq-txt{
       line-height: 20px;
@@ -339,12 +345,26 @@ export default {
       color: #F99111;
     }
   }
+  .teacher-light{
+    width: 46px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    color:#F99111;
+    background:rgba(249,145,17,.15);
+    border-radius: 18px;
+    display: inline-block;
+    text-align: center;
+    margin-left: 10px;
+  }
   .quiz-image-list, .teacher-answer{
-    padding-top: 6px;
+    // padding-top: 6px;
+    // overflow: hidden;
     img{
       width: 80px;
       height: 80px;
       margin-right: 10px;
+      display: inline-block;
     }
   }
   .teacher-answer{

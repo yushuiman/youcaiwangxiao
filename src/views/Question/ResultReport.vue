@@ -101,7 +101,8 @@ export default {
         query: {
           paper_id: this.$route.query.paper_id,
           type: type,
-          course_id: this.$route.query.course_id
+          course_id: this.$route.query.course_id,
+          plate_id: this.$route.query.plate_id
         }
       })
     }

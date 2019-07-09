@@ -46,8 +46,9 @@
               </div>
             </div>
             <ul class="anscard-list clearfix" >
-              <li :class="{'blue-bg': item.currenOption, 'red-bg': item.currenErrorRed, 'green-bg': item.currenRightGreen}" v-for="(item, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">
+              <li :class="{'blue-bg': item.userOption, 'red-bg': item.currenErrorRed, 'green-bg': item.currenRightGreen}" v-for="(item, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">
                 {{index+1}}
+                <!-- {{item.ID}} -->
               </li>
             </ul>
           </div>
@@ -73,7 +74,7 @@
         </div>
         <div class="jiaojuan-box" :class="{'jiaojuan-finish': percentNum == total}" v-if="txtShow == '交卷'">
           <div v-if="percentNum != total">
-            <p>您还有试题没完成</p>
+            <p>您还有试题没完成！</p>
             <div class="btn-box">
               <button class="btn-com" @click="goOnDopic">继续</button>
               <button class="btn-com" @click="jiaojuan">交卷</button>
@@ -128,6 +129,7 @@ export default {
         user_id: this.$route.query.user_id,
         status: 1, // 交卷状态 1完成2未完成
         course_id: this.$route.query.course_id,
+        used_time: 600,
         section_id: this.$route.query.section_id || 0,
         knob_id: this.$route.query.knob_id || 0,
         know_id: this.$route.query.know_id || 0,
@@ -178,11 +180,8 @@ export default {
       document.documentElement.scrollTop = anchor.offsetTop
     },
     // 题list
-    doPoticInfo (num = 0, val) {
+    doPoticInfo (num = 0) {
       this.percentNum = num
-      if (val) {
-        this.subTopics.question_content.question = val
-      }
       this.percent = this.percentNum / this.total * 100
     },
     getTopicList () {
@@ -197,6 +196,7 @@ export default {
           val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
           val.flag = false // 解析展开收起交互(练习模式)
           val.currenOption = false // 点击当前题，不能重复选择(练习模式)
+          val.userOption = ''
           val.options.map((v, index) => {
             v.selOption = false // 选择当前选项变蓝色，其他默认颜色，可以重复选择(除了练习模式，都是这个逻辑)
           })
@@ -234,29 +234,43 @@ export default {
     // 交卷
     jiaojuan () {
       this.visible = false
-      if (this.subTopics.question_content.question.length === 0) {
-        for (var j = 0; j < this.topics.length; j++) {
-          this.subTopics.question_content.question.push({
-            question_id: this.topics[j].ID,
-            true_options: this.topics[j].options[0].right,
-            user_answer: ''
-          })
-        }
+      // 未做题，直接点击交卷，做题信息user_answer=‘’
+      for (var j = 0; j < this.topics.length; j++) {
+        this.subTopics.question_content.question.push({
+          question_id: this.topics[j].ID,
+          true_options: this.topics[j].options[0].right,
+          user_answer: this.topics[j].discuss_useranswer || this.topics[j].userOption
+        })
       }
+      // 如果做题数目==总数目
       if (this.percent === this.total) {
         this.subTopics.status = 2
       }
-      // this.subGetPapers()
+      this.subGetPapers()
     },
     subGetPapers () {
       getPapers(this.subTopics).then(data => {
         const res = data.data
-        this.$router.push({ path: '/result-report',
-          query: {
-            paper_id: res.data.paper_id,
-            course_id: this.getQuestion.course_id
-          }
-        })
+        // 论述题板块
+        if (this.getQuestion.plate_id === '3' || this.getQuestion.plate_id === 3) {
+          this.$router.push({ path: '/analysis',
+            query: {
+              paper_id: res.data.paper_id,
+              type: 2, // 全部解析
+              course_id: this.$route.query.course_id,
+              plate_id: this.$route.query.plate_id
+            }
+          })
+        } else {
+          // 其他板块
+          this.$router.push({ path: '/result-report',
+            query: {
+              paper_id: res.data.paper_id,
+              course_id: this.getQuestion.course_id,
+              plate_id: this.$route.query.plate_id
+            }
+          })
+        }
       })
     }
   }

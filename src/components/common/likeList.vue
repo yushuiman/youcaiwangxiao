@@ -1,7 +1,7 @@
 <template>
   <div class="course-like-main" :class="{'styw': isW=278}">
     <div class="like-title">
-      <img src="@/assets/images/course/like.png" alt="">
+      <img src="../../assets/images/course/like.png" alt="">
       <span>猜你喜欢</span>
     </div>
     <div class="like-list" v-for="(item,index) in likeArr" :key="index">
@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-  @import "../assets/scss/app";
+  @import "../../assets/scss/app";
   .course-like-main {
     width: 298px;
     padding: 0 9px;

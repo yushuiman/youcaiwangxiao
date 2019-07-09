@@ -92,7 +92,7 @@
 // import courseOne from '@/components/courseOne.vue'
 // import courseTwo from '@/components/courseTwo.vue'
 // import WebSocket from '@/libs/web-socket'
-import likeList from '@/components/likeList.vue'
+import likeList from '@/components/common/likeList.vue'
 // // 加密 解密
 import { Decrypt, Encrypt } from '@/libs/crypto'
 import { courseList, subjects } from '@/api/class'

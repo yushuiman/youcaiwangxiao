@@ -95,7 +95,7 @@
 import 'swiper/dist/css/swiper.css'
 import { courseIntroduction } from '@/api/class'
 import courseList from '@/components/class/courseList.vue'
-import likeList from '@/components/likeList.vue'
+import likeList from '@/components/common/likeList.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
   data () {

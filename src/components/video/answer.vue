@@ -33,9 +33,6 @@
               class="uploadSty">
               <div class="icon-upload"></div>
           </Upload>
-          <Modal title="图片预览" v-model="visible" :width="795">
-            <img :src="imgUrl" v-if="visible" style="width: 100%;">
-          </Modal>
         </div>
         <div class="fr">
           <span class="errorTxt" v-if="errorTs">至少输入5个字</span>
@@ -47,9 +44,9 @@
       <i class="close-icon"></i>
     </div>
     <!--其他问题-->
-    <div class="others">
+    <div class="others" :class="{'has-img': quiz_image.length}" v-if="answerList.length">
       <h1 class="vc-title">本节其他问题</h1>
-      <ul class="othq-list" :class="{'has-img': quiz_image.length}">
+      <ul class="othq-list">
         <li class="othq-item" v-for="(item, index) in answerList" :key="index">
           <div class="othq-item-t">
             <img :src="item.head" alt="" class="head-logo">
@@ -70,15 +67,15 @@
               </template>
             </div>
           </div>
-          <Modal title="图片预览" v-model="visible" :width="795">
-            <img :src="imgUrl" v-if="visible" style="width: 100%;">
-          </Modal>
           <div class="open-txt" @click="openShow(item.openFlag, index)">
             {{item.openFlag ? '收起':'展开'}}
           </div>
         </li>
       </ul>
     </div>
+    <Modal title="图片预览" v-model="visible" :width="795">
+      <img :src="imgUrl" v-if="visible" style="width: 100%;">
+    </Modal>
   </div>
 </template>
 
@@ -180,6 +177,8 @@ export default {
       answerList(this.playCourseInfo).then(data => {
         const res = data.data
         this.answerList = res.data
+        this.uploadList = []
+        this.quiz = ''
         this.answerList.map((val, index) => {
           val.openFlag = false
         })
@@ -232,6 +231,9 @@ export default {
     left: 0;
     bottom: 0;
     box-sizing: border-box;
+    &.has-img{
+      top: 348px;
+    }
   }
   .othq-list{
     position: absolute;
@@ -240,9 +242,6 @@ export default {
     left: 0;
     bottom: 0;
     overflow-y: scroll;
-    &.has-img{
-      height: 410px;
-    }
   }
   .close-box{
     text-align: right;

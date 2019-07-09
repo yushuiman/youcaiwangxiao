@@ -1,7 +1,7 @@
 <template>
-  <!-- 解析模块 -->
+  <!-- 一、解析页面 纯展示-->
   <div class="topic-main" v-if="getQuestion.jiexi == 1">
-    <div class="topic-list" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
+    <div class="topic-list" :class="{'topic-list-pb': item.flag}" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
       <div class="topic-top">
         <span class="topic-num"><em>{{index+1}}</em>/{{topics.length}}</span>
         <ul class="topic-error-sc">
@@ -18,7 +18,12 @@
           <img v-if="item.topic[3]" :src="item.topic[3]" alt="">
           <p v-if="item.topic[4]">{{item.topic[4]}}</p>
         </div>
-        <ul class="topic-opition">
+        <!-- 论述题样式 -->
+        <div v-if="getQuestion.plate_id == 3">
+          <textarea autofocus v-model="item.discuss_useranswer" disabled class="texta-discuss"></textarea>
+        </div>
+        <!-- 做题ABCD样式 else -->
+        <ul class="topic-opition" v-else>
           <li class="tpc-opi" v-for="(v, key) in item.options" :key="key">
             <div class="opi-abcd">
               <span :class="{'red-bg': v.errorRed, 'green-bg': v.rightGreen}">{{v.option}}</span>
@@ -31,20 +36,21 @@
       <div class="resolving">
         <span class="resolve-tit" @click="resolveToggle(item.flag, index)">{{item.flag ? '收起' : '解析'}}<Icon type="ios-arrow-down" :class="{'shouqi': item.flag}"/></span>
         <div class="resolve-detail" v-show="item.flag">
-          <p class="right-resolve">
+          <!-- 论述题解析 -->
+          <p class="right-resolve" v-if="getQuestion.plate_id != 3">
             <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
             <span v-if="item.options[0].userOption">我的答案<em>{{item.options[0].userOption}}</em></span>
             <span v-else>我的答案<em>未作答</em></span>
           </p>
-          <p class="instr-resolve"><span>解析：</span>的返回港口地方高考的发给客服电话个会发光</p>
+          <p class="instr-resolve"><span>解析：</span>{{item.analysis}}</p>
           <img v-if="item.analysisPic" :src="item.analysisPic" alt="">
         </div>
       </div>
     </div>
   </div>
-  <!-- 真题/练习模块 -->
+  <!-- 二、真题/练习页面 做题-->
   <div class="topic-main" v-else>
-    <div class="topic-list" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
+    <div class="topic-list" :class="{'topic-list-pb': item.flag}" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
       <div class="topic-top">
         <span class="topic-num"><em>{{index+1}}</em>/{{total}}</span>
         <ul class="topic-error-sc">
@@ -60,8 +66,8 @@
           <img v-if="item.topic[3]" :src="item.topic[3]" alt="">
           <p v-if="item.topic[4]">{{item.topic[4]}}</p>
         </div>
-        <!-- 练习模式 -->
-        <ul class="topic-opition" v-if="getQuestion.paper_mode == 1">
+        <!-- 练习模式：有解析答对答错状态-->
+        <ul class="topic-opition" v-if="getQuestion.paper_mode == 1 && getQuestion.plate_id != 3">
           <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPoticPractice(item, v, index, key)">
             <div class="opi-abcd">
               <span :class="{'red-bg': v.errorRed, 'green-bg': v.rightGreen}">{{v.option}}</span>
@@ -69,8 +75,8 @@
             <p>{{v.topic}}</p>
           </li>
         </ul>
-        <!-- 真题模式 -->
-        <ul class="topic-opition" v-else>
+        <!-- 真题模式：正常，无解析答对答错状态-->
+        <ul class="topic-opition" v-if="getQuestion.paper_mode != 1 && getQuestion.plate_id != 3">
           <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPotic(item, v, index, key)">
             <div class="opi-abcd">
               <span :class="{'blue-bg': v.selOption}">{{v.option}}</span>
@@ -78,8 +84,12 @@
             <p>{{v.topic}}</p>
           </li>
         </ul>
+        <!-- 论述题：没有ABCD样式 -->
+        <div v-if="getQuestion.plate_id == 3">
+          <textarea autofocus v-model="item.discuss_useranswer" class="texta-discuss" placeholder="请填写您的答案" v-on:focus="doPoticDiscuss(item, index)"></textarea>
+        </div>
       </div>
-      <!-- 练习模式打错才显示解析 -->
+      <!-- 练习模式答错才显示解析 -->
       <div class="resolving" v-if="getQuestion.paper_mode == 1 && item.analysis">
         <span class="resolve-tit" @click="resolveToggle(item.flag, index)">{{item.flag ? '收起' : '解析'}}<Icon type="ios-arrow-down" :class="{'shouqi': item.flag}"/></span>
         <div class="resolve-detail" v-show="item.flag">
@@ -87,7 +97,7 @@
             <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
             <span v-if="item.userOption">我的答案<em>{{item.userOption}}</em></span>
           </p>
-          <p class="instr-resolve"><span>解析：</span>的返回港口地方高考的发给客服电话个会发光</p>
+          <p class="instr-resolve"><span>解析：</span>{{item.analysis}}</p>
           <img v-if="item.analysisPic" :src="item.analysisPic" alt="">
         </div>
       </div>
@@ -115,10 +125,6 @@ export default {
   },
   data () {
     return {
-      seletedAnswers: [],
-      currenSelOption: '',
-      questionContent: [], // 交卷：答题信息
-      otherquestion: [] // meiyouzuode
     }
   },
   computed: {
@@ -131,10 +137,11 @@ export default {
   methods: {
     // 做题练习模式
     doPoticPractice (item, val, index, key) {
-      if (item.currenOption === true) { // 练习模式：当前题选择以后不能再选
+      if (item.userOption) { // 练习模式：当前题选择以后不能再选
         return
       }
       item.currenOption = true // 练习模式：当前题选择以后不能再选
+      item.userOption = val.option // 交卷用户答案
       item.options.forEach((v, index) => {
         v.errorRed = false // 初始化答错状态
         if (v.option === v.right) {
@@ -142,11 +149,11 @@ export default {
         }
       })
       if (val.option === val.right) { // 判断当前点击的选项是否正确
-        val.rightGreen = true // 答对绿色
+        val.rightGreen = true // 答对当前选项绿色
         item.currenRightGreen = true // 答对：右边选项卡对应添加绿色已掌握状态
         this.$forceUpdate()
       } else {
-        val.errorRed = true // 答错红色
+        val.errorRed = true // 答错当前选项红色
         item.currenErrorRed = true // 答错：右边选项卡对应添加红色未掌握状态
         item.analysis = true // 答错，解析展示
         this.$forceUpdate()
@@ -154,28 +161,8 @@ export default {
       let num = this.topics.filter((v) => { // 已做题数
         return v.currenOption
       })
-      this.$emit('doPoticInfo', num.length, this.questionContent)
-      this.topics.map((v, index) => {
-        v.userOption = ''
-      })
-      item.userOption = val.option // 交卷用
-      for (var k = 0; k < this.questionContent.length; k++) {
-        if (item.ID === this.questionContent[k].question_id) {
-          this.questionContent[k].user_answer = this.topics[k].userOption
-          this.$emit('doPoticInfo', num.length, this.questionContent)
-          this.$forceUpdate()
-          return
-        }
-      }
-      for (var j = 0; j < this.topics.length; j++) {
-        this.questionContent.push({
-          question_id: this.topics[j].ID,
-          true_options: this.topics[j].options[0].right,
-          user_answer: this.topics[j].userOption
-        })
-      }
       this.$forceUpdate()
-      this.$emit('doPoticInfo', num.length, this.questionContent)
+      this.$emit('doPoticInfo', num.length)
     },
     // 做题考试模式
     doPotic (item, val, index, key) {
@@ -184,30 +171,20 @@ export default {
       })
       val.selOption = true // 点击当前选项true蓝色，else false
       item.currenOption = true // 点击当前题 右边选项卡对应添加已做蓝色状态
+      item.userOption = val.option // 交卷用户答案
       let num = this.topics.filter((v) => { // 已做题数
         return v.currenOption
       })
-      this.topics.map((v, index) => {
-        v.userOption = ''
-      })
-      item.userOption = val.option // 交卷用
-      for (var k = 0; k < this.questionContent.length; k++) {
-        if (item.ID === this.questionContent[k].question_id) {
-          this.questionContent[k].user_answer = this.topics[k].userOption
-          this.$forceUpdate()
-          this.$emit('doPoticInfo', num.length, this.questionContent)
-          return
-        }
-      }
-      for (var j = 0; j < this.topics.length; j++) {
-        this.questionContent.push({
-          question_id: this.topics[j].ID,
-          true_options: this.topics[j].options[0].right,
-          user_answer: this.topics[j].userOption
-        })
-      }
       this.$forceUpdate()
-      this.$emit('doPoticInfo', num.length, this.questionContent)
+      this.$emit('doPoticInfo', num.length)
+    },
+    // 论述题
+    doPoticDiscuss (item, quiz) {
+      let num = this.topics.filter((v) => { // 已做题数
+        return v.currenOption
+      })
+      this.$forceUpdate()
+      this.$emit('doPoticInfo', num.length)
     },
     // 解析展开收起
     resolveToggle (currentFlag, index) {
@@ -251,6 +228,9 @@ export default {
     background: $colfff;
     margin-bottom: 20px;
     padding: 0 30px;
+    &.topic-list-pb{
+      padding-bottom: 20px;
+    }
   }
   .topic-top{
     padding: 12px 0;
@@ -372,5 +352,16 @@ export default {
         }
       }
     }
+  }
+  .texta-discuss{
+    width: 100%;
+    height: 133px;
+    padding: 9px 14px;
+    border-radius: 8px;
+    margin: 22px 0;
+    border: 1px solid #C7C7C7;
+    outline: none;
+    resize: none;
+    box-sizing: border-box;
   }
 </style>

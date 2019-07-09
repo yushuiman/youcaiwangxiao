@@ -13,25 +13,34 @@
       </div>
       <div class="dptic-wrap-r fr">
         <div class="go-result-box">
-          <button class="btn-com" @click="goResult">查看报告</button>
+          <!-- 论述题 -->
+          <button class="btn-com" @click="goResult" v-if="getQuestion.plate_id == 3">返回做题记录</button>
+          <!-- 其他板块 -->
+          <button class="btn-com" @click="goResult" v-else>查看报告</button>
         </div>
         <div class="right-bottom-wrap">
           <div class="answer-card">
             <div class="title-com">
               <h2>答题卡</h2>
-              <div class="anscard-sts">
+              <!-- 论述题 -->
+              <div class="anscard-sts" v-if="getQuestion.plate_id == 3">
+                <i class="blue-bg"></i>已做
+                <i class="white-bg"></i>未做
+              </div>
+              <!-- 其他板块 -->
+              <div class="anscard-sts" v-else>
                 <i class="green-bg"></i>已掌握
                 <i class="red-bg"></i>未掌握
               </div>
             </div>
             <ul class="anscard-list clearfix" >
-              <li :class="{'red-bg': v.redCurren, 'green-bg': v.rightCurren}" v-for="(v, index) in topics" :key="index">{{index+1}}</li>
+              <li :class="{'red-bg': v.redCurren, 'green-bg': v.rightCurren, 'blue-bg': v.discuss_useranswer}" v-for="(v, index) in topics" :key="index">{{index+1}}</li>
             </ul>
           </div>
         </div>
       </div>
     </div>
-    <Modal title="提问题" v-model="visibleAnswer" footer-hide :width="795">
+    <Modal title="提问题" v-model="visibleAnswer" footer-hide :width="795" class="iview-modal">
       <upload-img v-if="visibleAnswer" :getQuestion="getQuestion"></upload-img>
     </Modal>
   </div>
@@ -40,7 +49,7 @@
 <script>
 import { questionParsing } from '@/api/questions'
 import poticList from '../../components/poticList/poticList'
-import uploadImg from '../../components/uploadImg'
+import uploadImg from '../../components/common/uploadImg'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -51,7 +60,8 @@ export default {
         paper_mode: '',
         jiexi: 1,
         question_id: '',
-        course_id: this.$route.query.course_id
+        course_id: this.$route.query.course_id,
+        plate_id: this.$route.query.plate_id
       },
       visibleAnswer: false
     }
@@ -100,7 +110,8 @@ export default {
       this.$router.push({ path: '/result-report',
         query: {
           paper_id: this.$route.query.paper_id,
-          course_id: this.$route.query.course_id
+          course_id: this.$route.query.course_id,
+          plate_id: this.$route.query.plate_id
         }
       })
     },
@@ -181,6 +192,13 @@ export default {
       }
       &.green-bg{
         background: #47BF7F;
+      }
+      &.blue-bg{
+        background: #3485FF;
+      }
+      &.white-bg{
+        border: 1px solid $col666;
+        margin-left: 20px;
       }
     }
   }
