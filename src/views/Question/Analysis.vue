@@ -126,17 +126,23 @@ export default {
     answerSts (topics) {
       topics.map((val, index) => {
         val.flag = false // 解析展开收起交互
-        let userOptions = val.options[0].userOption // 用户答案 右边答题卡样式
-        let trueOptions = val.options[0].right // 用户答案 右边答题卡样式
+        let userOptions = val.options[0].userOption // 用户答案
+        let trueOptions = val.options[0].right // 正确答案
         if (userOptions !== '' && userOptions === trueOptions) {
           val.rightCurren = true
         }
         if (userOptions !== '' && userOptions !== trueOptions) {
           val.redCurren = true
         }
-        val.options.map((v, index) => { // 易错答案
+        val.options.forEach((v, index) => {
           if (val.eprone.indexOf(v.option) > -1) {
-            v.eprone = true
+            v.eprone = true // 易错答案
+          }
+          if (v.option.indexOf(userOptions) > -1 && userOptions !== '') {
+            v.errorRed = true // 用户答案 答错选项红色
+          }
+          if (v.option === v.right) {
+            v.rightGreen = true // 正确答案 选项添加绿色
           }
         })
       })
