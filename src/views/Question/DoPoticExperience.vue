@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length">
+    <div class="do-potic-wrap w-wrap clearfix">
       <div class="dptic-wrap-l fl">
         <div ref="fixedTit">
           <Row class="dptic-title">
@@ -20,7 +20,7 @@
             </Col>
           </Row>
         </div>
-        <potic-list ref="poticWrap" :topics="topics" :total="total" :getQuestion="getQuestion" @doPoticInfo="doPoticInfo" @modalShow="modalShow" :ID="ID"></potic-list>
+        <potic-list ref="poticWrap" :topics="topics" :getQuestion="getQuestion" :total="total" @doPoticInfo="doPoticInfo" :ID="ID"></potic-list>
       </div>
       <div class="dptic-wrap-r fr">
         <div class="right-top-wrap">
@@ -40,10 +40,6 @@
           <div class="answer-card">
             <div class="title-com">
               <h2>答题卡</h2>
-              <div class="anscard-sts" v-if="getQuestion.paper_mode == 1">
-                <i class="green-bg"></i>已掌握
-                <i class="red-bg"></i>未掌握
-              </div>
             </div>
             <ul class="anscard-list clearfix" >
               <li :class="{'blue-bg': item.userOption, 'red-bg': item.currenErrorRed, 'green-bg': item.currenRightGreen}" v-for="(item, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">
@@ -64,13 +60,6 @@
             <button class="btn-com" @click="goOnDopic">继续做题</button>
           </div>
         </div>
-        <div class="save-box" v-if="txtShow == '保存'">
-          <p>保存进度，下次继续</p>
-          <div class="btn-box">
-            <button class="btn-com" @click="goOnDopic">继续</button>
-            <button class="btn-com" @click="saveDopic">保存</button>
-          </div>
-        </div>
         <div class="jiaojuan-box" :class="{'jiaojuan-finish': percentNum == total}" v-if="txtShow == '交卷'">
           <div v-if="percentNum != total">
             <p>您还有试题没完成！</p>
@@ -88,36 +77,24 @@
           </div>
         </div>
       </Modal>
-      <Modal
-        title="纠错"
-        v-model="visibleError"
-        footer-hide
-        :width="795"
-        class="iview-modal">
-        <error-correction v-if="visibleError" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
-      </Modal>
-    </div>
-    <div v-else>
-      没有题
     </div>
   </div>
 </template>
 
 <script>
-import { topicList, getPapers } from '@/api/questions'
+import { zExperience, experienceStati } from '@/api/questions'
 import poticList from '../../components/poticList/poticList'
 import count from '../../components/count'
-import errorCorrection from '../../components/common/errorCorrection'
 import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      stsTxtArr: ['暂停', '保存', '交卷'],
+      stsTxtArr: ['暂停', '交卷'],
       visible: false,
       visibleError: false, // 纠错show
       txtShow: '',
       topics: [], // 题列表
-      answer_time: '',
+      answer_time: 0,
       total: 0,
       title: '',
       percent: 0, // 百分比
@@ -135,25 +112,10 @@ export default {
         paper_mode: this.$route.query.paper_mode,
         paper_type: this.$route.query.paper_type
       },
-      subTopics: {
-        user_id: this.$route.query.user_id,
-        status: 1, // 交卷状态 1完成2未完成
-        course_id: this.$route.query.course_id,
+      experienceTopics: {
+        user_id: '',
         used_time: 600,
-        section_id: this.$route.query.section_id || 0,
-        knob_id: this.$route.query.knob_id || 0,
-        know_id: this.$route.query.know_id || 0,
-        paper_id: this.$route.query.paper_id || 0,
-        mock_id: this.$route.query.mock_id || 0,
-        plate_id: this.$route.query.plate_id,
-        paper_type: this.$route.query.paper_mode || 2, // 练习1 考试2
-        question_content: {
-          knob_id: this.$route.query.knob_id || 0,
-          know_id: this.$route.query.know_id || 0,
-          mock_id: this.$route.query.mock_id || 0,
-          paper_id: this.$route.query.plate_id,
-          question: []
-        } // 交卷信息
+        question_content: [] // 交卷信息
       },
       ID: '#anchor-0',
       scrollTop: 0
@@ -166,15 +128,14 @@ export default {
   },
   components: {
     poticList,
-    count,
-    errorCorrection
+    count
   },
   destroyed () {
     window.removeEventListener('scroll', this.scrollToTop)
   },
   mounted () {
     window.addEventListener('scroll', this.scrollToTop)
-    this.getTopicList()
+    this.getZExperience()
   },
   methods: {
     scrollToTop () {
@@ -199,16 +160,17 @@ export default {
       this.percentNum = num
       this.percent = this.percentNum / this.total * 100
     },
-    // 拿题
-    getTopicList () {
-      topicList(this.getQuestion).then(data => {
+    // 0元体验拿题
+    getZExperience () {
+      zExperience({
+        user_id: this.user_id
+      }).then(data => {
         const res = data.data
         let { topics, total, title } = res.data
         this.topics = topics
         this.total = parseInt(total)
         this.title = title
-        // this.answer_time = res.data.answer_time
-        this.answer_time = 10000
+        this.answer_time = 50000
         this.topics.map((val, index) => {
           val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
           val.flag = false // 解析展开收起交互(练习模式)
@@ -226,7 +188,6 @@ export default {
       this.visible = true
       this.txtShow = v
       if (v === '暂停') {
-        this.emitEvents = true
       }
     },
     countdownend () {
@@ -251,49 +212,27 @@ export default {
     // 交卷
     jiaojuan () {
       this.visible = false
-      // 未做题，直接点击交卷，做题信息user_answer=''
-      for (var i = 0; i < this.topics.length; i++) {
-        this.subTopics.question_content.question.push({
-          question_id: this.topics[i].ID,
-          true_options: this.topics[i].options[0].right,
-          user_answer: this.topics[i].discuss_useranswer || this.topics[i].userOption
+      this.experienceTopics.user_id = this.user_id
+      // 未做题，直接点击交卷，做题信息user_answer=‘’
+      for (var j = 0; j < this.topics.length; j++) {
+        this.experienceTopics.question_content.push({
+          question_id: this.topics[j].ID,
+          true_options: this.topics[j].options[0].right,
+          user_answer: this.topics[j].userOption || ''
         })
       }
-      // 如果做题数目==总数目
-      if (this.percent === this.total) {
-        this.subTopics.status = 2
-      }
-      this.subGetPapers()
+      this.getExperienceStati()
     },
-    subGetPapers () {
-      getPapers(this.subTopics).then(data => {
+    getExperienceStati () {
+      experienceStati(this.experienceTopics).then(data => {
         const res = data.data
-        // 论述题板块 直接跳转到解析页面
-        if (this.getQuestion.plate_id === 3) {
-          this.$router.push({ path: '/analysis',
-            query: {
-              paper_id: res.data.paper_id,
-              type: 2, // 全部解析
-              course_id: this.$route.query.course_id,
-              plate_id: this.$route.query.plate_id
-            }
-          })
-        }
-        // 其他板块 跳转到结果页面
-        if (this.getQuestion.plate_id !== 3) {
-          this.$router.push({ path: '/result-report',
-            query: {
-              paper_id: res.data.paper_id,
-              course_id: this.getQuestion.course_id
-            }
-          })
-        }
+        window.localStorage.setItem('experienceStatiInfo', JSON.stringify(res.data))
+        this.$router.push({ path: '/result-report',
+          query: {
+            plate_id: this.$route.query.plate_id
+          }
+        })
       })
-    },
-    // 纠错显示
-    modalShow (flag, qId) {
-      this.visibleError = flag
-      this.getQuestion.question_id = qId
     }
   }
 }
@@ -358,11 +297,9 @@ export default {
   }
   .dopic-status{
     display: flex;
-    justify-content: space-between;
-    text-align: center;
-    padding: 0 20px;
   }
   .dopstu-item{
+    margin-right: 50px;
     span{
       height: 35px;
       display: block;

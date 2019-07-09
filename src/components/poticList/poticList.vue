@@ -4,9 +4,9 @@
     <div class="topic-list" :class="{'topic-list-pb': item.flag}" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
       <div class="topic-top">
         <span class="topic-num"><em>{{index+1}}</em>/{{topics.length}}</span>
-        <ul class="topic-error-sc">
-          <li @click="answerQuestion(item)"><i class="dy"></i><p>答疑</p></li>
-          <li><i class="error"></i><p>纠错</p></li>
+        <ul class="topic-error-sc" v-if="getQuestion.plate_id != 8">
+          <li @click="modalShow(item, 'dy')"><i class="dy"></i><p>答疑</p></li>
+          <li @click="modalShow(item, 'jc')"><i class="error"></i><p>纠错</p></li>
           <li @click="qtCollection(item)"><i class="collect" :class="{'active': item.collection == 1}"></i><p>收藏</p></li>
         </ul>
       </div>
@@ -53,8 +53,8 @@
     <div class="topic-list" :class="{'topic-list-pb': item.flag}" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
       <div class="topic-top">
         <span class="topic-num"><em>{{index+1}}</em>/{{total}}</span>
-        <ul class="topic-error-sc">
-          <li><i class="error"></i><p>纠错</p></li>
+        <ul class="topic-error-sc" v-if="getQuestion.plate_id != 8">
+          <li @click="modalShow(item, 'jc')"><i class="error"></i><p>纠错</p></li>
           <li @click="qtCollection(item)"><i class="collect" :class="{'active': item.collection == 1}"></i><p>收藏</p></li>
         </ul>
       </div>
@@ -117,7 +117,7 @@ export default {
       type: Object
     },
     total: {
-      type: String
+      type: Number
     },
     ID: {
       type: String
@@ -208,8 +208,9 @@ export default {
       })
     },
     // 答疑显示
-    answerQuestion ({ ID }) {
-      this.$emit('answerQuestion', true, ID)
+    modalShow ({ ID }, type) {
+      this.$emit('modalShow', true, ID, type)
+      console.log('emit')
     },
     // scroll
     goAnchor (selector) {

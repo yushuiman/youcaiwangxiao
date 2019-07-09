@@ -7,11 +7,14 @@
         </Col>
       </Row>
       <Row class="cass-row-mtb">
-        <Col span="12">
-          <div class="yc-record"><em>{{ycfen}}</em>分</div>
+        <Col span="12" class="yc-record-rb">
+          <div class="yc-record">
+            <p class="yc-record-top"><em>{{ycfen}}</em>分</p>
+            <p class="yc-record-bt">总分100</p>
+          </div>
         </Col>
         <Col span="12">
-          <div ref="myEchart" style="width: 400px;height: 240px;"></div>
+          <div ref="myEchart" style="width: 400px;height: 240px;margin:0 auto;"></div>
         </Col>
       </Row>
     </div>
@@ -21,7 +24,7 @@
           <div class="cass-title">本月统计</div>
         </Col>
       </Row>
-      <Row>
+      <Row class="cass-row-pt">
         <Col span="8">
           <div class="answer-status-item answer-status-item01">
             <i class="asi-icon"></i>
@@ -57,8 +60,7 @@ export default {
     return {
       ycfen: '',
       nlpgInfo: {}, // 能力评估
-      monStatistics: {}, // 本月统计
-      orgOptions: {}
+      monStatistics: {} // 本月统计
     }
   },
   computed: {
@@ -66,26 +68,8 @@ export default {
       user_id: state => state.user.user_id
     })
   },
-  components: {
-    // echarts
-  },
   mounted () {
-    // this.getAbiAssess()
-    // this.orgOptions = {
-    //   xAxis: {
-    //     type: 'category',
-    //     data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    //   },
-    //   yAxis: {
-    //     type: 'value'
-    //   },
-    //   series: [{
-    //     data: [820, 932, 901, 934, 1290, 1330, 1320],
-    //     type: 'line',
-    //     smooth: true
-    //   }]
-    // }
-    this.initCharts()
+    this.getAbiAssess()
   },
   methods: {
     initCharts () {
@@ -93,7 +77,9 @@ export default {
       this.chart.setOption({
         color: ['none'],
         tooltip: {
-          trigger: 'axis'
+          trigger: 'axis',
+          padding: 8,
+          extraCssText: 'width:180px'
         },
         textStyle: {
           fontSize: 16,
@@ -102,45 +88,76 @@ export default {
         radar: [
           {
             indicator: [
-              { text: '答题时间', max: 100 },
+              { text: '答题时间', max: 0 },
               { text: '错题数', max: 100 },
               { text: '做题数', max: 100 },
               { text: '学员排名', max: 100 },
               { text: '平均分', max: 100 },
               { text: '正确率', max: 100 }
+              // { text: '答题时间' },
+              // { text: '错题数' },
+              // { text: '做题数' },
+              // { text: '学员排名' },
+              // { text: '平均分' },
+              // { text: '正确率' }
             ],
+            splitArea: {
+              show: true,
+              areaStyle: {// 每个分割区域的颜色
+                color: ['#C4D8FB', '#D6E4FE', '#E9F1FE']
+              }
+            },
             radius: 80,
-            center: ['50%', '50%']
+            splitNumber: 3,
+            center: ['50%', '50%'],
+            axisLine: { // 设置雷达图中间射线的颜色
+              lineStyle: {
+                color: 'rgba(24, 116, 253, 0.2)'
+              }
+            },
+            splitLine: {
+              show: true,
+              lineStyle: {
+                width: 1,
+                color: 'rgba(24, 116, 253, 0.2)' // 图表背景网格线的颜色
+              }
+            }
           }
         ],
-        splitArea: {
-          show: true,
-          areaStyle: {
-            color: 'rgba(17,81,249,1)' // 图表背景网格线的颜色
-          }
-        },
         series: [
           {
             type: 'radar',
+            symbol: 'circle',
             tooltip: {
               trigger: 'item',
               backgroundColor: 'rgba(0,0,0,0.5)'
             },
             itemStyle: {
               normal: {
+                width: 3,
                 color: '#1151F9', // 图表中各个图区域的边框线拐点颜色
+                borderColor: 'rgba(24, 116, 253, 0.4)',
+                borderWidth: 4,
                 lineStyle: {
                   color: '#1151F9' // 图表中各个图区域的边框线颜色
-                },
-                areaStyle: {
-                  color: 'rgba(17,81,249,1)'
                 }
               }
             },
             data: [
               {
-                value: [60, 73, 85, 40, 90],
-                name: '能力评估'
+                value: [
+                  this.nlpgInfo.user_time / 1000000,
+                  this.nlpgInfo.error_num,
+                  this.nlpgInfo.total_num,
+                  this.nlpgInfo.ranking,
+                  this.nlpgInfo.scores,
+                  this.nlpgInfo.accuracy
+                ],
+                name: '能力评估',
+                areaStyle: {
+                  opacity: 0,
+                  color: 'rgb(255, 225, 123, 0)'
+                }
               }
             ]
           }
@@ -153,10 +170,10 @@ export default {
         course_id: this.$route.query.course_id
       }).then(data => {
         const res = data.data
-        console.log(res)
         this.ycfen = res.data.ycfen
         this.nlpgInfo = res.data.data
         this.monStatistics = res.data.monStatistics
+        this.initCharts()
       })
     }
   }
@@ -165,9 +182,6 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .capacity-assessment-wrap{
-
-  }
   .cass-row{
     padding: 20px;
     margin-top: 20px;
@@ -189,14 +203,26 @@ export default {
     padding-top: 55px;
     padding-bottom: 35px;
   }
+  .cass-row-pt{
+    padding-top: 38px;
+  }
   .yc-record{
-    line-height: 220px;
-    @include bg-img(220, 220, '../../assets/images/questions/yc-record.png');
-    em{
-      font-size: 54px;
+    @include bg-img(275, 203, '../../assets/images/questions/yc-record.png');
+    .yc-record-top{
+      margin-left: -10px;
+      margin-top: 85px;
+      em{
+        font-size: 54px;
+      }
+    }
+    .yc-record-bt{
+      margin-left: -10px;
+      margin-top: 22px;
+      font-size: 16px;
+      color: $col999;
     }
   }
-  .answer-status-item{
+  .answer-status-item,.yc-record-rb{
     position: relative;
     &:after{
       position: absolute;
@@ -225,20 +251,28 @@ export default {
       width: 0;
     }
   }
-  .asi-icon{
-    .answer-status-item &{
-      @include bg-img(52, 48, '../../assets/images/questions/yc-record.png');
-    }
-    .answer-status-item02 &{
-      @include bg-img(48, 48, '../../assets/images/questions/yc-record.png');
-    }
-    .answer-status-item03 &{
-      @include bg-img(48, 48, '../../assets/images/questions/yc-record.png');
+  .yc-record-rb{
+    &:after{
+      height: 112px;
+      margin-bottom: -56px;
     }
   }
-  // <div class="answer-status-item answer-status-item01">
-  //           <i class="asi-icon"></i>
-  //           <p>12<em>分钟</em></p>
-  //           <span>练习天数</span>
-  //         </div>
+  .asi-icon{
+    width: 52px;
+    height: 55px;
+    display: inline-block;
+    background-size: 52px 52px;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    .answer-status-item01 &{
+      background-image: url('../../assets/images/questions/statistics-icon01.png');
+    }
+    .answer-status-item02 &{
+      background-image: url('../../assets/images/questions/statistics-icon02.png');
+    }
+    .answer-status-item03 &{
+      background-image: url('../../assets/images/questions/statistics-icon03.png');
+      background-size: 50px 55px;
+    }
+  }
 </style>

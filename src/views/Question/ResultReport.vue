@@ -71,9 +71,16 @@ export default {
   components: {
   },
   mounted () {
+    // 0元体验做题结果
+    if (parseInt(this.$route.query.plate_id) === 8) {
+      this.experienceStatiInfo()
+      return
+    }
+    // 正常做题结果
     this.getResultsStati()
   },
   methods: {
+    // 正常做题结果
     getResultsStati () {
       resultsStati({
         user_id: this.user_id,
@@ -81,21 +88,30 @@ export default {
       }).then(data => {
         const res = data.data
         this.resultsInfo = res.data
-        let answerList = res.data.question_content
-        answerList.map((v, index) => {
-          v.num = index + 1
-          if (v.user_answer !== '' && v.user_answer === v.true_options) {
-            v.rightCurren = true
-          }
-          if (v.user_answer !== '' && v.user_answer !== v.true_options) {
-            v.redCurren = true
-          }
-        })
-        for (let i = 0; i < answerList.length; i += 10) {
-          this.cardList.push(answerList.slice(i, i + 10))
-        }
+        this.cardSts(res.data.question_content) // 答题卡颜色状态
       })
     },
+    // 0元体验结果
+    experienceStatiInfo () {
+      let obj = JSON.parse(window.localStorage.getItem('experienceStatiInfo'))
+      this.resultsInfo = obj
+      this.cardSts(obj.question_content)// 答题卡颜色状态
+    },
+    cardSts (answerList) {
+      answerList.map((v, index) => {
+        v.num = index + 1
+        if (v.user_answer !== '' && v.user_answer === v.true_options) {
+          v.rightCurren = true
+        }
+        if (v.user_answer !== '' && v.user_answer !== v.true_options) {
+          v.redCurren = true
+        }
+      })
+      for (let i = 0; i < answerList.length; i += 10) {
+        this.cardList.push(answerList.slice(i, i + 10))
+      }
+    },
+    // 查看解析
     viewAnalysis (type) {
       this.$router.push({ path: '/analysis',
         query: {

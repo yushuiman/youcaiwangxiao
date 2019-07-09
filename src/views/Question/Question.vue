@@ -1,5 +1,6 @@
 <template>
   <div class="question-wrap w-wrap clearfix">
+    <div @click="zExperienceTopic">0元体验</div>
     <div class="qt-wrap-l fl">
       <!-- 科目标题 -->
       <Row class="qt-subject">
@@ -129,7 +130,6 @@ import errorSection from '../../components/questions/errorSection'
 import lianxiSelf from '../../components/questions/lianxiSelf'
 import groupLianxi from '../../components/questions/groupLianxi'
 import { mapState } from 'vuex'
-// import Cookies from 'js-cookie'
 export default {
   data () {
     return {
@@ -137,7 +137,6 @@ export default {
       selIdx: 0,
       subjectId: '',
       course_id: '',
-      // user_id: Cookies.get('user_id'),
       plateList: [
         {
           id: 1,
@@ -179,7 +178,8 @@ export default {
       showPlateModal: '', // 显示弹窗对应模块
       plateTitle: '', // 显示弹窗对应模块title问案
       questionResult: {}, // 正确率，做题数，平均分
-      studentsRankList: [] // 学生排名
+      studentsRankList: [], // 学生排名
+      experience: false // 0元体验
     }
   },
   components: {
@@ -205,6 +205,12 @@ export default {
         const res = data.data
         this.projectArr = res.data
         this.getQuestionIndex(res.data[0].id, this.selIdx)
+        // 0元体验
+        res.data = [] // 测试0元体验 记得删除
+        if (res.data && res.data.length === 0) {
+          this.experience = true
+          console.log(112)
+        }
       })
     },
     // 课程对应正确率，做题数，平均分
@@ -237,10 +243,16 @@ export default {
       })
     },
     nengLiPingGu () {
-      this.$router.push({ path: '/capacity-assessment', query: { course_id: this.course_id }
+      this.$router.push({ path: '/capacity-assessment', query: { course_id: this.course_id } })
+    },
+    // 0元体验
+    zExperienceTopic () {
+      this.$router.push({ path: '/dopotic-experience',
+        query: {
+          plate_id: 8 // 代表0元体验
+        }
       })
     }
-
   }
 }
 </script>

@@ -46,12 +46,7 @@ export default {
         plate_id: this.plate_id,
         num: '', // 默认随机15道
         paper_type: 1 // 默认单选
-      },
-      titleObj: {
-        zhang: '',
-        jie: '',
-        dian: ''
-      } // 做题页title
+      }
     }
   },
   mounted () {
@@ -70,9 +65,6 @@ export default {
     // 去做题
     goToPic (v) {
       this.getPoticData.paper_id = v.paper_id
-      // this.getPoticData.section_id = v.paper_id
-      this.titleObj.zhang = v.paper_name
-      window.localStorage.setItem('titleObj', JSON.stringify(this.titleObj))
       this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }

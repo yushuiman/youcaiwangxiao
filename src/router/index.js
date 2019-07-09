@@ -49,6 +49,15 @@ export default new Router({
       }
     },
     {
+      path: '/dopotic-experience',
+      name: 'dopotic-experience',
+      component: () => import('@/views/Question/DoPoticExperience.vue'),
+      meta: {
+        showHeader: true,
+        showFooter: false
+      }
+    },
+    {
       path: '/result-report',
       name: 'result-report',
       component: () => import('@/views/Question/ResultReport.vue'),

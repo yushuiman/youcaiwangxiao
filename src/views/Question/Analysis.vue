@@ -9,7 +9,7 @@
             </Col>
           </Row>
         </div>
-        <potic-list ref="poticWrap" :topics="topics" :getQuestion="getQuestion" @answerQuestion="answerQuestion"></potic-list>
+        <potic-list ref="poticWrap" :topics="topics" :getQuestion="getQuestion" @modalShow="modalShow"></potic-list>
       </div>
       <div class="dptic-wrap-r fr">
         <div class="go-result-box">
@@ -40,16 +40,23 @@
         </div>
       </div>
     </div>
-    <Modal title="提问题" v-model="visibleAnswer" footer-hide :width="795" class="iview-modal">
-      <upload-img v-if="visibleAnswer" :getQuestion="getQuestion"></upload-img>
+    <Modal
+      :title="typeShow=='dy'? '提问题':'纠错'"
+      v-model="visible"
+      footer-hide
+      :width="795"
+      class="iview-modal">
+      <upload-img v-if="visible && typeShow == 'dy'" :getQuestion="getQuestion"></upload-img>
+      <error-correction v-if="visible && typeShow == 'jc'" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
     </Modal>
   </div>
 </template>
 
 <script>
-import { questionParsing } from '@/api/questions'
+import { questionParsing, experienceParsing } from '@/api/questions'
 import poticList from '../../components/poticList/poticList'
 import uploadImg from '../../components/common/uploadImg'
+import errorCorrection from '../../components/common/errorCorrection'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -63,12 +70,14 @@ export default {
         course_id: this.$route.query.course_id,
         plate_id: this.$route.query.plate_id
       },
-      visibleAnswer: false
+      visible: false,
+      typeShow: false // 答疑dy，纠错jc
     }
   },
   components: {
     poticList,
-    uploadImg
+    uploadImg,
+    errorCorrection
   },
   computed: {
     ...mapState({
@@ -76,10 +85,18 @@ export default {
     })
   },
   mounted () {
+    // 0元体验解析
+    if (parseInt(this.$route.query.plate_id) === 8) {
+      this.getExperienceParsing()
+      return
+    }
+    // 6大板块解析
     this.getQuestionParsing()
   },
   methods: {
+    // 6大板块解析
     getQuestionParsing () {
+      console.log(1234567890)
       questionParsing({
         paper_id: this.$route.query.paper_id,
         user_id: this.user_id,
@@ -88,21 +105,39 @@ export default {
         const res = data.data
         this.topics = res.data.topics
         this.title = res.data.title
-        this.topics.map((val, index) => {
-          val.flag = false // 解析展开收起交互
-          let userOptions = val.options[0].userOption // 用户答案 右边答题卡样式
-          let trueOptions = val.options[0].right // 用户答案 右边答题卡样式
-          if (userOptions !== '' && userOptions === trueOptions) {
-            val.rightCurren = true
+        this.answerSts(this.topics)
+      })
+    },
+    // 0元体验解析
+    getExperienceParsing () {
+      let obj = JSON.parse(window.localStorage.getItem('experienceStatiInfo'))
+      experienceParsing({
+        type: this.$route.query.type,
+        user_id: this.user_id,
+        question_content: obj.question_content
+      }).then(data => {
+        const res = data.data
+        this.topics = res.data.topics
+        this.title = res.data.title
+        this.answerSts(this.topics)
+      })
+    },
+    // 答题卡状态，问题列表状态（解析，用户答案）
+    answerSts (topics) {
+      topics.map((val, index) => {
+        val.flag = false // 解析展开收起交互
+        let userOptions = val.options[0].userOption // 用户答案 右边答题卡样式
+        let trueOptions = val.options[0].right // 用户答案 右边答题卡样式
+        if (userOptions !== '' && userOptions === trueOptions) {
+          val.rightCurren = true
+        }
+        if (userOptions !== '' && userOptions !== trueOptions) {
+          val.redCurren = true
+        }
+        val.options.map((v, index) => { // 易错答案
+          if (val.eprone.indexOf(v.option) > -1) {
+            v.eprone = true
           }
-          if (userOptions !== '' && userOptions !== trueOptions) {
-            val.redCurren = true
-          }
-          val.options.map((v, index) => { // 易错答案
-            if (val.eprone.indexOf(v.option) > -1) {
-              v.eprone = true
-            }
-          })
         })
       })
     },
@@ -115,8 +150,9 @@ export default {
         }
       })
     },
-    answerQuestion (flag, qId) {
-      this.visibleAnswer = flag
+    modalShow (flag, qId, type) {
+      this.visible = flag
+      this.typeShow = type
       this.getQuestion.question_id = qId
     }
   }

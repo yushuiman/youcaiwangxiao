@@ -136,4 +136,32 @@ export const questionallAnswer = (data) => { // 答疑知识点
     method: 'post'
   })
 }
-// questionallAnswer
+export const errorCorrection = (data) => { // 纠错
+  return axios.request({
+    url: '/web/Question/errorCorrection',
+    data,
+    method: 'post'
+  })
+}
+export const zExperience = (data) => { // 0元体验拿题
+  return axios.request({
+    url: '/web/Question/zExperience',
+    data,
+    method: 'post'
+  })
+}
+
+export const experienceStati = (data) => { // 0元体验成绩统计
+  return axios.request({
+    url: '/web/Question/experienceStati',
+    data,
+    method: 'post'
+  })
+}
+export const experienceParsing = (data) => { // 0元体验错题解析
+  return axios.request({
+    url: '/web/Question/experienceParsing',
+    data,
+    method: 'post'
+  })
+}
