@@ -81,6 +81,7 @@ export default {
       }).then(data => {
         const res = data.data
         this.resultsInfo = res.data
+        console.log(res.data)
         let answerList = res.data.question_content
         answerList.map((v, index) => {
           v.num = index + 1

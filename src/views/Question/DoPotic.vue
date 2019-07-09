@@ -127,6 +127,7 @@ export default {
       subTopics: {
         user_id: this.$route.query.user_id,
         status: 1, // 交卷状态 1完成2未完成
+        used_time: 600,
         course_id: this.$route.query.course_id,
         section_id: this.$route.query.section_id || 0,
         knob_id: this.$route.query.knob_id || 0,
@@ -246,7 +247,7 @@ export default {
       if (this.percent === this.total) {
         this.subTopics.status = 2
       }
-      // this.subGetPapers()
+      this.subGetPapers()
     },
     subGetPapers () {
       getPapers(this.subTopics).then(data => {
