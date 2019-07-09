@@ -209,7 +209,6 @@ export default {
         res.data = [] // 测试0元体验 记得删除
         if (res.data && res.data.length === 0) {
           this.experience = true
-          console.log(112)
         }
       })
     },
