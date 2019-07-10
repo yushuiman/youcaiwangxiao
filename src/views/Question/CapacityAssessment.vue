@@ -1,5 +1,6 @@
 <template>
   <div class="capacity-assessment-wrap w-wrap">
+    <div class="about">是多少</div>
     <div class="cass-row cass-row-top">
       <Row>
         <Col span="24">
@@ -178,10 +179,30 @@ export default {
     }
   }
 }
+document.addEventListener('DOMContentLoaded', () => {
+  // 获取到页面的宽度，按照10等分平分
+  let fontSize = window.innerWidth / 10
+  // 给fontsize设置最大的字体大小
+  fontSize = fontSize > 50 ? 50 : fontSize
+  // 找到根节点
+  const html = document.querySelector('html')
+  // 给html添加字体样式
+  html.style.fontSize = fontSize + 'px'
+})
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
+  $ratio:375/10;
+  @function px2rem($px){
+    @return $px/$ratio+rem;
+  }
+.about{
+    color: red;
+    font-size: px2rem(20);
+    width: px2rem(200);
+    background: #f00;
+  }
   .cass-row{
     padding: 20px;
     margin-top: 20px;

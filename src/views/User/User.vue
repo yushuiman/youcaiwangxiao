@@ -1,0 +1,264 @@
+<template>
+    <div class="user-wrap">
+      <div class="user-top-wrap">
+        <div class="w-wrap">
+          <div class="integral-signin">35积分<span>签到</span></div>
+          <div class="user-flex">
+            <div class="user-info">
+              <img src="../../assets/images/user/user-top-bg.jpg" alt="头像" class="head-logo">
+              <div class="user-name-instr">
+                <h2>优财学员昵称</h2>
+                <p>您已入学<span>124</span>天啦！</p>
+              </div>
+            </div>
+            <div class="go-on-some">
+              <a class="zhibo"><Icon type="ios-play" />最近直播</a>
+              <a>继续学习</a>
+              <a>继续做题</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- main -->
+      <div class="user-main w-wrap">
+        <div class="userm-left">
+          <ul class="userm-list">
+            <li class="userm-item" :class="['userm-item-0' + (index+1), {'curren': clkTit == v.type}]" v-for="(v, index) in userArr" :key="index" @click="switchInfo(v, index)">
+              <i class="userm-icon" :class="{'curren': clkTit == v.type}"></i>{{v.tit}}
+            </li>
+          </ul>
+        </div>
+        <div class="userm-right">
+          <course-info v-if="clkTit == 'course'"></course-info>
+          <questions-info v-if="clkTit == 'questions'"></questions-info>
+          <zhibo-info v-if="clkTit == 'zhibo'"></zhibo-info>
+          <answer-info v-if="clkTit == 'answer'"></answer-info>
+          <order-info v-if="clkTit == 'order'"></order-info>
+          <account-info v-if="clkTit == 'account'"></account-info>
+        </div>
+      </div>
+    </div>
+</template>
+
+<script>
+import courseInfo from '../../components/user/courseInfo'
+import questionsInfo from '../../components/user/questionsInfo'
+import zhiboInfo from '../../components/user/zhiboInfo'
+import answerInfo from '../../components/user/answerInfo'
+import orderInfo from '../../components/user/orderInfo'
+import accountInfo from '../../components/user/accountInfo'
+export default {
+  data () {
+    return {
+      userArr: [
+        {
+          type: 'course',
+          tit: '课程'
+        },
+        {
+          type: 'questions',
+          tit: '题库'
+        },
+        {
+          type: 'zhibo',
+          tit: '直播'
+        },
+        {
+          type: 'answer',
+          tit: '答疑'
+        },
+        {
+          type: 'order',
+          tit: '订单'
+        },
+        {
+          type: 'account',
+          tit: '账号'
+        }
+      ],
+      clkTit: this.$route.query.type || 'course'
+    }
+  },
+  components: {
+    courseInfo,
+    questionsInfo,
+    zhiboInfo,
+    answerInfo,
+    orderInfo,
+    accountInfo
+  },
+  methods: {
+    switchInfo ({ type }, index) {
+      this.clkTit = type
+      console.log(this.$route.query.type)
+    }
+  }
+}
+</script>
+
+<style scoped lang="scss" rel="stylesheet/scss">
+  @import "../../assets/scss/app";
+  .user-wrap{
+    font-size: 18px;
+  }
+  .user-top-wrap{
+    height: 206px;
+    background: url('../../assets/images/user/user-top-bg.jpg') no-repeat;
+    background-size: cover;
+  }
+  .user-top-wrap{
+    color: #ffffff;
+    padding-top: 30px;
+    padding-bottom: 24px;
+    .w-wrap{
+      position: relative;
+    }
+  }
+  .integral-signin{
+    text-align: right;
+    line-height: 33px;
+    span{
+      width: 72px;
+      height: 33px;
+      text-align: center;
+      display: inline-block;
+      border-radius: 17px;
+      margin-left: 16px;
+      background: $colfff;
+      color: #112441;
+    }
+  }
+  .user-flex{
+    @include flexJustifyAlignItem;
+    position: absolute;
+    width: 100%;
+    top: 60px;
+  }
+  .user-info{
+    @include flexJustifyAlignItem;
+    .head-logo{
+      width: 142px;
+      height: 142px;
+      border: 4px solid $colfff;
+      border-radius: 50%;
+      box-sizing: border-box;
+    }
+  }
+  .user-name-instr{
+    margin-left: 28px;
+    h2{
+      font-size: 28px;
+    }
+    p{
+      font-size: 16px;
+      line-height: 40px;
+      span{
+        font-size: 24px;
+        margin: 0 4px;
+      }
+    }
+  }
+  .go-on-some{
+    a{
+      padding: 0 16px;
+      height: 35px;
+      line-height: 35px;
+      text-align: center;
+      border-radius: 18px;
+      border: 1px solid $colfff;
+      color: $colfff;
+      display: inline-block;
+      margin-left: 15px;
+      &.zhibo{
+        background:rgba(216,216,216,0.3017);
+        border: 0;
+        .ivu-icon{
+          margin-top: -3px;
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+  .user-main{
+    @include flexJustify;
+    padding-top: 38px;
+    .userm-left{
+      width: 142px;
+    }
+    .userm-right{
+      width: 971px;
+    }
+  }
+  .userm-list{
+    padding-top: 15px;
+  }
+  .userm-item{
+    margin: 15px 0;
+    height: 46px;
+    line-height: 46px;
+    text-align: center;
+    color: $col666;
+    &.curren{
+      color: $colfff;
+      background: #0267FF;
+      border-radius: 8px 0px 0px 8px;
+      position: relative;
+      &:before{
+        position: absolute;
+        content: "";
+        right: -30px;
+        top: 0px;
+        width: 0;
+        height: 0;
+        border: 23px solid transparent;
+        border-right-width: 15px;
+        border-left-color: #0267FF;
+        border-left-width: 15px;
+      }
+    }
+  }
+  .userm-icon{
+    width: 20px;
+    height: 18px;
+    margin-right: 10px;
+    margin-top: -5px;
+    vertical-align: middle;
+    @extend %bg-img;
+    .userm-item-01 &{
+      background-image: url('../../assets/images/user/user-icon01.png');
+      &.curren{
+        background-image: url('../../assets/images/user/user-active-icon01.png');
+      }
+    }
+    .userm-item-02 &{
+      background-image: url('../../assets/images/user/user-icon02.png');
+      &.curren{
+        background-image: url('../../assets/images/user/user-active-icon02.png');
+      }
+    }
+    .userm-item-03 &{
+      background-image: url('../../assets/images/user/user-icon03.png');
+      &.curren{
+        background-image: url('../../assets/images/user/user-active-icon03.png');
+      }
+    }
+    .userm-item-04 &{
+      background-image: url('../../assets/images/user/user-icon04.png');
+      &.curren{
+        background-image: url('../../assets/images/user/user-active-icon04.png');
+      }
+    }
+    .userm-item-05 &{
+      background-image: url('../../assets/images/user/user-icon05.png');
+      &.curren{
+        background-image: url('../../assets/images/user/user-active-icon05.png');
+      }
+    }
+    .userm-item-06 &{
+      background-image: url('../../assets/images/user/user-icon06.png');
+      &.curren{
+        background-image: url('../../assets/images/user/user-active-icon06.png');
+      }
+    }
+  }
+</style>

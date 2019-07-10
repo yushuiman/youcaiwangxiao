@@ -113,6 +113,15 @@ export default new Router({
       name: 'login',
       component: () => import('@/views/Login/Login.vue'),
       meta: { showHeader: true }
+    },
+    // 个人中心
+    {
+      path: '/User',
+      name: 'User',
+      component: () => import('@/views/User/User.vue'),
+      meta: {
+        showHeader: true
+      }
     }
   ]
 })
