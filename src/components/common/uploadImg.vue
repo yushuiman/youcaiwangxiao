@@ -122,10 +122,7 @@ export default {
       uploadList: [],
       errorTs: false,
       questionallAnswerInfo: [], // 全部答疑
-      reply: {}, // 老师回复内容
-      // replyList: {}
-      replyList: {
-      }
+      replyList: {} // 老师回复内容
     }
   },
   computed: {
@@ -221,7 +218,6 @@ export default {
         answer_id: id
       }).then(data => {
         const res = data.data
-        this.reply = res.data.reply
         this.$set(this.replyList, [id], res.data.reply)
       })
     },
@@ -297,12 +293,6 @@ export default {
   .othq-list-teacher{
     border-top: 1px solid #E6E6E6;
     margin-top: 15px;
-    .othq-item{
-      padding: 20px 0;
-      margin-bottom: 0;
-      box-shadow: 0px 0px 0px rgba(0,0,0,0);
-      background: none;
-    }
   }
   .othq-item{
     padding: 15px 20px;
@@ -324,6 +314,12 @@ export default {
       font-size: 13px;
       color: $blueColor;
       text-align: right;
+    }
+    .othq-list-teacher &{
+      padding: 20px 0;
+      margin-bottom: 0;
+      box-shadow: 0px 0px 0px rgba(0,0,0,0);
+      background: none;
     }
   }
   .othq-item-t{
@@ -359,8 +355,6 @@ export default {
     margin-left: 10px;
   }
   .quiz-image-list, .teacher-answer{
-    // padding-top: 6px;
-    // overflow: hidden;
     img{
       width: 80px;
       height: 80px;

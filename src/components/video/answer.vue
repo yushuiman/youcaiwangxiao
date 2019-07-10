@@ -67,9 +67,32 @@
               </template>
             </div>
           </div>
-          <div class="open-txt" @click="openShow(item.openFlag, index)">
+          <div class="open-txt" @click="openShow(item, index)">
             {{item.openFlag ? '收起':'展开'}}
           </div>
+          <!-- 老师回复 -->
+          <ul class="othq-list-teacher" v-if="replyList[item.id] && item.openFlag">
+            <li class="othq-item">
+              <div class="othq-item-t">
+                <img :src="replyList[item.id].head_img" alt="" class="head-logo">
+                <div class="othq-info">
+                  <h3>{{replyList[item.id].reply_user_name}}<span class="teacher-light">老师</span></h3>
+                  <p>{{replyList[item.id].reply_times}}</p>
+                </div>
+              </div>
+              <p class="othq-txt">{{replyList[item.id].reply_quiz}}</p>
+              <div class="quiz-image-list course_img">
+                <div class="demo-upload-list" v-for="(v, index) in replyList[item.id].reply_image" :key="index">
+                  <template>
+                    <img :src="v" alt="">
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleView(v)"></Icon>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
@@ -103,7 +126,8 @@ export default {
       imgUrl: '',
       uploadList: [],
       errorTs: false,
-      playStatus: true
+      playStatus: true,
+      replyList: {} // 老师回复内容
     }
   },
   mounted () {
@@ -169,7 +193,6 @@ export default {
         this.uploadList = []
         this.quiz_image = []
         this.quiz = ''
-        console.log(this.quiz)
         this.getAnswerList()
       })
     },
@@ -184,16 +207,21 @@ export default {
       })
     },
     // 展开收起
-    openShow (currentOpenFlag, index) {
-      this.answerList[index].openFlag = !currentOpenFlag
+    openShow (item, index) {
+      this.answerList[index].openFlag = !item.openFlag
       this.$forceUpdate()
+      if (item.reply_status === 1 && item.openFlag) { // 已回复并且是展开的状态
+        this.getAnswerDetails(item.id)
+      }
     },
-    // 问题详情
-    getAnswerDetails () {
+    // 问题详情老师回复
+    getAnswerDetails (id) {
       answerDetails({
-        answer_id: '2'
+        answer_id: id
       }).then(data => {
-        // console.log(data)
+        const res = data.data
+        console.log(res.data)
+        this.$set(this.replyList, [id], res.data)
       })
     },
     // 答疑
@@ -279,6 +307,10 @@ export default {
       color: $col999;
     }
   }
+  .othq-list-teacher{
+    border-top: 1px solid #E6E6E6;
+    margin-top: 15px;
+  }
   .othq-item{
     padding: 15px 20px;
     margin-bottom: 10px;
@@ -301,6 +333,12 @@ export default {
       text-align: right;
       margin-top: 5px;
     }
+    .othq-list-teacher &{
+      padding: 20px 0;
+      margin-bottom: 0;
+      box-shadow: 0px 0px 0px rgba(0,0,0,0);
+      background: none;
+    }
   }
   .othq-item-t{
     padding-bottom: 5px;
@@ -322,12 +360,28 @@ export default {
       color: #F99111;
     }
   }
-  .quiz-image-list{
-    padding-top: 6px;
+  .teacher-light{
+    width: 46px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    color:#F99111;
+    background:rgba(249,145,17,.15);
+    border-radius: 18px;
+    display: inline-block;
+    text-align: center;
+    margin-left: 10px;
+  }
+  .quiz-image-list, .teacher-answer{
     img{
       width: 80px;
       height: 80px;
       margin-right: 10px;
+      display: inline-block;
     }
+  }
+  .teacher-answer{
+    padding: 10px 20px;
+    background: #999999;
   }
 </style>

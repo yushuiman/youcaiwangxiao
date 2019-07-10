@@ -17,6 +17,14 @@
               <span>{{isntroduction.description}}</span>
             </div>
           </div>
+          <div v-if="videoflag" class="video-object">
+            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="650" height="364" id="cc_FBBCC178D6FB98CC9C33DC5901307461">
+              <param name="movie" value="https://p.bokecc.com/flash/single/8E7175958932B212_FBBCC178D6FB98CC9C33DC5901307461_false_0CCEB0A89A516E59_1/player.swf" />
+              <param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" />
+              <param value="transparent" name="wmode" />
+              <embed src="https://p.bokecc.com/flash/single/8E7175958932B212_FBBCC178D6FB98CC9C33DC5901307461_false_0CCEB0A89A516E59_1/player.swf" width="650" height="364" name="cc_FBBCC178D6FB98CC9C33DC5901307461" allowFullScreen="true" wmode="transparent" allowScriptAccess="always" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash"/>
+            </object>
+          </div>
         </div>
         <div class="cdi-special">
           特色服务：
@@ -108,7 +116,8 @@ export default {
           disableOnInteraction: false
         },
         loop: true
-      }
+      },
+      videoflag: false
     }
   },
   components: {
@@ -138,7 +147,7 @@ export default {
       this.isChoose = type
     },
     playVideo () {
-      console.log(3223)
+      this.videoflag = true
     },
     consultLink () {
       window.open('https://awt.zoosnet.net/LR/Chatpre.aspx?id=AWT95637580&cid=1453186017984561518698&lng=cn&sid=1519874658448243043282&p=http%3A//www.ucfo.com.cn/&rf1=&rf2=&e=%25u6765%25u81EA%25u9996%25u9875%25u81EA%25u52A8%25u9080%25u8BF7%25u7684%25u5BF9%25u8BDD&msg=&d=1519874661546', '_blank')
@@ -185,7 +194,7 @@ export default {
       }
     }
   }
-  .cdi-opa{
+  .cdi-opa,.video-object{
     position: absolute;
     left: 0;
     top: 0;
