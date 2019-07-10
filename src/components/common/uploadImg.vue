@@ -197,6 +197,7 @@ export default {
       }).then(data => {
         this.quiz = ''
         this.uploadList = []
+        this.quiz_image = []
         this.questionallAnswerList()
       })
     },

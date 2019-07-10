@@ -123,18 +123,15 @@ export default {
     handleRemove3 (file) {
       let fileList = this.uploadList
       this.uploadList.splice(fileList.indexOf(file), 1)
-      this.quiz_image.splice(fileList.indexOf(file), 1)
     },
     handleSuccess (res, file) {
       if (res.code === 200) {
-        // this.uploadList = []
         let obj = {
           name: file.name,
           url: res.data.image_url
         }
         this.uploadList.push(obj)
-        this.imageUrl = res.data.image_url
-        this.quiz_image.push(res.data.image_url)
+        this.quiz_image.push(obj.url)
       }
     },
     handleFormatError (file) {
@@ -169,6 +166,10 @@ export default {
       let quizImage = this.quiz_image.join(',')
       let data = Object.assign({ quiz: this.quiz, video_time: 5, quiz_image: quizImage }, this.playCourseInfo)
       answerSub(data).then(data => {
+        this.uploadList = []
+        this.quiz_image = []
+        this.quiz = ''
+        console.log(this.quiz)
         this.getAnswerList()
       })
     },
@@ -177,8 +178,6 @@ export default {
       answerList(this.playCourseInfo).then(data => {
         const res = data.data
         this.answerList = res.data
-        this.uploadList = []
-        this.quiz = ''
         this.answerList.map((val, index) => {
           val.openFlag = false
         })
