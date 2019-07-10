@@ -38,7 +38,7 @@
         <p class="cdi-price"><em>¥</em>{{isntroduction.price}}</p>
         <div class="cdi-buy-consult">
           <button type="button" name="button" class="buy-btn">立即购买</button>
-          <button type="button" name="button" class="consult-btn">在线咨询</button>
+          <button type="button" name="button" class="consult-btn" @click="consultLink">在线咨询</button>
         </div>
       </div>
     </div>
@@ -110,15 +110,6 @@ export default {
           disableOnInteraction: false
         },
         loop: true
-        // stopPropagation: true
-        // paginationClickable: true,
-        // touchMoveStopPropagation: true
-        // autoplayDisableOnInteraction: false
-        // loop: true
-        // navigation: {
-        //   nextEl: '.swiper-button-next',
-        //   prevEl: '.swiper-button-prev'
-        // }
       }
     }
   },
@@ -147,6 +138,9 @@ export default {
     // tab切换 (课程简介 课程大纲)
     tabChoose (type) {
       this.isChoose = type
+    },
+    consultLink () {
+      window.open('https://awt.zoosnet.net/LR/Chatpre.aspx?id=AWT95637580&cid=1453186017984561518698&lng=cn&sid=1519874658448243043282&p=http%3A//www.ucfo.com.cn/&rf1=&rf2=&e=%25u6765%25u81EA%25u9996%25u9875%25u81EA%25u52A8%25u9080%25u8BF7%25u7684%25u5BF9%25u8BDD&msg=&d=1519874661546', '_blank')
     }
   }
 }

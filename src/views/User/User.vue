@@ -103,8 +103,8 @@ export default {
   }
   .user-top-wrap{
     height: 206px;
-    background: url('../../assets/images/user/user-top-bg.jpg') no-repeat;
-    background-size: cover;
+    background: #112441 url('../../assets/images/user/user-top-bg.jpg') repeat center;
+    background-size: 349px 167px;
   }
   .user-top-wrap{
     color: #ffffff;

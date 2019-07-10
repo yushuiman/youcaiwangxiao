@@ -9,8 +9,8 @@
       <li class="class-item class-item01">
         <img class="ci-img" src="@/assets/images/index/undraw_video_call_kxyp.png" alt="">
         <div class="class-instru">
-          <h1>体验课程</h1>
-          <p>专业高效的课程，免费体验</p>
+          <h1>CMA高清网课全科</h1>
+          <p>科学的理念 + 优秀的师资 + 权威的课程</p>
           <div class="btn-box">
             <button type="button" name="button" class="more-btn">更多</button>
           </div>
@@ -20,7 +20,7 @@
         <span class="anima-icon"></span>
         <div class="class-instru">
           <h1>体验课程</h1>
-          <p>超50+CMA精选案例；提高论述题掌握程</p>
+          <p>专业高效的课程，免费体验</p>
           <div class="btn-box">
             <button type="button" name="button" class="ty-btn">体验</button>
           </div>
@@ -30,8 +30,8 @@
       <li class="class-item class-item03">
         <img class="ci-img" src="@/assets/images/index/undraw_prototyping_process_rswj.png" alt="">
         <div class="class-instru">
-          <h1>体验课程</h1>
-          <p>专业高效的课程，免费体验</p>
+          <h1>翻转课堂</h1>
+          <p>超50+CMA精选案例；提高论述题掌握程度；3天2晚互动；老师一对一沟通；团队共创；主动参与，互动交流。</p>
           <div class="btn-box">
             <button type="button" name="button" class="more-btn">更多</button>
           </div>
@@ -40,8 +40,8 @@
       <li class="class-item class-item04">
         <span class="anima-icon"></span>
         <div class="class-instru">
-          <h1>体验课程</h1>
-          <p>专业高效的课程，免费体验</p>
+          <h1>精选直播</h1>
+          <p>最近直播：零基础运营让搜索流量稳步暴涨</p>
           <div class="btn-box">
             <button type="button" name="button" class="hg-btn">往期回顾</button>
             <button type="button" name="button" class="zb-tbn">正在直播</button>
@@ -72,38 +72,6 @@
           <span class="part-icon">合作伙伴</span>
         </div>
         <img class="hzhb-img" src="@/assets/images/index/hzhb.png" alt="" >
-        <!-- <ul class="part-list clearfix">
-          <li class="part-item">
-            <img src="@/assets/images/index/banner.png" alt="" >
-          </li>
-          <li class="part-item">
-            <img src="@/assets/images/index/banner.png" alt="" >
-          </li>
-          <li class="part-item">
-            <img src="@/assets/images/index/banner.png" alt="" >
-          </li>
-          <li class="part-item">
-            <img src="@/assets/images/index/banner.png" alt="" >
-          </li>
-          <li class="part-item">
-            <img src="@/assets/images/index/banner.png" alt="" >
-          </li>
-          <li class="part-item">
-            <img src="@/assets/images/index/banner.png" alt="" >
-          </li>
-          <li class="part-item">
-            <img src="@/assets/images/index/banner.png" alt="" >
-          </li>
-          <li class="part-item">
-            <img src="@/assets/images/index/banner.png" alt="" >
-          </li>
-          <li class="part-item">
-            <img src="@/assets/images/index/banner.png" alt="" >
-          </li>
-          <li class="part-item">
-            <img src="@/assets/images/index/banner.png" alt="" >
-          </li>
-        </ul> -->
       </div>
     </div>
   </div>
@@ -160,6 +128,7 @@ export default {
         line-height: 35px;
       }
       p{
+        width: 310px;
         line-height: 20px;
         color: $col999;
         margin-top: 5px;
@@ -205,18 +174,6 @@ export default {
       }
     }
   }
-  // .ci-img{
-  //   @include wh(220, 133);
-  //   .class-item02 &{
-  //     @include wh(220, 150);
-  //   }
-  //   .class-item03 &{
-  //     @include wh(220, 170);
-  //   }
-  //   .class-item04 &{
-  //     @include wh(220, 165);
-  //   }
-  // }
   // cma咨询
   .cma-consultation{
     background: #ffffff;
@@ -225,7 +182,7 @@ export default {
       @include whl(272, 210, 192);
       margin-left: 62px;
       margin-right: 47px;
-      padding-left: 82px;
+      padding-left: 60px;
       font-size: 26px;
       @extend %bg-img;
       background-image: url('../assets/images/index/cma_icon.png');
@@ -262,20 +219,4 @@ export default {
       margin-left: -38px;
     }
   }
-  // .part-list{
-  //   padding: 36px 5px;
-  //   li{
-  //     border: 1px solid $col999;
-  //     text-align: center;
-  //     @include whl(226, 98, 98);
-  //     float: left;
-  //     margin: 5px;
-  //     img{
-  //       vertical-align: middle;
-  //       margin-top: -3px;
-  //       width: 90%;
-  //       height: 90%;
-  //     }
-  //   }
-  // }
 </style>

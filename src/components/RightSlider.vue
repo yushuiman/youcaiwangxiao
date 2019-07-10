@@ -14,7 +14,7 @@
         <div class="com-show r-service">
           <p>周一至周五</p>
           <p>9:00-21:00</p>
-          <div class="com-btn">咨询</div>
+          <div class="com-btn" @click="serviceLink">咨询</div>
         </div>
       </li>
       <li class="hotline-item">
@@ -79,6 +79,9 @@ export default {
       } else {
         this.btnFlag = false
       }
+    },
+    serviceLink () {
+      window.open('https://awt.zoosnet.net/lr/chatpre.aspx?id=AWT95637580', '_blank')
     }
   }
 }
@@ -93,7 +96,6 @@ export default {
     right: 0;
     z-index: 13;
     background: rgba(0,0,0,.5);
-    // display: none;
   }
   .slider-list {
     li{
@@ -174,6 +176,7 @@ export default {
     color: #ffffff;
     display: inline-block;
     margin-top: 6px;
+    cursor: pointer;
     .r-try &{
       margin-top: 0;
     }

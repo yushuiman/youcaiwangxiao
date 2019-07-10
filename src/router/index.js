@@ -10,19 +10,28 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home,
-      meta: { showHeader: true }
+      meta: {
+        showHeader: true,
+        showFooter: true
+      }
     },
     {
       path: '/class',
       name: 'class',
       component: () => import(/* webpackChunkName: "about" */ '@/views/Class/Class.vue'),
-      meta: { showHeader: true }
+      meta: {
+        showHeader: true,
+        showFooter: true
+      }
     },
     {
       path: '/class-detail',
       name: 'class-detail',
       component: () => import(/* webpackChunkName: "about" */ '@/views/Class/ClassDetail.vue'),
-      meta: { showHeader: true }
+      meta: {
+        showHeader: true,
+        showFooter: true
+      }
     },
     {
       path: '/class-video',
@@ -37,7 +46,10 @@ export default new Router({
       path: '/question',
       name: 'question',
       component: () => import('@/views/Question/Question.vue'),
-      meta: { showHeader: true }
+      meta: {
+        showHeader: true,
+        showFooter: true
+      }
     },
     {
       path: '/dopotic',
@@ -94,25 +106,37 @@ export default new Router({
       path: '/zhibo',
       name: 'zhibo',
       component: () => import('@/views/Zhibo/Zhibo.vue'),
-      meta: { showHeader: true }
+      meta: {
+        showHeader: true,
+        showFooter: true
+      }
     },
     {
       path: '/zixun',
       name: 'zixun',
       component: () => import('@/views/Zixun/Zixun.vue'),
-      meta: { showHeader: true }
+      meta: {
+        showHeader: true,
+        showFooter: true
+      }
     },
     {
       path: '/app',
       name: 'app',
       component: () => import('@/views/App/App.vue'),
-      meta: { showHeader: true }
+      meta: {
+        showHeader: true,
+        showFooter: true
+      }
     },
     {
       path: '/login',
       name: 'login',
       component: () => import('@/views/Login/Login.vue'),
-      meta: { showHeader: true }
+      meta: {
+        showHeader: true,
+        showFooter: true
+      }
     },
     // 个人中心
     {
@@ -120,7 +144,8 @@ export default new Router({
       name: 'User',
       component: () => import('@/views/User/User.vue'),
       meta: {
-        showHeader: true
+        showHeader: true,
+        showFooter: true
       }
     }
   ]
