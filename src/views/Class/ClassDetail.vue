@@ -21,8 +21,8 @@
         <div class="cdi-special">
           特色服务：
           <span><i class="icon-server"></i>1对1服务</span>
-          <span><i class="icon-answer"></i>在线答疑</span>
-          <span><i class="icon-fanzhuan"></i>翻转课堂</span>
+          <span v-if="isntroduction.line_answer == 1"><i class="icon-answer"></i>在线答疑</span>
+          <span v-if="isntroduction.is_overclass == 1"><i class="icon-fanzhuan"></i>翻转课堂</span>
         </div>
       </div>
       <div class="cdi-wrap-r fr">
@@ -30,8 +30,8 @@
         <p class="cdi-instr">{{isntroduction.description}} 是否收到</p>
         <p class="cdi-teacher">讲师：{{isntroduction.teacher_name}}</p>
         <div class="cdi-type">
-          <span>VIP视频</span>
-          <span>VIP题库</span>
+          <span v-if="isntroduction.vip_video == 1">VIP视频</span>
+          <span v-if="isntroduction.vip_bank == 1">VIP题库</span>
           <span>有效期：{{isntroduction.study_days}}天</span>
         </div>
         <p class="cdi-buy-people">{{isntroduction.join_num}}人购买<span>9993次播放</span></p>
@@ -75,8 +75,6 @@
                 <p class="cl-t-info">{{item.introduce}}</p>
               </div>
             </swiper-slide>
-            <!-- <div class="swiper-button-prev" slot="button-prev"></div>
-            <div class="swiper-button-next" slot="button-next"></div> -->
           </swiper>
         </div>
         <div class="course-main-right course-main-student">
@@ -138,6 +136,9 @@ export default {
     // tab切换 (课程简介 课程大纲)
     tabChoose (type) {
       this.isChoose = type
+    },
+    playVideo () {
+      console.log(3223)
     },
     consultLink () {
       window.open('https://awt.zoosnet.net/LR/Chatpre.aspx?id=AWT95637580&cid=1453186017984561518698&lng=cn&sid=1519874658448243043282&p=http%3A//www.ucfo.com.cn/&rf1=&rf2=&e=%25u6765%25u81EA%25u9996%25u9875%25u81EA%25u52A8%25u9080%25u8BF7%25u7684%25u5BF9%25u8BDD&msg=&d=1519874661546', '_blank')

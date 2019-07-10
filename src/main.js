@@ -11,9 +11,8 @@ import Iview from 'iview'
 import ElementUI from 'element-ui'
 import VueAwesomeSwiper from 'vue-awesome-swiper' // swiper
 import 'iview/dist/styles/iview.css'
-import ECharts from 'vue-echarts/components/ECharts'
-// import 'echarts/lib/chart/line'
-Vue.component('chart', ECharts)
+// import ECharts from 'vue-echarts/components/ECharts'
+// Vue.component('chart', ECharts)
 Vue.config.productionTip = false
 
 Vue.use(Iview)

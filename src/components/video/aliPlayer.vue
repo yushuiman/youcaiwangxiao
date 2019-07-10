@@ -303,7 +303,7 @@ export default {
 <style>
   @import url('https://g.alicdn.com/de/prismplayer/2.8.2/skins/default/aliplayer-min.css');
   .prism-big-play-btn{
-    /* display: none!important; */
+
   }
   .prism-player .prism-progress .prism-progress-played{
     background: #F99111!important;
@@ -332,14 +332,18 @@ export default {
     background-size: contain;
   }
   .prism-player .prism-big-play-btn{
-    border: 2px solid #F99111;
+    background: url('../../assets/images/video/play-btn-icon.png') no-repeat;
+    background-size: contain;
+    width: 70px;
+    height: 70px;
+    top: 50%!important;
+    left: 50%!important;
+    margin-top: -35px!important;
+    margin-left: -35px!important;
     border-radius: 100%;
     z-index: 112;
   }
   .prism-player .prism-big-play-btn:hover{
-    border: 2px solid #F99111;
-    background-size: contain;
-    background: url('../../assets/images/video/play-btn-icon.png') no-repeat;
   }
   .outter{
     /* display: none!important; */

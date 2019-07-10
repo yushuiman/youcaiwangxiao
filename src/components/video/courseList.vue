@@ -1,6 +1,6 @@
 <template>
   <div class="rightCourseList">
-    <div class="video-course-wrap vid-kcqh">
+    <div class="video-course-wrap vid-kcqh" v-if="flagCourse">
       <h1 class="vc-title">套餐内课程</h1>
       <div class="vc-list" v-for="(item, index) in packageList" :key="index" @click="getSecvCatalog(item)">
         <img :src="item.pc_img" alt="">
@@ -51,6 +51,10 @@ export default {
     showBox: {
       type: String,
       default: ''
+    },
+    flagCourse: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -71,7 +75,6 @@ export default {
       this.reload() // 在想要刷新页面的时候调用reload方法
     },
     closeModel () {
-      // this.showBox = ''
       this.$emit('closeModel', '')
     },
     // 课程大纲（目录）
@@ -145,8 +148,6 @@ export default {
     &.vid-kcqh{
       left: 60px;
       width: 386px;
-      // height: 100%;
-      // height: 849px;
       overflow-y: scroll;
     }
   }
@@ -159,15 +160,6 @@ export default {
       width: 382px;
     }
   }
-  // .vc-title{
-  //   padding-top: 18px;
-  //   padding-bottom: 30px;
-  //   font-size: 20px;
-  //   color: $col333;
-  //   .vid-kcqh &{
-  //     color: #E6E6E6;
-  //   }
-  // }
   .vc-title{
     padding-top: 18px;
     padding-bottom: 30px;

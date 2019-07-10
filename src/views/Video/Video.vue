@@ -18,16 +18,16 @@
           </li>
         </ul>
       </div>
-      <div class="video-info-c fl" :class="{'rightSty': showBox == '','rightStyKc': showBox == '课程<br />切换'}">
+      <div class="video-info-c fl" :class="{'rightSty': showBox == '', 'rightStyKc': showBox == '课程<br />切换'}">
         <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
       </div>
       <div class="video-info-zjml fr" v-if="showBox == '课程<br />切换'">
-        <course-list :package_id="this.$route.query.package_id" :is_zheng="playCourseInfo.is_zheng" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback()"></course-list>
+        <course-list :package_id="this.$route.query.package_id" :is_zheng="playCourseInfo.is_zheng" :flagCourse="flagCourse" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback()"></course-list>
       </div>
-      <div class="video-info-r video-info-day-r fr" v-if="showBox == '答疑'">
+      <div class="video-info-r video-info-day-r fr" v-if="showBox == '答疑' && flag">
         <answer :playCourseInfo="playCourseInfo" @closeModel="closeModel"></answer>
       </div>
-      <div class="video-info-r fr" v-if="showBox == '讲义'">
+      <div class="video-info-r fr" v-if="showBox == '讲义' && flag">
         <div class="close-box" @click="closeModel()">
           <i class="close-icon"></i>
         </div>
@@ -63,6 +63,8 @@ export default {
       selMenu: 3,
       showBox: '课程<br />切换',
       vinfo: ['课程<br />切换', '答疑', '讲义'],
+      flag: true,
+      flagCourse: false,
       VideoId: '', // 视频VideoId
       videoCredentials: {
         handouts: '', // 讲义
@@ -97,7 +99,13 @@ export default {
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
       this.selMenu = index
-      this.showBox = val
+      this.flag = !this.flag
+      this.flagCourse = this.flag
+      if (this.flag) {
+        this.showBox = val
+      } else {
+        this.showBox = ''
+      }
     },
     closeModel () {
       this.showBox = ''
