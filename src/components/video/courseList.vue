@@ -1,47 +1,35 @@
 <template>
   <div class="rightCourseList">
-    <!-- <div class="vid-kcqh" v-if="flagCourse">
-      <h1 class="vc-title">套餐内课程</h1>
-      <div class="vc-list" v-for="(item, index) in packageList" :key="index" @click="getSecvCatalog(item)">
-        <img :src="item.pc_img" alt="">
-        <div class="c-info">
-          <h2>{{item.name}}</h2>
-          <p>讲师: {{item.teacher_name}}</p>
-        </div>
-      </div>
-    </div> -->
-    <div class="video-info-r" v-if="videoListFlag">
-      <div class="close-box" @click="closeModel()">
-        <i class="close-icon"></i>
-      </div>
-      <h1 class="vc-title">章节目录</h1>
-      <el-row class="tac">
-        <el-col :span="24">
-          <el-menu
-            default-active="2"
-            class="el-menu-vertical-demo"
-            background-color="#1D1F21"
-            text-color="#E6E6E6"
-            active-text-color="#F99111">
-            <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key">
-              <template slot="title">
-                <span>{{val.section_name}}</span>
-              </template>
-              <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
-              @click="playVideo(val, v)">
-                <i class="el-video-icon"></i>
-                <span>{{v.video_name}}</span>
-                <i class="el-dot-icon"></i>
-              </el-menu-item>
-            </el-submenu>
-          </el-menu>
-        </el-col>
-      </el-row>
+    <div class="close-box" @click="closeModel()">
+      <i class="close-icon"></i>
     </div>
+    <h1 class="vc-title">章节目录</h1>
+    <el-row class="tac">
+      <el-col :span="24">
+        <el-menu
+          :default-active="openMenu"
+          class="el-menu-vertical-demo"
+          background-color="#1D1F21"
+          text-color="#E6E6E6"
+          active-text-color="#F99111">
+          <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key">
+            <template slot="title">
+              <span>{{val.section_name}}</span>
+            </template>
+            <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
+            @click="playVideo(val, v, key, index)">
+              <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
+              <span class="sl">{{v.video_name}}</span>
+              <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1)}"></i>
+            </el-menu-item>
+          </el-submenu>
+        </el-menu>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
-import { secvCatalog } from '@/api/class'
+// import { secvCatalog } from '@/api/class'
 export default {
   inject: ['reload'],
   props: {
@@ -56,7 +44,7 @@ export default {
       type: Boolean,
       default: false
     },
-    courseSections:{
+    courseSections: {
       type: Array
     }
   },
@@ -68,7 +56,9 @@ export default {
       secvCatalogArr: [],
       packageList: [],
       curIndex: '',
-      videoListFlag: true
+      videoListFlag: true,
+      playIdx: 0,
+      openMenu: window.localStorage.getItem('openMenu') || '1-1'
     }
   },
   mounted () {
@@ -129,7 +119,11 @@ export default {
     //   })
     // },
     // 跳转到播放页面
-    playVideo (val, v) {
+    playVideo (val, v, key, index) {
+      v.flag = true
+      this.playIdx = v
+      this.$forceUpdate()
+      this.openMenu = (key + 1) + '-' + (index + 1)
       this.$emit('getVideoPlayback', v.video_id)
       this.$router.replace({ path: 'class-video',
         query: {
@@ -138,6 +132,7 @@ export default {
           video_id: v.video_id
         }
       })
+      window.localStorage.setItem('openMenu', this.openMenu)
       this.handleReload()
     }
   }
@@ -145,16 +140,16 @@ export default {
 </script>
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .vid-kcqh{
-    position: absolute;
-    width: 386px;
-    top: 0;
-    left: 60px;
-    bottom: 19px;
-    z-index: 101;
-    background: #26292C;
-    overflow-y: scroll;
-  }
+  // .vid-kcqh{
+  //   position: absolute;
+  //   width: 100%;
+  //   top: 0;
+  //   left: 60px;
+  //   bottom: 19px;
+  //   z-index: 101;
+  //   background: #26292C;
+  //   overflow-y: scroll;
+  // }
   // .vc-title{
   //   color: #E6E6E6;
   //   font-size: 20px;
@@ -170,6 +165,14 @@ export default {
   //     width: 100%;
   //   }
   // }
+  .rightCourseList{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    overflow-y: scroll;
+  }
   .vc-title{
     padding-top: 18px;
     padding-bottom: 30px;
@@ -239,6 +242,13 @@ export default {
       border: 0;
       border:2px solid rgba(249,145,17,1);
     }
+  }
+  .sl{
+    width: 80%;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   // .el-video-icon{
   //   @include wh(14, 14);
