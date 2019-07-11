@@ -1,6 +1,5 @@
 <template>
   <div class="capacity-assessment-wrap w-wrap">
-    <div class="about">是多少</div>
     <div class="cass-row cass-row-top">
       <Row>
         <Col span="24">
@@ -29,22 +28,22 @@
         <Col span="8">
           <div class="answer-status-item answer-status-item01">
             <i class="asi-icon"></i>
-            <p><em>{{monStatistics.num}}</em>次</p>
+            <p><em>{{monStatistics.num || 0}}</em>次</p>
             <span>练习次数</span>
           </div>
         </Col>
         <Col span="8">
           <div class="answer-status-item answer-status-item02">
             <i class="asi-icon"></i>
-            <p><em>{{monStatistics.used_time}}</em>分钟</p>
-            <span>练习天数</span>
+            <p><em>{{monStatistics.used_time || 0}}</em>分钟</p>
+            <span>答题时长</span>
           </div>
         </Col>
         <Col span="8">
           <div class="answer-status-item answer-status-item03">
             <i class="asi-icon"></i>
-            <p><em>{{monStatistics.answer_speed}}</em>秒/题</p>
-            <span>答题进度</span>
+            <p><em>{{monStatistics.answer_speed || 0}}</em>秒/题</p>
+            <span>答题速度</span>
           </div>
         </Col>
       </Row>
@@ -89,18 +88,12 @@ export default {
         radar: [
           {
             indicator: [
-              { text: '答题时间', max: 0 },
-              { text: '错题数', max: 100 },
-              { text: '做题数', max: 100 },
-              { text: '学员排名', max: 100 },
+              { text: '答题时间', max: 100000 },
+              { text: '错题数', max: 10000 },
+              { text: '做题数', max: 100000 },
+              { text: '学员排名', max: 10000 },
               { text: '平均分', max: 100 },
               { text: '正确率', max: 100 }
-              // { text: '答题时间' },
-              // { text: '错题数' },
-              // { text: '做题数' },
-              // { text: '学员排名' },
-              // { text: '平均分' },
-              // { text: '正确率' }
             ],
             splitArea: {
               show: true,
@@ -147,9 +140,9 @@ export default {
             data: [
               {
                 value: [
-                  this.nlpgInfo.user_time / 1000000,
-                  this.nlpgInfo.error_num,
-                  this.nlpgInfo.total_num,
+                  this.nlpgInfo.user_time,
+                  this.nlpgInfo.error_num || 0,
+                  this.nlpgInfo.total_num || 0,
                   this.nlpgInfo.ranking,
                   this.nlpgInfo.scores,
                   this.nlpgInfo.accuracy

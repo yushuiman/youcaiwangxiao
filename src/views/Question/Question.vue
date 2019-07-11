@@ -1,7 +1,39 @@
 <template>
   <div class="question-wrap w-wrap clearfix">
-    <div @click="zExperienceTopic">0元体验</div>
-    <div class="qt-wrap-l fl">
+    <!-- 0元体验 -->
+    <div class="qt-wrap-l fl" v-if="experience">
+      <Row class="qt-subject">
+        <Col span="6">
+          <div class="qt-course-ty" @click="zExperienceTopic">0元体验</div>
+        </Col>
+      </Row>
+       <!-- 答题详情(做题数 正确率 平均分) -->
+      <Row class="qt-answer-detail">
+        <Col span="8">
+          <div class="qta-item qta-item01">
+            <span class="tit">做题数</span>
+            <p class="record">0<em>道</em></p>
+            <p class="compare">同类考生平均答题量<span>{{questionResult.avgtu}}</span>道<br>已击败<span>{{questionResult.donerank}}%</span>同类考生</p>
+          </div>
+        </Col>
+        <Col span="8">
+          <div class="qta-item qta-item02">
+            <span class="tit">正确率</span>
+            <p class="record">0<em>%</em></p>
+            <p class="compare">同类考生平均正确率<span>{{questionResult.avgra}}%</span><br>已击败<span>{{questionResult.beatrank}}%</span>同类考生</p>
+          </div>
+        </Col>
+        <Col span="8">
+          <div class="qta-item qta-item03">
+            <span class="tit">平均分</span>
+            <p class="record">0<em>分</em></p>
+            <p class="compare">同类考生平均分<span>{{questionResult.avgav}}分</span><br>已击败<span>{{questionResult.pingrank}}%</span>同类考生</p>
+          </div>
+        </Col>
+      </Row>
+    </div>
+    <!-- 已购买课程 有题库 -->
+    <div class="qt-wrap-l fl" v-if="!experience">
       <!-- 科目标题 -->
       <Row class="qt-subject">
         <Col span="6" v-for="(item, index) in projectArr" :key="index">
@@ -179,7 +211,7 @@ export default {
       plateTitle: '', // 显示弹窗对应模块title问案
       questionResult: {}, // 正确率，做题数，平均分
       studentsRankList: [], // 学生排名
-      experience: false // 0元体验
+      experience: true // 0元体验
     }
   },
   components: {
@@ -196,7 +228,9 @@ export default {
     })
   },
   mounted () {
-    this.projectList()
+    if (this.user_id) {
+      this.projectList()
+    }
   },
   methods: {
     // 展示课程
@@ -205,8 +239,8 @@ export default {
         const res = data.data
         this.projectArr = res.data
         this.getQuestionIndex(res.data[0].id, this.selIdx)
+        // this.experience = false
         // 0元体验
-        res.data = [] // 测试0元体验 记得删除
         if (res.data && res.data.length === 0) {
           this.experience = true
         }
@@ -246,6 +280,10 @@ export default {
     },
     // 0元体验
     zExperienceTopic () {
+      if (!this.user_id) {
+        this.$router.push('/login')
+        return
+      }
       this.$router.push({ path: '/dopotic-experience',
         query: {
           plate_id: 8 // 代表0元体验
@@ -285,6 +323,11 @@ export default {
     //   font-size: 20px;
     //   color: $col333;
     // }
+  }
+  .qt-course-ty{
+    font-size: 20px;
+    padding-left: 20px;
+    color: $col333;
   }
   // 答题详情 做题数正确率平均分
   .qt-answer-detail, .practice-wrap{
