@@ -54,6 +54,7 @@
         <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%"></iframe>
       </div> -->
     </div>
+    <!-- <div style="height: 20px; background: #f00;"></div> -->
   </div>
 </template>
 <script>
@@ -114,36 +115,36 @@ export default {
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
       this.selMenu = index
-      if(val === '课程<br />切换'){
+      if (val === '课程<br />切换') {
         this.flagCourse = !this.flagCourse
         this.flagAnswer = false
         this.flagJy = false
-        if(this.flagKc){
+        if (this.flagKc) {
           this.wImportant = 328
         }
       }
-      if(val === '答疑'){
+      if (val === '答疑') {
         this.flagAnswer = !this.flagAnswer
         this.flagJy = false
-        if(this.flagAnswer){
+        if (this.flagAnswer) {
           this.wImportant = 495
-        } else{
-          if(this.flagKc){
+        } else {
+          if (this.flagKc) {
             this.wImportant = '328'
-          } else{
+          } else {
             this.wImportant = '0'
           }
         }
       }
-      if(val === '讲义'){
+      if (val === '讲义') {
         this.flagJy = !this.flagJy
         this.flagAnswer = false
-        if(this.flagJy){
+        if (this.flagJy) {
           this.wImportant = 495
-        } else{
-          if(this.flagKc){
+        } else {
+          if (this.flagKc) {
             this.wImportant = '328'
-          } else{
+          } else {
             this.wImportant = '0'
           }
         }
@@ -151,14 +152,14 @@ export default {
     },
     closeModel (msg) {
       // this.flagCourse = false
-      if(msg === 'kc'){
+      if (msg === 'kc') {
         this.flagKc = false
         this.wImportant = '0'
       }
       this.flagAnswer = false
       this.flagJy = false
       this.wImportant = '0'
-      if(this.flagKc){
+      if (this.flagKc) {
         this.wImportant = '382'
       }
     },
@@ -171,7 +172,7 @@ export default {
         this.packageList = res.data
       })
     },
-     // 课程大纲(章节 video)
+    // 课程大纲(章节 video)
     getSecvCatalog (item, idx) {
       this.flagKc = true
       this.wImportant = '382'
@@ -181,7 +182,7 @@ export default {
           course_id: item.course_id,
           section_id: this.$route.query.section_id,
           video_id: this.$route.query.video_id,
-          is_zheng: this.$route.query.is_zheng,
+          is_zheng: this.$route.query.is_zheng
         }
       })
       for (var i = 0; i < this.secvCatalogArr.length; i++) {
@@ -212,13 +213,13 @@ export default {
     },
     // getSecvCatalog (item) {
     //   this.$router.replace({ path: 'class-video',
-        // query: {
-        //   package_id: this.$route.query.package_id,
-        //   course_id: item.course_id,
-        //   section_id: this.$route.query.section_id,
-        //   video_id: this.$route.query.video_id,
-        //   is_zheng: this.$route.query.is_zheng,
-        // }
+    // query: {
+    //   package_id: this.$route.query.package_id,
+    //   course_id: item.course_id,
+    //   section_id: this.$route.query.section_id,
+    //   video_id: this.$route.query.video_id,
+    //   is_zheng: this.$route.query.is_zheng,
+    // }
     //   })
     //   this.course_id = item.course_id
     // },
@@ -237,6 +238,10 @@ export default {
         })
       })
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    window.localStorage.setItem('openMenu', '')
+    next()
   }
 }
 </script>
@@ -282,7 +287,7 @@ export default {
     font-size: 20px;
     color: $col333;
   }
-  
+
   // // 目录 答疑 讲义
   // .video-course-wrap{
   //   position: absolute;
@@ -306,8 +311,6 @@ export default {
   //   }
   // }
 
-  
-
   .video-main{
     position: absolute;
     bottom: 0;
@@ -330,7 +333,10 @@ export default {
   .video-info-c{
     position: relative;
     flex: 1;
-    background: #1c1f21;
+    background: #000000;
+    border-radius: 10px;
+    margin: 20px 0;
+    overflow: hidden;
   }
   .video-info-r{
     position: relative;

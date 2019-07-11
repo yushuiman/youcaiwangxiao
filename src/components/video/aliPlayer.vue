@@ -304,6 +304,7 @@ export default {
     background: #F99111!important;
   }
   .prism-player .prism-progress:hover{
+    height: 10px!important;
   }
   .prism-progress-cursor{
     background: none!important;

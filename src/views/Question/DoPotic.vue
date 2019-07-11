@@ -9,8 +9,8 @@
             </Col>
             <Col span="4">
               <div class="answer-time">
-                <count @countdownprogress="countdownprogress" @countdownend="countdownend" countdownpause="countdownpause" :time="answer_time">
-                  <template slot-scope="props" ref="countTime">
+                <count ref="countTime" @countdownend="countdownend" :time="answer_time">
+                  <template slot-scope="props" >
                       0{{ props.totalHours }}:
                       {{ props.minutes }}:
                       {{ props.seconds }}
@@ -207,8 +207,8 @@ export default {
         this.topics = topics
         this.total = parseInt(total)
         this.title = title
-        // this.answer_time = res.data.answer_time
-        this.answer_time = 10000
+        // this.answer_time = parseInt(res.data.answer_time)
+        this.answer_time = 100000
         this.topics.map((val, index) => {
           val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
           val.flag = false // 解析展开收起交互(练习模式)
@@ -226,23 +226,16 @@ export default {
       this.visible = true
       this.txtShow = v
       if (v === '暂停') {
-        this.emitEvents = true
+        this.$refs.countTime.pause()
       }
-    },
-    countdownend () {
-      // 倒计时结束
-      console.log('结束')
-    },
-    countdownprogress () {
-      console.log('倒计时-1')
-    },
-    countdownpause () {
-      console.log('暂停')
     },
     // 继续
     goOnDopic () {
       this.visible = false
-      // 开始倒计时
+      this.$refs.countTime.start()
+    },
+    countdownend () {
+      console.log('倒计时结束')
     },
     // 保存
     saveDopic () {

@@ -4,7 +4,7 @@
     <div class="qt-wrap-l fl" v-if="experience">
       <Row class="qt-subject">
         <Col span="6">
-          <div class="qt-course-ty" @click="zExperienceTopic">0元体验</div>
+          <div class="qt-course-ty">0元体验</div>
         </Col>
       </Row>
        <!-- 答题详情(做题数 正确率 平均分) -->
@@ -28,6 +28,20 @@
             <span class="tit">平均分</span>
             <p class="record">0<em>分</em></p>
             <p class="compare">同类考生平均分<span>{{questionResult.avgav}}分</span><br>已击败<span>{{questionResult.pingrank}}%</span>同类考生</p>
+          </div>
+        </Col>
+      </Row>
+      <Row class="practice-wrap">
+        <Col span="24" class="practice-item">
+          <div class="prt-info-com prt-info prt-info-04">
+            <div class="prt-flex">
+              <i class="prt-icon"></i>
+              <div class="prt-txt">
+                <h2>权威CMA精准题库</h2>
+                <p>名师考题还原，一题三审录入</p>
+              </div>
+            </div>
+            <button class="prt-btn btn-com" @click="zExperienceTopic">去做题</button>
           </div>
         </Col>
       </Row>
@@ -229,7 +243,7 @@ export default {
   },
   mounted () {
     if (this.user_id) {
-      this.projectList()
+      this.projectList() // 已登录，获取课程列表
     }
   },
   methods: {
@@ -239,7 +253,7 @@ export default {
         const res = data.data
         this.projectArr = res.data
         this.getQuestionIndex(res.data[0].id, this.selIdx)
-        // this.experience = false
+        this.experience = false
         // 0元体验
         if (res.data && res.data.length === 0) {
           this.experience = true
