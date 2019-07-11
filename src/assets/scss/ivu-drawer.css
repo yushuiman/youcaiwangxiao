@@ -1,0 +1,11 @@
+.my-drawer .ivu-drawer-wrap,.my-drawer .ivu-drawer-left{
+    left: 60px!important;
+    top: 91px!important;
+    bottom: 19px!important;
+    right: auto!important;
+    width: 386px!important;
+    height: auto!important;
+}
+.my-drawer .ivu-drawer-mask{display: none!important;}
+.my-drawer .ivu-drawer-body{padding: 0;line-height: 1;}
+.my-drawer .ivu-drawer-content{background: #26292C;}

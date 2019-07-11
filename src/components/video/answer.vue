@@ -1,7 +1,8 @@
 <template>
-  <div>
+  <div class="ask-wrap">
     <!--提问-->
-    <div class="ask" v-if="playCourseInfo.is_zheng == 1">
+    <!--  v-if="playCourseInfo.is_zheng == 1" v-else-->
+    <div class="ask">
       <div class="close-box" @click="closeModel()">
         <i class="close-icon"></i>
       </div>
@@ -40,9 +41,9 @@
         </div>
       </div>
     </div>
-    <div class="close-box" @click="closeModel()" v-else>
+    <!-- <div class="close-box" @click="closeModel()" v-else>
       <i class="close-icon"></i>
-    </div>
+    </div> -->
     <!--其他问题-->
     <div class="others" :class="{'has-img': quiz_image.length}" v-if="answerList.length">
       <h1 class="vc-title">本节其他问题</h1>
@@ -177,7 +178,7 @@ export default {
       console.log(file)
     },
     closeModel () {
-      this.$emit('closeModel')
+      this.$emit('closeModel', '')
     },
     // 问题提交
     answerSubmit () {
@@ -239,6 +240,15 @@ export default {
   @import "../../assets/scss/app";
   @import "../../assets/scss/iview.css";
   // @import "../../../node_modules/iview/dist/styles/iview.css";
+  .ask-wrap{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    overflow-y: scroll;
+    background: #F8FAFC;
+  }
   .vc-title{
     padding-top: 18px;
     padding-bottom: 30px;
@@ -246,8 +256,12 @@ export default {
     color: $col333;
   }
   .ask {
+    width: 495px;
+    height: 100%;
     padding: 0 20px;
     background: #ffffff;
+    box-sizing: border-box;
+    overflow-y: scroll;
   }
   .others{
     width: 100%;

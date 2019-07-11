@@ -8,46 +8,51 @@
         <img src="../../assets/images/global/head-logo-moren.png" alt="头像" class="head-logo">
       </div>
     </div>
-    <div class="video-main clearfix">
-      <div class="video-info-l fl">
+    <div class="video-main" id="box">
+      <div class="vid-kcqh" v-if="flagCourse">
+        <h1 class="vc-title">套餐内课程</h1>
+        <div class="vc-list" v-for="(item, index) in packageList" :key="index" @click="getSecvCatalog(item)">
+          <img :src="item.pc_img" alt="">
+          <div class="c-info">
+            <h2>{{item.name}}</h2>
+            <p>讲师: {{item.teacher_name}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="video-info-l" id="left">
         <ul class="vinfo-ul">
-          <li class="vinfo-item" :class="['vinfo-item-0'+(index+1), {'curren': selMenu==index}]"
+          <li class="vinfo-item" :class="[{'curren': selMenu==index}]"
             v-for="(item, index) in vinfo" :key="index" @click="showModel(item, index)">
-            <i class="vio-icon"></i>
+            <i class="vio-icon" :class="['vio-icon-0'+(index+1)]"></i>
             <p class="txt" v-html="item"></p>
           </li>
         </ul>
       </div>
-      <div class="video-info-c fl" :class="{'rightSty': showBox == '', 'rightStyKc': showBox == '课程<br />切换'}">
+      <div class="video-info-c">
         <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
       </div>
-      <div class="video-info-zjml fr" v-if="showBox == '课程<br />切换'">
-        <course-list :package_id="this.$route.query.package_id" :is_zheng="playCourseInfo.is_zheng" :flagCourse="flagCourse" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback()"></course-list>
+      <div id="line"></div>
+      <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
+        <course-list v-if="flagKc" :courseSections="courseSections" :is_zheng="playCourseInfo.is_zheng" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback()"></course-list>
+        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" @closeModel="closeModel"></answer>
+        <div class="jiangyi" v-if="flagJy">
+          <div class="close-box" @click="closeModel()">
+            <i class="close-icon"></i>
+          </div>
+          <h1 class="vc-title">讲义</h1>
+          <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%"></iframe>
+        </div>
       </div>
-      <div class="video-info-r video-info-day-r fr" v-if="showBox == '答疑' && flag">
+      <!-- <div class="video-info-r video-info-day-r" v-if="flagAnswer">
         <answer :playCourseInfo="playCourseInfo" @closeModel="closeModel"></answer>
       </div>
-      <div class="video-info-r fr" v-if="showBox == '讲义' && flag">
+      <div class="video-info-r" v-if="showBox == '讲义' && flag">
         <div class="close-box" @click="closeModel()">
           <i class="close-icon"></i>
         </div>
         <h1 class="vc-title">讲义</h1>
         <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%"></iframe>
-      </div>
-      <!-- 课程 答疑 讲义 -->
-      <div class="three-main">
-        <!-- <course-list v-if="showBox == '课程<br />切换'"></course-list> -->
-        <!-- <div class="video-course-wrap vid-dy" v-if="showBox == '答疑'">
-          <answer :playCourseInfo="playCourseInfo" @closeModel="closeModel"></answer>
-        </div> -->
-        <!-- <div class="video-course-wrap vid-jy" v-if="showBox == '讲义'">
-          <div class="close-box" @click="closeModel()">
-            <i class="close-icon"></i>
-          </div>
-          <h1 class="vc-title">讲义</h1>
-          <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="750px"></iframe>
-        </div> -->
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -55,7 +60,8 @@
 import aliPlayer from '@/components/video/aliPlayer'
 import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
-import { videoPlayback, videoCredentials } from '@/api/class'
+import { videoPlayback, videoCredentials, courseCatalog, secvCatalog } from '@/api/class'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -63,8 +69,11 @@ export default {
       selMenu: 3,
       showBox: '课程<br />切换',
       vinfo: ['课程<br />切换', '答疑', '讲义'],
-      flag: true,
+      flagKc: true,
+      flagAnswer: false,
       flagCourse: false,
+      flagJy: false,
+      wImportant: '328',
       VideoId: '', // 视频VideoId
       videoCredentials: {
         handouts: '', // 讲义
@@ -80,6 +89,9 @@ export default {
         package_id: this.$route.query.package_id,
         is_zheng: this.$route.query.is_zheng
       },
+      packageList: [],
+      secvCatalogArr: [],
+      courseSections: [],
       playStatus: true // 停止播放
     }
   },
@@ -89,27 +101,127 @@ export default {
     answer
   },
   computed: {
-
+    ...mapState({
+      user_id: state => state.user.user_id
+    })
   },
-
   mounted () {
     this.getVideoPlayback(this.$route.query.video_id)
+    this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
+    this.getCourseCatalog() // 课程大纲（目录）
   },
   methods: {
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
       this.selMenu = index
-      this.flag = !this.flag
-      this.flagCourse = this.flag
-      if (this.flag) {
-        this.showBox = val
-      } else {
-        this.showBox = ''
+      if(val === '课程<br />切换'){
+        this.flagCourse = !this.flagCourse
+        this.flagAnswer = false
+        this.flagJy = false
+        if(this.flagKc){
+          this.wImportant = 328
+        }
+      }
+      if(val === '答疑'){
+        this.flagAnswer = !this.flagAnswer
+        this.flagJy = false
+        if(this.flagAnswer){
+          this.wImportant = 495
+        } else{
+          if(this.flagKc){
+            this.wImportant = '328'
+          } else{
+            this.wImportant = '0'
+          }
+        }
+      }
+      if(val === '讲义'){
+        this.flagJy = !this.flagJy
+        this.flagAnswer = false
+        if(this.flagJy){
+          this.wImportant = 495
+        } else{
+          if(this.flagKc){
+            this.wImportant = '328'
+          } else{
+            this.wImportant = '0'
+          }
+        }
       }
     },
-    closeModel () {
-      this.showBox = ''
+    closeModel (msg) {
+      // this.flagCourse = false
+      if(msg === 'kc'){
+        this.flagKc = false
+        this.wImportant = '0'
+      }
+      this.flagAnswer = false
+      this.flagJy = false
+      this.wImportant = '0'
+      if(this.flagKc){
+        this.wImportant = '382'
+      }
     },
+    // 课程大纲（目录）
+    getCourseCatalog () {
+      courseCatalog({
+        package_id: this.$route.query.package_id
+      }).then(data => {
+        const res = data.data
+        this.packageList = res.data
+      })
+    },
+     // 课程大纲(章节 video)
+    getSecvCatalog (item, idx) {
+      this.flagKc = true
+      this.wImportant = '382'
+      this.$router.replace({ path: 'class-video',
+        query: {
+          package_id: this.$route.query.package_id,
+          course_id: item.course_id,
+          section_id: this.$route.query.section_id,
+          video_id: this.$route.query.video_id,
+          is_zheng: this.$route.query.is_zheng,
+        }
+      })
+      for (var i = 0; i < this.secvCatalogArr.length; i++) {
+        if (item.name === this.secvCatalogArr[i].type) {
+          this.courseSections = this.secvCatalogArr[i].courseSections
+          return
+        }
+      }
+      secvCatalog({
+        course_id: item.course_id
+      }).then(data => {
+        const res = data.data
+        this.courseSections = res.data
+        this.secvCatalogArr.push({
+          type: item.name,
+          courseSections: res.data
+        })
+      })
+    },
+    // 初始化展示章节
+    initSecvCatalog () {
+      secvCatalog({
+        course_id: this.$route.query.course_id
+      }).then(data => {
+        const res = data.data
+        this.courseSections = res.data
+      })
+    },
+    // getSecvCatalog (item) {
+    //   this.$router.replace({ path: 'class-video',
+        // query: {
+        //   package_id: this.$route.query.package_id,
+        //   course_id: item.course_id,
+        //   section_id: this.$route.query.section_id,
+        //   video_id: this.$route.query.video_id,
+        //   is_zheng: this.$route.query.is_zheng,
+        // }
+    //   })
+    //   this.course_id = item.course_id
+    // },
     // 获取视频凭证
     getVideoPlayback (id) {
       videoPlayback({
@@ -118,14 +230,13 @@ export default {
         const res = data.data
         this.VideoId = res.data.VideoId
         // 获取视频凭证
-        let dataForm = Object.assign({ VideoId: res.data.VideoId, user_id: 41, video_time: 5, quiz_image: 'dfsdfsdfsd' }, this.playCourseInfo)
+        let dataForm = Object.assign({ VideoId: res.data.VideoId, user_id: this.user_id, video_time: 5, quiz_image: 'dfsdfsdfsd' }, this.playCourseInfo)
         videoCredentials(dataForm).then(data => {
           let res = data.data
           this.videoCredentials = res.data
         })
       })
     }
-
   }
 }
 </script>
@@ -136,6 +247,9 @@ export default {
     @include lh(70, 70);
     padding: 0 31px;
     background: $colfff;
+    box-shadow: 0 4px 8px 0 rgba(28,31,33,.1);
+    position: relative;
+    z-index: 101;
     span{
       font-size: 16px;
       font-weight:500;
@@ -160,65 +274,94 @@ export default {
       }
     }
   }
+
+  .vc-title{
+    padding-top: 18px;
+    padding-bottom: 30px;
+    padding-left: 30px;
+    font-size: 20px;
+    color: $col333;
+  }
+  
+  // // 目录 答疑 讲义
+  // .video-course-wrap{
+  //   position: absolute;
+  //   top: 20px;
+  //   background: #26292C;
+  //   z-index: 12;
+  //   padding: 0 20px;
+  //   box-sizing: border-box;
+  //   &.vid-jy, &.vid-dy{
+  //     width: 495px;
+  //     // height: 869px;
+  //     height: 100%;
+  //     top: 0;
+  //     right: 0;
+  //     background: #ffffff;
+  //     box-shadow: 0px 15px 10px -15px rgba(0,0,0,0.2) inset;
+  //   }
+  //   &.vid-dy{
+  //     padding: 0;
+  //     background: #F8FAFC;
+  //   }
+  // }
+
+  
+
   .video-main{
     position: absolute;
     bottom: 0;
     left: 0;
     top: 70px;
     width: 100%;
-    // height: 100%;
     background: #1D1F21;
-    // background: #f00;
-    // display: flex;
-    // justify-content: space-between;
-    .video-info-l{
-      width: 60px;
-    }
-    .video-info-c{
-      position: absolute;
-      left: 61px;
-      top: 20px;
-      bottom: 20px;
-      // width: 100%;
-      right: 495px;
-      // height: 849px;
-      // height: 100%;
-      background:rgba(0,0,0,1);
-      border-radius: 10px;
-      box-sizing: border-box;
-      &.rightSty{
-        right: 0;
-      }
-      &.rightStyKc{
-        right: 382px;
-      }
-    }
-    .video-info-r{
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      // padding: 0 20px;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+  }
+  .video-info-l{
+    background: #1c1f21;
+    width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+  }
+  .video-info-c{
+    position: relative;
+    flex: 1;
+    background: #1c1f21;
+  }
+  .video-info-r{
+    position: relative;
+    background: #1c1f21;
+    // width: 384px;
+    padding: 0;
+    right: 0;
+    z-index: 1;
+    &.video-info-r-w{
       width: 495px;
-      background: #F8FAFC;
-      // height: 869px;
-      // height: 100%;
-      // box-sizing: border-box;
-      box-shadow: 0px 15px 10px -15px rgba(0,0,0,0.2) inset;
     }
   }
+  // 左边菜单
   .vinfo-ul{
-    padding-top: 156px;
+    width: 100%;
   }
   .vinfo-item{
     padding: 30px 0;
     text-align: center;
     &:hover, &.curren{
       background: #26292C;
+      .vio-icon-01{
+        @include bg_img(22, 18, '../../assets/images/video/class-active-icon.png');
+      }
+      .vio-icon-02{
+        @include bg_img(26, 24, '../../assets/images/video/answer-active-icon.png');
+      }
+      .vio-icon-03{
+        @include bg_img(26, 25, '../../assets/images/video/jiangyi-active-icon.png');
+      }
     }
-    // &.curren{
-    //   background: #ffffff;
-    // }
     .txt{
       color: $col999;
       line-height: 18px;
@@ -226,91 +369,32 @@ export default {
     }
   }
   .vio-icon{
-    .vinfo-item-01 &{
+    &.vio-icon-01{
       @include bg_img(22, 18, '../../assets/images/video/class-icon.png');
     }
-    .vinfo-item-02 &{
+    &.vio-icon-02{
       @include bg_img(26, 24, '../../assets/images/video/answer-icon.png');
     }
-    .vinfo-item-03 &{
+    &.vio-icon-03{
       @include bg_img(26, 25, '../../assets/images/video/jiangyi-icon.png');
     }
   }
-
-  .vc-title{
-    padding-top: 18px;
-    padding-bottom: 30px;
-    font-size: 20px;
-    color: $col333;
-    .video-info-r &{
-      padding-left: 20px;
-    }
-    .video-info-zjml &{
-      color: #E6E6E6;
-    }
-  }
-  .el-video-icon{
-    @include wh(14, 14);
-    display: inline-block;
-    margin-right: 10px;
-    margin-top: -3px;
-    vertical-align: middle;
-    @extend %bg-img;
-    background-image: url('../../assets/images/video/stop-icon.png');
-    &.play-icon{
-      background-image: url('../../assets/images/video/play-icon.png');
-    }
-  }
-  .el-menu-item{
-    padding-left: 35px!important;
-    padding-right: 22px!important;
-  }
-  .el-dot-icon{
-    @include wh(10, 10);
-    display: inline-block;
-    border-radius: 100%;
-    margin-top: 20px;
-    border:2px solid rgba(102,102,102,1);
-    box-sizing: border-box;
-    float: right;
-    &.el-dot-see{
-      border: 0;
-      background: rgba(249,145,17,1);
-    }
-    &.el-dot-now{
-      border: 0;
-      border:2px solid rgba(249,145,17,1);
-    }
-  }
-  // 目录 答疑 讲义
-  .video-course-wrap{
+  // 课程包
+  .vid-kcqh{
     position: absolute;
-    top: 20px;
+    width: 386px;
+    top: 0;
+    left: 60px;
+    bottom: 19px;
+    z-index: 101;
     background: #26292C;
-    z-index: 12;
-    padding: 0 20px;
-    box-sizing: border-box;
-    &.vid-kcqh{
-      left: 60px;
-      width: 386px;
-      // height: 849px;
-      height: 100%;
-    }
-    &.vid-jy, &.vid-dy{
-      width: 495px;
-      // height: 869px;
-      height: 100%;
-      top: 0;
-      right: 0;
-      background: #ffffff;
-      box-shadow: 0px 15px 10px -15px rgba(0,0,0,0.2) inset;
-    }
-    &.vid-dy{
-      padding: 0;
-      background: #F8FAFC;
+    overflow-y: scroll;
+    .vc-title{
+      color: #E6E6E6;
+      padding-left: 30px;
+      padding-top: 30px;
     }
   }
-
   .vc-list{
     padding-bottom: 30px;
     padding-left: 30px;
@@ -332,6 +416,16 @@ export default {
         margin-top: 8px;
       }
     }
+  }
+  // 讲义
+  .jiangyi{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    overflow-y: scroll;
+    background: $colfff;
   }
   .close-box{
     text-align: right;

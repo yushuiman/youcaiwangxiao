@@ -1,6 +1,6 @@
 <template>
   <div class="rightCourseList">
-    <div class="video-course-wrap vid-kcqh" v-if="flagCourse">
+    <!-- <div class="vid-kcqh" v-if="flagCourse">
       <h1 class="vc-title">套餐内课程</h1>
       <div class="vc-list" v-for="(item, index) in packageList" :key="index" @click="getSecvCatalog(item)">
         <img :src="item.pc_img" alt="">
@@ -9,8 +9,8 @@
           <p>讲师: {{item.teacher_name}}</p>
         </div>
       </div>
-    </div>
-    <div class="video-info-r">
+    </div> -->
+    <div class="video-info-r" v-if="videoListFlag">
       <div class="close-box" @click="closeModel()">
         <i class="close-icon"></i>
       </div>
@@ -41,7 +41,7 @@
   </div>
 </template>
 <script>
-import { courseCatalog, secvCatalog } from '@/api/class'
+import { secvCatalog } from '@/api/class'
 export default {
   inject: ['reload'],
   props: {
@@ -55,71 +55,79 @@ export default {
     flagCourse: {
       type: Boolean,
       default: false
+    },
+    courseSections:{
+      type: Array
     }
   },
   data () {
     return {
+      // value2: false,
       courseCatalogInfo: [], // 课程大纲（目录）
-      courseSections: [], // 课程大纲（章节 video）
+      // courseSections: [], // 课程大纲（章节 video）
       secvCatalogArr: [],
       packageList: [],
-      curIndex: ''
+      curIndex: '',
+      videoListFlag: true
     }
   },
   mounted () {
-    this.getCourseCatalog() // 课程大纲（目录）
-    this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
+    // this.getCourseCatalog() // 课程大纲（目录）
+    // this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
   },
   methods: {
     handleReload () {
       this.reload() // 在想要刷新页面的时候调用reload方法
     },
     closeModel () {
-      this.$emit('closeModel', '')
+      this.videoListFlag = false
+      this.$emit('closeModel', 'kc')
     },
-    // 课程大纲（目录）
-    getCourseCatalog () {
-      courseCatalog({
-        package_id: this.package_id
-      }).then(data => {
-        const res = data.data
-        this.packageList = res.data
-      })
-    },
+    // // 课程大纲（目录）
+    // getCourseCatalog () {
+    //   courseCatalog({
+    //     package_id: this.package_id
+    //   }).then(data => {
+    //     const res = data.data
+    //     this.packageList = res.data
+    //   })
+    // },
     // 课程大纲(章节 video)
-    getSecvCatalog (item, idx) {
-      this.$router.replace({ path: 'class-video',
-        query: {
-          ...this.$route.query,
-          course_id: item.course_id
-        }
-      })
-      for (var i = 0; i < this.secvCatalogArr.length; i++) {
-        if (item.name === this.secvCatalogArr[i].type) {
-          this.courseSections = this.secvCatalogArr[i].courseSections
-          return
-        }
-      }
-      secvCatalog({
-        course_id: item.course_id
-      }).then(data => {
-        const res = data.data
-        this.courseSections = res.data
-        this.secvCatalogArr.push({
-          type: item.name,
-          courseSections: res.data
-        })
-      })
-    },
-    // 初始化展示章节
-    initSecvCatalog () {
-      secvCatalog({
-        course_id: this.$route.query.course_id
-      }).then(data => {
-        const res = data.data
-        this.courseSections = res.data
-      })
-    },
+    // getSecvCatalog (item, idx) {
+    //   this.videoListFlag = true
+    //   this.$emit('closeModel')
+    //   this.$router.replace({ path: 'class-video',
+    //     query: {
+    //       ...this.$route.query,
+    //       course_id: item.course_id
+    //     }
+    //   })
+    //   for (var i = 0; i < this.secvCatalogArr.length; i++) {
+    //     if (item.name === this.secvCatalogArr[i].type) {
+    //       this.courseSections = this.secvCatalogArr[i].courseSections
+    //       return
+    //     }
+    //   }
+    //   secvCatalog({
+    //     course_id: item.course_id
+    //   }).then(data => {
+    //     const res = data.data
+    //     this.courseSections = res.data
+    //     this.secvCatalogArr.push({
+    //       type: item.name,
+    //       courseSections: res.data
+    //     })
+    //   })
+    // },
+    // // 初始化展示章节
+    // initSecvCatalog () {
+    //   secvCatalog({
+    //     course_id: this.$route.query.course_id
+    //   }).then(data => {
+    //     const res = data.data
+    //     this.courseSections = res.data
+    //   })
+    // },
     // 跳转到播放页面
     playVideo (val, v) {
       this.$emit('getVideoPlayback', v.video_id)
@@ -137,33 +145,35 @@ export default {
 </script>
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .video-course-wrap{
+  .vid-kcqh{
     position: absolute;
-    top: 20px;
-    bottom: 20px;
+    width: 386px;
+    top: 0;
+    left: 60px;
+    bottom: 19px;
+    z-index: 101;
     background: #26292C;
-    z-index: 12;
-    // padding: 0 20px;
-    box-sizing: border-box;
-    &.vid-kcqh{
-      left: 60px;
-      width: 386px;
-      overflow-y: scroll;
-    }
+    overflow-y: scroll;
   }
-  .rightCourseList{
-    .video-info-r{
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 382px;
-    }
-  }
+  // .vc-title{
+  //   color: #E6E6E6;
+  //   font-size: 20px;
+  //   padding-left: 30px;
+  //   padding-top: 30px;
+  // }
+  // .rightCourseList{
+  //   .video-info-r{
+  //     position: absolute;
+  //     top: 0;
+  //     right: 0;
+  //     bottom: 0;
+  //     width: 100%;
+  //   }
+  // }
   .vc-title{
     padding-top: 18px;
     padding-bottom: 30px;
-     padding-left: 20px;
+    padding-left: 20px;
     font-size: 20px;
     color: #E6E6E6;
   }
@@ -230,4 +240,37 @@ export default {
       border:2px solid rgba(249,145,17,1);
     }
   }
+  // .el-video-icon{
+  //   @include wh(14, 14);
+  //   display: inline-block;
+  //   margin-right: 10px;
+  //   margin-top: -3px;
+  //   vertical-align: middle;
+  //   @extend %bg-img;
+  //   background-image: url('../../assets/images/video/stop-icon.png');
+  //   &.play-icon{
+  //     background-image: url('../../assets/images/video/play-icon.png');
+  //   }
+  // }
+  // .el-menu-item{
+  //   padding-left: 35px!important;
+  //   padding-right: 22px!important;
+  // }
+  // .el-dot-icon{
+  //   @include wh(10, 10);
+  //   display: inline-block;
+  //   border-radius: 100%;
+  //   margin-top: 20px;
+  //   border:2px solid rgba(102,102,102,1);
+  //   box-sizing: border-box;
+  //   float: right;
+  //   &.el-dot-see{
+  //     border: 0;
+  //     background: rgba(249,145,17,1);
+  //   }
+  //   &.el-dot-now{
+  //     border: 0;
+  //     border:2px solid rgba(249,145,17,1);
+  //   }
+  // }
 </style>
