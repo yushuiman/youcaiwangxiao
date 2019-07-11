@@ -12,7 +12,7 @@
           <Submenu :name="index+1" v-for="(item, index) in sectionList" :key="index">
             <template slot="title" >
               <div class="menu-section-title">
-                {{item.section_name}}
+                {{item.know_section_name}}
               </div>
             </template>
             <MenuItem :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key" style="padding-left: 60px;">
@@ -116,6 +116,7 @@ export default {
     getKnowList () {
       this.knowIdArr = []
       getKnow({
+        course_id: this.getPoticData.course_id,
         section_id: this.getPoticData.section_id,
         knob_id: this.getPoticData.knob_id
       }).then(data => {

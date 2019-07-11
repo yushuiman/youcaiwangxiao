@@ -17,7 +17,7 @@
           <Submenu :name="index+1" v-for="(item, index) in sectionList" :key="index">
             <template slot="title" >
               <div class="menu-title">
-                <div class="menu-section-title">{{item.section_name}}</div>
+                <div class="menu-section-title">{{item.know_section_name}}</div>
                 <div>
                   <Progress
                     :percent="Number(item.correct)"
@@ -136,6 +136,7 @@ export default {
     getKnowList () {
       console.log(this.getPoticData)
       getKnow({
+        course_id: this.getPoticData.course_id,
         section_id: this.getPoticData.section_id,
         knob_id: this.getPoticData.knob_id
       }).then(data => {

@@ -106,6 +106,7 @@ export default {
     // 知识点数据
     getKnowList () {
       getKnow({
+        course_id: this.getPoticData.course_id,
         section_id: this.getPoticData.section_id,
         knob_id: this.getPoticData.knob_id
       }).then(data => {
