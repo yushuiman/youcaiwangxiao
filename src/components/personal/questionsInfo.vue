@@ -20,6 +20,15 @@
       <div v-if="changeIdx == 2">收藏夹</div>
       <div v-if="changeIdx == 3">习题笔记</div>
     </div>
+    <div style="padding: 20px; text-align: center;">
+      <Page
+      :total="total"
+      @on-change="onChange"
+      :current="page"
+      :page-size="limit"
+      size="small"
+      />
+    </div>
   </div>
 </template>
 
@@ -39,7 +48,20 @@ export default {
         3: '查看解析'
       },
       page: 1,
-      limit: 10
+      total: 1,
+      limit: 10,
+      getPoticData: {
+        course_id: '',
+        paper_id: '',
+        section_id: '',
+        knob_id: '', // 节id
+        know_id: '', // 知识点id
+        mock_id: '',
+        user_id: '',
+        plate_id: '',
+        paper_mode: 2, // 练习模式1 考试2
+        paper_type: 1 // 单选1 论述2
+      }
     }
   },
   computed: {
@@ -60,6 +82,7 @@ export default {
       this.changeIdx = index
       if (index === 1) {
         this.getPersonalWrongtopic()
+        // course_id=2&paper_id=3&section_id=&knob_id=&know_id=&mock_id=&user_id=20&plate_id=2&num=&paper_type=1
       }
       if (index === 2) {
         // this.getPersonalWrongtopic()
@@ -77,7 +100,8 @@ export default {
         page: this.page
       }).then(data => {
         const res = data.data
-        this.questionRecordList = res.data
+        this.questionRecordList = res.data.question
+        this.total = res.data.num
       })
     },
     // 错题记录
@@ -87,8 +111,25 @@ export default {
         course_id: this.$route.query.course_id
       }).then(data => {
         const res = data.data
-        this.questionRecordList = res.data
+        this.questionRecordList = res.data.question
+        this.total = res.data.num
       })
+    },
+    // 分页
+    onChange (val) {
+      this.page = val
+      if (this.changeIdx === 0) {
+        this.getQuestionRecord()
+      }
+      if (this.changeIdx === 1) {
+        this.getPersonalWrongtopic()
+      }
+      if (this.changeIdx === 1) {
+        this.getPersonalWrongtopic()
+      }
+      if (this.changeIdx === 1) {
+        this.getPersonalWrongtopic()
+      }
     },
     goPage (item) {
       if (item.state === 1) { // 成绩统计
@@ -99,16 +140,23 @@ export default {
         })
       }
       if (item.state === 2) { // 继续做题
-        this.$router.push({ path: 'dopotic',
-          query: {
-            course_id: item.course_id
-          }
+        this.getPoticData.course_id = item.course_id
+        this.getPoticData.paper_id = item.id
+        this.getPoticData.section_id = item.section_id
+        this.getPoticData.knob_id = item.knob_id
+        this.getPoticData.know_id = item.know_id
+        this.getPoticData.mock_id = item.mock_id
+        this.getPoticData.plate_id = item.plate_id
+        this.getPoticData.paper_mode = item.paper_type // 1练习模式 2考试模式
+        this.getPoticData.paper_type = item.paper_type // 1练习模式 2考试模式
+        this.$router.push({ path: 'dopotic-continue',
+          query: this.getPoticData
         })
       }
       if (item.state === 3) { // 查看解析 论述题才有查看解析
         this.$router.push({ path: 'analysis',
           query: {
-            paper_id: item.id, // 试卷id
+            paper_id: item.id, // 试卷id(阶段，论述才有)
             plate_id: item.plate_id, // 板块
             course_id: item.course_id, // 板块
             type: 2, // 所有解析

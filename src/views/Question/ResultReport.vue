@@ -98,7 +98,7 @@ export default {
       this.cardSts(obj.question_content)// 答题卡颜色状态
     },
     cardSts (answerList) {
-      if (answerList.length) {
+      if (answerList && answerList.length) {
         answerList.map((v, index) => {
           v.num = index + 1
           if (v.user_answer !== '' && v.user_answer === v.true_options) {

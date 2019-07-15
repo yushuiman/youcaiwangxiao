@@ -70,7 +70,7 @@
         <ul class="topic-opition" v-if="getQuestion.paper_mode == 1 && getQuestion.plate_id != 3">
           <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPoticPractice(item, v, index, key)">
             <div class="opi-abcd">
-              <span :class="{'red-bg': v.errorRed, 'green-bg': v.rightGreen}">{{v.option}}</span>
+              <span :class="{'blue-bg': v.selOption, 'red-bg': v.errorRed, 'green-bg': v.rightGreen}">{{v.option}}</span>
             </div>
             <p>{{v.topic}}</p>
           </li>
@@ -137,22 +137,25 @@ export default {
   methods: {
     // 做题练习模式
     doPoticPractice (item, val, index, key) {
-      if (item.userOption) { // 练习模式：当前题选择以后不能再选
+      if (item.currenOption) { // 练习模式：当前题选择以后不能再选
         return
       }
       item.currenOption = true // 练习模式：当前题选择以后不能再选
       item.userOption = val.option // 交卷用户答案
       item.options.forEach((v, index) => {
+        v.selOption = false // 蓝色状态取消
         v.errorRed = false // 初始化答错状态
         if (v.option === v.right) {
           v.rightGreen = true // 遍历哪个是正确答案 对应添加rightGreen
         }
       })
       if (val.option === val.right) { // 判断当前点击的选项是否正确
+        // val.selOption = false // 蓝色状态取消
         val.rightGreen = true // 答对当前选项绿色
         item.currenRightGreen = true // 答对：右边选项卡对应添加绿色已掌握状态
         this.$forceUpdate()
       } else {
+        // val.selOption = false // 蓝色状态取消
         val.errorRed = true // 答错当前选项红色
         item.currenErrorRed = true // 答错：右边选项卡对应添加红色未掌握状态
         item.analysis = true // 答错，解析展示
@@ -202,7 +205,7 @@ export default {
         item.collection = 1
       }
       questionCollection({
-        user_id: this.getQuestion.user_id,
+        user_id: this.user_id,
         course_id: this.getQuestion.course_id,
         question_id: ID,
         type: item.collection

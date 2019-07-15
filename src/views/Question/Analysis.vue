@@ -64,7 +64,6 @@ export default {
       topics: [],
       title: '',
       getQuestion: {
-        paper_mode: '',
         jiexi: 1,
         question_id: '',
         course_id: this.$route.query.course_id,

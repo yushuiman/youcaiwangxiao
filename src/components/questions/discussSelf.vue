@@ -31,7 +31,7 @@ export default {
       courseList: [],
       getPoticData: {
         course_id: this.course_id,
-        paper_id: '',
+        paper_id: '', // 阶段测试,论述题
         section_id: '',
         knob_id: '', // 节id
         know_id: '', // 知识点id
@@ -39,7 +39,7 @@ export default {
         user_id: this.user_id,
         plate_id: this.plate_id,
         num: '', // 默认随机15道
-        paper_type: 1 // 默认单选
+        paper_type: 2 // 单选1 论述2
       }
     }
   },

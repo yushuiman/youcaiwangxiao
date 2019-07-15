@@ -21,13 +21,21 @@ export const getKnow = (data) => { // 题库-错题集知识点
     method: 'post'
   })
 }
-export const ContinueTopic = (data) => { // 题库-继续做题
+export const continueQuestion = (data) => { // 题库-继续做题
   return axios.request({
-    url: '/web/Personal/ContinueTopic ',
+    url: '/web/Question/continueQuestion',
     data,
     method: 'post'
   })
 }
+export const getdtPapers = (data) => { // 题库-继续做题交卷
+  return axios.request({
+    url: '/web/Question/getdtPapers',
+    data,
+    method: 'post'
+  })
+}
+
 export const continueLearn = (data) => { // 课程-继续学习
   return axios.request({
     url: '/web/Personal/continueLearn',

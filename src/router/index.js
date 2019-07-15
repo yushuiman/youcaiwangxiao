@@ -71,6 +71,15 @@ const router = new Router({
       }
     },
     {
+      path: '/dopotic-continue',
+      name: 'dopotic-continue',
+      component: () => import('@/views/Question/DoPoticContinue.vue'),
+      meta: {
+        showHeader: true,
+        showFooter: false
+      }
+    },
+    {
       path: '/result-report',
       name: 'result-report',
       component: () => import('@/views/Question/ResultReport.vue'),
@@ -146,7 +155,7 @@ const router = new Router({
       component: () => import('@/views/Personal/Personal.vue'),
       meta: {
         showHeader: true,
-        showFooter: true
+        showFooter: false
       }
     }
   ]

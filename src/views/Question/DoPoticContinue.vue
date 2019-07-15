@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { topicList, getPapers } from '@/api/questions'
+import { continueQuestion, getdtPapers } from '@/api/personal'
 import poticList from '../../components/poticList/poticList'
 import count from '../../components/count'
 import errorCorrection from '../../components/common/errorCorrection'
@@ -131,22 +131,21 @@ export default {
         mock_id: this.$route.query.mock_id,
         user_id: this.$route.query.user_id,
         plate_id: this.$route.query.plate_id,
-        num: this.$route.query.num,
-        paper_mode: this.$route.query.paper_mode || 2, // 练习1 考试2
-        paper_type: this.$route.query.paper_mode || 2 // 练习1 考试2
+        paper_mode: this.$route.query.paper_mode || 2 // 练习1 考试2
       },
       subTopics: { // 交卷
-        user_id: this.$route.query.user_id,
-        status: 1, // 交卷状态 1交卷 2保存
+        user_id: '',
+        id: this.$route.query.paper_id || 0,
+        status: 2, // 交卷状态 1交卷 2保存
         course_id: this.$route.query.course_id,
-        used_time: 600,
         section_id: this.$route.query.section_id || 0,
         knob_id: this.$route.query.knob_id || 0,
         know_id: this.$route.query.know_id || 0,
         paper_id: this.$route.query.paper_id || 0,
         mock_id: this.$route.query.mock_id || 0,
         plate_id: this.$route.query.plate_id,
-        paper_type: this.$route.query.paper_mode || 2, // 练习1 考试2
+        used_time: 600,
+        paper_type: 0, // 练习1 考试2
         question_content: {
           knob_id: this.$route.query.knob_id || 0,
           know_id: this.$route.query.know_id || 0,
@@ -201,7 +200,10 @@ export default {
     },
     // 拿题
     getTopicList () {
-      topicList(this.getQuestion).then(data => {
+      continueQuestion({
+        Id: this.$route.query.paper_id,
+        user_id: this.user_id
+      }).then(data => {
         const res = data.data
         let { topics, total, title } = res.data
         this.topics = topics
@@ -209,17 +211,45 @@ export default {
         this.title = title
         // this.answer_time = parseInt(res.data.answer_time)
         this.answer_time = 100000
-        if (topics && topics.length) {
-          this.topics.map((val, index) => {
-            val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
-            val.flag = false // 解析展开收起交互(练习模式)
-            val.currenOption = false // 点击当前题，不能重复选择(练习模式)
-            val.userOption = ''
-            val.options.map((v, index) => {
-              v.selOption = false // 选择当前选项变蓝色，其他默认颜色，可以重复选择(除了练习模式，都是这个逻辑)
-            })
+        this.topics.map((val, index) => {
+          val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
+          val.flag = false // 解析展开收起交互(练习模式)
+          val.currenOption = false // 点击当前题，不能重复选择(练习模式)
+          val.userOption = ''
+          val.options.forEach((v, index) => {
+            if (v.option.indexOf(v.userOption) > -1 && v.userOption !== '') {
+              val.currenOption = true // 答题卡蓝色
+              v.selOption = true // 选项蓝色
+            }
           })
-        }
+          // 练习模式
+          if (parseInt(this.getQuestion.paper_mode) === 1) {
+            val.options.forEach((v, index) => {
+              if (v.userOption !== '') {
+                if (v.option.indexOf(v.right) > -1) {
+                  v.rightGreen = true // 遍历哪个是正确答案 对应添加rightGreen
+                }
+              }
+              if (v.option.indexOf(v.userOption) > -1 && v.userOption !== '') {
+                v.errorRed = false // 初始化当前选项答错状态
+                if (v.userOption === v.right) { // 判断当前点击的选项是否正确
+                  v.rightGreen = true // 答对当前选项绿色
+                  val.currenRightGreen = true // 答对：右边选项卡对应添加绿色已掌握状态
+                  this.$forceUpdate()
+                } else {
+                  v.errorRed = true // 答错当前选项红色
+                  val.currenErrorRed = true // 答错：右边选项卡对应添加红色未掌握状态
+                  val.analysis = true // 答错，解析展示
+                  this.$forceUpdate()
+                }
+              }
+            })
+          }
+        })
+        let num = this.topics.filter((v) => { // 已做题数
+          return v.currenOption
+        })
+        this.doPoticInfo(num.length)
       })
     },
     // 交卷 保存 暂停
@@ -244,6 +274,8 @@ export default {
     },
     // 交卷
     jiaojuan (type) {
+      this.subTopics.user_id = this.user_id
+      this.subTopics.paper_type = this.topics[0].topicType
       this.visible = false
       for (var i = 0; i < this.topics.length; i++) {
         this.subTopics.question_content.question.push({
@@ -255,10 +287,10 @@ export default {
       if (type === 'save') {
         this.subTopics.status = 2
       }
-      this.subGetPapers(type)
+      this.subGetdtPapers(type)
     },
-    subGetPapers (type) {
-      getPapers(this.subTopics).then(data => {
+    subGetdtPapers (type) {
+      getdtPapers(this.subTopics).then(data => {
         const res = data.data
         // 保存之后跳转到题库页面
         if (type === 'save') {
@@ -266,26 +298,13 @@ export default {
           this.$router.push('/question')
           return
         }
-        // 论述题板块 直接跳转到解析页面
-        if (this.getQuestion.plate_id === 3) {
-          this.$router.push({ path: '/analysis',
-            query: {
-              paper_id: res.data.paper_id,
-              type: 2, // 全部解析
-              course_id: this.$route.query.course_id,
-              plate_id: this.$route.query.plate_id
-            }
-          })
-        }
-        // 其他板块 跳转到结果页面
-        if (this.getQuestion.plate_id !== 3) {
-          this.$router.push({ path: '/result-report',
-            query: {
-              paper_id: res.data.paper_id,
-              course_id: this.getQuestion.course_id
-            }
-          })
-        }
+        // 论述题3直接跳转解析，其他12456板块查看成绩
+        this.$router.push({ path: '/result-report',
+          query: {
+            paper_id: res.data.paper_id,
+            course_id: this.getQuestion.course_id
+          }
+        })
       })
     },
     // 纠错显示

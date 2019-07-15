@@ -108,9 +108,7 @@ export default {
         mock_id: this.$route.query.mock_id,
         user_id: this.$route.query.user_id,
         plate_id: this.$route.query.plate_id,
-        num: this.$route.query.num,
-        paper_mode: this.$route.query.paper_mode,
-        paper_type: this.$route.query.paper_type
+        paper_type: 2 // 考试模式
       },
       experienceTopics: {
         user_id: '',
@@ -180,7 +178,6 @@ export default {
             v.selOption = false // 选择当前选项变蓝色，其他默认颜色，可以重复选择(除了练习模式，都是这个逻辑)
           })
         })
-        this.doPoticInfo() // 百分比
       })
     },
     // 交卷 保存 暂停

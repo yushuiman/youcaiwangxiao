@@ -79,7 +79,7 @@ export default {
       sectionList: [], // 知识点章节
       getPoticData: {
         course_id: this.course_id,
-        paper_id: '',
+        paper_id: '', // 阶段测试,论述题
         section_id: '',
         knob_id: '', // 节id
         know_id: '', // 知识点id
@@ -87,8 +87,8 @@ export default {
         user_id: this.user_id,
         plate_id: this.plate_id,
         num: 15, // 默认随机15道
-        paper_mode: 1, // 默认练习模式
-        paper_type: 1 // 默认单选
+        paper_mode: 1, // 练习模式1 考试模式2
+        paper_type: 1 // 单选1 论述2
       },
       KnowShow: false, // 知识点显示
       knowList: [] // 知识点
@@ -111,11 +111,7 @@ export default {
     },
     // 选择练习考试模式
     doMode (type) {
-      if (type === 1) {
-        this.getPoticData.paper_mode = 1
-      } else if (type === 2) {
-        this.getPoticData.paper_mode = 2
-      }
+      this.getPoticData.paper_mode = type
     },
     // 做题数量
     orderDoNum (num) {
