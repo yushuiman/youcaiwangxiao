@@ -58,6 +58,13 @@ export const getErrorsection = (data) => { // 高频错题章节
     method: 'post'
   })
 }
+export const geterrorKnow = (data) => { // 高频错题章节
+  return axios.request({
+    url: '/web/Question/geterrorKnow',
+    data,
+    method: 'post'
+  })
+}
 export const volumeList = (data) => { // 组卷列表
   return axios.request({
     url: '/web/Question/volumeList',

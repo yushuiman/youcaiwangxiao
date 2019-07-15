@@ -65,7 +65,7 @@ import { getSection, getKnow } from '@/api/questions'
 export default {
   props: {
     course_id: {
-      type: Number
+      type: String
     },
     user_id: {
       type: Number
@@ -134,7 +134,6 @@ export default {
     },
     // 知识点数据
     getKnowList () {
-      console.log(this.getPoticData)
       getKnow({
         course_id: this.getPoticData.course_id,
         section_id: this.getPoticData.section_id,
@@ -146,7 +145,7 @@ export default {
     },
     // 去做题
     goToPic (v) {
-      this.getPoticData.know_id = v.id
+      this.getPoticData.know_id = v.know_id
       this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }

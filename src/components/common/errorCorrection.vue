@@ -1,7 +1,7 @@
 <template>
   <div>
     <textarea autofocus v-model="error_content" class="texta" placeholder="请输入纠错内容，我们在收到后会及时为您解决。" cols="3" rows="3"></textarea>
-    <div class="ts-box">{{tsTxt}}</div>
+    <div class="ts-box">{{errorTs}}</div>
     <div class="btn-box">
       <!-- <button class="btn-com" @click="cancleFun">取消</button> -->
       <button class="btn-com" @click="subErrorCorrection">提交</button>
@@ -21,7 +21,7 @@ export default {
   data () {
     return {
       error_content: '',
-      tsTxt: ''
+      errorTs: ''
     }
   },
   computed: {
@@ -33,23 +33,23 @@ export default {
   },
   methods: {
     subErrorCorrection () {
-      console.log(this.error_content.length)
       if (this.error_content.length < 5 && this.error_content.length > 0) {
-        this.tsTxt = '请至少输入5个字'
+        this.errorTs = '请至少输入5个字'
         return
       }
       if (this.error_content === '') {
-        this.tsTxt = '请输入纠错内容'
+        this.errorTs = '请输入纠错内容'
         return
       }
       if (/^\s+$/gi.test(this.error_content) || this.error_content.trim() === '') {
-        this.tsTxt = '不能全为空格'
+        this.errorTs = '不能全为空格'
         return
       }
       if (this.error_content > 200) {
-        this.tsTxt = '最多输入200字'
+        this.errorTs = '最多输入200字'
         return
       }
+      this.errorTs = ''
       errorCorrection({
         question_id: this.getQuestion.question_id,
         user_id: this.user_id,

@@ -16,6 +16,10 @@ export const getToken = () => {
   else return false
 }
 
+export const removeToken = () => {
+  return Cookies.remove(TOKEN_KEY)
+}
+
 // 获取服务端token
 export const getcookiesInServer = function (req) {
   let serviceCookie = {}

@@ -10,14 +10,14 @@
             <template slot="title" >
               <div class="menu-section-title">
                 {{item.section_name}}
-                <span>（<em>{{item.sectionnum}}</em>道错题）</span>
+                <span>（<em>{{item.section_num}}</em>道错题）</span>
               </div>
             </template>
             <MenuItem :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key" style="padding-left: 60px;">
               <div class="menu-jie-title" @click="getKnow(item, val, key)">
                 <div>
                   {{val.knob_name}}
-                  <span>（<em style="color:#f00;">{{val.knownum}}</em>道错题）</span>
+                  <span>（<em style="color:#f00;">{{val.knob_num}}</em>道错题）</span>
                 </div>
                 <button class="btn-com do-potic-btn">去做题</button>
               </div>
@@ -48,12 +48,12 @@
   </div>
 </template>
 <script>
-import { getErrorsection, getKnow } from '@/api/questions'
+import { getErrorsection, geterrorKnow } from '@/api/questions'
 
 export default {
   props: {
     course_id: {
-      type: Number
+      type: String
     },
     user_id: {
       type: Number
@@ -88,9 +88,9 @@ export default {
   },
   methods: {
     getErrorsectionList (val) {
-      console.log('2323232323')
       getErrorsection({
-        course_id: this.course_id
+        course_id: this.course_id,
+        user_id: this.user_id
       }).then(data => {
         const res = data.data
         this.errorSecList = res.data
@@ -105,7 +105,7 @@ export default {
     },
     // 知识点数据
     getKnowList () {
-      getKnow({
+      geterrorKnow({
         course_id: this.getPoticData.course_id,
         section_id: this.getPoticData.section_id,
         knob_id: this.getPoticData.knob_id
@@ -116,7 +116,7 @@ export default {
     },
     // 去做题
     goToPic (v) {
-      this.getPoticData.know_id = v.id
+      this.getPoticData.know_id = v.know_id
       this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }

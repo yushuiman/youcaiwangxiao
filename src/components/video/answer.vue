@@ -1,7 +1,6 @@
 <template>
   <div class="ask-wrap">
     <!--提问-->
-    <!--  v-if="playCourseInfo.is_zheng == 1" v-else-->
     <div class="ask">
       <div class="close-box" @click="closeModel()">
         <i class="close-icon"></i>
@@ -36,14 +35,11 @@
           </Upload>
         </div>
         <div class="fr">
-          <span class="errorTxt" v-if="errorTs">至少输入5个字</span>
+          <span class="errorTxt">{{errorTs}}</span>
           <button class="submit" @click="answerSubmit()">提交</button>
         </div>
       </div>
     </div>
-    <!-- <div class="close-box" @click="closeModel()" v-else>
-      <i class="close-icon"></i>
-    </div> -->
     <!--其他问题-->
     <div class="others" :class="{'has-img': quiz_image.length}" v-if="answerList.length">
       <h1 class="vc-title">本节其他问题</h1>
@@ -126,7 +122,7 @@ export default {
       visible: false,
       imgUrl: '',
       uploadList: [],
-      errorTs: false,
+      errorTs: '',
       playStatus: true,
       replyList: {} // 老师回复内容
     }
@@ -136,7 +132,7 @@ export default {
   },
   methods: {
     send () {
-      EventBus.$emit('stopPlay', this.playStatus)
+      EventBus.$emit('stopPlay')
     },
     handleView (url) {
       this.imgUrl = url
@@ -182,12 +178,23 @@ export default {
     },
     // 问题提交
     answerSubmit () {
-      if (this.quiz.length < 5) {
-        this.errorTs = true
+      if (this.quiz.length < 5 && this.quiz.length > 0) {
+        this.errorTs = '请至少输入5个字'
         return
-      } else {
-        this.errorTs = false
       }
+      if (this.quiz === '') {
+        this.errorTs = '请输入纠错内容'
+        return
+      }
+      if (/^\s+$/gi.test(this.quiz) || this.quiz.trim() === '') {
+        this.errorTs = '不能全为空格'
+        return
+      }
+      if (this.quiz > 200) {
+        this.errorTs = '最多输入200字'
+        return
+      }
+      this.errorTs = ''
       let quizImage = this.quiz_image.join(',')
       let data = Object.assign({ quiz: this.quiz, video_time: 5, quiz_image: quizImage }, this.playCourseInfo)
       answerSub(data).then(data => {
@@ -272,17 +279,18 @@ export default {
     left: 0;
     bottom: 0;
     box-sizing: border-box;
+    overflow-y: scroll;
     &.has-img{
       top: 348px;
     }
   }
   .othq-list{
-    position: absolute;
-    width: 100%;
-    top: 68px;
-    left: 0;
-    bottom: 0;
-    overflow-y: scroll;
+    // position: absolute;
+    // width: 100%;
+    // top: 68px;
+    // left: 0;
+    // bottom: 0;
+    // overflow-y: scroll;
   }
   .close-box{
     text-align: right;

@@ -76,14 +76,14 @@
             <p>您还有试题没完成！</p>
             <div class="btn-box">
               <button class="btn-com" @click="goOnDopic">继续</button>
-              <button class="btn-com" @click="jiaojuan">交卷</button>
+              <button class="btn-com" @click="jiaojuan('save')">交卷</button>
             </div>
           </div>
           <div v-else>
             <p>确认提交试卷？</p>
             <div class="btn-box">
               <button class="btn-com" @click="goOnDopic">检查</button>
-              <button class="btn-com" @click="jiaojuan">交卷</button>
+              <button class="btn-com" @click="jiaojuan('sub')">交卷</button>
             </div>
           </div>
         </div>
@@ -242,7 +242,7 @@ export default {
 
     },
     // 交卷
-    jiaojuan () {
+    jiaojuan (type) {
       this.visible = false
       // 未做题，直接点击交卷，做题信息user_answer=''
       for (var i = 0; i < this.topics.length; i++) {
@@ -256,11 +256,15 @@ export default {
       if (this.percent === this.total) {
         this.subTopics.status = 2
       }
-      this.subGetPapers()
+      this.subGetPapers(type)
     },
-    subGetPapers () {
+    subGetPapers (type) {
       getPapers(this.subTopics).then(data => {
         const res = data.data
+        if (type === 'save') {
+          alert('已保存...???')
+          return
+        }
         // 论述题板块 直接跳转到解析页面
         if (this.getQuestion.plate_id === 3) {
           this.$router.push({ path: '/analysis',

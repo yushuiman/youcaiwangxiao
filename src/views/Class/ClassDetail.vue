@@ -61,7 +61,7 @@
             <img :src="isntroduction.brief_img" alt="" width="100%">
           </div>
           <div class="clt-kcdg" v-show="isChoose == 'kjdg'">
-            <course-list :course_id="this.$route.query.course_id"></course-list>
+            <course-list :course_id="this.$route.query.course_id" :userstatus="isntroduction.userstatus"></course-list>
           </div>
         </div>
       </div>

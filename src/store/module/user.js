@@ -1,18 +1,19 @@
 import { accountLogin, outLogin, getUserInfo } from '@/api/login'
 
-import { setToken, getToken } from '@/libs/utils'
+import {
+  setToken,
+  getToken,
+  removeToken
+} from '@/libs/utils'
 // import Cookies from 'js-cookie'
 // import config from '@/config'
 import { Message } from 'element-ui'
-
 export default {
   state: {
     userName: '',
     user_id: '',
-    groupId: '',
     avatorImgPath: '',
-    token: getToken(),
-    access: ''
+    token: getToken()
   },
   mutations: {
     setAvator (state, avatorPath) {
@@ -21,14 +22,8 @@ export default {
     setUserId (state, id) {
       state.user_id = id
     },
-    setGroupId (state, id) {
-      state.groupId = id
-    },
     setUserName (state, name) {
       state.userName = name
-    },
-    setAccess (state, access) {
-      state.access = access
     },
     setToken (state, token) {
       state.token = token
@@ -51,7 +46,6 @@ export default {
           } else if (data.code === 403) {
             Message.error('账号已被冻结，请联系管理员!')
           } else if (data.code === 406) {
-            console.log(Message)
             Message.error(data.msg)
           }
         }).catch(err => {
@@ -63,16 +57,18 @@ export default {
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
         outLogin().then(() => {
+          removeToken() // cookie token
           commit('setToken', '')
-          commit('setAccess', [])
-          commit('setRoutersConfig', { newRouters: [], routersData: [] }) // 变为静态路由
+          commit('setAvator', '')
+          commit('setUserId', '')
+          commit('setUserName', '')
+          // window.loacation.load()
           resolve()
         }).catch(err => {
           reject(err)
         })
         // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
         // commit('setToken', '')
-        // commit('setAccess', [])
         // resolve()
       })
     },
@@ -84,7 +80,6 @@ export default {
           commit('setAvator', data.data.head)
           commit('setUserName', data.data.username)
           commit('setUserId', data.data.id)
-          commit('setGroupId', data.data.group_id)
           // Cookies.set('user_id', data.data.id, {
           //   expires: config.cookieExpires || 1
           // })

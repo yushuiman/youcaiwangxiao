@@ -35,6 +35,9 @@ export default {
   props: {
     course_id: {
       type: String
+    },
+    userstatus: {
+      type: Number
     }
   },
   data () {
@@ -84,7 +87,8 @@ export default {
           course_id: item.course_id,
           section_id: val.section_id,
           video_id: v.video_id,
-          is_zheng: item.is_zhengke
+          is_zheng: item.is_zhengke,
+          userstatus: this.userstatus // 是否购买
         }
       })
     }

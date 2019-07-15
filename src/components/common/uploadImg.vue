@@ -30,7 +30,7 @@
           </Upload>
         </div>
         <div class="fr">
-          <span class="errorTxt" v-if="errorTs">至少输入5个字</span>
+          <span class="errorTxt">{{errorTs}}</span>
           <button class="submit" @click="questionSubmit()">提交</button>
         </div>
       </div>
@@ -120,7 +120,7 @@ export default {
       visible: false,
       imgUrl: '',
       uploadList: [],
-      errorTs: false,
+      errorTs: '',
       questionallAnswerInfo: [], // 全部答疑
       replyList: {} // 老师回复内容
     }
@@ -178,12 +178,23 @@ export default {
     },
     // 问题提交
     questionSubmit () {
-      if (this.quiz.length < 5) {
-        this.errorTs = true
+      if (this.quiz.length < 5 && this.quiz.length > 0) {
+        this.errorTs = '请至少输入5个字'
         return
-      } else {
-        this.errorTs = false
       }
+      if (this.quiz === '') {
+        this.errorTs = '请输入纠错内容'
+        return
+      }
+      if (/^\s+$/gi.test(this.quiz) || this.quiz.trim() === '') {
+        this.errorTs = '不能全为空格'
+        return
+      }
+      if (this.quiz > 200) {
+        this.errorTs = '最多输入200字'
+        return
+      }
+      this.errorTs = ''
       let quizImage = this.quiz_image.join(',')
       questionSub({
         user_id: this.user_id,

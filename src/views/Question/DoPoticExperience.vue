@@ -9,8 +9,8 @@
             </Col>
             <Col span="4">
               <div class="answer-time">
-                <count @countdownprogress="countdownprogress" @countdownend="countdownend" countdownpause="countdownpause" :time="answer_time">
-                  <template slot-scope="props" ref="countTime">
+                <count ref="countTime" @countdownend="countdownend" :time="answer_time">
+                  <template slot-scope="props" >
                       0{{ props.totalHours }}:
                       {{ props.minutes }}:
                       {{ props.seconds }}
@@ -65,14 +65,14 @@
             <p>您还有试题没完成！</p>
             <div class="btn-box">
               <button class="btn-com" @click="goOnDopic">继续</button>
-              <button class="btn-com" @click="jiaojuan">交卷</button>
+              <button class="btn-com" @click="jiaojuan('sub')">交卷</button>
             </div>
           </div>
           <div v-else>
             <p>确认提交试卷？</p>
             <div class="btn-box">
               <button class="btn-com" @click="goOnDopic">检查</button>
-              <button class="btn-com" @click="jiaojuan">交卷</button>
+              <button class="btn-com" @click="jiaojuan('sub')">交卷</button>
             </div>
           </div>
         </div>
@@ -188,22 +188,16 @@ export default {
       this.visible = true
       this.txtShow = v
       if (v === '暂停') {
+        this.$refs.countTime.pause()
       }
-    },
-    countdownend () {
-      // 倒计时结束
-      console.log('结束')
-    },
-    countdownprogress () {
-      console.log('倒计时-1')
-    },
-    countdownpause () {
-      console.log('暂停')
     },
     // 继续
     goOnDopic () {
       this.visible = false
-      // 开始倒计时
+      this.$refs.countTime.start()
+    },
+    countdownend () {
+      console.log('倒计时结束')
     },
     // 保存
     saveDopic () {

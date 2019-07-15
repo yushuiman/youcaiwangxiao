@@ -51,7 +51,7 @@
       <!-- 科目标题 -->
       <Row class="qt-subject">
         <Col span="6" v-for="(item, index) in projectArr" :key="index">
-          <div class="qt-course" :class="{'curren': selIdx === index}" @click="getQuestionIndex(item.id, index)">{{item.name}}</div>
+          <div class="qt-course" :class="{'curren': selIdx == index}" @click="getQuestionIndex(item.id, index)">{{item.name}}</div>
         </Col>
       </Row>
       <!-- 答题详情(做题数 正确率 平均分) -->
@@ -134,18 +134,18 @@
           </div>
         </div>
         <ul class="my-question">
-          <li class="mq-item mq-item-01">
+          <li class="mq-item mq-item-01" :class="['mq-item-0' + (index+1)]" v-for="(item, index) in personalTxtArr" :key="index" @click="goPersonalPage">
             <i class="mq-icon"></i>
-            <p>答题记录</p>
+            <p>{{item}}</p>
           </li>
-          <li class="mq-item mq-item-02">
+          <!-- <li class="mq-item mq-item-02">
             <i class="mq-icon"></i>
             <p>我的错题</p>
           </li>
           <li class="mq-item mq-item-03">
             <i class="mq-icon"></i>
             <p>收藏夹</p>
-          </li>
+          </li> -->
         </ul>
       </div>
       <div class="qt-wrap-r-bottom">
@@ -180,9 +180,8 @@ export default {
   data () {
     return {
       projectArr: [], // 科目
-      selIdx: 0,
-      subjectId: '',
-      course_id: '',
+      selIdx: window.sessionStorage.getItem('selIdx') || 0,
+      course_id: window.sessionStorage.getItem('course_id') || '',
       plateList: [
         {
           id: 1,
@@ -220,6 +219,7 @@ export default {
           describe: '适用于考前冲刺'
         }
       ],
+      personalTxtArr: ['答题记录', '我的错题', '收藏夹'],
       visible: false,
       showPlateModal: '', // 显示弹窗对应模块
       plateTitle: '', // 显示弹窗对应模块title问案
@@ -252,7 +252,7 @@ export default {
       getProject({ user_id: this.user_id }).then(data => {
         const res = data.data
         this.projectArr = res.data
-        this.getQuestionIndex(res.data[0].id, this.selIdx)
+        this.getQuestionIndex(this.course_id || res.data[0].id, this.selIdx)
         this.experience = false
         // 0元体验
         if (res.data && res.data.length === 0) {
@@ -262,11 +262,12 @@ export default {
     },
     // 课程对应正确率，做题数，平均分
     getQuestionIndex (id, index) {
-      this.course_id = id
+      window.sessionStorage.setItem('course_id', id)
+      window.sessionStorage.setItem('selIdx', index)
       this.selIdx = index
       questionIndex({
         user_id: this.user_id,
-        course_id: this.course_id
+        course_id: id
       }).then(data => {
         const res = data.data
         this.questionResult = res.data
@@ -289,8 +290,13 @@ export default {
         this.studentsRankList = res.data
       })
     },
+    // 能力评估
     nengLiPingGu () {
-      this.$router.push({ path: '/capacity-assessment', query: { course_id: this.course_id } })
+      this.$router.push({ path: '/capacity-assessment',
+        query: {
+          course_id: this.course_id
+        }
+      })
     },
     // 0元体验
     zExperienceTopic () {
@@ -301,6 +307,15 @@ export default {
       this.$router.push({ path: '/dopotic-experience',
         query: {
           plate_id: 8 // 代表0元体验
+        }
+      })
+    },
+    // 个人中心
+    goPersonalPage () {
+      this.$router.push({ path: '/personal',
+        query: {
+          type: 'questions',
+          course_id: this.course_id
         }
       })
     }

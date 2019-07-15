@@ -21,12 +21,26 @@
       </div>
       <div class="video-info-l" id="left">
         <ul class="vinfo-ul">
+          <li class="vinfo-item" @click="showModel('课程<br />切换')">
+            <i class="vio-icon vio-icon-01"></i>
+            <p class="txt">课程<br />切换</p>
+          </li>
+          <li class="vinfo-item" v-if="playCourseInfo.is_zheng == 1" @click="showModel('答疑')">
+            <i class="vio-icon vio-icon-02"></i>
+            <p class="txt">答疑</p>
+          </li>
+          <li class="vinfo-item" @click="showModel('讲义')">
+            <i class="vio-icon vio-icon-03"></i>
+            <p class="txt">讲义</p>
+          </li>
+        </ul>
+         <!-- <ul class="vinfo-ul" v-else>
           <li class="vinfo-item" :class="[{'curren': selMenu==index}]"
             v-for="(item, index) in vinfo" :key="index" @click="showModel(item, index)">
             <i class="vio-icon" :class="['vio-icon-0'+(index+1)]"></i>
             <p class="txt" v-html="item"></p>
           </li>
-        </ul>
+        </ul> -->
       </div>
       <div class="video-info-c">
         <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
@@ -43,18 +57,7 @@
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%"></iframe>
         </div>
       </div>
-      <!-- <div class="video-info-r video-info-day-r" v-if="flagAnswer">
-        <answer :playCourseInfo="playCourseInfo" @closeModel="closeModel"></answer>
-      </div>
-      <div class="video-info-r" v-if="showBox == '讲义' && flag">
-        <div class="close-box" @click="closeModel()">
-          <i class="close-icon"></i>
-        </div>
-        <h1 class="vc-title">讲义</h1>
-        <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%"></iframe>
-      </div> -->
     </div>
-    <!-- <div style="height: 20px; background: #f00;"></div> -->
   </div>
 </template>
 <script>
@@ -88,7 +91,8 @@ export default {
         section_id: this.$route.query.section_id,
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
-        is_zheng: this.$route.query.is_zheng
+        is_zheng: this.$route.query.is_zheng,
+        userstatus: this.$route.query.userstatus
       },
       packageList: [],
       secvCatalogArr: [],
@@ -107,6 +111,9 @@ export default {
     })
   },
   mounted () {
+    // if (this.playCourseInfo.is_zheng !== 1) {
+    //   this.vinfo = ['课程<br />切换', '讲义']
+    // }
     this.getVideoPlayback(this.$route.query.video_id)
     this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
     this.getCourseCatalog() // 课程大纲（目录）
@@ -114,7 +121,7 @@ export default {
   methods: {
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
-      this.selMenu = index
+      // this.selMenu = index
       if (val === '课程<br />切换') {
         this.flagCourse = !this.flagCourse
         this.flagAnswer = false
@@ -151,7 +158,6 @@ export default {
       }
     },
     closeModel (msg) {
-      // this.flagCourse = false
       if (msg === 'kc') {
         this.flagKc = false
         this.wImportant = '0'
@@ -175,14 +181,13 @@ export default {
     // 课程大纲(章节 video)
     getSecvCatalog (item, idx) {
       this.flagKc = true
+      this.flagAnswer = false
+      this.flagJy = false
       this.wImportant = '382'
       this.$router.replace({ path: 'class-video',
         query: {
-          package_id: this.$route.query.package_id,
-          course_id: item.course_id,
-          section_id: this.$route.query.section_id,
-          video_id: this.$route.query.video_id,
-          is_zheng: this.$route.query.is_zheng
+          ...this.$route.query,
+          course_id: item.course_id
         }
       })
       for (var i = 0; i < this.secvCatalogArr.length; i++) {
@@ -211,18 +216,6 @@ export default {
         this.courseSections = res.data
       })
     },
-    // getSecvCatalog (item) {
-    //   this.$router.replace({ path: 'class-video',
-    // query: {
-    //   package_id: this.$route.query.package_id,
-    //   course_id: item.course_id,
-    //   section_id: this.$route.query.section_id,
-    //   video_id: this.$route.query.video_id,
-    //   is_zheng: this.$route.query.is_zheng,
-    // }
-    //   })
-    //   this.course_id = item.course_id
-    // },
     // 获取视频凭证
     getVideoPlayback (id) {
       videoPlayback({

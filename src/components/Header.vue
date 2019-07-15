@@ -15,6 +15,7 @@
               <li :class="isChange ==='app' ? 'on_change' : ''" @click="onChange('app')"><router-link to="/app">App</router-link></li>
             </ul>
           </div>
+
           <div class="login-wrap fr">
             <div class="login-l fl" v-if="!this.token">
               <router-link to="/login">登录</router-link> |
@@ -23,8 +24,9 @@
             <a class="learen-btn fl">学习中心</a>
             <div class="login-r fr" v-if="this.token">
               <img src="../assets/images/global/email-icon.png" alt="email" class="email-icon">
-              <img :src="headeLogo" alt="头像" class="head-logo" @click="goUser">
+              <img :src="avatorImgPath" alt="头像" class="head-logo">
             </div>
+            <div @click="ouLogin">退出</div>
           </div>
         </div>
       </div>
@@ -33,29 +35,28 @@
   </div>
 </template>
 <script>
-import { getToken } from '@/libs/utils'
-import { mapMutations, mapActions } from 'vuex'
+// import { getToken } from '@/libs/utils'
+import { mapMutations, mapActions, mapState } from 'vuex'
 export default {
   data () {
     return {
-      token: getToken(),
-      headeLogo: this.$store.state.user.avatorImgPath
-    }
-  },
-
-  mounted () {
-    if (this.token) {
-      this.getUserInfo()
     }
   },
   computed: {
+    ...mapState({
+      token: state => state.user.token,
+      avatorImgPath: state => state.user.avatorImgPath,
+      'is_change': state => state.nav.is_change
+    }),
     isChange () {
-      return this.$store.state.nav.is_change
+      return this.is_change
     }
+  },
+  mounted () {
   },
   methods: {
     ...mapActions([
-      'getUserInfo'
+      'handleLogOut'
     ]),
     ...mapMutations([
       'setChange'
@@ -63,8 +64,8 @@ export default {
     onChange (navName) {
       this.setChange(navName)
     },
-    goUser () {
-      this.$router.push('/user')
+    ouLogin () {
+      this.handleLogOut()
     }
   }
 }

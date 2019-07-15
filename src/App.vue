@@ -1,9 +1,7 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <Header/>
-      <RightSlider/>
-    </div>
+    <Header/>
+    <RightSlider/>
     <router-view v-if="isAlive"/>
     <Footer/>
   </div>
@@ -31,12 +29,11 @@ export default {
     RightSlider
   },
   mounted () {
-
   },
   created () {
-    // 在页面加载时读取localStorage里的状态信息
+    // 在页面加载时读取sessionStorage里的状态信息
     sessionStorage.getItem('is_change') && this.$store.replaceState(Object.assign(this.$store.state, JSON.parse(sessionStorage.getItem('is_change'))))
-    // 在页面刷新时将vuex里的信息保存到localStorage里
+    // 在页面刷新时将vuex里的信息保存到sessionStorage里
     window.addEventListener('beforeunload', () => {
       sessionStorage.setItem('is_change', JSON.stringify(this.$store.state))
     })

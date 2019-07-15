@@ -41,12 +41,12 @@
 </template>
 
 <script>
-import courseInfo from '../../components/user/courseInfo'
-import questionsInfo from '../../components/user/questionsInfo'
-import zhiboInfo from '../../components/user/zhiboInfo'
-import answerInfo from '../../components/user/answerInfo'
-import orderInfo from '../../components/user/orderInfo'
-import accountInfo from '../../components/user/accountInfo'
+import courseInfo from '../../components/personal/courseInfo'
+import questionsInfo from '../../components/personal/questionsInfo'
+import zhiboInfo from '../../components/personal/zhiboInfo'
+import answerInfo from '../../components/personal/answerInfo'
+import orderInfo from '../../components/personal/orderInfo'
+import accountInfo from '../../components/personal/accountInfo'
 export default {
   data () {
     return {
@@ -90,7 +90,6 @@ export default {
   methods: {
     switchInfo ({ type }, index) {
       this.clkTit = type
-      console.log(this.$route.query.type)
     }
   }
 }

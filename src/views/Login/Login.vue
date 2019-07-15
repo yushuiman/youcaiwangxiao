@@ -258,7 +258,7 @@ import icon2 from '@/assets/images/login/icon2.png'
 import Bookend from '@/assets/images/login/Bookend.png'
 import code from '@/assets/images/login/code.png'
 import success from '@/assets/images/login/success.png'
-import { mapActions } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 // 加密 解密
 import { Encrypt } from '@/libs/crypto'
 import { getSmsCode, webReg, voice, resetPaw, quickLogin, wxLogin, forgetPaw } from '@/api/login'
@@ -320,11 +320,23 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState({
+      token: state => state.user.token
+    }),
+    isChange () {
+      return this.is_change
+    }
+  },
   mounted () {
   },
   methods: {
     ...mapActions([
-      'handleLogin'
+      'handleLogin',
+      'getUserInfo'
+    ]),
+    ...mapMutations([
+      'setChange'
     ]),
     onMouseOver: function () {
       this.is_show = 1
@@ -474,8 +486,12 @@ export default {
         this.$Message.error('密码必须为6-16位哦~~')
       } else {
         this.handleLogin({ mobile: Encrypt(this.form.mobile), password: this.form.password }).then(data => {
+          if (this.token) {
+            this.getUserInfo()
+          }
           setTimeout(() => {
             this.$router.push('/')
+            this.setChange('shouye')
           }, 1000)
         })
       }

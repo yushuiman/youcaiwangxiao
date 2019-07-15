@@ -23,7 +23,7 @@ import { getCourse } from '@/api/questions'
 export default {
   props: {
     course_id: {
-      type: Number
+      type: String
     },
     user_id: {
       type: Number
