@@ -90,6 +90,12 @@ export default {
   methods: {
     switchInfo ({ type }, index) {
       this.clkTit = type
+      this.$router.replace({ path: 'personal',
+        query: {
+          ...this.$route.query,
+          type: type
+        }
+      })
     }
   }
 }

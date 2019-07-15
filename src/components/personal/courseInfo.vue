@@ -8,21 +8,21 @@
         <ul class="ucr-do-list">
           <li class="ucr-do-item">
             <div class="ucr-do-l">
-              <h2>这姑娘问 v 把势均力敌</h2>
+              <h2>课程课程课程课程</h2>
               <p>2019-93-833</p>
             </div>
             <button class="btn-com">继续做题</button>
           </li>
           <li class="ucr-do-item">
             <div class="ucr-do-l">
-              <h2>这姑娘问 v 把势均力敌</h2>
+              <h2>课程课程课程课程 v 把势均力敌</h2>
               <p>2019-93-833</p>
             </div>
             <button class="btn-com">继续做题</button>
           </li>
           <li class="ucr-do-item">
             <div class="ucr-do-l">
-              <h2>这姑娘问 v 把势均力敌</h2>
+              <h2>课程课程课程课程 v 把势均力敌</h2>
               <p>2019-93-833</p>
             </div>
             <button class="btn-com">继续做题</button>
@@ -37,30 +37,32 @@
 </template>
 
 <script>
-import { errorCorrection } from '@/api/questions'
+import { questionRecord } from '@/api/personal'
 import { mapState } from 'vuex'
 export default {
-  props: {
-    getQuestion: {
-      type: Object
-    }
-  },
   data () {
     return {
       txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
-      changeIdx: 0
+      changeIdx: 0,
+      btnSts: {
+        1: '成绩统计',
+        2: '继续做题',
+        3: '查看解析'
+      }
     }
   },
   computed: {
     ...mapState({
+      token: state => state.user.token,
       user_id: state => state.user.user_id
     })
   },
   mounted () {
+    this.getQuestionRecord()
   },
   methods: {
-    subErrorCorrection () {
-      errorCorrection({
+    getQuestionRecord () {
+      questionRecord({
         question_id: this.getQuestion.question_id,
         user_id: this.user_id,
         error_content: this.error_content
