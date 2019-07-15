@@ -179,10 +179,12 @@ export default {
       this.$emit('doPoticInfo', num.length)
     },
     // 论述题
-    doPoticDiscuss (item, quiz) {
+    doPoticDiscuss (item) {
+      item.currenOption = true // 点击当前题 右边选项卡对应添加已做蓝色状态
       let num = this.topics.filter((v) => { // 已做题数
         return v.currenOption
       })
+
       this.$forceUpdate()
       this.$emit('doPoticInfo', num.length)
     },

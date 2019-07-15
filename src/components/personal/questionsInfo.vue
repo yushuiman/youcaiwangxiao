@@ -6,26 +6,12 @@
     <div class="all-main">
       <div class="uc-do-record" v-if="changeIdx == 0">
         <ul class="ucr-do-list">
-          <li class="ucr-do-item">
+          <li class="ucr-do-item" v-for="(item, index) in questionRecordList" :key="index">
             <div class="ucr-do-l">
-              <h2>这姑娘问 v 把势均力敌</h2>
-              <p>2019-93-833</p>
+              <h2>{{item.paper_name}}</h2>
+              <p>{{item.create_time}}</p>
             </div>
-            <button class="btn-com">继续做题</button>
-          </li>
-          <li class="ucr-do-item">
-            <div class="ucr-do-l">
-              <h2>这姑娘问 v 把势均力敌</h2>
-              <p>2019-93-833</p>
-            </div>
-            <button class="btn-com">继续做题</button>
-          </li>
-          <li class="ucr-do-item">
-            <div class="ucr-do-l">
-              <h2>这姑娘问 v 把势均力敌</h2>
-              <p>2019-93-833</p>
-            </div>
-            <button class="btn-com">继续做题</button>
+            <button class="btn-com">{{btnSts[item.state]}}</button>
           </li>
         </ul>
       </div>
@@ -37,18 +23,21 @@
 </template>
 
 <script>
-import { errorCorrection } from '@/api/questions'
+import { questionRecord } from '@/api/personal'
 import { mapState } from 'vuex'
 export default {
-  props: {
-    getQuestion: {
-      type: Object
-    }
-  },
   data () {
     return {
       txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
-      changeIdx: 0
+      changeIdx: 0,
+      questionRecordList: [],
+      btnSts: {
+        1: '成绩统计',
+        2: '继续做题',
+        3: '查看解析'
+      },
+      page: 1,
+      limit: 10
     }
   },
   computed: {
@@ -57,16 +46,18 @@ export default {
     })
   },
   mounted () {
+    this.getQuestionRecord()
   },
   methods: {
-    subErrorCorrection () {
-      errorCorrection({
-        question_id: this.getQuestion.question_id,
+    getQuestionRecord () {
+      questionRecord({
         user_id: this.user_id,
-        error_content: this.error_content
+        course_id: this.$route.query.course_id,
+        limit: this.limit,
+        page: this.page
       }).then(data => {
-        this.$Message.success('纠错问题提交成功')
-        this.$emit('modalShow', false)
+        const res = data.data
+        this.questionRecordList = res.data
       })
     }
   }

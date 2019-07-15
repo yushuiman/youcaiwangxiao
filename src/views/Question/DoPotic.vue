@@ -46,7 +46,7 @@
               </div>
             </div>
             <ul class="anscard-list clearfix" >
-              <li :class="{'blue-bg': item.userOption, 'red-bg': item.currenErrorRed, 'green-bg': item.currenRightGreen}" v-for="(item, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">
+              <li :class="{'blue-bg': item.currenOption, 'red-bg': item.currenErrorRed, 'green-bg': item.currenRightGreen}" v-for="(item, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">
                 {{index+1}}
               </li>
             </ul>
@@ -68,7 +68,7 @@
           <p>保存进度，下次继续</p>
           <div class="btn-box">
             <button class="btn-com" @click="goOnDopic">继续</button>
-            <button class="btn-com" @click="saveDopic">保存</button>
+            <button class="btn-com" @click="jiaojuan('save')">保存</button>
           </div>
         </div>
         <div class="jiaojuan-box" :class="{'jiaojuan-finish': percentNum == total}" v-if="txtShow == '交卷'">
@@ -76,7 +76,7 @@
             <p>您还有试题没完成！</p>
             <div class="btn-box">
               <button class="btn-com" @click="goOnDopic">继续</button>
-              <button class="btn-com" @click="jiaojuan('save')">交卷</button>
+              <button class="btn-com" @click="jiaojuan('sub')">交卷</button>
             </div>
           </div>
           <div v-else>
