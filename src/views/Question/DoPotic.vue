@@ -261,8 +261,9 @@ export default {
     subGetPapers (type) {
       getPapers(this.subTopics).then(data => {
         const res = data.data
+        // 保存之后跳转到题库页面
         if (type === 'save') {
-          alert('已保存...???')
+          this.$router.push('/question')
           return
         }
         // 论述题板块 直接跳转到解析页面

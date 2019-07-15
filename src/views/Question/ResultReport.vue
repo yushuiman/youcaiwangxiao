@@ -98,17 +98,19 @@ export default {
       this.cardSts(obj.question_content)// 答题卡颜色状态
     },
     cardSts (answerList) {
-      answerList.map((v, index) => {
-        v.num = index + 1
-        if (v.user_answer !== '' && v.user_answer === v.true_options) {
-          v.rightCurren = true
+      if (answerList.length) {
+        answerList.map((v, index) => {
+          v.num = index + 1
+          if (v.user_answer !== '' && v.user_answer === v.true_options) {
+            v.rightCurren = true
+          }
+          if (v.user_answer !== '' && v.user_answer !== v.true_options) {
+            v.redCurren = true
+          }
+        })
+        for (let i = 0; i < answerList.length; i += 10) {
+          this.cardList.push(answerList.slice(i, i + 10))
         }
-        if (v.user_answer !== '' && v.user_answer !== v.true_options) {
-          v.redCurren = true
-        }
-      })
-      for (let i = 0; i < answerList.length; i += 10) {
-        this.cardList.push(answerList.slice(i, i + 10))
       }
     },
     // 查看解析

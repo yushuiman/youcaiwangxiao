@@ -1,5 +1,5 @@
 <template>
-  <div class="u-course-wrap">
+  <div class="u-question-wrap">
     <ul class="tab-list">
       <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': changeIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
@@ -11,7 +11,8 @@
               <h2>{{item.paper_name}}</h2>
               <p>{{item.create_time}}</p>
             </div>
-            <button class="btn-com">{{btnSts[item.state]}}</button>
+            <button :class="{'yellow-btn': item.state == 1, 'blue-btn': item.state == 2, 'green-btn': item.state == 3}"
+            @click="goPage(item)">{{btnSts[item.state]}}</button>
           </li>
         </ul>
       </div>
@@ -23,14 +24,15 @@
 </template>
 
 <script>
-import { questionRecord } from '@/api/personal'
+import { questionRecord, personalWrongtopic } from '@/api/personal'
 import { mapState } from 'vuex'
 export default {
   data () {
     return {
       txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
       changeIdx: 0,
-      questionRecordList: [],
+      questionRecordList: [], // 做题记录
+      PersonalWrongtopicList: [], // 错题记录
       btnSts: {
         1: '成绩统计',
         2: '继续做题',
@@ -42,6 +44,7 @@ export default {
   },
   computed: {
     ...mapState({
+      token: state => state.user.token,
       user_id: state => state.user.user_id
     })
   },
@@ -49,6 +52,23 @@ export default {
     this.getQuestionRecord()
   },
   methods: {
+    // tab
+    tabClk (v, index) {
+      if (!this.user_id) {
+
+      }
+      this.changeIdx = index
+      if (index === 1) {
+        this.getPersonalWrongtopic()
+      }
+      if (index === 2) {
+        // this.getPersonalWrongtopic()
+      }
+      if (index === 3) {
+        // this.getPersonalWrongtopic()
+      }
+    },
+    // 做题记录
     getQuestionRecord () {
       questionRecord({
         user_id: this.user_id,
@@ -59,6 +79,43 @@ export default {
         const res = data.data
         this.questionRecordList = res.data
       })
+    },
+    // 错题记录
+    getPersonalWrongtopic () {
+      personalWrongtopic({
+        user_id: this.user_id,
+        course_id: this.$route.query.course_id
+      }).then(data => {
+        const res = data.data
+        this.questionRecordList = res.data
+      })
+    },
+    goPage (item) {
+      if (item.state === 1) { // 成绩统计
+        this.$router.push({ path: 'result-report',
+          query: {
+            paper_id: item.id
+          }
+        })
+      }
+      if (item.state === 2) { // 继续做题
+        this.$router.push({ path: 'dopotic',
+          query: {
+            course_id: item.course_id
+          }
+        })
+      }
+      if (item.state === 3) { // 查看解析 论述题才有查看解析
+        this.$router.push({ path: 'analysis',
+          query: {
+            paper_id: item.id, // 试卷id
+            plate_id: item.plate_id, // 板块
+            course_id: item.course_id, // 板块
+            type: 2, // 所有解析
+            jiexi: 2 // 区分答题记录的解析，6大板块解析没有这个参数的
+          }
+        })
+      }
     }
   }
 }
@@ -67,6 +124,9 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   // 做题记录
+  .u-question-wrap{
+    font-size: 18px;
+  }
   .ucr-do-list{
     box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
     border-radius: 8px;
@@ -86,10 +146,20 @@ export default {
       color: $col999;
       margin-top: 8px;
     }
-    .btn-com{
+    button{
       width: 103px;
       height: 32px;
-      font-size: 16px;
+      color: $colfff;
+      border-radius: 16px;
+    }
+    .yellow-btn{
+      background: #F99111;
+    }
+    .blue-btn{
+      background: #1874FD;
+    }
+    .green-btn{
+      background: #0AAB55;
     }
   }
 </style>

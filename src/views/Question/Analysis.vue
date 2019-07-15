@@ -14,7 +14,7 @@
       <div class="dptic-wrap-r fr">
         <div class="go-result-box">
           <!-- 论述题 -->
-          <button class="btn-com" @click="goResult" v-if="getQuestion.plate_id == 3">返回做题记录</button>
+          <button class="btn-com" @click="goPersonal" v-if="getQuestion.plate_id == 3">返回做题记录</button>
           <!-- 其他板块 -->
           <button class="btn-com" @click="goResult" v-else>查看报告</button>
         </div>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { questionParsing, experienceParsing } from '@/api/questions'
+import { questionParsing, experienceParsing, checkItem } from '@/api/questions'
 import poticList from '../../components/poticList/poticList'
 import uploadImg from '../../components/common/uploadImg'
 import errorCorrection from '../../components/common/errorCorrection'
@@ -90,13 +90,17 @@ export default {
       this.getExperienceParsing()
       return
     }
+    // 答题记录(论述题)解析， 其实和6大板块的论述题解析一模一样，后台说怕后期修改，就新增一个接口
+    if (parseInt(this.$route.query.jiexi) === 2) {
+      this.getCheckItem()
+      return
+    }
     // 6大板块解析
     this.getQuestionParsing()
   },
   methods: {
     // 6大板块解析
     getQuestionParsing () {
-      console.log(1234567890)
       questionParsing({
         paper_id: this.$route.query.paper_id,
         user_id: this.user_id,
@@ -122,30 +126,48 @@ export default {
         this.answerSts(this.topics)
       })
     },
+    // 答题记录论述题解析
+    getCheckItem () {
+      checkItem({
+        paper_id: this.$route.query.paper_id,
+        user_id: this.user_id,
+        type: this.$route.query.type
+      }).then(data => {
+        const res = data.data
+        this.topics = res.data.topics
+        this.title = res.data.title
+        this.answerSts(this.topics)
+      })
+    },
     // 答题卡状态，问题列表状态（解析，用户答案）
     answerSts (topics) {
-      topics.map((val, index) => {
-        val.flag = false // 解析展开收起交互
-        let userOptions = val.options[0].userOption // 用户答案
-        let trueOptions = val.options[0].right // 正确答案
-        if (userOptions !== '' && userOptions === trueOptions) {
-          val.rightCurren = true
-        }
-        if (userOptions !== '' && userOptions !== trueOptions) {
-          val.redCurren = true
-        }
-        val.options.forEach((v, index) => {
-          if (val.eprone.indexOf(v.option) > -1) {
-            v.eprone = true // 易错答案
+      if (topics && topics.length) {
+        topics.map((val, index) => {
+          val.flag = false // 解析展开收起交互
+          if (parseInt(this.$route.query.plate_id) === 3) { // 论述题解析不需要下面的逻辑
+            return
           }
-          if (v.option.indexOf(userOptions) > -1 && userOptions !== '') {
-            v.errorRed = true // 用户答案 答错选项红色
+          let userOptions = val.options[0].userOption // 用户答案
+          let trueOptions = val.options[0].right // 正确答案
+          if (userOptions !== '' && userOptions === trueOptions) {
+            val.rightCurren = true
           }
-          if (v.option === v.right) {
-            v.rightGreen = true // 正确答案 选项添加绿色
+          if (userOptions !== '' && userOptions !== trueOptions) {
+            val.redCurren = true
           }
+          val.options.forEach((v, index) => {
+            if (val.eprone.indexOf(v.option) > -1) {
+              v.eprone = true // 易错答案
+            }
+            if (v.option.indexOf(userOptions) > -1 && userOptions !== '') {
+              v.errorRed = true // 用户答案 答错选项红色
+            }
+            if (v.option === v.right) {
+              v.rightGreen = true // 正确答案 选项添加绿色
+            }
+          })
         })
-      })
+      }
     },
     goResult () {
       this.$router.push({ path: '/result-report',
@@ -153,6 +175,14 @@ export default {
           paper_id: this.$route.query.paper_id,
           course_id: this.$route.query.course_id,
           plate_id: this.$route.query.plate_id
+        }
+      })
+    },
+    goPersonal () {
+      this.$router.push({ path: '/personal',
+        query: {
+          type: 'questions',
+          course_id: this.$route.query.course_id
         }
       })
     },

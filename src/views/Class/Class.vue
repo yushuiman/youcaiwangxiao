@@ -91,18 +91,16 @@
 <script>
 // import courseOne from '@/components/courseOne.vue'
 // import courseTwo from '@/components/courseTwo.vue'
-// import WebSocket from '@/libs/web-socket'
+import WebSocket from '@/libs/web-socket'
 import likeList from '@/components/common/likeList.vue'
 // // 加密 解密
-import { Decrypt, Encrypt } from '@/libs/crypto'
+// import { Decrypt, Encrypt } from '@/libs/crypto'
 import { courseList, subjects } from '@/api/class'
-// const initWS = () => {
-//   return new WebSocket(ws => {
-//     ws.onmessage(data => {
-//       console.log('%c%s', 'color:green;', data)
-//     })
-//   })
-// }
+const initWS = (data) => {
+  return new WebSocket(ws => {
+    ws.send(data)
+  })
+}
 
 export default {
   data () {
@@ -164,18 +162,10 @@ export default {
       }
     }
   },
-  // watch: {
-  //   form: {
-  //     handler (newVal, oldVal) {
-  //       this.getCourseList(this.form)
-  //     },
-  //     deep: true
-  //   }
-  // },
   mounted () {
     this.getCourseList() // 课程列表 默认第一页，6条数据
     this.getSubjects() // 科目
-    // this.Ws = initWS(this)
+    this.Ws = initWS(this)
   },
   methods: {
     // 条件筛选
@@ -209,15 +199,6 @@ export default {
     },
     // 条件删除
     delChoose (type) {
-      // if (type === '科目') {
-      //   this.form.class_id = ''
-      // }
-      // if (type === '类型') {
-      //   this.form.billing_status = ''
-      // }
-      // if (type === '班型') {
-      //   this.form.ym = ''
-      // }
       switch (type) {
         case '科目':
           this.form.class_id = ''
@@ -260,9 +241,9 @@ export default {
       })
     },
     sendText () {
-      this.Ws.send(222)
-      console.log(Encrypt('123'))
-      console.log(Decrypt(Encrypt('亲猪猪')))
+      // this.Ws.send(222)
+      // console.log(Encrypt('123'))
+      // console.log(Decrypt(Encrypt('亲猪猪')))
     }
   }
 }

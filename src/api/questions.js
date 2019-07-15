@@ -107,6 +107,13 @@ export const questionParsing = (data) => { // 解析（全部，错题）
     method: 'post'
   })
 }
+export const checkItem = (data) => { // 答题记录论述题解析
+  return axios.request({
+    url: '/web/Question/checkItem',
+    data,
+    method: 'post'
+  })
+}
 export const abiAssess = (data) => { // 能力评估
   return axios.request({
     url: '/web/Question/abiAssess',
