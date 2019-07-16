@@ -36,11 +36,15 @@
       <div class="resolving">
         <span class="resolve-tit" @click="resolveToggle(item.flag, index)">{{item.flag ? '收起' : '解析'}}<Icon type="ios-arrow-down" :class="{'shouqi': item.flag}"/></span>
         <div class="resolve-detail" v-show="item.flag">
-          <!-- 论述题解析 -->
-          <p class="right-resolve" v-if="getQuestion.plate_id != 3">
+          <!-- 非论述题，另外5个板块解析 -->
+          <p class="right-resolve" v-if="getQuestion.plate_id != 3 && getQuestion.sc != 1">
             <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
             <span v-if="item.options[0].userOption">我的答案<em>{{item.options[0].userOption}}</em></span>
             <span v-else>我的答案<em>未作答</em></span>
+          </p>
+          <!-- 收藏不展示用户答案 -->
+          <p class="right-resolve" v-if="getQuestion.sc == 1">
+            <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
           </p>
           <p class="instr-resolve"><span>解析：</span>{{item.analysis}}</p>
           <img v-if="item.analysisPic" :src="item.analysisPic" alt="">
@@ -125,6 +129,7 @@ export default {
   },
   data () {
     return {
+      userOptionFlag: window.sessionStorage.getItem('userOptionFlag') // 收藏没有用户答案
     }
   },
   computed: {
@@ -206,7 +211,7 @@ export default {
       }
       questionCollection({
         user_id: this.user_id,
-        course_id: this.getQuestion.course_id,
+        course_id: this.getQuestion.course_id || window.sessionStorage.getItem('course_id'),
         question_id: ID,
         type: item.collection
       }).then(data => {

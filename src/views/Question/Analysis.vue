@@ -54,7 +54,7 @@
 
 <script>
 import { questionParsing, experienceParsing, checkItem } from '@/api/questions'
-import { errorParsing, error2Parsing } from '@/api/personal'
+import { errorParsing, error2Parsing, myCollcsee } from '@/api/personal'
 import poticList from '../../components/poticList/poticList'
 import uploadImg from '../../components/common/uploadImg'
 import errorCorrection from '../../components/common/errorCorrection'
@@ -76,7 +76,8 @@ export default {
         jiexi: 1,
         question_id: '',
         course_id: this.$route.query.course_id,
-        plate_id: this.$route.query.plate_id
+        plate_id: this.$route.query.plate_id,
+        sc: this.$route.query.sc
       },
       visible: false,
       typeShow: false, // 答疑dy，纠错jc
@@ -99,7 +100,7 @@ export default {
       this.getExperienceParsing()
       return
     }
-    // 答题记录(论述题)解析， 其实和6大板块的论述题解析一模一样，后台说怕后期修改，就新增一个接口
+    // 答题记录做题集(论述题)解析
     if (this.diffRes === '0') {
       this.getCheckItem()
       return
@@ -112,6 +113,11 @@ export default {
     // 答题记录错题集解析，全部和错题
     if (this.diffRes === '11') {
       this.getErrorParsing2()
+      return
+    }
+    // 收藏夹查看解析
+    if (this.diffRes === '2') {
+      this.getMyCollcsee()
       return
     }
     // 6大板块解析
@@ -183,6 +189,21 @@ export default {
         knob_id: this.dataStorage.knob_id,
         user_id: this.user_id,
         question_content: this.dataStorage.question_content.question
+      }).then(data => {
+        const res = data.data
+        this.topics = res.data.topics
+        this.title = res.data.title
+        this.answerSts(this.topics)
+      })
+    },
+    // 收藏夹
+    getMyCollcsee (val) {
+      myCollcsee({
+        user_id: this.user_id,
+        course_id: this.dataStorage.course_id,
+        section_id: this.dataStorage.section_id,
+        know_id: this.dataStorage.know_id,
+        knob_id: this.dataStorage.knob_id
       }).then(data => {
         const res = data.data
         this.topics = res.data.topics

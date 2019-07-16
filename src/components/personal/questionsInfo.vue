@@ -123,7 +123,7 @@ export default {
         })
       }
       if (item.state === 2) { // 继续做题
-        window.sessionStorage.setItem('diffRes', 0) // 区分不同接口请求
+        window.sessionStorage.setItem('diffRes', '') // 区分不同接口请求
         window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
         this.getPoticData.id = item.id
         this.getPoticData.course_id = item.course_id
@@ -138,16 +138,17 @@ export default {
         this.$router.push({ path: 'dopotic-continue',
           query: this.getPoticData
         })
+        window.sessionStorage.setItem('subTopics', JSON.stringify(this.getPoticData))
       }
       if (item.state === 3) { // 查看解析 论述题才有查看解析
+        window.sessionStorage.setItem('diffRes', 0) // 区分不同接口请求
         window.sessionStorage.setItem('diffTxt', 0) // 区分查看报告按钮，返回个人中心
         this.$router.push({ path: 'analysis',
           query: {
             paper_id: item.id, // 试卷id(阶段，论述才有)
             plate_id: item.plate_id, // 板块
             course_id: item.course_id, // 板块
-            type: 2, // 所有解析
-            jiexi: 2 // 区分答题记录的解析，6大板块解析没有这个参数的
+            type: 2 // 所有解析
           }
         })
       }
@@ -171,6 +172,12 @@ export default {
     background:#ffffff;
     @include flexJustifyAlignItem;
     padding: 22px 20px;
+    &:first-child{
+      border-radius: 8px 8px 0px 0px;
+    }
+    &:last-child{
+      border-radius: 0px 0px 8px 8px;
+    }
     &:hover{
       background: #F3F6FF;
     }

@@ -62,7 +62,7 @@ export default {
         plate_id: 4, // 错题
         num: '', // 默认随机15道
         paper_type: 1, // 单选1 论述2
-        jiexi: 3 // 错题集解析
+        sc: 1 // 收藏用户答案文案不展示
       },
       visible: false, // 知识点显示
       knowList: [] // 知识点
@@ -110,20 +110,13 @@ export default {
       })
     },
     goToPic (v, type) {
-      this.getPoticData.user_id = this.user_id
       this.getPoticData.know_id = v.know_id
       window.sessionStorage.setItem('subTopics', JSON.stringify(this.getPoticData))
       window.sessionStorage.setItem('diffRes', 2) // 区分不同的接口请求
       // 查看解析
-      if (type === '1') {
-        window.sessionStorage.setItem('diffTxt', 2) // 区分查看报告按钮，返回个人中心
-        this.$router.push({ path: '/analysis', query: this.getPoticData })
-      }
-      // 去做题
-      if (type === '2') {
-        window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
-        this.$router.push({ path: '/dopotic', query: this.getPoticData })
-      }
+      window.sessionStorage.setItem('diffTxt', 2) // 区分查看报告按钮，返回个人中心
+      window.sessionStorage.setItem('userOptionFlag', 1) // 收藏记录查看解析，只有正确答案展示，用户答案没有
+      this.$router.push({ path: '/analysis', query: this.getPoticData })
     }
   }
 }

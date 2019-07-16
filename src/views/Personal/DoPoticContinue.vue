@@ -216,7 +216,7 @@ export default {
           val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
           val.flag = false // 解析展开收起交互(练习模式)
           val.currenOption = false // 点击当前题，不能重复选择(练习模式)
-          val.userOption = ''
+          val.userOption = val.discuss_useranswer
           val.options.forEach((v, index) => {
             if (v.option.indexOf(v.userOption) > -1 && v.userOption !== '') {
               val.currenOption = true // 答题卡蓝色
@@ -282,7 +282,7 @@ export default {
         this.subTopics.question_content.question.push({
           question_id: this.topics[i].ID,
           true_options: this.topics[i].options[0].right,
-          user_answer: this.topics[i].discuss_useranswer || this.topics[i].userOption
+          user_answer: this.topics[i].userOption || ''
         })
       }
       if (type === 'save') {
@@ -291,8 +291,9 @@ export default {
       this.subGetdtPapers(type)
     },
     subGetdtPapers (type) {
+      window.sessionStorage.setItem('subTopics', JSON.stringify(this.subTopics))
       window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
-      window.sessionStorage.setItem('diffRes', 0) // 区分查看报告按钮，返回个人中心
+      window.sessionStorage.setItem('diffRes', '') // 区分不同接口请求
       getdtPapers(this.subTopics).then(data => {
         const res = data.data
         // 保存之后跳转到题库页面
@@ -300,7 +301,6 @@ export default {
           this.$router.push('/question')
           return
         }
-        // 论述题3直接跳转解析，其他12456板块查看成绩
         this.$router.push({ path: '/result-report',
           query: {
             paper_id: res.data.paper_id,

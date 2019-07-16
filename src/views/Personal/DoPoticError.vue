@@ -214,17 +214,45 @@ export default {
         this.title = title
         // this.answer_time = parseInt(res.data.answer_time)
         this.answer_time = 100000
-        if (topics && topics.length) {
-          this.topics.map((val, index) => {
-            val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
-            val.flag = false // 解析展开收起交互(练习模式)
-            val.currenOption = false // 点击当前题，不能重复选择(练习模式)
-            val.userOption = ''
-            val.options.map((v, index) => {
-              v.selOption = false // 选择当前选项变蓝色，其他默认颜色，可以重复选择(除了练习模式，都是这个逻辑)
-            })
+        this.topics.map((val, index) => {
+          val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
+          val.flag = false // 解析展开收起交互(练习模式)
+          val.currenOption = false // 点击当前题，不能重复选择(练习模式)
+          val.userOption = val.discuss_useranswer
+          val.options.forEach((v, index) => {
+            if (v.option.indexOf(v.userOption) > -1 && v.userOption !== '') {
+              val.currenOption = true // 答题卡蓝色
+              v.selOption = true // 选项蓝色
+            }
           })
-        }
+          // 练习模式
+          if (parseInt(this.getQuestion.paper_mode) === 1) {
+            val.options.forEach((v, index) => {
+              if (v.userOption !== '') {
+                if (v.option.indexOf(v.right) > -1) {
+                  v.rightGreen = true // 遍历哪个是正确答案 对应添加rightGreen
+                }
+              }
+              if (v.option.indexOf(v.userOption) > -1 && v.userOption !== '') {
+                v.errorRed = false // 初始化当前选项答错状态
+                if (v.userOption === v.right) { // 判断当前点击的选项是否正确
+                  v.rightGreen = true // 答对当前选项绿色
+                  val.currenRightGreen = true // 答对：右边选项卡对应添加绿色已掌握状态
+                  this.$forceUpdate()
+                } else {
+                  v.errorRed = true // 答错当前选项红色
+                  val.currenErrorRed = true // 答错：右边选项卡对应添加红色未掌握状态
+                  val.analysis = true // 答错，解析展示
+                  this.$forceUpdate()
+                }
+              }
+            })
+          }
+        })
+        let num = this.topics.filter((v) => { // 已做题数
+          return v.currenOption
+        })
+        this.doPoticInfo(num.length)
       })
     },
     // 交卷 保存 暂停

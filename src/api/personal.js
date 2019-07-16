@@ -88,7 +88,13 @@ export const myCollquestionknob = (data) => { // 题库-收藏夹-知识点
     method: 'post'
   })
 }
-
+export const myCollcsee = (data) => { // 题库-收藏夹-查看解析
+  return axios.request({
+    url: '/web/Personal/myCollcsee ',
+    data,
+    method: 'post'
+  })
+}
 export const continueLearn = (data) => { // 课程-继续学习
   return axios.request({
     url: '/web/Personal/continueLearn',
