@@ -55,12 +55,14 @@
 
 <script>
 import { resultsStati } from '@/api/questions'
+import { errorStati } from '@/api/personal'
 import { mapState } from 'vuex'
 export default {
   data () {
     return {
       resultsInfo: {},
-      cardList: []
+      cardList: [],
+      diffRes: window.sessionStorage.getItem('diffRes')
     }
   },
   computed: {
@@ -71,16 +73,21 @@ export default {
   components: {
   },
   mounted () {
-    // 0元体验做题结果
+    // 0元体验做题成绩统计
     if (parseInt(this.$route.query.plate_id) === 8) {
       this.experienceStatiInfo()
       return
     }
-    // 正常做题结果
+    // 错题集成绩统计 全部和错题不能共用一个 所以又区分了
+    if (this.diffRes === '1' || this.diffRes === '11') {
+      this.getErrorStati()
+      return
+    }
+    // 正常做题成绩统计 答题记录成绩统计
     this.getResultsStati()
   },
   methods: {
-    // 正常做题结果
+    // 正常做题成绩统计
     getResultsStati () {
       resultsStati({
         user_id: this.user_id,
@@ -91,9 +98,9 @@ export default {
         this.cardSts(res.data.question_content) // 答题卡颜色状态
       })
     },
-    // 0元体验结果
+    // 0元体验成绩统计
     experienceStatiInfo () {
-      let obj = JSON.parse(window.localStorage.getItem('experienceStatiInfo'))
+      let obj = JSON.parse(window.sessionStorage.getItem('experienceStatiInfo'))
       this.resultsInfo = obj
       this.cardSts(obj.question_content)// 答题卡颜色状态
     },
@@ -112,6 +119,21 @@ export default {
           this.cardList.push(answerList.slice(i, i + 10))
         }
       }
+    },
+    // 错题集成绩统计
+    getErrorStati () {
+      let obj = JSON.parse(window.sessionStorage.getItem('subTopics'))
+      errorStati({
+        used_time: obj.used_time,
+        user_id: this.user_id,
+        course_id: obj.course_id,
+        section_id: obj.section_id,
+        question_content: obj.question_content.question
+      }).then(data => {
+        const res = data.data
+        this.resultsInfo = res.data
+        this.cardSts(res.data.question_content) // 答题卡颜色状态
+      })
     },
     // 查看解析
     viewAnalysis (type) {

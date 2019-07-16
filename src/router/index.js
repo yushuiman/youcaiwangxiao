@@ -73,7 +73,16 @@ const router = new Router({
     {
       path: '/dopotic-continue',
       name: 'dopotic-continue',
-      component: () => import('@/views/Question/DoPoticContinue.vue'),
+      component: () => import('@/views/Personal/DoPoticContinue.vue'),
+      meta: {
+        showHeader: true,
+        showFooter: false
+      }
+    },
+    {
+      path: '/dopotic-error',
+      name: 'dopotic-error',
+      component: () => import('@/views/Personal/DoPoticError.vue'),
       meta: {
         showHeader: true,
         showFooter: false

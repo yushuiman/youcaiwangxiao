@@ -217,7 +217,7 @@ export default {
     getExperienceStati () {
       experienceStati(this.experienceTopics).then(data => {
         const res = data.data
-        window.localStorage.setItem('experienceStatiInfo', JSON.stringify(res.data))
+        window.sessionStorage.setItem('experienceStatiInfo', JSON.stringify(res.data))
         this.$router.push({ path: '/result-report',
           query: {
             plate_id: this.$route.query.plate_id

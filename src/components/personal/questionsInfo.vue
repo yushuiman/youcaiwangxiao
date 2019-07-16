@@ -30,7 +30,9 @@
       <div v-if="changeIdx == 1">
         <error-menuItem :getPoticData="getPoticData"></error-menuItem>
       </div>
-      <div v-if="changeIdx == 2">收藏夹</div>
+      <div v-if="changeIdx == 2">
+        <collection-menuItem></collection-menuItem>
+      </div>
       <div v-if="changeIdx == 3">习题笔记</div>
     </div>
 
@@ -40,6 +42,7 @@
 <script>
 import { questionRecord } from '@/api/personal'
 import errorMenuItem from '../../components/personal/errorMenuItem'
+import collectionMenuItem from '../../components/personal/collectionMenuItem'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -70,7 +73,8 @@ export default {
     }
   },
   components: {
-    errorMenuItem
+    errorMenuItem,
+    collectionMenuItem
   },
   computed: {
     ...mapState({
@@ -110,6 +114,8 @@ export default {
     },
     goPage (item) {
       if (item.state === 1) { // 成绩统计
+        window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
+        window.sessionStorage.setItem('diffRes', '') // 区分不同的接口请求
         this.$router.push({ path: 'result-report',
           query: {
             paper_id: item.id
@@ -117,6 +123,8 @@ export default {
         })
       }
       if (item.state === 2) { // 继续做题
+        window.sessionStorage.setItem('diffRes', 0) // 区分不同接口请求
+        window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
         this.getPoticData.id = item.id
         this.getPoticData.course_id = item.course_id
         this.getPoticData.paper_id = item.paper_id
@@ -132,6 +140,7 @@ export default {
         })
       }
       if (item.state === 3) { // 查看解析 论述题才有查看解析
+        window.sessionStorage.setItem('diffTxt', 0) // 区分查看报告按钮，返回个人中心
         this.$router.push({ path: 'analysis',
           query: {
             paper_id: item.id, // 试卷id(阶段，论述才有)

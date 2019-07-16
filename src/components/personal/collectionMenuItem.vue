@@ -7,14 +7,14 @@
             <template slot="title">
               <div class="menu-section-title">
                 {{item.know_section_name}}
-                <span>（<em>{{item.section_num}}</em>道错题）</span>
+                <span>（收藏<em>{{item.sectioncoun}}</em>道题）</span>
               </div>
             </template>
             <MenuItem class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key" style="padding-left: 40px;padding-right: 40px;">
               <div class="menu-jie-title">
                 <div>
                   {{val.knob_name}}
-                  <span>（<em style="color:#f00;">{{val.knob_num}}</em>道错题）</span>
+                  <span>（收藏<em style="color:#f00;">{{val.knobcoun}}</em>道题）</span>
                 </div>
                 <button class="btn-zsd" @click="getKnow(item, val, key)">选择知识点</button>
               </div>
@@ -36,7 +36,7 @@
             <span>{{val.know_name}}</span>
             <div class="error-btn">
               <button class="" @click="goToPic(val, '1')">查看解析</button>
-              <button class="btn-com" @click="goToPic(val, '2')">去做题</button>
+              <!-- <button class="btn-com" @click="goToPic(val, '2')">去做题</button> -->
             </div>
           </li>
         </ul>
@@ -45,7 +45,7 @@
   </div>
 </template>
 <script>
-import { personalWrongtopic, getKnow } from '@/api/personal'
+import { myCollquestion, myCollquestionknob } from '@/api/personal'
 import { mapState } from 'vuex'
 
 export default {
@@ -61,7 +61,8 @@ export default {
         mock_id: '',
         plate_id: 4, // 错题
         num: '', // 默认随机15道
-        paper_type: 1 // 单选1 论述2
+        paper_type: 1, // 单选1 论述2
+        jiexi: 3 // 错题集解析
       },
       visible: false, // 知识点显示
       knowList: [] // 知识点
@@ -76,11 +77,11 @@ export default {
     })
   },
   mounted () {
-    this.getErrorsectionList()
+    this.getMyCollquestion()
   },
   methods: {
-    getErrorsectionList (val) {
-      personalWrongtopic({
+    getMyCollquestion (val) {
+      myCollquestion({
         course_id: this.getPoticData.course_id,
         user_id: this.user_id
       }).then(data => {
@@ -98,7 +99,7 @@ export default {
     },
     // 知识点数据
     getKnowList () {
-      getKnow({
+      myCollquestionknob({
         user_id: this.user_id,
         course_id: this.getPoticData.course_id,
         section_id: this.getPoticData.section_id,
@@ -109,18 +110,19 @@ export default {
       })
     },
     goToPic (v, type) {
+      this.getPoticData.user_id = this.user_id
       this.getPoticData.know_id = v.know_id
       window.sessionStorage.setItem('subTopics', JSON.stringify(this.getPoticData))
-      window.sessionStorage.setItem('diffRes', 1) // 区分不同的接口请求
+      window.sessionStorage.setItem('diffRes', 2) // 区分不同的接口请求
       // 查看解析
       if (type === '1') {
-        window.sessionStorage.setItem('diffTxt', 1) // 区分查看报告按钮，返回个人中心
+        window.sessionStorage.setItem('diffTxt', 2) // 区分查看报告按钮，返回个人中心
         this.$router.push({ path: '/analysis', query: this.getPoticData })
       }
       // 去做题
       if (type === '2') {
         window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
-        this.$router.push({ path: '/dopotic-error', query: this.getPoticData })
+        this.$router.push({ path: '/dopotic', query: this.getPoticData })
       }
     }
   }

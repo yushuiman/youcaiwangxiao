@@ -35,6 +35,59 @@ export const getdtPapers = (data) => { // 题库-继续做题交卷
     method: 'post'
   })
 }
+export const errorParsing = (data) => { // 题库-错题集查看解析-全部
+  return axios.request({
+    url: '/web/Question/errorParsing',
+    data,
+    method: 'post'
+  })
+}
+export const error2Parsing = (data) => { // 题库-错题集查看解析-全部-错题
+  return axios.request({
+    url: '/web/Question/error2Parsing',
+    data,
+    method: 'post'
+  })
+}
+
+export const wrongCheck = (data) => { // 题库-错题集-拿题
+  return axios.request({
+    url: '/web/Question/wrongCheck ',
+    data,
+    method: 'post'
+  })
+}
+
+export const errorCenter = (data) => { // 题库-错题集交卷
+  return axios.request({
+    url: '/web/Question/errorCenter ',
+    data,
+    method: 'post'
+  })
+}
+
+export const errorStati = (data) => { // 题库-错题集-成绩统计
+  return axios.request({
+    url: '/web/Question/errorStati ',
+    data,
+    method: 'post'
+  })
+}
+
+export const myCollquestion = (data) => { // 题库-收藏夹-章节
+  return axios.request({
+    url: '/web/Personal/myCollquestion ',
+    data,
+    method: 'post'
+  })
+}
+export const myCollquestionknob = (data) => { // 题库-收藏夹-知识点
+  return axios.request({
+    url: '/web/Personal/myCollquestionknob ',
+    data,
+    method: 'post'
+  })
+}
 
 export const continueLearn = (data) => { // 课程-继续学习
   return axios.request({

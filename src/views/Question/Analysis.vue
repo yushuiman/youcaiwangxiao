@@ -15,8 +15,8 @@
         <div class="go-result-box">
           <!-- 论述题 -->
           <button class="btn-com" @click="goPersonal" v-if="getQuestion.plate_id == 3">返回做题记录</button>
-          <!-- 其他板块 -->
-          <button class="btn-com" @click="goResult" v-else>查看报告</button>
+          <!-- 其他板块 包含个人中心 1错题集 2做题记录 3收藏夹-->
+          <button class="btn-com" @click="goResult" v-else>{{txtSts[diffTxt]}}</button>
         </div>
         <div class="right-bottom-wrap">
           <div class="answer-card">
@@ -54,6 +54,7 @@
 
 <script>
 import { questionParsing, experienceParsing, checkItem } from '@/api/questions'
+import { errorParsing, error2Parsing } from '@/api/personal'
 import poticList from '../../components/poticList/poticList'
 import uploadImg from '../../components/common/uploadImg'
 import errorCorrection from '../../components/common/errorCorrection'
@@ -61,6 +62,14 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      txtSts: {
+        0: '返回做题记录',
+        1: '返回错题集',
+        2: '返回收藏夹',
+        10: '查看报告'
+      },
+      diffRes: window.sessionStorage.getItem('diffRes'), // 请求不同的接口
+      diffTxt: window.sessionStorage.getItem('diffTxt'), // 请求不同的接口
       topics: [],
       title: '',
       getQuestion: {
@@ -70,7 +79,8 @@ export default {
         plate_id: this.$route.query.plate_id
       },
       visible: false,
-      typeShow: false // 答疑dy，纠错jc
+      typeShow: false, // 答疑dy，纠错jc
+      dataStorage: JSON.parse(window.sessionStorage.getItem('subTopics'))
     }
   },
   components: {
@@ -90,8 +100,18 @@ export default {
       return
     }
     // 答题记录(论述题)解析， 其实和6大板块的论述题解析一模一样，后台说怕后期修改，就新增一个接口
-    if (parseInt(this.$route.query.jiexi) === 2) {
+    if (this.diffRes === '0') {
       this.getCheckItem()
+      return
+    }
+    // 答题记录错题集解析，全部
+    if (this.diffRes === '1') {
+      this.getErrorParsing()
+      return
+    }
+    // 答题记录错题集解析，全部和错题
+    if (this.diffRes === '11') {
+      this.getErrorParsing2()
       return
     }
     // 6大板块解析
@@ -113,7 +133,7 @@ export default {
     },
     // 0元体验解析
     getExperienceParsing () {
-      let obj = JSON.parse(window.localStorage.getItem('experienceStatiInfo'))
+      let obj = JSON.parse(window.sessionStorage.getItem('experienceStatiInfo'))
       experienceParsing({
         type: this.$route.query.type,
         user_id: this.user_id,
@@ -138,6 +158,38 @@ export default {
         this.answerSts(this.topics)
       })
     },
+    // 错题集查看解析 全部
+    getErrorParsing (val) {
+      errorParsing({
+        section_id: this.dataStorage.section_id,
+        course_id: this.dataStorage.course_id,
+        know_id: this.dataStorage.know_id,
+        knob_id: this.dataStorage.knob_id,
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        this.topics = res.data.topics
+        this.title = res.data.title
+        this.answerSts(this.topics)
+      })
+    },
+    // 错题集查看解析,全部-错题
+    getErrorParsing2 (val) {
+      error2Parsing({
+        type: this.$route.query.type,
+        section_id: this.dataStorage.section_id,
+        course_id: this.dataStorage.course_id,
+        know_id: this.dataStorage.know_id,
+        knob_id: this.dataStorage.knob_id,
+        user_id: this.user_id,
+        question_content: this.dataStorage.question_content.question
+      }).then(data => {
+        const res = data.data
+        this.topics = res.data.topics
+        this.title = res.data.title
+        this.answerSts(this.topics)
+      })
+    },
     // 答题卡状态，问题列表状态（解析，用户答案）
     answerSts (topics) {
       if (topics && topics.length) {
@@ -146,7 +198,7 @@ export default {
           if (parseInt(this.$route.query.plate_id) === 3) { // 论述题解析不需要下面的逻辑
             return
           }
-          let userOptions = val.options[0].userOption // 用户答案
+          let userOptions = val.options[0].userOption || val.discuss_useranswer // 用户答案
           let trueOptions = val.options[0].right // 正确答案
           if (userOptions !== '' && userOptions === trueOptions) {
             val.rightCurren = true
@@ -169,6 +221,14 @@ export default {
       }
     },
     goResult () {
+      // 如果是错题中心，查看报告
+      if (this.diffTxt === '0' || this.diffTxt === '1' || this.diffTxt === '2') {
+        this.$router.push({ path: '/personal' })
+        // window.sessionStorage.setItem('type', 'questions')
+        // window.sessionStorage.setItem('course_id', this.$route.query.course_id)
+        // window.sessionStorage.setItem('changeIdx', this.diffRes)
+        return
+      }
       this.$router.push({ path: '/result-report',
         query: {
           paper_id: this.$route.query.paper_id,

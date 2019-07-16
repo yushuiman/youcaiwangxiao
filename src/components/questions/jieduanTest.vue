@@ -65,7 +65,6 @@ export default {
     // 去做题
     goToPic (v) {
       this.getPoticData.paper_id = v.paper_id
-      console.log(this.getPoticData)
       this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }
