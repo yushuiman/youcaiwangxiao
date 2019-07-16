@@ -109,6 +109,7 @@ import poticList from '../../components/poticList/poticList'
 import count from '../../components/count'
 import errorCorrection from '../../components/common/errorCorrection'
 import { mapState } from 'vuex'
+// import Cookies from 'js-cookie'
 export default {
   data () {
     return {
@@ -124,7 +125,7 @@ export default {
       percentNum: 0, // 已做题数
       getQuestion: { // 拿题
         course_id: this.$route.query.course_id,
-        paper_id: this.$route.query.paper_id,
+        paper_id: this.$route.query.paper_id, // 阶段测试,论述题
         section_id: this.$route.query.section_id,
         knob_id: this.$route.query.knob_id,
         know_id: this.$route.query.know_id,
@@ -135,13 +136,13 @@ export default {
       },
       subTopics: { // 交卷
         user_id: '',
-        id: this.$route.query.paper_id || 0,
-        status: 2, // 交卷状态 1交卷 2保存
+        id: this.$route.query.id,
+        status: 1, // 交卷状态 1交卷 2保存
         course_id: this.$route.query.course_id,
         section_id: this.$route.query.section_id || 0,
         knob_id: this.$route.query.knob_id || 0,
         know_id: this.$route.query.know_id || 0,
-        paper_id: this.$route.query.paper_id || 0,
+        paper_id: this.$route.query.paper_id, // 阶段测试,论述题
         mock_id: this.$route.query.mock_id || 0,
         plate_id: this.$route.query.plate_id,
         used_time: 600,
@@ -150,7 +151,7 @@ export default {
           knob_id: this.$route.query.knob_id || 0,
           know_id: this.$route.query.know_id || 0,
           mock_id: this.$route.query.mock_id || 0,
-          paper_id: this.$route.query.plate_id,
+          paper_id: this.$route.query.paper_id, // 阶段测试,论述题
           question: []
         }
       },
@@ -201,7 +202,7 @@ export default {
     // 拿题
     getTopicList () {
       continueQuestion({
-        Id: this.$route.query.paper_id,
+        Id: this.$route.query.id,
         user_id: this.user_id
       }).then(data => {
         const res = data.data
@@ -294,7 +295,6 @@ export default {
         const res = data.data
         // 保存之后跳转到题库页面
         if (type === 'save') {
-          this.subTopics.status = 2
           this.$router.push('/question')
           return
         }

@@ -4,6 +4,7 @@
       <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': changeIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
     <div class="all-main">
+      <!-- 做题记录 -->
       <div class="uc-do-record" v-if="changeIdx == 0">
         <ul class="ucr-do-list">
           <li class="ucr-do-item" v-for="(item, index) in questionRecordList" :key="index">
@@ -15,33 +16,37 @@
             @click="goPage(item)">{{btnSts[item.state]}}</button>
           </li>
         </ul>
+        <div style="padding: 20px; text-align: center;">
+          <Page
+          :total="total"
+          @on-change="onChange"
+          :current="page"
+          :page-size="limit"
+          size="small"
+          />
+        </div>
       </div>
-      <div v-if="changeIdx == 1">错题集</div>
+      <!-- 错题集 -->
+      <div v-if="changeIdx == 1">
+        <error-menuItem :getPoticData="getPoticData"></error-menuItem>
+      </div>
       <div v-if="changeIdx == 2">收藏夹</div>
       <div v-if="changeIdx == 3">习题笔记</div>
     </div>
-    <div style="padding: 20px; text-align: center;">
-      <Page
-      :total="total"
-      @on-change="onChange"
-      :current="page"
-      :page-size="limit"
-      size="small"
-      />
-    </div>
+
   </div>
 </template>
 
 <script>
-import { questionRecord, personalWrongtopic } from '@/api/personal'
+import { questionRecord } from '@/api/personal'
+import errorMenuItem from '../../components/personal/errorMenuItem'
 import { mapState } from 'vuex'
 export default {
   data () {
     return {
       txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
-      changeIdx: 0,
+      changeIdx: window.sessionStorage.getItem('changeIdx'),
       questionRecordList: [], // 做题记录
-      PersonalWrongtopicList: [], // 错题记录
       btnSts: {
         1: '成绩统计',
         2: '继续做题',
@@ -51,18 +56,21 @@ export default {
       total: 1,
       limit: 10,
       getPoticData: {
-        course_id: '',
+        id: '',
+        course_id: window.sessionStorage.getItem('course_id'),
         paper_id: '',
         section_id: '',
         knob_id: '', // 节id
         know_id: '', // 知识点id
         mock_id: '',
-        user_id: '',
         plate_id: '',
         paper_mode: 2, // 练习模式1 考试2
         paper_type: 1 // 单选1 论述2
       }
     }
+  },
+  components: {
+    errorMenuItem
   },
   computed: {
     ...mapState({
@@ -79,36 +87,16 @@ export default {
       if (!this.user_id) {
 
       }
+      window.sessionStorage.setItem('changeIdx', index)
       this.changeIdx = index
-      if (index === 1) {
-        this.getPersonalWrongtopic()
-        // course_id=2&paper_id=3&section_id=&knob_id=&know_id=&mock_id=&user_id=20&plate_id=2&num=&paper_type=1
-      }
-      if (index === 2) {
-        // this.getPersonalWrongtopic()
-      }
-      if (index === 3) {
-        // this.getPersonalWrongtopic()
-      }
     },
     // 做题记录
     getQuestionRecord () {
       questionRecord({
         user_id: this.user_id,
-        course_id: this.$route.query.course_id,
+        course_id: this.getPoticData.course_id,
         limit: this.limit,
         page: this.page
-      }).then(data => {
-        const res = data.data
-        this.questionRecordList = res.data.question
-        this.total = res.data.num
-      })
-    },
-    // 错题记录
-    getPersonalWrongtopic () {
-      personalWrongtopic({
-        user_id: this.user_id,
-        course_id: this.$route.query.course_id
       }).then(data => {
         const res = data.data
         this.questionRecordList = res.data.question
@@ -118,18 +106,7 @@ export default {
     // 分页
     onChange (val) {
       this.page = val
-      if (this.changeIdx === 0) {
-        this.getQuestionRecord()
-      }
-      if (this.changeIdx === 1) {
-        this.getPersonalWrongtopic()
-      }
-      if (this.changeIdx === 1) {
-        this.getPersonalWrongtopic()
-      }
-      if (this.changeIdx === 1) {
-        this.getPersonalWrongtopic()
-      }
+      this.getQuestionRecord()
     },
     goPage (item) {
       if (item.state === 1) { // 成绩统计
@@ -140,8 +117,9 @@ export default {
         })
       }
       if (item.state === 2) { // 继续做题
+        this.getPoticData.id = item.id
         this.getPoticData.course_id = item.course_id
-        this.getPoticData.paper_id = item.id
+        this.getPoticData.paper_id = item.paper_id
         this.getPoticData.section_id = item.section_id
         this.getPoticData.knob_id = item.knob_id
         this.getPoticData.know_id = item.know_id
@@ -210,4 +188,32 @@ export default {
       background: #0AAB55;
     }
   }
+  // tab
+  .tab-list{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+    .tab-item{
+      margin: 0 30px;
+      position: relative;
+      &:before{
+        position: absolute;
+        content: "";
+        left: 50%;
+        width: 36px;
+        height: 2px;
+        background: none;
+        margin-top: 22px;
+        margin-left: -18px;
+      }
+      &.active{
+        color: #0267FF;
+        &:before{
+          background: #0267FF;
+        }
+      }
+    }
+  }
+
 </style>

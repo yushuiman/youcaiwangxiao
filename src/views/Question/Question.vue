@@ -134,7 +134,7 @@
           </div>
         </div>
         <ul class="my-question">
-          <li class="mq-item mq-item-01" :class="['mq-item-0' + (index+1)]" v-for="(item, index) in personalTxtArr" :key="index" @click="goPersonalPage">
+          <li class="mq-item mq-item-01" :class="['mq-item-0' + (index+1)]" v-for="(item, index) in personalTxtArr" :key="index" @click="goPersonalPage(index)">
             <i class="mq-icon"></i>
             <p>{{item}}</p>
           </li>
@@ -176,6 +176,7 @@ import errorSection from '../../components/questions/errorSection'
 import lianxiSelf from '../../components/questions/lianxiSelf'
 import groupLianxi from '../../components/questions/groupLianxi'
 import { mapState } from 'vuex'
+// import Cookies from 'js-cookie'
 export default {
   data () {
     return {
@@ -252,6 +253,9 @@ export default {
       getProject({ user_id: this.user_id }).then(data => {
         const res = data.data
         this.projectArr = res.data
+        // if (this.course_id === '') {
+        //   window.sessionStorage.setItem('course_id', res.data[0].id)
+        // }
         this.getQuestionIndex(this.course_id || res.data[0].id, this.selIdx)
         this.experience = false
         // 0元体验
@@ -262,6 +266,7 @@ export default {
     },
     // 课程对应正确率，做题数，平均分
     getQuestionIndex (id, index) {
+      this.course_id = id
       window.sessionStorage.setItem('course_id', id)
       window.sessionStorage.setItem('selIdx', index)
       this.selIdx = index
@@ -311,13 +316,11 @@ export default {
       })
     },
     // 个人中心
-    goPersonalPage () {
-      this.$router.push({ path: '/personal',
-        query: {
-          type: 'questions',
-          course_id: this.course_id
-        }
-      })
+    goPersonalPage (index) {
+      window.sessionStorage.setItem('type', 'questions')
+      window.sessionStorage.setItem('course_id', this.course_id)
+      window.sessionStorage.setItem('changeIdx', index)
+      this.$router.push('/personal')
     }
   }
 }

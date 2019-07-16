@@ -47,9 +47,13 @@ import zhiboInfo from '../../components/personal/zhiboInfo'
 import answerInfo from '../../components/personal/answerInfo'
 import orderInfo from '../../components/personal/orderInfo'
 import accountInfo from '../../components/personal/accountInfo'
+// import Cookies from 'js-cookie'
 export default {
   data () {
     return {
+      //  Cookies.get('type', 'questions')
+      // Cookies.get('course_id', this.course_id)
+      // Cookies.get('changeIdx', index)
       userArr: [
         {
           type: 'course',
@@ -76,7 +80,7 @@ export default {
           tit: '账号'
         }
       ],
-      clkTit: this.$route.query.type || 'course'
+      clkTit: window.sessionStorage.getItem('type') || 'course'
     }
   },
   components: {
@@ -90,12 +94,13 @@ export default {
   methods: {
     switchInfo ({ type }, index) {
       this.clkTit = type
-      this.$router.replace({ path: 'personal',
-        query: {
-          ...this.$route.query,
-          type: type
-        }
-      })
+      window.sessionStorage.setItem('type', type)
+      // this.$router.replace({ path: 'personal',
+      //   query: {
+      //     ...this.$route.query,
+      //     type: type
+      //   }
+      // })
     }
   }
 }

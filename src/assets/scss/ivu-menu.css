@@ -1,0 +1,155 @@
+.error-menu-list .ivu-menu-submenu-title {
+    padding: 0;
+}
+.ivu-menu-vertical.ivu-menu-light:after {
+    width: 0;
+}
+.error-section-wrap .ivu-menu-light {
+    background: none;
+}
+/* .error-menu-list .ivu-menu-submenu-title-icon {
+    right: 0;
+} */
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after{
+    width: 0;
+}
+.com-bg {
+    background: #F3F6FF;
+    color: #666666;
+    font-size: 18px;
+    padding: 12px 30px;
+    margin-bottom: 10px;
+}
+
+.height-com {
+    height: 469px;
+    overflow-y: scroll;
+}
+
+
+/* .btn-com {
+    width: 79px;
+    height: 32px;
+    border-radius: 16px;
+    font-size: 16px;
+    text-align: center;
+    background: none;
+    border: 1px solid rgba(2, 103, 255, 1);
+    color: #0267FF;
+} */
+
+/* .btn-com:hover {
+    box-shadow: 0px 2px 11px 0px rgba(0, 113, 230, 0.65);
+}
+
+.do-potic-btn {
+    width: 69px !important;
+    height: 24px !important;
+} */
+
+.know-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 30px;
+    font-size: 18px;
+}
+
+.title-com {
+    font-size: 18px;
+    color: #333333;
+}
+
+.ivu-menu-vertical.ivu-menu-light:after,
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after {
+    width: 0;
+}
+
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
+    background: #F3F6FF;
+}
+.error-menu-item {
+    border-radius: 8px;
+    box-shadow: 0px 2px 20px 0px rgba(140, 196, 255, 0.3);
+    background: #ffffff;
+    margin-bottom: 20px;
+}
+.ivu-menu-vertical .ivu-menu-item,
+.ivu-menu-vertical .ivu-menu-submenu-title {
+    padding: 18px 20px;
+}
+
+.ivu-menu-submenu-title span>i,
+.ivu-menu-submenu-title>i {
+    margin-right: 0;
+    right: 0;
+}
+
+.question-modal .ivu-modal-body,
+.practiceModal .ivu-modal-body {
+    padding: 0;
+}
+
+.question-modal .ivu-modal-header,
+.practiceModal .ivu-modal-header {
+    border-bottom: 0;
+    padding: 20px 30px;
+}
+
+.question-modal .ivu-modal-header-inner,
+.practiceModal .ivu-modal-header-inner {
+    height: auto;
+    line-height: 1;
+    font-size: 26px;
+    color: #333333;
+    padding: 0;
+}
+.menu-jie-title .btn-zsd {
+    font-size: 16px;
+    color: #0267FF;
+}
+
+.menu-jie-title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu-section-title,
+.menu-jie-title {
+    color: #333333;
+    font-size: 18px;
+}
+.menu-jie-title div{
+    color: #666666;
+    font-size: 16px;
+}
+.menu-jie-title div span {
+    font-size: 16px;
+    color: #666666;
+}
+.menu-section-title span em, .menu-jie-title div span em {
+    color: #f00;
+}
+
+.error-menu-er:hover {
+    background: #F3F6FF;
+}
+.error-btn button{
+    height: 28px!important;
+    margin-left: 17px;
+}
+.error-btn button.btn-com {
+    width: 69px!important;
+}
+/* 
+.question-modal .ivu-modal-close,
+.practiceModal .ivu-modal-close {
+    top: 18px;
+}
+
+.ivu-icon-md-checkmark {
+    margin-top: -18px;
+}
+
+.ivu-icon-md-checkmark:before {
+    color: #0267ff;
+} */

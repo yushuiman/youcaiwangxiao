@@ -29,6 +29,7 @@
           </li>
         </ul>
       </div>
+      <!-- 错题集 -->
       <div v-if="changeIdx == 1">错题集</div>
       <div v-if="changeIdx == 2">收藏夹</div>
       <div v-if="changeIdx == 3">习题笔记</div>
@@ -58,7 +59,7 @@ export default {
     })
   },
   mounted () {
-    this.getQuestionRecord()
+    // this.getQuestionRecord()
   },
   methods: {
     getQuestionRecord () {

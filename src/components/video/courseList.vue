@@ -58,7 +58,7 @@ export default {
       curIndex: '',
       videoListFlag: true,
       playIdx: 0,
-      openMenu: window.localStorage.getItem('openMenu') || '1-1'
+      openMenu: window.sessionStorage.getItem('openMenu') || '1-1'
     }
   },
   mounted () {

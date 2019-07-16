@@ -47,8 +47,8 @@
      background: #FAFAFA;
  }
 
- .ivu-menu-vertical .ivu-menu-item,
- .ivu-menu-vertical .ivu-menu-submenu-title {
+ .zsd-section-wrap .ivu-menu-vertical .ivu-menu-item,
+ .zsd-section-wrap .ivu-menu-vertical .ivu-menu-submenu-title {
      padding: 10px 30px;
  }
  .ivu-menu-submenu-title span>i,

@@ -37,11 +37,11 @@ export default {
       courseList: [],
       getPoticData: {
         course_id: this.course_id,
-        paper_id: '', // 阶段测试,论述题
-        section_id: '',
-        knob_id: '', // 节id
-        know_id: '', // 知识点id
-        mock_id: '',
+        paper_id: 0, // 阶段测试3,论述题2
+        section_id: 0,
+        knob_id: 0, // 节id
+        know_id: 0, // 知识点id
+        mock_id: 0,
         user_id: this.user_id,
         plate_id: this.plate_id,
         num: '', // 默认随机15道
@@ -65,6 +65,7 @@ export default {
     // 去做题
     goToPic (v) {
       this.getPoticData.paper_id = v.paper_id
+      console.log(this.getPoticData)
       this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }

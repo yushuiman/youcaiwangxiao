@@ -151,7 +151,7 @@ export default {
           knob_id: this.$route.query.knob_id || 0,
           know_id: this.$route.query.know_id || 0,
           mock_id: this.$route.query.mock_id || 0,
-          paper_id: this.$route.query.plate_id,
+          paper_id: this.$route.query.paper_id,
           question: []
         }
       },
@@ -262,7 +262,6 @@ export default {
         const res = data.data
         // 保存之后跳转到题库页面
         if (type === 'save') {
-          this.subTopics.status = 2
           this.$router.push('/question')
           return
         }
