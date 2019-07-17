@@ -1,5 +1,12 @@
 import axios from '@/libs/api.request'
 
+export const getProject = (data) => { // 题库-目录列表
+  return axios.request({
+    url: '/web/Personal/getProject',
+    data,
+    method: 'post'
+  })
+}
 export const questionRecord = (data) => { // 题库-做题记录
   return axios.request({
     url: '/web/Personal/questionRecord',

@@ -29,6 +29,11 @@
           </ul>
         </div>
         <div class="userm-right">
+          <div>
+            <select class="com-sel" v-model="courseIdSel" @change="getCourseIdSel($event)">
+              <option class="com-opt" :value="v.course_id" v-for="(v, index) in courseList" :key="index">{{v.name}}</option>
+            </select>
+          </div>
           <course-info v-if="clkTit == 'course'"></course-info>
           <questions-info v-if="clkTit == 'questions'"></questions-info>
           <zhibo-info v-if="clkTit == 'zhibo'"></zhibo-info>
@@ -41,19 +46,17 @@
 </template>
 
 <script>
+import { getProject } from '@/api/personal'
 import courseInfo from '../../components/personal/courseInfo'
 import questionsInfo from '../../components/personal/questionsInfo'
 import zhiboInfo from '../../components/personal/zhiboInfo'
 import answerInfo from '../../components/personal/answerInfo'
 import orderInfo from '../../components/personal/orderInfo'
 import accountInfo from '../../components/personal/accountInfo'
-// import Cookies from 'js-cookie'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      //  Cookies.get('type', 'questions')
-      // Cookies.get('course_id', this.course_id)
-      // Cookies.get('changeIdx', index)
       userArr: [
         {
           type: 'course',
@@ -80,8 +83,15 @@ export default {
           tit: '账号'
         }
       ],
-      clkTit: window.sessionStorage.getItem('type') || 'course'
+      clkTit: window.sessionStorage.getItem('type') || 'course',
+      courseList: [], // 课程列表
+      courseIdSel: window.sessionStorage.getItem('course_id') || ''
     }
+  },
+  computed: {
+    ...mapState({
+      user_id: state => state.user.user_id
+    })
   },
   components: {
     courseInfo,
@@ -91,16 +101,25 @@ export default {
     orderInfo,
     accountInfo
   },
+  mounted () {
+    this.getProjectList()
+  },
   methods: {
     switchInfo ({ type }, index) {
       this.clkTit = type
       window.sessionStorage.setItem('type', type)
-      // this.$router.replace({ path: 'personal',
-      //   query: {
-      //     ...this.$route.query,
-      //     type: type
-      //   }
-      // })
+    },
+    getProjectList (type) {
+      getProject({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        this.courseList = res.data
+      })
+    },
+    getCourseIdSel (e) {
+      window.sessionStorage.setItem('selIdx', e.target.selectedIndex)
+      window.sessionStorage.setItem('course_id', this.courseIdSel)
     }
   }
 }
@@ -271,4 +290,19 @@ export default {
       }
     }
   }
+  .com-sel {
+    line-height: 30px;
+    cursor: pointer;        /*鼠标上移变成小手*/
+    border: solid 1px $col666;
+    padding-left: 14px;
+    padding-right: 34px;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    // background: url("../../assets/images/questions/practice-icon01.png") no-repeat right center transparent;
+    // background-size: 20px 20px;
+}
+
+.com-opt {
+}
 </style>
