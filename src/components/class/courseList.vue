@@ -12,13 +12,13 @@
               {{item.name}}
             </div>
           </template>
-          <el-submenu :index="'1-'+ index+1" v-for="(val, index) in courseSections" :key="index">
+          <el-submenu :index="'1-'+ key+1" v-for="(val, key) in courseSections" :key="key">
             <template slot="title">
               <i class="elt-icon elt-icon-02"></i>
               <span>{{val.section_name}}</span>
             </template>
             <el-menu-item :index="'1-1'+ index+1" v-for="(v, index) in val.videos" :key="index"
-            @click="playVideo(item, val, v)">
+            @click="playVideo(item, val, v, key, index)">
               <i class="elt-icon elt-icon-stop"></i>
               <span>{{v.video_name}}</span>
               <em class="free-pay">免费试听</em>
@@ -80,7 +80,7 @@ export default {
       })
     },
     // 跳转到播放页面
-    playVideo (item, val, v) {
+    playVideo (item, val, v, key, index) {
       this.$router.push({ path: '/class-video',
         query: {
           package_id: this.course_id,
@@ -91,6 +91,8 @@ export default {
           userstatus: this.userstatus // 是否购买
         }
       })
+      let openMenu = (key+1) + '-' + (index+1)
+      window.sessionStorage.setItem('openMenu', openMenu)
     }
   }
 }

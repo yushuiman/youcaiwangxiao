@@ -132,7 +132,7 @@ export default {
           video_id: v.video_id
         }
       })
-      window.localStorage.setItem('openMenu', this.openMenu)
+      window.sessionStorage.setItem('openMenu', this.openMenu)
       this.handleReload()
     }
   }

@@ -295,9 +295,6 @@ export default {
 
 <style>
   @import url('https://g.alicdn.com/de/prismplayer/2.8.2/skins/default/aliplayer-min.css');
-  .prism-big-play-btn{
-
-  }
   .prism-player .prism-progress .prism-progress-played{
     background: #F99111!important;
   }
@@ -369,5 +366,11 @@ export default {
   .prism-player .prism-volume .volume-icon.mute:hover{
     background: url('../../assets/images/video/volumemutehover.png') no-repeat;
     background-size: contain;
+  }
+  .prism-player .prism-controlbar .prism-controlbar-bg{
+    background: #070C12;
+  }
+  .prism-volume{
+    margin-right: 15px!important;
   }
 </style>

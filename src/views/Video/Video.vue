@@ -44,6 +44,10 @@
       </div>
       <div class="video-info-c">
         <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
+        <div class="star-collection" @click="courseCollection">
+          <Icon type="md-star-outline" style="color: #ffffff;"/>
+          <Icon type="md-star" style="color: #F99111;"/>
+        </div>
       </div>
       <div id="line"></div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
@@ -230,11 +234,11 @@ export default {
           this.videoCredentials = res.data
         })
       })
+    },
+    // 收藏
+    courseCollection(){
+
     }
-  },
-  beforeRouteLeave (to, from, next) {
-    window.localStorage.setItem('openMenu', '')
-    next()
   }
 }
 </script>
@@ -433,5 +437,13 @@ export default {
     .close-icon{
       @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
     }
+  }
+  // 收藏
+  .star-collection{
+    position: absolute;
+    z-index: 10;
+    right: 170px;
+    bottom: 7px;
+    font-size: 30px;
   }
 </style>

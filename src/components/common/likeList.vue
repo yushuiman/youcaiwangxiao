@@ -20,7 +20,7 @@ import { guessLike } from '@/api/class'
 export default {
   props: {
     isW: {
-      type: String
+      type: Number
     }
   },
   data () {
