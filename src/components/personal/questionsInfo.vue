@@ -1,8 +1,16 @@
 <template>
   <div class="u-question-wrap">
-    <ul class="tab-list">
-      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': changeIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
-    </ul>
+    <div class="tab-change-course">
+      <ul class="tab-list">
+        <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': changeIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      </ul>
+      <div class="select-box">
+        <select class="com-sel" v-model="courseIdSel" @change="getCourseIdSel($event)">
+          <option class="com-opt" :value="v.course_id" v-for="(v, index) in userArr" :key="index">{{v.name}}</option>
+        </select>
+        <Icon type="md-arrow-dropdown" style="font-size:24px; position:absolute; right: 5px; top: 3px;" />
+      </div>
+    </div>
     <div class="all-main">
       <!-- 做题记录 -->
       <div class="uc-do-record" v-if="changeIdx == 0">
@@ -47,6 +55,12 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      props: {
+        userArr: {
+          type: Array
+        }
+      },
+      courseIdSel: window.sessionStorage.getItem('course_id') || '',
       txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
       changeIdx: window.sessionStorage.getItem('changeIdx'),
       questionRecordList: [], // 做题记录
@@ -93,6 +107,10 @@ export default {
       }
       window.sessionStorage.setItem('changeIdx', index)
       this.changeIdx = index
+    },
+    getCourseIdSel (e) {
+      window.sessionStorage.setItem('selIdx', e.target.selectedIndex)
+      window.sessionStorage.setItem('course_id', this.courseIdSel)
     },
     // 做题记录
     getQuestionRecord () {
@@ -205,6 +223,29 @@ export default {
     }
   }
   // tab
+  .tab-change-course{
+    position: relative;
+  }
+  .select-box{
+    right: 0;
+    top: -6px;
+    line-height: 30px;
+    border: solid 1px $col666;
+    padding-left: 14px;
+    padding-right: 34px;
+    display: inline-block;
+    border-radius: 4px;
+    background: #ffffff;
+    position: absolute;
+  }
+  .com-sel {
+    cursor: pointer;
+    border: 0;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: none;
+  }
   .tab-list{
     display: flex;
     align-items: center;

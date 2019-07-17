@@ -43,6 +43,11 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      props: {
+        courseList: {
+          type: Array
+        }
+      },
       txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
       changeIdx: 0,
       btnSts: {
@@ -59,6 +64,7 @@ export default {
     })
   },
   mounted () {
+    console.log(this.courseList)
     // this.getQuestionRecord()
   },
   methods: {

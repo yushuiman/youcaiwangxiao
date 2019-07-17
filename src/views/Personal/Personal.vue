@@ -29,13 +29,8 @@
           </ul>
         </div>
         <div class="userm-right">
-          <div>
-            <select class="com-sel" v-model="courseIdSel" @change="getCourseIdSel($event)">
-              <option class="com-opt" :value="v.course_id" v-for="(v, index) in courseList" :key="index">{{v.name}}</option>
-            </select>
-          </div>
-          <course-info v-if="clkTit == 'course'"></course-info>
-          <questions-info v-if="clkTit == 'questions'"></questions-info>
+          <course-info v-if="clkTit == 'course'" :courseList="courseList"></course-info>
+          <questions-info v-if="clkTit == 'questions'" :courseList="courseList"></questions-info>
           <zhibo-info v-if="clkTit == 'zhibo'"></zhibo-info>
           <answer-info v-if="clkTit == 'answer'"></answer-info>
           <order-info v-if="clkTit == 'order'"></order-info>
@@ -84,8 +79,7 @@ export default {
         }
       ],
       clkTit: window.sessionStorage.getItem('type') || 'course',
-      courseList: [], // 课程列表
-      courseIdSel: window.sessionStorage.getItem('course_id') || ''
+      courseList: [] // 课程列表
     }
   },
   computed: {
@@ -116,10 +110,6 @@ export default {
         const res = data.data
         this.courseList = res.data
       })
-    },
-    getCourseIdSel (e) {
-      window.sessionStorage.setItem('selIdx', e.target.selectedIndex)
-      window.sessionStorage.setItem('course_id', this.courseIdSel)
     }
   }
 }
@@ -290,19 +280,4 @@ export default {
       }
     }
   }
-  .com-sel {
-    line-height: 30px;
-    cursor: pointer;        /*鼠标上移变成小手*/
-    border: solid 1px $col666;
-    padding-left: 14px;
-    padding-right: 34px;
-    appearance: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    // background: url("../../assets/images/questions/practice-icon01.png") no-repeat right center transparent;
-    // background-size: 20px 20px;
-}
-
-.com-opt {
-}
 </style>
