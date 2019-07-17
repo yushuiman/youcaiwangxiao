@@ -12,7 +12,6 @@ export default {
       endTime: 0
     }
   },
-
   props: {
     autoStart: {
       type: Boolean,

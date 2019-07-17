@@ -18,13 +18,13 @@
 <script>
 import { guessLike } from '@/api/class'
 export default {
+  props: {
+    isW: {
+      type: String
+    }
+  },
   data () {
     return {
-      props: {
-        isW: {
-          type: String
-        }
-      },
       likeArr: []
     }
   },

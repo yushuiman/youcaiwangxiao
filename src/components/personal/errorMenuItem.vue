@@ -1,5 +1,11 @@
 <template>
   <div class="error-section-wrap">
+    <div class="select-box">
+      <select class="com-sel" v-model="course_id" @change="getCourseIdSel($event)">
+        <option class="com-opt" :value="v.course_id" v-for="(v, index) in courseList" :key="index">{{v.name}}</option>
+      </select>
+      <Icon type="md-arrow-dropdown" style="font-size:24px; position:absolute; right: 5px; top: 3px;" />
+    </div>
     <Row>
       <Col span="24">
         <Menu accordion width="100%" class="error-menu-list">
@@ -49,8 +55,14 @@ import { personalWrongtopic, getKnow } from '@/api/personal'
 import { mapState } from 'vuex'
 
 export default {
+  props: {
+    courseList: {
+      type: Array
+    }
+  },
   data () {
     return {
+      course_id: window.sessionStorage.getItem('course_id'),
       errorSecList: [], // 知识点章节
       getPoticData: {
         course_id: window.sessionStorage.getItem('course_id'),
@@ -80,16 +92,20 @@ export default {
     this.getErrorsectionList()
   },
   methods: {
+    getCourseIdSel (e) {
+      window.sessionStorage.setItem('selIdx', e.target.selectedIndex)
+      window.sessionStorage.setItem('course_id', this.course_id)
+      this.getErrorsectionList()
+    },
     getErrorsectionList (val) {
       personalWrongtopic({
-        course_id: this.getPoticData.course_id,
+        course_id: this.course_id,
         user_id: this.user_id
       }).then(data => {
         const res = data.data
         this.errorSecList = res.data
       })
     },
-
     // 知识点显示
     getKnow (item, val, index) {
       this.visible = true
@@ -132,20 +148,5 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   @import "../../assets/scss/ivu-menu.css";
-  // @import "../../assets/scss/questions.css";
-
-  // .error-menu-item{
-  //   border-radius: 8px;
-  //   box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
-  //   background: #ffffff;
-  //   margin-bottom: 20px;
-  //   // padding: 18px 20px;
-  // }
-  // .com-bg {
-  //   background: #F3F6FF;
-  //   color: #666666;
-  //   font-size: 18px;
-  //   padding: 12px 30px;
-  //   margin-bottom: 10px;
-  // }
+  @import "../../assets/scss/course-item";
 </style>
