@@ -1,5 +1,5 @@
 <template>
-  <div class="course-like-main" :class="{'styw': isW=278}">
+  <div class="course-like-main" :class="{'styw': isW}">
     <div class="like-title">
       <img src="../../assets/images/course/like.png" alt="">
       <span>猜你喜欢</span>
@@ -20,7 +20,7 @@ import { guessLike } from '@/api/class'
 export default {
   props: {
     isW: {
-      type: Number
+      type: Boolean
     }
   },
   data () {
@@ -73,7 +73,6 @@ export default {
     height: 86px;
     padding: 11px 0;
     @include display_flex(flex);
-    // @extend %alignitem_center;
     border-top: 1px solid $borderColor;
     box-sizing: border-box;
     img{

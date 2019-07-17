@@ -102,6 +102,42 @@ export const myCollcsee = (data) => { // 题库-收藏夹-查看解析
     method: 'post'
   })
 }
+export const myCourse = (data) => { // 课程-我的课程
+  return axios.request({
+    url: '/web/Personal/myCourse',
+    data,
+    method: 'post'
+  })
+}
+export const watchRecords = (data) => { // 课程-播放记录
+  return axios.request({
+    url: '/web/Personal/watchRecords',
+    data,
+    method: 'post'
+  })
+}
+export const myCollpackage = (data) => { // 课程-收藏-课程包
+  return axios.request({
+    url: '/web/Personal/myCollpackage',
+    data,
+    method: 'post'
+  })
+}
+export const myCollcourse = (data) => { // 课程-收藏-课程章
+  return axios.request({
+    url: '/web/Personal/myCollcourse',
+    data,
+    method: 'post'
+  })
+}
+export const myCollvideo = (data) => { // 课程-收藏-课程节知识点
+  return axios.request({
+    url: '/web/Personal/myCollvideo',
+    data,
+    method: 'post'
+  })
+}
+
 export const continueLearn = (data) => { // 课程-继续学习
   return axios.request({
     url: '/web/Personal/continueLearn',

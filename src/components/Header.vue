@@ -24,7 +24,7 @@
             <a class="learen-btn fl">学习中心</a>
             <div class="login-r fr" v-if="this.token">
               <img src="../assets/images/global/email-icon.png" alt="email" class="email-icon">
-              <img :src="avatorImgPath" alt="头像" class="head-logo">
+              <img :src="avatorImgPath" alt="头像" class="head-logo" @click="goPersonalPage">
             </div>
             <div @click="ouLogin">退出</div>
           </div>
@@ -66,6 +66,11 @@ export default {
     },
     ouLogin () {
       this.handleLogOut()
+    },
+    // 个人中心
+    goPersonalPage (index) {
+      window.sessionStorage.setItem('type', 'course')
+      this.$router.push('/personal')
     }
   }
 }

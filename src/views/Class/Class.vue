@@ -89,18 +89,10 @@
   </div>
 </template>
 <script>
-// import courseOne from '@/components/courseOne.vue'
-// import courseTwo from '@/components/courseTwo.vue'
-import WebSocket from '@/libs/web-socket'
 import likeList from '@/components/common/likeList.vue'
 // // 加密 解密
 // import { Decrypt, Encrypt } from '@/libs/crypto'
 import { courseList, subjects } from '@/api/class'
-const initWS = (data) => {
-  return new WebSocket(ws => {
-    ws.send(data)
-  })
-}
 
 export default {
   data () {
@@ -165,7 +157,6 @@ export default {
   mounted () {
     this.getCourseList() // 课程列表 默认第一页，6条数据
     this.getSubjects() // 科目
-    this.Ws = initWS(this)
   },
   methods: {
     // 条件筛选

@@ -144,8 +144,7 @@ export default {
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-  @import "../../assets/scss/app";
-  @import "../../assets/scss/course-item";
+  @import "../../../assets/scss/app";
   .ucr-do-list{
     box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
     border-radius: 8px;

@@ -146,7 +146,6 @@ export default {
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-  @import "../../assets/scss/app";
-  @import "../../assets/scss/ivu-menu.css";
-  @import "../../assets/scss/course-item";
+  @import "../../../assets/scss/app";
+  @import "../../../assets/scss/ivu-menu.css";
 </style>

@@ -92,7 +92,7 @@
           </div>
         </div>
         <!-- 猜你喜欢 -->
-        <like-list :isW="isW"></like-list>
+        <like-list :isW="true"></like-list>
       </div>
     </div>
   </div>
@@ -106,7 +106,6 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
   data () {
     return {
-      isW: 278,
       isChoose: 'kcjj',
       isntroduction: {}, // 课程简介
       teacehr: [], // 教师信息
@@ -353,8 +352,8 @@ export default {
           margin-right: 20px;
         }
         &.consult-btn{
-          border: 1px solid #0267FF;
-          color: #0267FF;
+          border: 1px solid $blueColor;
+          color: $blueColor;
         }
       }
     }

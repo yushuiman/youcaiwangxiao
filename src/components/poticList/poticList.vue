@@ -305,8 +305,8 @@ export default {
           margin-right: 26px;
           box-sizing: border-box;
           &.blue-bg{
-            border: 1px solid #0267FF;
-            color: #0267FF;
+            border: 1px solid $blueColor;
+            color: $blueColor;
           }
           &.red-bg{
             border: 1px solid #ED7171;

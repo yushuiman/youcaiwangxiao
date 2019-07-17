@@ -171,7 +171,7 @@ export default {
     width: 79px;
     height: 19px;
     line-height: 19px;
-    background: #0267FF;
+    background: $blueColor;
     border-radius: 10px;
     font-size: 12px;
     color: #ffffff;

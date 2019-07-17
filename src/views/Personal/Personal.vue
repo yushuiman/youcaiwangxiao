@@ -29,8 +29,8 @@
           </ul>
         </div>
         <div class="userm-right">
-          <course-info v-if="clkTit == 'course'" :courseList="courseList"></course-info>
-          <questions-info v-if="clkTit == 'questions'" :courseList="courseList"></questions-info>
+          <course-info v-if="clkTit == 'course'"></course-info>
+          <questions-info v-if="clkTit == 'questions'"></questions-info>
           <zhibo-info v-if="clkTit == 'zhibo'"></zhibo-info>
           <answer-info v-if="clkTit == 'answer'"></answer-info>
           <order-info v-if="clkTit == 'order'"></order-info>
@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import { getProject } from '@/api/personal'
 import courseInfo from '../../components/personal/courseInfo'
 import questionsInfo from '../../components/personal/questionsInfo'
 import zhiboInfo from '../../components/personal/zhiboInfo'
@@ -78,8 +77,7 @@ export default {
           tit: '账号'
         }
       ],
-      clkTit: window.sessionStorage.getItem('type') || 'course',
-      courseList: [] // 课程列表
+      clkTit: window.sessionStorage.getItem('type') || 'course'
     }
   },
   computed: {
@@ -96,20 +94,11 @@ export default {
     accountInfo
   },
   mounted () {
-    this.getProjectList()
   },
   methods: {
     switchInfo ({ type }, index) {
       this.clkTit = type
       window.sessionStorage.setItem('type', type)
-    },
-    getProjectList (type) {
-      getProject({
-        user_id: this.user_id
-      }).then(data => {
-        const res = data.data
-        this.courseList = res.data
-      })
     }
   }
 }
@@ -117,15 +106,12 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .user-wrap{
-    font-size: 18px;
-  }
+  @import "../../assets/scss/personal.css";
   .user-top-wrap{
+    font-size: 18px;
     height: 206px;
     background: #112441 url('../../assets/images/user/user-top-bg.jpg') repeat center;
     background-size: 349px 167px;
-  }
-  .user-top-wrap{
     color: #ffffff;
     padding-top: 30px;
     padding-bottom: 24px;
@@ -203,6 +189,7 @@ export default {
     padding-top: 38px;
     .userm-left{
       width: 142px;
+      font-size: 18px;
     }
     .userm-right{
       width: 971px;
@@ -219,7 +206,7 @@ export default {
     color: $col666;
     &.curren{
       color: $colfff;
-      background: #0267FF;
+      background: $blueColor;
       border-radius: 8px 0px 0px 8px;
       position: relative;
       &:before{
@@ -231,7 +218,7 @@ export default {
         height: 0;
         border: 23px solid transparent;
         border-right-width: 15px;
-        border-left-color: #0267FF;
+        border-left-color: $blueColor;
         border-left-width: 15px;
       }
     }
