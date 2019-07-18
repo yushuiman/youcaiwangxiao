@@ -3,8 +3,6 @@
     <ul class="tab-list">
       <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxCourse == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
-    <!-- <course-item :myCourseList="myCourseList" v-if="selIdxCourse == 0"></course-item> -->
-    <!-- <course-item :myCourseList="watchRecordsList" v-if="watchRecordsList && watchRecordsList.length"></course-item> -->
     <div class="all-main">
       <!-- 课程 -->
       <div class="u-course-my" v-if="selIdxCourse == 0">
@@ -15,14 +13,14 @@
             <p class="ucid-des">{{val.description}}</p>
             <p class="ucid-learn" v-if="val.video">学习至{{val.video.video_name}}</p>
           </div>
-          <button class="btn-com uci-learn">去学习</button>
+          <button class="btn-com uci-learn" @click="courseLearnVideo(val)">去学习</button>
         </div>
       </div>
       <!-- 播放记录 -->
       <div v-if="selIdxCourse == 1">
         <div class="u-course-record" v-if="watchRecordsList && watchRecordsList.length">
-          <div class="uc-item-addtime" v-for="(item, index) in watchRecordsList" :key="index">
-            <p class="time">{{item.time}}</p>
+          <div class="ucr-item" v-for="(item, index) in watchRecordsList" :key="index">
+            <p class="time"><i class="dot"></i>{{item.time}}</p>
             <div class="uc-item" v-for="(val, key) in item.list" :key="key">
               <img :src="val.pc_img" alt="" class="uci-img">
               <div class="uci-detail">
@@ -31,7 +29,7 @@
                 <p class="ucid-learn" v-if="val.video">学习至{{val.video.course_id}}-{{val.video.section_id}}（{{val.video.video_id}}）{{val.video.video_name}}</p>
                 <p class="ucid-learn" v-else>学习至未学习</p>
               </div>
-              <button class="btn-com uci-learn">去学习</button>
+              <button class="btn-com uci-learn" @click="recordLearnVideo(val)">继续学习</button>
             </div>
           </div>
         </div>
@@ -64,14 +62,13 @@
             </Menu>
           </Col>
         </Row>
+        <coll-menu-item :myCollvideoList="myCollvideoList" @collectionLearnVideo="collectionLearnVideo" v-if="visible"></coll-menu-item>
       </div>
-      <coll-menu-item :myCollvideoList="myCollvideoList" v-if="visible"></coll-menu-item>
     </div>
   </div>
 </template>
 
 <script>
-// import courseItem from '../../components/personal/course/courseItem'
 import collMenuItem from '../../components/personal/course/collMenuItem'
 import { myCourse, watchRecords, myCollpackage, myCollcourse, myCollvideo } from '@/api/personal'
 import { mapState } from 'vuex'
@@ -92,7 +89,14 @@ export default {
       watchRecordsList: [], // 播放记录
       myCollpackageList: [], // 收藏课程包
       myCollcourseList: [], // 收藏课程
-      myCollvideoList: [] // 收藏课程章节
+      myCollvideoList: [], // 收藏课程章节
+      sessionPlayInfo: {
+        package_id: '',
+        course_id:'',
+        is_zhengke: '',
+        userstatus: 1, //购买1 未购买2
+        video_id: ''
+      }
     }
   },
   computed: {
@@ -167,8 +171,14 @@ export default {
         this.myCollcourseList = res.data
       })
     },
-    getKnow (val) {
+    getKnow (val, v) {
       this.getMyCollvideo(val)
+      this.sessionPlayInfo.is_zhengke = v.is_zhengke
+      this.sessionPlayInfo.package_id = val.package_id + ''
+      this.sessionPlayInfo.course_id = val.course_id
+      this.sessionPlayInfo.section_id = val.section_id
+      this.sessionPlayInfo.video_id = val.video_id
+      this.sessionPlayInfo.userstatus = val.is_purchase
       this.visible = true
     },
     // 获取收藏课程章节
@@ -181,6 +191,54 @@ export default {
         const res = data.data
         this.myCollvideoList = res.data.section
       })
+    },
+    // 课程去学习
+    courseLearnVideo (val) {
+      // 如果有看过的记录，继续学习
+      if(val.video){
+        let obj = {
+          package_id: val.package_id,
+          course_id: val.video.course_id,
+          section_id: val.video.section_id,
+          video_id: val.video.video_id,
+          is_zheng: val.video.is_zhengke, // 是否正课
+          userstatus: val.video.userstatus // 是否购买
+        }
+        this.$router.push({ path: '/class-video', query: obj })
+        let openMenu = (val.video.section_id) + '-' + (val.video.video_id)
+        window.sessionStorage.setItem('openMenu', openMenu)
+        window.sessionStorage.setItem('playVideoInfo', JSON.stringify(val))
+        return
+      }
+      // 否则去课程列表页面
+      this.$router.push({ path: '/class-detail', 
+        query: {
+          package_id: val.package_id + ''
+        } 
+      })
+    },
+    // 播放记录去学习
+    recordLearnVideo (val) {
+      let obj = {
+        package_id: val.package_id + '',
+        course_id: val.video.course_id,
+        section_id: val.video.section_id,
+        video_id: val.video.video_id,
+        is_zheng: val.video.is_zhengke, // 是否正课
+        userstatus: val.video.userstatus // 是否购买
+      }
+      this.$router.push({ path: '/class-video', query: obj })
+      let openMenu = (val.video.section_id) + '-' + (val.video.video_id)
+      window.sessionStorage.setItem('openMenu', openMenu)
+      window.sessionStorage.setItem('playVideoInfo', JSON.stringify(val))
+    },
+    // 收藏记录去学习
+    collectionLearnVideo (item, val) {
+      let playVideoObj = Object.assign({}, this.sessionPlayInfo, val)
+      this.$router.push({ path: '/class-video', query: this.sessionPlayInfo })
+      let openMenu = (item.section_id) + '-' + (val.video_id)
+      window.sessionStorage.setItem('openMenu', openMenu)
+      window.sessionStorage.setItem('playVideoInfo', JSON.stringify(playVideoObj))
     }
   }
 }
@@ -240,10 +298,32 @@ export default {
       font-size: 16px;
     }
   }
-  .uc-item-addtime{
+  // 观看记录
+  .ucr-item{
+    &:after{
+      position: absolute;
+      content: "";
+      left: 0;
+      top: 18px;
+      height: 100%;
+      width: 1px;
+      background: $blueColor;
+    }
+    .uc-item{
+      margin-left: 20px;
+    }
     .time{
       font-size: 16px;
-      padding: 10px 3px;
+      padding: 10px 0;
+      .dot{
+        width: 10px;
+        height: 10px;
+        border-radius: 10px;
+        background: $blueColor;
+        display: inline-block;
+        margin-left: -4px;
+        margin-right: 20px;
+      }
     }
   }
   // iview

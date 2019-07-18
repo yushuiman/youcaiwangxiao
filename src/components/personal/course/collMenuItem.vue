@@ -20,9 +20,8 @@
                   <div class="menu-jie-title">
                     <div>
                       {{val.video_name}}
-                      <span>（收藏<em style="color:#f00;">{{val.knobcoun}}</em>道题）</span>
                     </div>
-                    <button class="btn-zsd" @click="getKnow(item, val, key)">去学习</button>
+                    <button class="btn-zsd" @click="collectionLearnVideo(item, val)">去学习</button>
                   </div>
                 </MenuItem>
               </Submenu>
@@ -59,7 +58,9 @@ export default {
   mounted () {
   },
   methods: {
-
+    collectionLearnVideo (item, val) {
+      this.$emit('collectionLearnVideo', item, val)
+    }
   }
 }
 </script>

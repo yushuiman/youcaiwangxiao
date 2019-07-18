@@ -61,7 +61,7 @@
             <img :src="isntroduction.brief_img" alt="" width="100%">
           </div>
           <div class="clt-kcdg" v-show="isChoose == 'kjdg'">
-            <course-list :course_id="this.$route.query.course_id" :userstatus="isntroduction.userstatus"></course-list>
+            <course-list :package_id="this.$route.query.package_id" :userstatus="isntroduction.userstatus"></course-list>
           </div>
         </div>
       </div>
@@ -134,7 +134,7 @@ export default {
     // 课程简介
     getCourseIntroduction () {
       courseIntroduction({
-        package_id: this.$route.query.course_id
+        package_id: this.$route.query.package_id
       }).then(data => {
         const res = data.data
         this.isntroduction = res.data

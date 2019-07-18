@@ -21,7 +21,7 @@
             @click="playVideo(item, val, v, key, index)">
               <i class="elt-icon elt-icon-stop"></i>
               <span>{{v.video_name}}</span>
-              <em class="free-pay">免费试听</em>
+              <em v-if="userstatus == 2" class="free-pay">免费试听</em>
             </el-menu-item>
           </el-submenu>
         </el-submenu>
@@ -33,7 +33,7 @@
 import { courseCatalog, secvCatalog } from '@/api/class'
 export default {
   props: {
-    course_id: {
+    package_id: {
       type: String
     },
     userstatus: {
@@ -54,7 +54,7 @@ export default {
     // 课程大纲（目录）
     getCourseCatalog () {
       courseCatalog({
-        package_id: this.course_id
+        package_id: this.package_id
       }).then(data => {
         const res = data.data
         this.courseCatalogInfo = res.data
@@ -83,7 +83,7 @@ export default {
     playVideo (item, val, v, key, index) {
       this.$router.push({ path: '/class-video',
         query: {
-          package_id: this.course_id,
+          package_id: this.package_id,
           course_id: item.course_id,
           section_id: val.section_id,
           video_id: v.video_id,

@@ -1,4 +1,5 @@
 <template>
+<!-- 没有用到 -->
   <div class="u-course-main">
     <div class="uc-item" v-for="(val, key) in myCourseList" :key="key">
       <img :src="val.pc_img" alt="" class="uci-img">

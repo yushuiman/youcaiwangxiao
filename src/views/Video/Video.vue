@@ -1,7 +1,7 @@
 <template>
   <div class="video-wrap">
     <div class="video-header">
-      <router-link :to="{ path: '/class-detail', query:{course_id: this.$route.query.package_id}}">></router-link>
+      <router-link :to="{ path: '/class-detail', query:{package_id: this.$route.query.package_id}}">></router-link>
       <span>{{videoCredentials.Title}}</span>
       <div class="login-r fr">
         <img src="../../assets/images/global/email-icon.png" alt="email" class="email-icon">

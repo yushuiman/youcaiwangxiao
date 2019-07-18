@@ -1,6 +1,5 @@
 <template>
   <div class="u-course-wrap">
-    答疑页面
     <ul class="tab-list">
       <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': changeIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
