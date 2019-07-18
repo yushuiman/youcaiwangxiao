@@ -68,14 +68,14 @@
 import aliPlayer from '@/components/video/aliPlayer'
 import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
-import { videoPlayback, videoCredentials, courseCatalog, secvCatalog } from '@/api/class'
+import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, initWS } from '@/api/class'
 import { mapState } from 'vuex'
-import WebSocket from '@/libs/web-socket'
-const initWS = (data) => {
-  return new WebSocket(ws => {
-    ws.send(data)
-  })
-}
+// import WebSocket from '@/libs/web-socket'
+// const initWS = (data) => {
+//   return new WebSocket(ws => {
+//     ws.send(data)
+//   })
+// }
 export default {
   data () {
     return {
@@ -121,10 +121,8 @@ export default {
     })
   },
   mounted () {
-    // if (this.playCourseInfo.is_zheng !== 1) {
-    //   this.vinfo = ['课程<br />切换', '讲义']
-    // }
-    this.Ws = initWS(this)
+    initWS()
+    // this.ws = initWS()
     this.getVideoPlayback(this.$route.query.video_id)
     this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
     this.getCourseCatalog() // 课程大纲（目录）

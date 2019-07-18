@@ -1,5 +1,10 @@
 import axios from '@/libs/api.request'
-
+import WebSocket from '@/libs/web-socket'
+export const initWS = (data) => {
+  return new WebSocket(ws => {
+    ws.send(data)
+  })
+}
 export const courseList = (data) => { // 课程列表
   return axios.request({
     url: '/web/Course/courseList',

@@ -2,9 +2,6 @@
 .ivu-menu-vertical.ivu-menu-light:after {
     width: 0;
 }
-.error-section-wrap .ivu-menu-light {
-    background: none;
-}
 .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after{
     width: 0;
 }
@@ -49,12 +46,8 @@
 }
 .ivu-menu-vertical .ivu-menu-item,
 .ivu-menu-vertical .ivu-menu-submenu-title {
-    padding: 14px 20px;
+    padding: 10px 30px;
 }
-.menu-section-title{
-    padding: 8px 0;
-}
-
 .ivu-menu-submenu-title span>i,
 .ivu-menu-submenu-title>i {
     margin-right: 0;
@@ -107,13 +100,3 @@
     color: #f00;
 }
 
-.error-menu-er:hover {
-    background: #F3F6FF;
-}
-.error-btn button{
-    height: 28px!important;
-    margin-left: 17px;
-}
-.error-btn button.btn-com {
-    width: 69px!important;
-}

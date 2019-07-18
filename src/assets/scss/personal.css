@@ -55,3 +55,37 @@
 .all-main {
     position: relative;
 }
+/* modal header */
+.iview-modal .ivu-modal-header {
+    border: 0;
+}
+
+.iview-modal .ivu-modal-header-inner {
+    font-size: 26px;
+    height: auto;
+    line-height: 1
+}
+/* 课程收藏夹 */
+.myCollpackageMenu .ivu-menu-submenu-title {
+    padding: 0;
+}
+/* iview */
+.error-btn button {
+    font-size: 16px;
+    color: #666666;
+    height: 25px!important;
+    margin-left: 17px;
+}
+
+.error-btn button.btn-com {
+    width: 69px !important;
+}
+
+.error-menu-item .ivu-menu-submenu-title,
+.error-menu-item .ivu-menu-submenu-title {
+    padding: 14px 20px;
+}
+
+.error-menu-item .menu-section-title {
+    padding: 7px 0;
+}

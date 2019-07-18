@@ -16,7 +16,7 @@
                 <span>（<em>{{item.section_num}}</em>道错题）</span>
               </div>
             </template>
-            <MenuItem class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key" style="padding-left: 40px;padding-right: 40px;">
+            <MenuItem class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key" style="padding: 14px 40px;">
               <div class="menu-jie-title">
                 <div>
                   {{val.knob_name}}
@@ -73,8 +73,7 @@ export default {
         mock_id: '',
         plate_id: 4, // 错题
         num: '', // 默认随机15道
-        paper_type: 1, // 单选1 论述2
-        paper_mode: 2 // 练习模式1 考试2
+        paper_type: 1 // 单选1 论述2
       },
       visible: false, // 知识点显示
       knowList: [] // 知识点
@@ -136,7 +135,6 @@ export default {
       }
       // 去做题
       if (type === '2') {
-        this.getPoticData.paper_mode = v.paper_type
         window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
         this.$router.push({ path: '/dopotic-error', query: this.getPoticData })
       }

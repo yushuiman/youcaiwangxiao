@@ -1,11 +1,31 @@
-.dopic-modal .ivu-modal-body {
-    padding: 0;
-}
+
 .dopic-modal .ivu-modal-header,
 .dopic-modal .ivu-modal-close {
     display: none;
 }
 .dopic-modal .ivu-modal-content {
-    border-radius: 0px;
+    /* 暂停保存图片radius */
+    border-radius: 0px; 
     background: none;
+}
+.ivu-modal-header {
+    border: 0;
+    padding: 20px 26px;
+}
+
+.ivu-modal-header-inner {
+    font-size: 26px;
+    height: auto;
+    line-height: 1
+}
+.ivu-modal-body{
+    padding: 0;
+}
+.iview-modal .ivu-modal-header-inner {
+    font-size: 26px;
+    height: auto;
+    line-height: 1
+}
+.ivu-modal-close{
+    top: 18px;
 }

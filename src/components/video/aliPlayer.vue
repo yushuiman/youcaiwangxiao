@@ -121,7 +121,7 @@ export default {
     }
     EventBus.$on('stopPlay', target => {
       this.pause()
-      // this.getCurrentTime()
+      window.sessionStorage.setItem('playtime', parseInt(this.getCurrentTime()))
     })
   },
   methods: {
@@ -236,7 +236,6 @@ export default {
        * 获取当前时间 单位秒
        */
     getCurrentTime: function () {
-      console.log('获取时间')
       return this.instance.getCurrentTime()
     },
     /**
