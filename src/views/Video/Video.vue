@@ -25,7 +25,7 @@
             <i class="vio-icon vio-icon-01"></i>
             <p class="txt">课程<br />切换</p>
           </li>
-          <li class="vinfo-item" v-if="playCourseInfo.is_zheng == 1" @click="showModel('答疑')">
+          <li class="vinfo-item" v-if="playCourseInfo.is_zhengke == 1" @click="showModel('答疑')">
             <i class="vio-icon vio-icon-02"></i>
             <p class="txt">答疑</p>
           </li>
@@ -51,7 +51,7 @@
       </div>
       <div id="line"></div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
-        <course-list v-if="flagKc" :courseSections="courseSections" :is_zheng="playCourseInfo.is_zheng" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback()"></course-list>
+        <course-list v-if="flagKc" :courseSections="courseSections" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback()"></course-list>
         <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" @closeModel="closeModel"></answer>
         <div class="jiangyi" v-if="flagJy">
           <div class="close-box" @click="closeModel()">
@@ -101,7 +101,7 @@ export default {
         section_id: this.$route.query.section_id,
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
-        is_zheng: this.$route.query.is_zheng,
+        is_zhengke: this.$route.query.is_zhengke,
         userstatus: this.$route.query.userstatus
       },
       packageList: [],

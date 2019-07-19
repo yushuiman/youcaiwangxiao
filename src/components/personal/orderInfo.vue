@@ -1,30 +1,88 @@
 <template>
-  <div class="u-course-wrap">
+  <div class="u-order-wrap">
     <ul class="tab-list">
-      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': changeIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxOrder == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
-    <div class="all-main">
-      <div v-if="changeIdx == 0">做题记录</div>
-      <div v-if="changeIdx == 1">错题集</div>
-      <div v-if="changeIdx == 2">收藏夹</div>
-      <div v-if="changeIdx == 3">习题笔记</div>
+    <div class="order-main">
+      <ul class="order-list" v-if="orderList && orderList.length">
+        <li class="order-item" v-for="(item, index) in orderList" :key="index">
+          <div class="o-pay-info-top">
+            <div class="opi-num">
+              <span>订单编号：{{item.order_num}}</span>
+              <span>下单时间：{{item.adds_time}}</span>
+            </div>
+            <em class="opi-status" v-if="item.pay_status == 1">交易成功</em>
+            <em class="opi-status waiting" v-if="item.pay_status == 2">待付款</em>
+            <em class="opi-status" v-if="item.pay_status == 3">订单取消</em>
+          </div>
+          <div class="opi-course-info-bottom">
+            <img :src="item.pc_img" alt="" class="opi-img">
+            <div class="opi-detail">
+              <h2 class="opi-name">{{item.name}}</h2>
+              <p class="opi-price">应付金额：¥{{item.pay_price}}</p>
+            </div>
+            <div class="opi-btn" v-if="item.pay_status == 1">
+              <button @click="seeDetails(item)">查看详情</button>
+            </div>
+            <div class="opi-btn" v-if="item.pay_status == 2">
+              <button @click="seeDetails(item)">查看详情</button>
+              <button class="pay-btn" @click="goPay(item)">去支付</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <div v-else>暂无数据</div>
+      <Modal v-model="visible"
+        :width="795"
+        footer-hide
+        title="订单详情">
+        <div class="opi-course-info-bottom order-detail-course">
+          <img :src="orderDetail.pc_img" alt="" class="opi-img">
+          <div class="opi-detail">
+            <h2 class="opi-name">{{orderDetail.name}}</h2>
+            <p class="opi-teacher"><i class="teacher-icon"></i>{{orderDetail.teacher_name}}</p>
+            <p class="opi-effective">购买后{{orderDetail.study_days}}天有效</p>
+          </div>
+        </div>
+        <div class="order-detail-address">
+          <h3>订单信息</h3>
+          <p>地址：{{orderAddress.address}}</p>
+          <p>订单编号：{{orderDetail.order_num}}</p>
+          <p>下单时间：{{orderDetail.add_time}}</p>
+        </div>
+        <div class="order-detail-price">
+          <p>课程价格<span>¥1880</span></p>
+          <p>优惠金额<span>¥18800</span></p>
+          <p class="actual-payment">实付款<span>¥188000</span></p>
+        </div>
+        <div class="order-detail-btn">
+          <button class="ccs-btn">联系客服</button>
+          <button class="cancle-pay" v-if="pay_status == 2">取消订单</button>
+          <button class="go-pay" v-if="pay_status == 2">去支付</button>
+          <button v-if="pay_status == 1">申请发票</button>
+          <button class="succ-pay" v-if="pay_status == 1">交易成功</button>
+        </div>
+      </Modal>
     </div>
   </div>
 </template>
 
 <script>
-import { errorCorrection } from '@/api/questions'
+import { myOrder, alreadyOrderlist, cancelOrder } from '@/api/personal'
 import { mapState } from 'vuex'
 export default {
-  props: {
-    getQuestion: {
-      type: Object
-    }
-  },
   data () {
     return {
-      txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
-      changeIdx: 0
+      visible: false,
+      txtArr: ['全部订单', '已支付', '未支付'],
+      selIdxOrder: window.sessionStorage.getItem('selIdxOrder') || 0,
+      pay_status: 0, // 订单状态
+      orderList: [], // 订单
+      orderAllList: [], // 全部订单
+      orderAlearyPayList: [], // 已付款
+      orderNoPayList: [], // 未付款
+      orderDetail: {}, // 订单详情课程
+      orderAddress: {} // 订单详情地址
     }
   },
   computed: {
@@ -33,35 +91,68 @@ export default {
     })
   },
   mounted () {
+    this.getMyOrder()
+    // this.seeDetails()
   },
   methods: {
     tabClk (v, index) {
-      this.changeIdx = index
+      this.selIdxOrder = index
+      window.sessionStorage.setItem('selIdxOrder', index)
+      this.initRes()
     },
-    subErrorCorrection () {
-      if (this.error_content.length < 5 && this.error_content.length > 0) {
-        this.tsTxt = '请至少输入5个字'
-        return
-      }
-      if (this.error_content === '') {
-        this.tsTxt = '请输入纠错内容'
-        return
-      }
-      if (/^\s+$/gi.test(this.error_content) || this.error_content.trim() === '') {
-        this.tsTxt = '不能全为空格'
-        return
-      }
-      if (this.error_content > 200) {
-        this.tsTxt = '最多输入200字'
-        return
-      }
-      errorCorrection({
-        question_id: this.getQuestion.question_id,
-        user_id: this.user_id,
-        error_content: this.error_content
+    getMyOrder () {
+      myOrder({
+        user_id: this.user_id
       }).then(data => {
-        this.$Message.success('纠错问题提交成功')
-        this.$emit('modalShow', false)
+        const res = data.data
+        this.orderAllList = res.data
+        this.orderAlearyPayList = res.data.filter((v, i, a) => {
+          return v.pay_status === 1
+        })
+        this.orderNoPayList = res.data.filter((v, i, a) => {
+          return v.pay_status === 2
+        })
+        this.initRes()
+      })
+    },
+    initRes () {
+      if (parseInt(this.selIdxOrder) === 0) {
+        this.orderList = this.orderAllList
+      }
+      if (parseInt(this.selIdxOrder) === 1) {
+        this.orderList = this.orderAlearyPayList
+      }
+      if (parseInt(this.selIdxOrder) === 2) {
+        this.orderList = this.orderNoPayList
+      }
+    },
+    // 查看详情
+    seeDetails (item) {
+      this.visible = true
+      this.pay_status = item.pay_status
+      alreadyOrderlist({
+        user_id: this.user_id,
+        order_num: item.order_num
+      }).then(data => {
+        const res = data.data
+        let { course, address } = res.data
+        this.orderDetail = course
+        if (address) {
+          this.orderAddress = address
+        }
+      })
+    },
+    // 去支付
+    goPay (item) {
+      console.log('支付。。。')
+    },
+    // 取消订单
+    payCancelOrder (item) {
+      cancelOrder({
+        user_id: this.user_id,
+        order_num: item.order_num
+      }).then(data => {
+        console.log(data.data)
       })
     }
   }
@@ -70,31 +161,136 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  @import "../../assets/scss/iview.css";
-  .texta {
-    resize: none;
-    width: 100%;
-    height: 121px;
-    color: rgba(199, 199, 199, 1);
-    padding: 7px 12px;
-    border: 1px solid rgba(102, 102, 102, 1);
-    border-radius: 8px;
-    color: $col333;
-    box-sizing: border-box;
+  @import "../../assets/scss/modal";
+  .order-list{
+    .order-item{
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
+    }
   }
-  .ts-box{
-    height: 20px;
+  .o-pay-info-top{
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 20px;
+    background: #F5F5F5;
+    color: $col999;
+    font-size: 16px;
+    border-radius: 8px 8px 0px 0px;
+    .opi-status{
+      color: $col333;
+      &.waiting{
+        color: #F99111;
+      }
+    }
   }
-  .btn-box{
-    text-align: center;
+  .opi-course-info-bottom{
+    display: flex;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 0px 0px 8px 8px;
+    .opi-img{
+      width: 100px;
+      height: 60px;
+      border-radius: 6px;
+    }
+    .opi-btn{
+      margin-top: 20px;
+      button{
+        width: 104px;
+        height: 30px;
+        border-radius: 33px;
+        color: #F99111;
+        font-size: 18px;
+        border: 1px solid #F99111;
+        box-sizing: border-box;
+        margin-left: 20px;
+        &.pay-btn{
+          width: 80px;
+          color: #ffffff;
+          background: #F99111;
+        }
+      }
+    }
+  }
+  .opi-detail{
+    flex: 1;
+    padding: 0 20px;
+    .opi-name{
+      font-size: 18px;
+    }
+    .opi-price, .opi-teacher, .opi-effective{
+      font-size: 16px;
+      line-height: 22px;
+      margin-top: 10px;
+    }
+    .opi-teacher{
+      color: $col999;
+      margin-top: 6px;
+      .teacher-icon{
+        margin-right: 8px;
+        @include bg_img(16, 13, '../../assets/images/personal/teacher-icon.png');
+      }
+    }
+    .opi-effective{
+      margin-top: 3px;
+      color: #F99111;
+    }
+  }
+  .order-detail-course{
+    padding: 20px 30px;
+    border-top: 1px solid #E6E6E6;
+    border-bottom: 1px solid #E6E6E6;
+    .opi-img{
+      width: 117px;
+      height: 70px;
+    }
+  }
+  .order-detail-address{
+    border-bottom: 1px solid #E6E6E6;
+    padding: 16px 30px;
+    line-height: 24px;
+    h3{
+      font-size: 18px;
+    }
+    p{
+      color: $col999;
+      font-size: 16px;
+    }
+  }
+  .order-detail-price{
+    text-align: right;
+    padding: 11px 30px;
+    p{
+      line-height: 22px;
+      margin: 5px 0;
+      font-size: 16px;
+      span{
+        width: 130px;
+        display: inline-block;
+      }
+      &.actual-payment{
+        font-size: 18px;
+      }
+    }
+  }
+  .order-detail-btn{
+    padding: 100px 30px 30px;
+    text-align: right;
     button{
-      width: 122px;
-      height: 36px;
-      border-radius: 18px;
-      margin: 0 21px;
-      &:last-child{
-        background: #0066FF;
-        color: $colfff;
+      margin-left: 20px;
+      font-size: 18px;
+      height: 30px;
+      &.go-pay{
+        width: 80px;
+        color: #ffffff;
+        background: #F99111;
+        border-radius: 33px;
+      }
+      &.succ-pay{
+        color: $blueColor;
       }
     }
   }

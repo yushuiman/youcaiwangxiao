@@ -247,7 +247,7 @@ export default {
         this.$router.push({ path: '/personal' })
         // window.sessionStorage.setItem('type', 'questions')
         // window.sessionStorage.setItem('course_id', this.$route.query.course_id)
-        // window.sessionStorage.setItem('changeIdx', this.diffRes)
+        // window.sessionStorage.setItem('selIdxQuestion', this.diffRes)
         return
       }
       this.$router.push({ path: '/result-report',

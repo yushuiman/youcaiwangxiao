@@ -16,7 +16,7 @@
                 <span>（收藏<em>{{item.sectioncoun}}</em>道题）</span>
               </div>
             </template>
-            <MenuItem class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key" style="padding: 14px 40px;">
+            <div class="error-menu-er" v-for="(val, key) in item.knob" :key="key" style="padding: 14px 40px;">
               <div class="menu-jie-title">
                 <div>
                   {{val.knob_name}}
@@ -24,7 +24,7 @@
                 </div>
                 <button class="btn-zsd" @click="getKnow(item, val, key)">选择知识点</button>
               </div>
-            </MenuItem>
+            </div>
           </Submenu>
         </Menu>
       </Col>
@@ -141,4 +141,5 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../../assets/scss/app";
+  @import "../../../assets/scss/ivu-menu.css";
 </style>

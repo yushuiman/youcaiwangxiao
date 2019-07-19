@@ -32,9 +32,6 @@ export default {
     border-radius: 8px;
     margin-bottom: 20px;
     padding-right: 20px;
-    &:hover{
-      background: #F3F6FF;
-    }
     .uci-img{
       width: 198px;
       height: 109px;

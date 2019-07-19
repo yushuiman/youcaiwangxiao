@@ -16,7 +16,7 @@
                 <span>（<em>{{item.section_num}}</em>道错题）</span>
               </div>
             </template>
-            <MenuItem class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key" style="padding: 14px 40px;">
+            <div class="error-menu-er" v-for="(val, key) in item.knob" :key="key" style="padding: 14px 40px;">
               <div class="menu-jie-title">
                 <div>
                   {{val.knob_name}}
@@ -24,7 +24,7 @@
                 </div>
                 <button class="btn-zsd" @click="getKnow(item, val, key)">选择知识点</button>
               </div>
-            </MenuItem>
+            </div>
           </Submenu>
         </Menu>
       </Col>

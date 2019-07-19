@@ -137,10 +137,44 @@ export const myCollvideo = (data) => { // 课程-收藏-课程节知识点
     method: 'post'
   })
 }
-
 export const continueLearn = (data) => { // 课程-继续学习
   return axios.request({
     url: '/web/Personal/continueLearn',
+    data,
+    method: 'post'
+  })
+}
+export const courseAnswer = (data) => { // 课程答疑
+  return axios.request({
+    url: '/web/Personal/courseAnswer',
+    data,
+    method: 'post'
+  })
+}
+export const questionAnswer = (data) => { // 题库答疑
+  return axios.request({
+    url: '/web/Personal/questionAnswer',
+    data,
+    method: 'post'
+  })
+}
+export const myOrder = (data) => { // 订单
+  return axios.request({
+    url: '/web/Personal/myOrder',
+    data,
+    method: 'post'
+  })
+}
+export const cancelOrder = (data) => { // 订单取消
+  return axios.request({
+    url: '/web/Personal/cancelOrder',
+    data,
+    method: 'post'
+  })
+}
+export const alreadyOrderlist = (data) => { // 订单详情
+  return axios.request({
+    url: '/web/Personal/alreadyOrderlist',
     data,
     method: 'post'
   })

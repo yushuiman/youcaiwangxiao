@@ -51,7 +51,7 @@
               <h3>{{item.username}}</h3>
               <p>{{item.create_time}}</p>
             </div>
-            <span class="othq-huifu" v-if="item.reply_status == 1">{{item.reply_name}}</span>
+            <span class="othq-huifu" v-if="item.reply_status == 1">老师已回复</span>
           </div>
           <p class="othq-txt" :class="!item.openFlag? 'sl' : ''">{{item.quiz}}</p>
           <div class="quiz-image-list course_img">

@@ -160,7 +160,7 @@ export default {
     &:last-child{
       border-radius: 0px 0px 8px 8px;
     }
-    &:hover{
+    &:nth-child(even){
       background: #F3F6FF;
     }
     h2{

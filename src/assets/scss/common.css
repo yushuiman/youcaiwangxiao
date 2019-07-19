@@ -93,6 +93,7 @@ input[type='submit'] {
   -webkit-appearance: button;
   text-transform: none;
   outline: none;
+  background: none;
 }
 
 input::-webkit-input-placeholder,

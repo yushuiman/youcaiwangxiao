@@ -1,58 +1,46 @@
 <template>
-  <div class="u-user-wrap">
+  <div class="u-zhibo-wrap">
     <ul class="tab-list">
-      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': userChangeIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxAccount == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
-    <div class="all-main">
-      <div v-if="userChangeIdx == 0">
-        个人信息修改内容
-      </div>
-      <div v-if="userChangeIdx == 1">
-        密码修改内容
-      </div>
+    <div class="zhibo-main">
+      <div v-if="selIdxAccount == 0">消费项目</div>
+      <div v-if="selIdxAccount == 1">课程卡管理</div>
     </div>
   </div>
 </template>
 
 <script>
-import { getProject } from '@/api/personal'
+// import { errorCorrection } from '@/api/questions'
 import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      txtArr: ['个人信息修改', '密码修改'],
-      userChangeIdx: window.sessionStorage.getItem('userChangeIdx') || 0,
-      courseList: [] // 课程列表
+      txtArr: ['消费记录', '课程卡管理'],
+      selIdxAccount: window.sessionStorage.getItem('selIdxAccount') || 0
     }
-  },
-  components: {
-   
   },
   computed: {
     ...mapState({
-      token: state => state.user.token,
       user_id: state => state.user.user_id
     })
   },
   mounted () {
-    this.getProjectList()
+
   },
   methods: {
-    // tab
     tabClk (v, index) {
-      if (!this.user_id) {
-
-      }
-      window.sessionStorage.setItem('userChangeIdx', index)
-      this.userChangeIdx = index
+      this.selIdxAccount = index
+      window.sessionStorage.setItem('selIdxAccount', index)
+      this.initRes()
     },
-    getProjectList (type) {
-      getProject({
-        user_id: this.user_id
-      }).then(data => {
-        const res = data.data
-        this.courseList = res.data
-      })
+    initRes () {
+      if (parseInt(this.selIdxAccount) === 0) {
+        // this.getCourseAnswer()
+      }
+      if (parseInt(this.selIdxAccount) === 1) {
+        // this.getQuestionAnswer()
+      }
     }
   }
 }
@@ -60,4 +48,5 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
+  @import "../../assets/scss/personal";
 </style>

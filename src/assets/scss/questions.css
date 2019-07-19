@@ -34,6 +34,9 @@
     padding: 10px 30px;
     font-size: 18px;
 }
+.know-list li:hover {
+    background: #F3F6FF;
+}
 .title-com{
     font-size: 18px;
     color: #333333;

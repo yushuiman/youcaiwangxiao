@@ -51,7 +51,7 @@
       <!-- 科目标题 -->
       <Row class="qt-subject">
         <Col span="6" v-for="(item, index) in projectArr" :key="index">
-          <div class="qt-course" :class="{'curren': selIdx == index}" @click="getQuestionIndex(item.id, index)">{{item.name}}</div>
+          <div class="qt-course" :class="{'curren': questionIndexSel == index}" @click="getQuestionIndex(item.id, index)">{{item.name}}</div>
         </Col>
       </Row>
       <!-- 答题详情(做题数 正确率 平均分) -->
@@ -181,7 +181,7 @@ export default {
   data () {
     return {
       projectArr: [], // 科目
-      selIdx: window.sessionStorage.getItem('selIdx') || 0,
+      questionIndexSel: window.sessionStorage.getItem('questionIndexSel') || 0,
       course_id: window.sessionStorage.getItem('course_id') || '',
       plateList: [
         {
@@ -256,7 +256,7 @@ export default {
         // if (this.course_id === '') {
         //   window.sessionStorage.setItem('course_id', res.data[0].id)
         // }
-        this.getQuestionIndex(this.course_id || res.data[0].id, this.selIdx)
+        this.getQuestionIndex(this.course_id || res.data[0].id, this.questionIndexSel)
         this.experience = false
         // 0元体验
         if (res.data && res.data.length === 0) {
@@ -268,8 +268,8 @@ export default {
     getQuestionIndex (id, index) {
       this.course_id = id
       window.sessionStorage.setItem('course_id', id)
-      window.sessionStorage.setItem('selIdx', index)
-      this.selIdx = index
+      window.sessionStorage.setItem('questionIndexSel', index)
+      this.questionIndexSel = index
       questionIndex({
         user_id: this.user_id,
         course_id: id
@@ -319,7 +319,7 @@ export default {
     goPersonalPage (index) {
       window.sessionStorage.setItem('type', 'questions')
       window.sessionStorage.setItem('course_id', this.course_id)
-      window.sessionStorage.setItem('changeIdx', index)
+      window.sessionStorage.setItem('selIdxQuestion', index)
       this.$router.push('/personal')
     }
   }

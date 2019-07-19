@@ -16,14 +16,14 @@
                     {{item.section_name}}
                   </div>
                 </template>
-                <MenuItem :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.video" :key="key" style="padding-left: 40px;padding-right: 40px;">
+                <div class="coll-menu-er" v-for="(val, key) in item.video" :key="key">
                   <div class="menu-jie-title">
                     <div>
                       {{val.video_name}}
                     </div>
-                    <button class="btn-zsd" @click="collectionLearnVideo(item, val)">去学习</button>
+                    <button class="btn-com" @click="collectionLearnVideo(item, val)">去学习</button>
                   </div>
-                </MenuItem>
+                </div>
               </Submenu>
             </Menu>
           </Col>
@@ -68,4 +68,17 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../../assets/scss/app";
   @import "../../../assets/scss/modal.css";
+  .coll-menu-er{
+    padding: 5px 20px 5px 63px;
+    .menu-jie-title{
+      align-items: center;
+    }
+    .btn-com{
+      width: 69px;
+      height: 25px;
+    }
+  }
+  .coll-menu-er:hover {
+    background: #F3F6FF;
+  }
 </style>

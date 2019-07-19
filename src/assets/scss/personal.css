@@ -76,6 +76,7 @@
     color: #666666;
     height: 25px!important;
     margin-left: 17px;
+    background: none;
 }
 
 .error-btn button.btn-com {

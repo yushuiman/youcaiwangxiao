@@ -24,6 +24,9 @@
     padding: 10px 30px;
     font-size: 18px;
 }
+.know-list li:hover{
+    background: #F3F6FF;
+}
 
 .title-com {
     font-size: 18px;
@@ -36,7 +39,7 @@
 }
 
 .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
-    background: #F3F6FF;
+    /* background: #F3F6FF; */
 }
 .error-menu-item {
     border-radius: 8px;
@@ -100,4 +103,9 @@
 .menu-section-title span em, .menu-jie-title div span em {
     color: #f00;
 }
-
+.ivu-menu-light{
+    background: none;
+}
+.error-menu-er:nth-child(even) {
+    background: #F3F6FF;
+}

@@ -1,30 +1,135 @@
 <template>
   <div class="u-course-wrap">
     <ul class="tab-list">
-      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': changeIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxAnswer == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
     <div class="all-main">
-      <div v-if="changeIdx == 0">做题记录</div>
-      <div v-if="changeIdx == 1">错题集</div>
-      <div v-if="changeIdx == 2">收藏夹</div>
-      <div v-if="changeIdx == 3">习题笔记</div>
+      <div v-if="selIdxAnswer == 0">
+        <ul class="othq-list" v-if="courseAnswerList && courseAnswerList.length">
+          <li class="othq-item" v-for="(item, index) in courseAnswerList" :key="index">
+            <div class="othq-item-t">
+              <img :src="item.data.head" alt="" class="head-logo">
+              <div class="othq-info">
+                <h3>{{item.data.username}}</h3>
+                <p>{{item.data.create_times}}</p>
+              </div>
+              <span class="othq-huifu" v-if="item.reply">老师已回复</span>
+            </div>
+            <p class="othq-txt" :class="!item.openFlag? 'sl' : ''">{{item.data.quiz}}</p>
+            <div class="quiz-image-list course_img">
+              <div class="demo-upload-list" v-for="(val, index) in item.data.quiz_image" :key="index">
+                <template>
+                  <img :src="val">
+                  <div class="demo-upload-list-cover">
+                    <Icon type="ios-eye-outline" @click.native="handleView(val)"></Icon>
+                  </div>
+                </template>
+              </div>
+            </div>
+            <div class="open-txt" @click="openShow(item, index)">
+              {{item.openFlag ? '收起':'展开'}}
+            </div>
+            <ul class="othq-list-teacher" v-if="item.reply && item.openFlag">
+              <li class="othq-item">
+                <div class="othq-item-t">
+                  <img :src="item.reply.head_img" alt="" class="head-logo">
+                  <div class="othq-info">
+                    <h3>{{item.reply.reply_user_name}}<span class="teacher-light">老师</span></h3>
+                    <p>{{item.reply.repls_time}}</p>
+                  </div>
+                </div>
+                <p class="othq-txt">{{item.reply.reply_quiz}}</p>
+                <div class="quiz-image-list course_img">
+                  <div class="demo-upload-list" v-for="(v, index) in item.reply.reply_image" :key="index">
+                    <template>
+                      <img :src="v" alt="">
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleView(v)"></Icon>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <div v-else>暂无数据</div>
+      </div>
+      <div v-if="selIdxAnswer == 1">
+        <ul class="othq-list" v-if="questionAnswerList && questionAnswerList.length">
+          <li class="othq-item" v-for="(item, index) in questionAnswerList" :key="index">
+            <div class="othq-item-t">
+              <img :src="item.head" alt="" class="head-logo">
+              <div class="othq-info">
+                <h3>{{item.username}}</h3>
+                <p>{{item.create_times}}</p>
+              </div>
+              <span class="othq-huifu" v-if="item.reply_status == 1">老师已回复</span>
+            </div>
+            <p class="othq-txt" :class="!item.openFlag? 'sl' : ''">{{item.quiz}}</p>
+            <div class="quiz-image-list course_img">
+              <div class="demo-upload-list" v-for="(val, index) in item.quiz_image" :key="index">
+                <template>
+                  <img :src="val">
+                  <div class="demo-upload-list-cover">
+                    <Icon type="ios-eye-outline" @click.native="handleView(val)"></Icon>
+                  </div>
+                </template>
+              </div>
+            </div>
+            <div class="open-txt" @click="openShow2(item, index)">
+              {{item.openFlag ? '收起':'展开'}}
+            </div>
+            <ul class="othq-list-teacher" v-if="item.reply && item.openFlag">
+              <li class="othq-item">
+                <div class="othq-item-t">
+                  <img :src="item.reply.head_img" alt="" class="head-logo">
+                  <div class="othq-info">
+                    <h3>{{item.reply.reply_user_name}}<span class="teacher-light">老师</span></h3>
+                    <p>{{item.reply.repls_time}}</p>
+                  </div>
+                </div>
+                <p class="othq-txt">{{item.reply.reply_quiz}}</p>
+                <div class="quiz-image-list course_img">
+                  <div class="demo-upload-list" v-for="(v, index) in item.reply.reply_image" :key="index">
+                    <template>
+                      <img :src="v" alt="">
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleView(v)"></Icon>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <div v-else>暂无数据</div> 
+      </div>
     </div>
+    <Modal title="图片预览" v-model="visible" :width="795">
+      <img :src="imgUrl" v-if="visible" style="width: 100%;">
+    </Modal>
   </div>
 </template>
 
 <script>
-import { errorCorrection } from '@/api/questions'
+import { courseAnswer, questionAnswer } from '@/api/personal'
 import { mapState } from 'vuex'
 export default {
-  props: {
-    getQuestion: {
-      type: Object
-    }
-  },
   data () {
     return {
-      txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
-      changeIdx: 0
+      visible: false,
+      txtArr: ['课程答疑', '题库答疑'],
+      selIdxAnswer: window.sessionStorage.getItem('selIdxAnswer') || 0,
+      limit: 10,
+      page: 1,
+      courseAnswerList: [],
+      // courseMyAnswer: {},
+      // courseReply: {},
+      questionAnswerList: [],
+      // questionMyAnswer: {},
+      // questionReply: {}
     }
   },
   computed: {
@@ -33,36 +138,59 @@ export default {
     })
   },
   mounted () {
+    this.initRes()
   },
   methods: {
     tabClk (v, index) {
-      this.changeIdx = index
+      this.selIdxAnswer = index
+      window.sessionStorage.setItem('selIdxAnswer', index)
+      this.initRes()
     },
-    subErrorCorrection () {
-      if (this.error_content.length < 5 && this.error_content.length > 0) {
-        this.tsTxt = '请至少输入5个字'
-        return
+    initRes () {
+      if (parseInt(this.selIdxAnswer) === 0) {
+        this.getCourseAnswer()
       }
-      if (this.error_content === '') {
-        this.tsTxt = '请输入纠错内容'
-        return
+      if (parseInt(this.selIdxAnswer) === 1) {
+        this.getQuestionAnswer()
       }
-      if (/^\s+$/gi.test(this.error_content) || this.error_content.trim() === '') {
-        this.tsTxt = '不能全为空格'
-        return
-      }
-      if (this.error_content > 200) {
-        this.tsTxt = '最多输入200字'
-        return
-      }
-      errorCorrection({
-        question_id: this.getQuestion.question_id,
+    },
+    // 课程答疑
+    getCourseAnswer () {
+      courseAnswer({
         user_id: this.user_id,
-        error_content: this.error_content
+        limit: this.limit,
+        page: this.page
       }).then(data => {
-        this.$Message.success('纠错问题提交成功')
-        this.$emit('modalShow', false)
+        const res = data.data
+        this.courseAnswerList = res.data
+        this.courseAnswerList.map((val, index) => {
+          val.openFlag = false
+        })
       })
+    },
+    // 题库答疑
+    getQuestionAnswer () {
+      questionAnswer({
+        user_id: this.user_id,
+        limit: this.limit,
+        page: this.page
+      }).then(data => {
+        const res = data.data
+        this.questionAnswerList = res.data
+        this.questionAnswerList.map((val, index) => {
+          val.openFlag = false
+        })
+      })
+    },
+    // 展开收起
+    openShow (item, index) {
+      this.courseAnswerList[index].openFlag = !item.openFlag
+      this.$forceUpdate()
+    },
+    // 展开收起
+    openShow2 (item, index) {
+      this.questionAnswerList[index].openFlag = !item.openFlag
+      this.$forceUpdate()
     }
   }
 }
@@ -71,31 +199,86 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   @import "../../assets/scss/iview.css";
-  .texta {
-    resize: none;
-    width: 100%;
-    height: 121px;
-    color: rgba(199, 199, 199, 1);
-    padding: 7px 12px;
-    border: 1px solid rgba(102, 102, 102, 1);
+  .othq-list{
+    min-height: 320px;
+    max-height: 420px;
+    overflow-y: scroll;
+    margin-top: 20px;
+  }
+  .othq-list-teacher{
+    border-top: 1px solid #E6E6E6;
+    margin-top: 15px;
+  }
+  .othq-item{
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    background: $colfff;
+    box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.1);
     border-radius: 8px;
-    color: $col333;
-    box-sizing: border-box;
-  }
-  .ts-box{
-    height: 20px;
-  }
-  .btn-box{
-    text-align: center;
-    button{
-      width: 122px;
-      height: 36px;
-      border-radius: 18px;
-      margin: 0 21px;
-      &:last-child{
-        background: #0066FF;
-        color: $colfff;
+    .othq-txt{
+      line-height: 20px;
+      color: #4A4A4A;
+      &.sl{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
       }
     }
+    .open-txt{
+      font-size: 13px;
+      color: $blueColor;
+      text-align: right;
+    }
+    .othq-list-teacher &{
+      padding: 20px 0;
+      margin-bottom: 0;
+      box-shadow: 0px 0px 0px rgba(0,0,0,0);
+      background: none;
+    }
+  }
+  .othq-item-t{
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+    line-height: 26px;
+    .head-logo{
+      @include wh(40, 40);
+      border-radius: 100%;
+      margin-right: 10px;
+    }
+    p{
+      font-size: 12px;
+      color: $col999;
+    }
+    .othq-huifu{
+      flex: 1;
+      text-align: right;
+      color: #F99111;
+    }
+  }
+  .teacher-light{
+    width: 46px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    color:#F99111;
+    background:rgba(249,145,17,.15);
+    border-radius: 18px;
+    display: inline-block;
+    text-align: center;
+    margin-left: 10px;
+  }
+  .quiz-image-list, .teacher-answer{
+    img{
+      width: 80px;
+      height: 80px;
+      margin-right: 10px;
+      display: inline-block;
+    }
+  }
+  .teacher-answer{
+    padding: 10px 20px;
+    background: #999999;
   }
 </style>

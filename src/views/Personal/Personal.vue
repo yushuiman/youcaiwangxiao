@@ -5,7 +5,7 @@
           <div class="integral-signin">35积分<span>签到</span></div>
           <div class="user-flex">
             <div class="user-info">
-              <img src="../../assets/images/user/user-top-bg.jpg" alt="头像" class="head-logo">
+              <img src="../../assets/images/user/user-top-bg.jpg" alt="头像" class="head-logo" @click="setClk">
               <div class="user-name-instr">
                 <h2>优财学员昵称</h2>
                 <p>您已入学<span>124</span>天啦！</p>
@@ -24,7 +24,7 @@
         <div class="userm-left">
           <ul class="userm-list">
             <li class="userm-item" :class="['userm-item-0' + (index+1), {'curren': clkTit == v.type}]" v-for="(v, index) in userArr" :key="index" @click="switchInfo(v, index)">
-              <i class="userm-icon" :class="{'curren': clkTit == v.type}"></i>{{v.tit}}
+              <i class="userm-icon"></i>{{v.tit}}
             </li>
           </ul>
         </div>
@@ -35,6 +35,7 @@
           <answer-info v-if="clkTit == 'answer'"></answer-info>
           <order-info v-if="clkTit == 'order'"></order-info>
           <account-info v-if="clkTit == 'account'"></account-info>
+          <set-info v-if="clkTit == 'set'"></set-info>
         </div>
       </div>
     </div>
@@ -47,6 +48,7 @@ import zhiboInfo from '../../components/personal/zhiboInfo'
 import answerInfo from '../../components/personal/answerInfo'
 import orderInfo from '../../components/personal/orderInfo'
 import accountInfo from '../../components/personal/accountInfo'
+import setInfo from '../../components/personal/setInfo'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -77,7 +79,8 @@ export default {
           tit: '账号'
         }
       ],
-      clkTit: window.sessionStorage.getItem('type') || 'course'
+      clkTit: window.sessionStorage.getItem('type') || 'course',
+      selIdxSet: window.sessionStorage.getItem('selIdxSet')
     }
   },
   computed: {
@@ -91,7 +94,8 @@ export default {
     zhiboInfo,
     answerInfo,
     orderInfo,
-    accountInfo
+    accountInfo,
+    setInfo
   },
   mounted () {
   },
@@ -99,6 +103,10 @@ export default {
     switchInfo ({ type }, index) {
       this.clkTit = type
       window.sessionStorage.setItem('type', type)
+    },
+    setClk () {
+      this.clkTit = 'set'
+      window.sessionStorage.setItem('selIdxSet', this.selIdxSet)
     }
   }
 }
@@ -204,7 +212,7 @@ export default {
     line-height: 46px;
     text-align: center;
     color: $col666;
-    &.curren{
+    &.curren, &:hover{
       color: $colfff;
       background: $blueColor;
       border-radius: 8px 0px 0px 8px;
@@ -232,39 +240,39 @@ export default {
     @extend %bg-img;
     .userm-item-01 &{
       background-image: url('../../assets/images/user/user-icon01.png');
-      &.curren{
-        background-image: url('../../assets/images/user/user-active-icon01.png');
-      }
+    }
+    .userm-item-01.curren &, .userm-item-01:hover &{
+      background-image: url('../../assets/images/user/user-active-icon01.png');
     }
     .userm-item-02 &{
       background-image: url('../../assets/images/user/user-icon02.png');
-      &.curren{
-        background-image: url('../../assets/images/user/user-active-icon02.png');
-      }
+    }
+    .userm-item-02.curren &, .userm-item-02:hover &{
+      background-image: url('../../assets/images/user/user-active-icon02.png');
     }
     .userm-item-03 &{
       background-image: url('../../assets/images/user/user-icon03.png');
-      &.curren{
-        background-image: url('../../assets/images/user/user-active-icon03.png');
-      }
+    }
+    .userm-item-03.curren &, .userm-item-03:hover &{
+      background-image: url('../../assets/images/user/user-active-icon03.png');
     }
     .userm-item-04 &{
       background-image: url('../../assets/images/user/user-icon04.png');
-      &.curren{
-        background-image: url('../../assets/images/user/user-active-icon04.png');
-      }
+    }
+    .userm-item-04.curren &, .userm-item-04:hover &{
+      background-image: url('../../assets/images/user/user-active-icon04.png');
     }
     .userm-item-05 &{
       background-image: url('../../assets/images/user/user-icon05.png');
-      &.curren{
-        background-image: url('../../assets/images/user/user-active-icon05.png');
-      }
+    }
+    .userm-item-05.curren &, .userm-item-05:hover &{
+      background-image: url('../../assets/images/user/user-active-icon05.png');
     }
     .userm-item-06 &{
       background-image: url('../../assets/images/user/user-icon06.png');
-      &.curren{
-        background-image: url('../../assets/images/user/user-active-icon06.png');
-      }
+    }
+    .userm-item-06.curren &, .userm-item-06:hover &{
+      background-image: url('../../assets/images/user/user-active-icon06.png');
     }
   }
 </style>

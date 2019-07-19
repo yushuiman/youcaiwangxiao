@@ -27,5 +27,12 @@
     line-height: 1
 }
 .ivu-modal-close{
-    top: 18px;
+    top: 14px;
+    right: 12px;
+}
+.ivu-modal-close .ivu-icon-ios-close{
+    font-size: 40px;
+}
+.ivu-modal-body{
+    line-height: 1;
 }

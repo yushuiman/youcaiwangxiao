@@ -1,6 +1,5 @@
 import 'babel-polyfill'
 import './assets/scss/common.css'
-// import 'swiper/dist/css/swiper.css'
 import 'element-ui/lib/theme-chalk/index.css'
 
 import Vue from 'vue'
@@ -11,8 +10,6 @@ import Iview from 'iview'
 import ElementUI from 'element-ui'
 import VueAwesomeSwiper from 'vue-awesome-swiper' // swiper
 import 'iview/dist/styles/iview.css'
-// import ECharts from 'vue-echarts/components/ECharts'
-// Vue.component('chart', ECharts)
 Vue.config.productionTip = false
 
 Vue.use(Iview)
