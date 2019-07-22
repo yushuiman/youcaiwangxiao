@@ -33,15 +33,16 @@
           <!--地址列表-->
           <div class="info_msg">
             <span>地址</span>
-           <div>
-             <p class="info_address"><span>菜菜</span><span>17777777777</span><span>北京 北京市 海淀区 胜利街道 宝福大厦</span></p>
-             <button class="btn_default">默认</button>
-           </div>
-          <!--  <div>
-              <span style="display: none">地址</span>
-              <p class="info_address"><span>菜菜</span><span>17777777777</span><span>北京 北京市 海淀区 胜利街道 宝福大厦</span></p>
-              <button class="btn_default"><span>默认</span></button>
-            </div>-->
+            <div class="address-list">
+              <div class="addres-item">
+                <p class="info_address"><span>菜菜</span><span>17777777777</span><span>北京 北京市 海淀区 胜利街道 宝福大厦</span></p>
+                <button class="btn_default">默认</button>
+              </div>
+              <div class="address-item">
+                <p class="info_address"><span>菜菜</span><span>17777777777</span><span>北京 北京市 海淀区 胜利街道 宝福大厦</span></p>
+                <button class="btn_default"><span>默认</span></button>
+              </div>
+            </div>
           </div>
         </div>
         <!--个人信息修改-->
@@ -247,6 +248,16 @@ export default {
     this.getProjectList()
   },
   methods: {
+    // getPersonalInfo () {
+    //   getPersonal ({
+    //     user_id: this.user_id
+    //   }).then(data => {
+    //     const res =data.data
+    //     if(res.code === 200){
+    //       this.personalInfo = res.data
+    //     }
+    //   })
+    // },
     // tab
     tabClk (v, index) {
       if (!this.user_id) {
@@ -294,6 +305,7 @@ export default {
     // 实时预览函数
     realTime (data) {
       this.previews = data
+      this.previews.div = 'width:112px; height:112px;'
     },
     // 选择本地图片
     uploadImg (e, num) {
@@ -378,9 +390,7 @@ export default {
   /*个人信息页面展示开始*/
   .info_msg{
     margin-top: 20px;
-  }
-  .info_msg div{
-    display: inline-block;
+    display: flex;
   }
 
   .info_msg span{
@@ -415,6 +425,14 @@ export default {
     border-radius:20px;
     background:rgba(2,103,255,.1);
     border-radius:20px;
+  }
+  .address-list{
+    .address-item{
+      margin-bottom: 14px;
+      &:last-child{
+        margin-bottom: 0;
+      }
+    }
   }
   /*个人信息页面展示结束*/
   .avatar {
@@ -696,24 +714,21 @@ margin-left: 20px;
     width: 112px;
     height: 112px;
     border-radius: 50%;
-    background-color: red;
+    text-align: center;
   }
 
   .preview {
     width: 112px;
     height: 112px;
     border-radius: 50%;
-    border: 1px solid #ccc;
+    border: 4px solid #ffffff;
+    box-sizing: border-box;
     overflow: hidden;
   }
 
   .content_r_text {
-    margin-top: 120px;
-    width: 112px;
-    height: 22px;
     line-height: 22px;
     font-size: 16px;
-    text-align: center;
   }
 
   .vue-cropper {

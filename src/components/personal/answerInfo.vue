@@ -13,7 +13,7 @@
                 <h3>{{item.data.username}}</h3>
                 <p>{{item.data.create_times}}</p>
               </div>
-              <span class="othq-huifu" v-if="item.reply">老师已回复</span>
+              <span class="othq-huifu" v-if="item.data.reply_status == 1">老师已回复</span>
             </div>
             <p class="othq-txt" :class="!item.openFlag? 'sl' : ''">{{item.data.quiz}}</p>
             <div class="quiz-image-list course_img">
@@ -26,10 +26,10 @@
                 </template>
               </div>
             </div>
-            <div class="open-txt" @click="openShow(item, index)">
+            <div class="open-txt" @click="openShow(item, index, 0)">
               {{item.openFlag ? '收起':'展开'}}
             </div>
-            <ul class="othq-list-teacher" v-if="item.reply && item.openFlag">
+            <ul class="othq-list-teacher" v-if="item.data.reply_status == 1 && item.openFlag">
               <li class="othq-item">
                 <div class="othq-item-t">
                   <img :src="item.reply.head_img" alt="" class="head-logo">
@@ -54,21 +54,30 @@
           </li>
         </ul>
         <div v-else>暂无数据</div>
+        <div style="padding: 20px; text-align: center;">
+          <Page
+          :total="total"
+          @on-change="onChange"
+          :current="page"
+          :page-size="limit"
+          size="small"
+          />
+        </div>
       </div>
       <div v-if="selIdxAnswer == 1">
         <ul class="othq-list" v-if="questionAnswerList && questionAnswerList.length">
           <li class="othq-item" v-for="(item, index) in questionAnswerList" :key="index">
             <div class="othq-item-t">
-              <img :src="item.head" alt="" class="head-logo">
+              <img :src="item.data.head" alt="" class="head-logo">
               <div class="othq-info">
-                <h3>{{item.username}}</h3>
-                <p>{{item.create_times}}</p>
+                <h3>{{item.data.username}}</h3>
+                <p>{{item.data.create_times}}</p>
               </div>
-              <span class="othq-huifu" v-if="item.reply_status == 1">老师已回复</span>
+              <span class="othq-huifu" v-if="item.data.reply_status == 1">老师已回复</span>
             </div>
-            <p class="othq-txt" :class="!item.openFlag? 'sl' : ''">{{item.quiz}}</p>
+            <p class="othq-txt" :class="!item.openFlag? 'sl' : ''">{{item.data.quiz}}</p>
             <div class="quiz-image-list course_img">
-              <div class="demo-upload-list" v-for="(val, index) in item.quiz_image" :key="index">
+              <div class="demo-upload-list" v-for="(val, index) in item.data.quiz_image" :key="index">
                 <template>
                   <img :src="val">
                   <div class="demo-upload-list-cover">
@@ -77,10 +86,10 @@
                 </template>
               </div>
             </div>
-            <div class="open-txt" @click="openShow2(item, index)">
+            <div class="open-txt" @click="openShow(item, index, 1)">
               {{item.openFlag ? '收起':'展开'}}
             </div>
-            <ul class="othq-list-teacher" v-if="item.reply && item.openFlag">
+            <ul class="othq-list-teacher" v-if="item.data.reply_status == 1 && item.openFlag">
               <li class="othq-item">
                 <div class="othq-item-t">
                   <img :src="item.reply.head_img" alt="" class="head-logo">
@@ -104,7 +113,16 @@
             </ul>
           </li>
         </ul>
-        <div v-else>暂无数据</div> 
+        <div v-else>暂无数据</div>
+        <div style="padding: 20px; text-align: center;">
+          <Page
+          :total="total"
+          @on-change="onChange"
+          :current="page"
+          :page-size="limit"
+          size="small"
+          />
+        </div>
       </div>
     </div>
     <Modal title="图片预览" v-model="visible" :width="795">
@@ -122,12 +140,13 @@ export default {
       visible: false,
       txtArr: ['课程答疑', '题库答疑'],
       selIdxAnswer: window.sessionStorage.getItem('selIdxAnswer') || 0,
-      limit: 10,
+      limit: 5,
       page: 1,
+      total: 1,
       courseAnswerList: [],
       // courseMyAnswer: {},
       // courseReply: {},
-      questionAnswerList: [],
+      questionAnswerList: []
       // questionMyAnswer: {},
       // questionReply: {}
     }
@@ -141,6 +160,11 @@ export default {
     this.initRes()
   },
   methods: {
+    // 图片放大
+    handleView (url) {
+      this.imgUrl = url
+      this.visible = true
+    },
     tabClk (v, index) {
       this.selIdxAnswer = index
       window.sessionStorage.setItem('selIdxAnswer', index)
@@ -162,7 +186,9 @@ export default {
         page: this.page
       }).then(data => {
         const res = data.data
-        this.courseAnswerList = res.data
+        let { num, list } = res.data
+        this.total = num
+        this.courseAnswerList = list
         this.courseAnswerList.map((val, index) => {
           val.openFlag = false
         })
@@ -176,21 +202,33 @@ export default {
         page: this.page
       }).then(data => {
         const res = data.data
-        this.questionAnswerList = res.data
+        let { num } = res.data
+        this.total = num
+        this.questionAnswerList = res.data.data
         this.questionAnswerList.map((val, index) => {
           val.openFlag = false
         })
       })
     },
     // 展开收起
-    openShow (item, index) {
-      this.courseAnswerList[index].openFlag = !item.openFlag
+    openShow (item, index, type) {
+      if (type === 0) {
+        this.courseAnswerList[index].openFlag = !item.openFlag
+        this.$forceUpdate()
+        return
+      }
+      this.questionAnswerList[index].openFlag = !item.openFlag
       this.$forceUpdate()
     },
     // 展开收起
     openShow2 (item, index) {
       this.questionAnswerList[index].openFlag = !item.openFlag
       this.$forceUpdate()
+    },
+    // 分页
+    onChange (val) {
+      this.page = val
+      this.getCourseAnswer()
     }
   }
 }
@@ -200,10 +238,10 @@ export default {
   @import "../../assets/scss/app";
   @import "../../assets/scss/iview.css";
   .othq-list{
-    min-height: 320px;
-    max-height: 420px;
-    overflow-y: scroll;
-    margin-top: 20px;
+    // min-height: 320px;
+    // max-height: 420px;
+    // overflow-y: scroll;
+    // margin-top: 20px;
   }
   .othq-list-teacher{
     border-top: 1px solid #E6E6E6;

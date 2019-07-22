@@ -179,3 +179,38 @@ export const alreadyOrderlist = (data) => { // 订单详情
     method: 'post'
   })
 }
+export const consumptionRecord = (data) => { // 消费记录
+  return axios.request({
+    url: '/web/Personal/consumptionRecord',
+    data,
+    method: 'post'
+  })
+}
+export const defaultAddress = (data) => { // 设置默认收货地址
+  return axios.request({
+    url: '/web/Personal/defaultAddress',
+    data,
+    method: 'post'
+  })
+}
+export const delAddress = (data) => { // 删除收货地址
+  return axios.request({
+    url: '/web/Personal/delAddress',
+    data,
+    method: 'post'
+  })
+}
+export const savePersonal = (data) => { // 修改基本信息
+  return axios.request({
+    url: '/web/Personal/savePersonal',
+    data,
+    method: 'post'
+  })
+}
+export const getPersonal = (data) => { // 基本信息
+  return axios.request({
+    url: '/web/Personal/getPersonal',
+    data,
+    method: 'post'
+  })
+}
