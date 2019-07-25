@@ -206,8 +206,8 @@ export default {
           userstatus: val.video.userstatus // 是否购买
         }
         this.$router.push({ path: '/class-video', query: obj })
-        let openMenu = (val.video.section_id) + '-' + (val.video.video_id)
-        window.sessionStorage.setItem('openMenu', openMenu)
+        // let openMenu = (val.video.section_id) + '-' + (val.video.video_id)
+        // window.sessionStorage.setItem('openMenu', openMenu)
         window.sessionStorage.setItem('playVideoInfo', JSON.stringify(val))
         return
       }
@@ -229,16 +229,16 @@ export default {
         userstatus: val.video.userstatus // 是否购买
       }
       this.$router.push({ path: '/class-video', query: obj })
-      let openMenu = (val.video.section_id) + '-' + (val.video.video_id)
-      window.sessionStorage.setItem('openMenu', openMenu)
+      // let openMenu = (val.video.section_id) + '-' + (val.video.video_id)
+      // window.sessionStorage.setItem('openMenu', openMenu)
       window.sessionStorage.setItem('playVideoInfo', JSON.stringify(val))
     },
     // 收藏记录去学习
     collectionLearnVideo (item, val) {
       let playVideoObj = Object.assign({}, this.sessionPlayInfo, val)
       this.$router.push({ path: '/class-video', query: this.sessionPlayInfo })
-      let openMenu = (item.section_id) + '-' + (val.video_id)
-      window.sessionStorage.setItem('openMenu', openMenu)
+      // let openMenu = (item.section_id) + '-' + (val.video_id)
+      // window.sessionStorage.setItem('openMenu', openMenu)
       window.sessionStorage.setItem('playVideoInfo', JSON.stringify(playVideoObj))
     }
   }
@@ -275,6 +275,7 @@ export default {
       h2{
         font-size: 18px;
         line-height: 26px;
+        color: $col333;
       }
       .ucid-des{
         color: $col999;

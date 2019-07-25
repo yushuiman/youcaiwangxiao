@@ -43,6 +43,7 @@ export default {
       h2{
         font-size: 18px;
         line-height: 26px;
+        color: $col333;
       }
       .ucid-des{
         color: $col999;

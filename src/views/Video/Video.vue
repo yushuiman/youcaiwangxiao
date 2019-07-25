@@ -51,7 +51,7 @@
       </div>
       <div id="line"></div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
-        <course-list v-if="flagKc" :courseSections="courseSections" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback()"></course-list>
+        <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback()"></course-list>
         <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" @closeModel="closeModel"></answer>
         <div class="jiangyi" v-if="flagJy">
           <div class="close-box" @click="closeModel()">
@@ -107,6 +107,7 @@ export default {
       packageList: [],
       secvCatalogArr: [],
       courseSections: [],
+      openMenu: '1-1', // 默认播放菜单menu-index
       playStatus: true // 停止播放
     }
   },
@@ -199,12 +200,6 @@ export default {
           course_id: item.course_id
         }
       })
-      for (var i = 0; i < this.secvCatalogArr.length; i++) {
-        if (item.name === this.secvCatalogArr[i].type) {
-          this.courseSections = this.secvCatalogArr[i].courseSections
-          return
-        }
-      }
       secvCatalog({
         course_id: item.course_id
       }).then(data => {
@@ -223,6 +218,17 @@ export default {
       }).then(data => {
         const res = data.data
         this.courseSections = res.data
+        this.courseSections.forEach((v, key) => {
+          let sectionId = this.$route.query.section_id + ''
+          let videoId = this.$route.query.video_id + ''
+          v.videos.forEach((val, index) => {
+            if (sectionId.indexOf(v.section_id) > -1 && videoId.indexOf(val.video_id) > -1) {
+              let openMenu = (key + 1) + '-' + (index + 1)
+              window.sessionStorage.setItem('openMenu', openMenu)
+              this.openMenu = openMenu
+            }
+          })
+        })
       })
     },
     // 获取视频凭证

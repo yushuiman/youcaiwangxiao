@@ -65,6 +65,7 @@ export default {
       this.setChange(navName)
     },
     ouLogin () {
+      this.$router.push('/')
       this.handleLogOut()
     },
     // 个人中心

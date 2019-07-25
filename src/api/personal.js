@@ -193,6 +193,14 @@ export const defaultAddress = (data) => { // 设置默认收货地址
     method: 'post'
   })
 }
+
+export const addAddress = (data) => { // 添加收货地址
+  return axios.request({
+    url: '/web/Personal/addAddress',
+    data,
+    method: 'post'
+  })
+}
 export const delAddress = (data) => { // 删除收货地址
   return axios.request({
     url: '/web/Personal/delAddress',
@@ -210,6 +218,34 @@ export const savePersonal = (data) => { // 修改基本信息
 export const getPersonal = (data) => { // 基本信息
   return axios.request({
     url: '/web/Personal/getPersonal',
+    data,
+    method: 'post'
+  })
+}
+export const editAddress = (data) => { // 修改收货地址
+  return axios.request({
+    url: '/web/Personal/editAddress',
+    data,
+    method: 'post'
+  })
+}
+export const resetPaw = (data) => { // 修改密码
+  return axios.request({
+    url: '/web/Personal/resetPaw',
+    data,
+    method: 'post'
+  })
+}
+export const uploadImage = (data) => { // 上传图片
+  return axios.request({
+    url: 'upload/Index/uploadImage',
+    params: data,
+    method: 'get'
+  })
+}
+export const pcuploadImage = (data) => { // 上传图片
+  return axios.request({
+    url: 'upload/Index/pcuploadImage',
     data,
     method: 'post'
   })

@@ -46,6 +46,9 @@ export default {
     },
     courseSections: {
       type: Array
+    },
+    openMenu: {
+      type: String
     }
   },
   data () {
@@ -57,8 +60,8 @@ export default {
       packageList: [],
       curIndex: '',
       videoListFlag: true,
-      playIdx: 0,
-      openMenu: window.sessionStorage.getItem('openMenu') || '1-1'
+      playIdx: 0
+      // openMenu: window.sessionStorage.getItem('openMenu')
     }
   },
   mounted () {
@@ -123,8 +126,9 @@ export default {
       v.flag = true
       this.playIdx = v
       this.$forceUpdate()
-      this.openMenu = (key + 1) + '-' + (index + 1)
+      // this.openMenu = (key + 1) + '-' + (index + 1)
       this.$emit('getVideoPlayback', v.video_id)
+      // window.sessionStorage.setItem('openMenu', this.openMenu)
       this.$router.replace({ path: 'class-video',
         query: {
           ...this.$route.query,
@@ -132,8 +136,8 @@ export default {
           video_id: v.video_id
         }
       })
-      window.sessionStorage.setItem('openMenu', this.openMenu)
-      this.handleReload()
+      // window.location.reload()
+      // this.handleReload()
     }
   }
 }

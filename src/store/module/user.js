@@ -62,8 +62,9 @@ export default {
           commit('setAvator', '')
           commit('setUserId', '')
           commit('setUserName', '')
-          // window.loacation.load()
           resolve()
+          this.$route.push('/')
+          window.location.reload()
         }).catch(err => {
           reject(err)
         })

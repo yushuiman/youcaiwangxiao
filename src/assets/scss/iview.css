@@ -89,7 +89,7 @@
    top: 26px;
  }
 
- .uploadSty .ivu-upload-drag,
+ .ivu-upload-drag,
  .uploadSty .ivu-btn {
    border: 0 !important;
    padding: 0;
@@ -104,6 +104,9 @@
    height: 18px;
    background: url('../../assets/images/video/upload-img-icon.png') no-repeat center;
    background-size: contain;
+ }
+ .ivu-upload-drag{
+
  }
 /* .ivu-menu-item:hover{
   background: #F3F6FF;

@@ -2,13 +2,13 @@
     <div class="user-wrap">
       <div class="user-top-wrap">
         <div class="w-wrap">
-          <div class="integral-signin">35积分<span>签到</span></div>
+          <div class="integral-signin">{{personalInfo.integral}}积分<span>签到</span></div>
           <div class="user-flex">
             <div class="user-info">
-              <img src="../../assets/images/user/user-top-bg.jpg" alt="头像" class="head-logo" @click="setClk">
+              <img :src="personalInfo.head" alt="头像" class="head-logo" @click="setClk">
               <div class="user-name-instr">
-                <h2>优财学员昵称</h2>
-                <p>您已入学<span>124</span>天啦！</p>
+                <h2>{{personalInfo.username}}</h2>
+                <p>您已入学<span>{{personalInfo.day}}</span>天啦！</p>
               </div>
             </div>
             <div class="go-on-some">
@@ -35,7 +35,7 @@
           <answer-info v-if="clkTit == 'answer'"></answer-info>
           <order-info v-if="clkTit == 'order'"></order-info>
           <account-info v-if="clkTit == 'account'"></account-info>
-          <set-info v-if="clkTit == 'set'"></set-info>
+          <set-info v-if="clkTit == 'set'" :personalInfo="personalInfo" @getPersonalInfo="getPersonalInfo"></set-info>
         </div>
       </div>
     </div>
@@ -49,6 +49,7 @@ import answerInfo from '../../components/personal/answerInfo'
 import orderInfo from '../../components/personal/orderInfo'
 import accountInfo from '../../components/personal/accountInfo'
 import setInfo from '../../components/personal/setInfo'
+import { getPersonal } from '@/api/personal'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -80,7 +81,8 @@ export default {
         }
       ],
       clkTit: window.sessionStorage.getItem('type') || 'course',
-      selIdxSet: window.sessionStorage.getItem('selIdxSet')
+      selIdxSet: window.sessionStorage.getItem('selIdxSet'),
+      personalInfo: {} // 个人信息
     }
   },
   computed: {
@@ -98,6 +100,7 @@ export default {
     setInfo
   },
   mounted () {
+    this.getPersonalInfo()
   },
   methods: {
     switchInfo ({ type }, index) {
@@ -107,6 +110,30 @@ export default {
     setClk () {
       this.clkTit = 'set'
       window.sessionStorage.setItem('selIdxSet', this.selIdxSet)
+    },
+    // 用户信息
+    getPersonalInfo () {
+      getPersonal({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.personalInfo = res.data
+          this.personalInfo.address.forEach(v => {
+            v.flag = false
+            v.value = '设置默认地址'
+            if (v.is_default === 1) {
+              v.value = '取消默认地址'
+            }
+          })
+          let obj = {
+            username: this.personalInfo.username,
+            head: this.personalInfo.head,
+            sex: this.personalInfo.sex
+          }
+          window.sessionStorage.setItem('personalInfo', JSON.stringify(obj))
+        }
+      })
     }
   }
 }

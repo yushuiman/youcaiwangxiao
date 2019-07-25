@@ -35,6 +35,7 @@
 .tab-list .tab-item {
     margin: 0 30px;
     position: relative;
+    cursor: pointer;
 }
 .tab-list .tab-item:before {
     position: absolute;
@@ -69,6 +70,9 @@
 /* 课程收藏夹 */
 .myCollpackageMenu .ivu-menu-submenu-title {
     padding: 0;
+}
+.myCollpackageMenu .ivu-menu-submenu-title:hover{
+    color: #333333;
 }
 /* iview */
 .error-btn button {
