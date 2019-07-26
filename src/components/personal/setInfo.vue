@@ -47,12 +47,25 @@
         <!--个人信息修改-->
        <div v-if="changeSetFlag">
          <!--头像-->
-         <div @click="changeAvatar">
+         <div style="position:relative;">
            <img class="avatar" :src="userInfo.head" alt="">
            <span class="change_avatar">修改头像</span>
+           <Upload ref="upload"
+              :show-upload-list="false"
+              :on-success="handleSuccess"
+              :on-error="onError"
+              :on-format-error="onFormateError"
+              :on-exceeded-size="onExceededSize"
+              :format="['jpg','jpeg','png']"
+              :max-size="2048"
+              type="drag"
+              action="/upload/Index/uploadImage"
+              name="image"
+              class="set-head-iview">
+          </Upload>
          </div>
          <!--保存按钮-->
-         <button class="btn_save" @click="saveChange">保存</button>
+         <button class="btn_save" @click="saveBaseInfo">保存</button>
          <!--基本信息-->
          <div class="basic">
            <h3 class="basic_info">基本信息</h3>
@@ -194,17 +207,7 @@
         </div>
         <div class="content_foot">
           <label class="btn" for="uploads">重新上传</label>
-          <!-- <el-upload
-            class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :on-success="onSuccess"
-            multiple
-            :limit=1
-            :file-list="fileList">
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-          </el-upload> -->
-          <Upload ref="upload"
+          <!-- <Upload ref="upload"
               :show-upload-list="false"
               :on-success="handleSuccess"
               :format="['jpg','jpeg','png']"
@@ -214,7 +217,7 @@
               name="image"
               class="uploadSty">
               <div class="icon-upload"></div>
-          </Upload>
+          </Upload> -->
           <input type="file" id="uploads" :value="imgFile"
                  style="position:absolute; clip:rect(0 0 0 0);width: 1px;"
                  accept="image/png, image/jpeg, image/gif, image/jpg"
@@ -234,7 +237,7 @@
 </template>
 
 <script>
-import { savePersonal, defaultAddress, delAddress, addAddress, editAddress, resetPaw, uploadImage, pcuploadImage } from '@/api/personal'
+import { savePersonal, defaultAddress, delAddress, addAddress, editAddress, resetPaw, uploadImage } from '@/api/personal'
 import { mapState, mapActions } from 'vuex'
 import { VueCropper } from 'vue-cropper'
 export default {
@@ -260,7 +263,6 @@ export default {
       visible: false, // 模态框默认不显示
       crap: false,
       previews: {}, // 实时图片预览对象
-      fileList: [],
       limit: 1,
       background: false,
       changeSetFlag: false, // 修改展示div
@@ -306,14 +308,18 @@ export default {
     ...mapActions([
       'handleLogOut'
     ]),
-    onSuccess (response, file, fileList) {
-      // console.log(file.raw)
-      // console.log(window.URL.createObjectURL(file.raw))
-    },
     handleSuccess (res, file) {
-      // console.log(res)
-      // console.log(window.URL.createObjectURL(file.raw))
-      this.option.img = res.data.image_url
+      // this.option.img = res.data.image_url // 暂时不做裁剪功能
+      this.userInfo.head = res.data.image_url
+    },
+    onError (eror, file, fileList) {
+      this.$Message.error('上传失败')
+    },
+    onFormateError (file, fileList) {
+      this.$Message.error('文件格式错误')
+    },
+    onExceededSize (file, fileList) {
+      this.$Message.error('最大上传2M')
     },
     // tab
     tabClk (v, index) {
@@ -328,9 +334,6 @@ export default {
       this.changeSetFlag = true
       this.userInfo.sex = this.userInfo.sex + ''
       // this.option.img = this.userInfo.head
-      // this.option.img = 'https://desk-fd.zol-img.com.cn/t_s144x90c5/g5/M00/02/00/ChMkJlbKw6iISQ3RAAPmharbU-IAALG6gIuG_IAA-ad876.jpg'
-      // let img = document.getElementsByClassName('cropper-box-canvas')[0].children[0]
-      // img.setAttribute('crossOrigin', 'Anonymous')
     },
     // 添加收货地址div
     addNewAddres () {
@@ -383,10 +386,11 @@ export default {
           is_default: 2
         }).then(data => {
           const res = data.data
-          this.addAddresFlag = false
-          if (res.code === 200) {
-            this.$emit('getPersonalInfo')
-          }
+          console.log(res)
+          // this.addAddresFlag = false
+          // if (res.code === 200) {
+          //   this.$emit('getPersonalInfo')
+          // }
         })
       }
       if (type === 2) {
@@ -425,11 +429,13 @@ export default {
       } else {
         this.personalInfo.address.forEach(v => {
           v.value = '设置默认地址'
+          v.is_default = 2
         })
         v.is_default = 1
         v.value = '取消默认地址'
         this.$forceUpdate()
       }
+      // this.changeSetFlag = false
       defaultAddress({
         user_id: this.user_id,
         address_id: v.address_id,
@@ -443,11 +449,11 @@ export default {
         user_id: this.user_id,
         address_id: v.address_id
       }).then(data => {
-        const res = data.data
         // this.personalInfo.address.splice(index, 1)
-        if (res.code === 200) {
-          this.$emit('getPersonalInfo')
-        }
+        // const res = data.data
+        // if (res.code === 200) {
+        //   this.$emit('getPersonalInfo')
+        // }
       })
     },
     // 男女
@@ -455,7 +461,7 @@ export default {
       this.userInfo.sex = label
     },
     // 修改基本信息
-    saveChange () {
+    saveBaseInfo () {
       // 昵称
       if (this.userInfo.username === '') {
         this.$Message.error('请输入昵称')
@@ -526,6 +532,7 @@ export default {
       })
     },
     /* 点击修改头像时模态框显示 */
+    // 先保留缩放旋转功能 后面优化
     changeAvatar () {
       this.visible = true
     },
@@ -584,7 +591,6 @@ export default {
     },
     // 上传图片（点击保存按钮）
     finish (type) {
-      // let _this = this
       let formData = new FormData()
       // 输出
       if (type === 'blob') {
@@ -592,29 +598,13 @@ export default {
           let img = window.URL.createObjectURL(data)
           this.model = true
           this.modelSrc = img
-          console.log('这是data')
           console.log(data)
-          console.log('这是img')
           console.log(img)
-          console.log('这是file')
           formData.append('image', data, this.fileName)
           console.log(formData.get('image'))
           uploadImage(formData).then({
-
+            // 后续优化
           })
-          // this.$http.get('http://ycapi.youcaiwx.com/upload/Index/uploadImage', formData, { contentType: false, processData: false, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-          //   .then((response) => {
-          //     var res = response.data
-          //     if (res.success === 1) {
-          //       _this.imgFile = ''
-          //       _this.headImg = res.realPathList[0] // 完整路径
-          //       _this.uploadImgRelaPath = res.relaPathList[0] // 非完整路径
-          //       _this.$message({
-          //         type: 'success',
-          //         message: '上传成功'
-          //       })
-          //     }
-          //   })
         })
       } else {
         this.$refs.cropper.getCropData((data) => {
@@ -1035,5 +1025,14 @@ export default {
     margin: 0 auto;
     margin-top: 20px;
     display: block;
+  }
+  .set-head-iview{
+    position: absolute;
+    width: 112px;
+    height: 112px;
+    top: 50%;
+    left: 50%;
+    margin-left: -56px;
+    margin-top: -56px;
   }
 </style>

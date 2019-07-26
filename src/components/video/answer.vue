@@ -6,7 +6,7 @@
         <i class="close-icon"></i>
       </div>
       <h1 class="vc-title">提问题</h1>
-      <textarea autofocus v-model="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"
+      <textarea autofocus v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"
         v-on:focus="send()" v-on:blur="goPlay()"></textarea>
       <div class="submitAnswer clearfix">
         <div class="course_img fl">
@@ -186,7 +186,7 @@ export default {
         this.errorTs = '请输入纠错内容'
         return
       }
-      if (/^\s+$/gi.test(this.quiz) || this.quiz.trim() === '') {
+      if (/^\s+$/gi.test(this.quiz)) {
         this.errorTs = '不能全为空格'
         return
       }
@@ -196,7 +196,8 @@ export default {
       }
       this.errorTs = ''
       let quizImage = this.quiz_image.join(',')
-      let data = Object.assign({ quiz: this.quiz, video_time: 5, quiz_image: quizImage }, this.playCourseInfo)
+      let vtime = window.sessionStorage.getItem('pauseWatchTime')
+      let data = Object.assign({ quiz: this.quiz, video_time: vtime, quiz_image: quizImage }, this.playCourseInfo)
       answerSub(data).then(data => {
         this.uploadList = []
         this.quiz_image = []

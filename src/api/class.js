@@ -82,3 +82,25 @@ export const answerDetails = (data) => { // 问题详情
     method: 'post'
   })
 }
+export const collection = (data) => { // 收藏
+  return axios.request({
+    url: '/apps/Course/collection',
+    data,
+    method: 'post'
+  })
+}
+export const test = (data) => { // 测试
+  return axios.request({
+    url: 'web/Personal/test',
+    data,
+    method: 'post'
+  })
+}
+// test(message).then(data => {
+//   const res = data.data
+//   console.log(res)
+//   // this.addAddresFlag = false
+//   // if (res.code === 200) {
+//   //   this.$emit('getPersonalInfo')
+//   // }
+// })

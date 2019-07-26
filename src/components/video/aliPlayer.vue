@@ -4,6 +4,8 @@
 
 <script>
 import { EventBus } from '@/event-bus.js'
+import { mapState } from 'vuex'
+import { initWS } from '@/api/class'
 export default {
   name: 'Aliplayer',
   props: {
@@ -56,6 +58,10 @@ export default {
       type: String,
       default: ''
     },
+    playtime: {
+      type: String,
+      default: ''
+    },
     cover: {
       type: String,
       default: ''
@@ -100,7 +106,16 @@ export default {
       playStatus: ''
     }
   },
+  computed: {
+    ...mapState({
+      token: state => state.user.token,
+      user_id: state => state.user.user_id
+    })
+  },
   mounted () {
+    // setTimeout(() => {
+    //   console.log(parseInt(this.getCurrentTime()))
+    // }, 600000)
     if (window.Aliplayer !== undefined) {
       // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
       this.scriptTagStatus = 2
@@ -109,6 +124,10 @@ export default {
       // 如果全局对象不存在，说明编辑器代码还没有加载完成，需要加载编辑器代码
       this.insertScriptTag()
     }
+    EventBus.$on('stopPlay', target => {
+      this.pause()
+      window.sessionStorage.setItem('pauseWatchTime', parseInt(this.getCurrentTime()))
+    })
   },
   created () {
     if (window.Aliplayer !== undefined) {
@@ -121,8 +140,46 @@ export default {
     }
     EventBus.$on('stopPlay', target => {
       this.pause()
-      window.sessionStorage.setItem('playtime', parseInt(this.getCurrentTime()))
+      window.sessionStorage.setItem('pauseWatchTime', parseInt(this.getCurrentTime()))
     })
+    setInterval(() => {
+      let playtime = parseInt(this.getCurrentTime())
+      console.log(playtime)
+      var message = {
+        from: 1,
+        user_id: this.user_id,
+        package_id: this.$route.query.package_id,
+        course_id: this.$route.query.course_id,
+        section_id: this.$route.query.section_id,
+        video_id: this.$route.query.video_id,
+        watch_time: playtime,
+        video_type: 1, // 视频类型 1视频2直播
+        status: 1 // 播放类型 1课程视频播放
+      }
+      initWS(JSON.stringify(message))
+      // var message = {
+      //   from: 1,
+      //   user_id: 20,
+      //   package_id: 1,
+      //   course_id: 1,
+      //   section_id: 1,
+      //   video_id: 6,
+      //   watch_time: 17,
+      //   video_type: 1, // 视频类型 1视频2直播
+      //   status: 1 // 播放类型 1课程视频播放
+      // }
+      // let ws
+      // ws = new WebSocket('ws://ycapi.youcaiwx.com:2346')
+      // ws.onopen = function () {
+      //   console.log('连接成功')
+      //   ws.send(JSON.stringify(message))
+      //   console.log(JSON.stringify(message))
+      //   console.log('给服务端发送一个字符串：My')
+      // }
+      // ws.onmessage = function (e) {
+      //   console.log('收到服务端的消息：' + e.data)
+      // }
+    }, 30000)
   },
   methods: {
     insertScriptTag () {

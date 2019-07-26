@@ -5,7 +5,7 @@
       <span>{{videoCredentials.Title}}</span>
       <div class="login-r fr">
         <img src="../../assets/images/global/email-icon.png" alt="email" class="email-icon">
-        <img src="../../assets/images/global/head-logo-moren.png" alt="头像" class="head-logo">
+        <img :src="avatorImgPath" alt="头像" class="head-logo" @click="goPersonalPage">
       </div>
     </div>
     <div class="video-main" id="box">
@@ -43,10 +43,10 @@
         </ul> -->
       </div>
       <div class="video-info-c">
-        <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
-        <div class="star-collection" @click="courseCollection">
-          <Icon type="md-star-outline" style="color: #ffffff;"/>
-          <Icon type="md-star" style="color: #F99111;"/>
+        <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playtime="videoCredentials.playtime" :playauth="videoCredentials.playAuth"></ali-player>
+        <div class="star-collection" @click="courseCollection(videoCredentials.collect)">
+          <Icon type="md-star-outline" style="color: #ffffff;" v-if="videoCredentials.collect == 2"/>
+          <Icon type="md-star" style="color: #F99111;" v-if="videoCredentials.collect == 1"/>
         </div>
       </div>
       <div id="line"></div>
@@ -68,7 +68,7 @@
 import aliPlayer from '@/components/video/aliPlayer'
 import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
-import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, initWS } from '@/api/class'
+import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, collection } from '@/api/class'
 import { mapState } from 'vuex'
 // import WebSocket from '@/libs/web-socket'
 // const initWS = (data) => {
@@ -92,9 +92,10 @@ export default {
       videoCredentials: {
         handouts: '', // 讲义
         playauth: '', // 获取视频凭证
-        collect: '',
-        watch_time: '',
-        Title: ''
+        collect: '', // 收藏
+        watch_time: '', // 观看时间
+        Title: '', // name
+        playtime: 0 // 播放时间记录，下次自动跳转到当前时间
       },
       playCourseInfo: {
         video_id: this.$route.query.video_id,
@@ -108,6 +109,8 @@ export default {
       secvCatalogArr: [],
       courseSections: [],
       openMenu: '1-1', // 默认播放菜单menu-index
+      playVideoInfo: window.sessionStorage.getItem('playVideoInfo'), // 视频播放信息
+      playtime: window.sessionStorage.getItem('playtime'), // 视频播放时间
       playStatus: true // 停止播放
     }
   },
@@ -118,12 +121,11 @@ export default {
   },
   computed: {
     ...mapState({
+      avatorImgPath: state => state.user.avatorImgPath,
       user_id: state => state.user.user_id
     })
   },
   mounted () {
-    initWS()
-    // this.ws = initWS()
     this.getVideoPlayback(this.$route.query.video_id)
     this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
     this.getCourseCatalog() // 课程大纲（目录）
@@ -224,7 +226,6 @@ export default {
           v.videos.forEach((val, index) => {
             if (sectionId.indexOf(v.section_id) > -1 && videoId.indexOf(val.video_id) > -1) {
               let openMenu = (key + 1) + '-' + (index + 1)
-              window.sessionStorage.setItem('openMenu', openMenu)
               this.openMenu = openMenu
             }
           })
@@ -243,12 +244,46 @@ export default {
         videoCredentials(dataForm).then(data => {
           let res = data.data
           this.videoCredentials = res.data
+          this.videoCredentials.playtime = this.playtime // 播放到当前时间
         })
       })
     },
     // 收藏
-    courseCollection () {
+    // qtCollection (item) {
+    //   let { ID, collection } = item
+    //   if (parseInt(collection) === 1) {
+    //     item.collection = 0
+    //   } else {
+    //     item.collection = 1
+    //   }
+    //   questionCollection({
+    //     user_id: this.user_id,
+    //     course_id: this.getQuestion.course_id || window.sessionStorage.getItem('course_id'),
+    //     question_id: ID,
+    //     type: item.collection
+    //   }).then(data => {
+    //   })
+    // },
+    courseCollection (collectId) {
+      this.videoCredentials.collect = 2
+      if (collectId === 2) {
+        this.videoCredentials.collect = 1
+      }
+      collection({
+        package_id: this.playCourseInfo.package_id,
+        course_id: this.playCourseInfo.course_id,
+        section_id: this.playCourseInfo.section_id,
+        video_id: this.playCourseInfo.video_id,
+        user_id: this.user_id,
+        static: this.videoCredentials.collect
+      }).then(data => {
 
+      })
+    },
+    // 个人中心
+    goPersonalPage (index) {
+      window.sessionStorage.setItem('type', 'course')
+      this.$router.push('/personal')
     }
   }
 }

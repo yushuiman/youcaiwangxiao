@@ -91,8 +91,6 @@ export default {
           userstatus: this.userstatus // 是否购买
         }
       })
-      // let openMenu = (key + 1) + '-' + (index + 1)
-      // window.sessionStorage.setItem('openMenu', openMenu)
     }
   }
 }

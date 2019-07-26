@@ -246,7 +246,7 @@ export default {
   @import "../../assets/scss/app";
   @import "../../assets/scss/iview.css";
   .ask{
-    padding: 0 3px;
+    padding: 0 30px;
   }
   .vc-title{
     font-size: 20px;

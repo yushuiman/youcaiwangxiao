@@ -26,7 +26,7 @@
               <img src="../assets/images/global/email-icon.png" alt="email" class="email-icon">
               <img :src="avatorImgPath" alt="头像" class="head-logo" @click="goPersonalPage">
             </div>
-            <div @click="ouLogin">退出</div>
+            <div @click="ouLogin" style="position:absolute; right: 6%;top:-2px;padding:6px;">退出</div>
           </div>
         </div>
       </div>

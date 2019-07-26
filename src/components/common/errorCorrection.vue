@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="error-wrap">
     <textarea autofocus v-model="error_content" class="texta" placeholder="请输入纠错内容，我们在收到后会及时为您解决。" cols="3" rows="3"></textarea>
     <div class="ts-box">{{errorTs}}</div>
     <div class="btn-box">
@@ -66,6 +66,9 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   @import "../../assets/scss/iview.css";
+  .error-wrap{
+    padding: 0 30px 20px;
+  }
   .texta {
     resize: none;
     width: 100%;
