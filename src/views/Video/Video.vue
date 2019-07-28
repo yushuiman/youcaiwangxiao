@@ -319,6 +319,7 @@ export default {
       }
       &.head-logo{
         @include wh(30, 30);
+        border-radius: 50%;
       }
     }
   }
@@ -488,7 +489,7 @@ export default {
   .star-collection{
     position: absolute;
     z-index: 10;
-    right: 170px;
+    right: 131px;
     bottom: 7px;
     font-size: 30px;
   }

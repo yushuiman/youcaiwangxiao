@@ -163,7 +163,7 @@ export default {
       }
       &.head-logo{
         @include wh(30, 30);
-        border-radius: 100%;
+        border-radius: 50%;
       }
     }
   }

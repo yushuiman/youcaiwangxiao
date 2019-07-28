@@ -96,7 +96,138 @@ export default {
     endPlay: {
       type: Boolean,
       default: true
-    }
+    },
+    liveSkin: [
+      {
+        name: 'bigPlayButton',
+        align: 'blabs',
+        x: 30,
+        y: 80
+      },
+      {
+        name: 'errorDisplay',
+        align: 'tlabs',
+        x: 0,
+        y: 0
+      },
+      {
+        name: 'infoDisplay'
+      },
+      {
+        name: 'controlBar',
+        align: 'blabs',
+        x: 0,
+        y: 0,
+        children: [
+          {
+            name: 'liveDisplay',
+            align: 'tlabs',
+            x: 15,
+            y: 25
+          },
+          {
+            name: 'fullScreenButton',
+            align: 'tr',
+            x: 10,
+            y: 25
+          },
+          {
+            name: 'volume',
+            align: 'tr',
+            x: 10,
+            y: 25
+          }
+        ]
+      }
+    ],
+    playSkin: [
+      {
+        name: 'bigPlayButton',
+        align: 'blabs',
+        x: 30,
+        y: 80
+      },
+      {
+        name: 'controlBar',
+        align: 'blabs',
+        x: 0,
+        y: 0,
+        children: [
+          {
+            name: 'progress',
+            align: 'tlabs',
+            x: 0,
+            y: 0
+          },
+          {
+            name: 'playButton',
+            align: 'tl',
+            x: 15,
+            y: 26
+          },
+          {
+            name: 'nextButton',
+            align: 'tl',
+            x: 10,
+            y: 26
+          },
+          {
+            name: 'timeDisplay',
+            align: 'tl',
+            x: 10,
+            y: 24
+          },
+          {
+            name: 'fullScreenButton',
+            align: 'tr',
+            x: 10,
+            y: 25
+          },
+          {
+            name: 'streamButton',
+            align: 'tr',
+            x: 10,
+            y: 23
+          },
+          {
+            name: 'volume',
+            align: 'tr',
+            x: 10,
+            y: 25
+          }
+        ]
+      },
+      {
+        name: 'fullControlBar',
+        align: 'tlabs',
+        x: 0,
+        y: 0,
+        children: [
+          {
+            name: 'fullTitle',
+            align: 'tl',
+            x: 25,
+            y: 6
+          },
+          {
+            name: 'fullNormalScreenButton',
+            align: 'tr',
+            x: 24,
+            y: 13
+          },
+          {
+            name: 'fullTimeDisplay',
+            align: 'tr',
+            x: 10,
+            y: 12
+          },
+          {
+            name: 'fullZoom',
+            align: 'cc'
+          }
+        ]
+      }
+    ]
   },
   data () {
     return {
@@ -113,9 +244,6 @@ export default {
     })
   },
   mounted () {
-    // setTimeout(() => {
-    //   console.log(parseInt(this.getCurrentTime()))
-    // }, 600000)
     if (window.Aliplayer !== undefined) {
       // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
       this.scriptTagStatus = 2
@@ -133,7 +261,9 @@ export default {
     if (window.Aliplayer !== undefined) {
       // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
       this.scriptTagStatus = 2
-      this.initAliplayer()
+      window.onload = function () {
+        this.initAliplayer()
+      }
     } else {
       // 如果全局对象不存在，说明编辑器代码还没有加载完成，需要加载编辑器代码
       this.insertScriptTag()
@@ -144,7 +274,6 @@ export default {
     })
     setInterval(() => {
       let playtime = parseInt(this.getCurrentTime())
-      console.log(playtime)
       var message = {
         from: 1,
         user_id: this.user_id,
@@ -208,9 +337,8 @@ export default {
     initAliplayer () {
       const _this = this
       // scriptTagStatus 为 2 的时候，说明两个必需引入的 js 文件都已经被引入，且加载完成
-      if (_this.scriptTagStatus === 2 && _this.instance === null) {
-        // Vue 异步执行 DOM 更新，这样一来代码执行到这里的时候可能 template 里面的 script 标签还没真正创建
-        // 所以，我们只能在 nextTick 里面初始化 Aliplayer
+      if (_this.scriptTagStatus === 2 && (_this.instance === null || _this.reloadPlayer)) {
+        _this.instance && _this.instance.dispose()
         _this.$nextTick(() => {
           _this.instance = window.Aliplayer({
             id: _this.playerId,
@@ -428,5 +556,8 @@ export default {
   }
   .prism-volume{
     margin-right: 15px!important;
+  }
+  .prism-cc-btn,.prism-setting-quality{
+    display: none;
   }
 </style>
