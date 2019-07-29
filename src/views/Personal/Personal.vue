@@ -5,7 +5,7 @@
           <div class="integral-signin">{{personalInfo.integral}}积分<span>签到</span></div>
           <div class="user-flex">
             <div class="user-info">
-              <img :src="personalInfo.head" alt="头像" class="head-logo" @click="setClk">
+              <img :src="personalInfo.head" alt="头像" class="head-logo" @click="setBaseInfo">
               <div class="user-name-instr">
                 <h2>{{personalInfo.username}}</h2>
                 <p>您已入学<span>{{personalInfo.day}}</span>天啦！</p>
@@ -107,7 +107,7 @@ export default {
       this.clkTit = type
       window.sessionStorage.setItem('type', type)
     },
-    setClk () {
+    setBaseInfo () {
       this.clkTit = 'set'
       window.sessionStorage.setItem('selIdxSet', this.selIdxSet)
     },

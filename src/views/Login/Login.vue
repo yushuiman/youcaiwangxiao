@@ -73,7 +73,7 @@
           <div class="read">
             <Checkbox v-model="single">我已同意并阅读</Checkbox>
             <span class="Agreement" @click="modal1 = true">《用户注册协议》</span>
-            <!-- <Modal
+            <Modal
               v-model="modal1"
               footer-hide = "false"
               width="1200">
@@ -154,7 +154,7 @@
               <div class="content">
 
               </div>
-            </Modal> -->
+            </Modal>
           </div>
           <i-button type="primary" class="registered" @click="webReg">注册</i-button>
           <div class="yc-bot">优财智业（北京）科技发展有限公司</div>
@@ -300,8 +300,8 @@ export default {
       timer3: null,
       dialogFormVisible: false,
       form: {
-        mobile: '18810399514',
-        password: 'qwe123'
+        mobile: '',
+        password: ''
       },
       form2: {
         mobile: '',
@@ -412,15 +412,18 @@ export default {
     // 忘记密码--获取验证码
     forgetPaw () {
       const TIME_COUNT2 = 60
+       const re = /^[1][3,4,5,7,8,9][0-9]{9}$/
       if (this.form3.mobile === '') {
         this.$Message.error('请输入手机号')
+      } else if(!re.test(this.form3.mobile)) {
+        this.$Message.error('该手机号不符合格式')
       } else {
         if (!this.timer2) {
-          this.count2 = TIME_COUNT2
-          this.show2 = false
-          this.disabled = true
           forgetPaw({ mobile: Encrypt(this.form3.mobile) }).then(res => {
             if (res.data.code === 200) {
+              this.count2 = TIME_COUNT2
+              this.show2 = false
+              this.disabled = true
               this.timer2 = setInterval(() => {
                 if (this.count2 > 0 && this.count2 <= TIME_COUNT2) {
                   this.disabled = false
@@ -436,6 +439,8 @@ export default {
                   this.timer2 = null
                 }
               }, 1000)
+            } else{
+              this.$Message.error(res.data.msg)
             }
           })
         }
@@ -525,6 +530,8 @@ export default {
           } else if (res.data.code === 408) {
             this.$store.commit('setToken', res.data.data)
             this.$Message.error('验证码错误')
+          } else{
+            this.$Message.error(res.msg)
           }
         })
       }

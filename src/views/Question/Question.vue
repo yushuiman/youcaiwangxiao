@@ -243,7 +243,7 @@ export default {
     })
   },
   mounted () {
-    if (this.user_id) {
+    if (this.user_id && !this.experience) {
       this.projectList() // 已登录，获取课程列表
     }
   },

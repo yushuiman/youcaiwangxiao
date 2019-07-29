@@ -358,6 +358,7 @@ export default {
     padding: 0 20px;
   }
   .dopstu-item{
+    text-align: center;
     span{
       height: 35px;
       display: block;

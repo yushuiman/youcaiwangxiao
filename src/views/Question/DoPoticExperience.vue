@@ -215,6 +215,8 @@ export default {
       this.getExperienceStati()
     },
     getExperienceStati () {
+      window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
+      window.sessionStorage.setItem('diffRes', '') // 区分接口请求
       experienceStati(this.experienceTopics).then(data => {
         const res = data.data
         window.sessionStorage.setItem('experienceStatiInfo', JSON.stringify(res.data))
@@ -290,6 +292,7 @@ export default {
     display: flex;
   }
   .dopstu-item{
+    text-align: center;
     margin-right: 50px;
     span{
       height: 35px;

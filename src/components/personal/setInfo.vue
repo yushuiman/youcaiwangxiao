@@ -25,7 +25,7 @@
             <span>性别</span>
             <span class="info_sex" v-if="userInfo.sex == 1">男</span>
             <span class="info_sex" v-if="userInfo.sex == 2">女</span>
-            <span class="info_sex" v-if="userInfo.sex == 3">未填写</span>
+            <span class="info_sex" v-if="userInfo.sex == 0">未填写</span>
           </div>
           <!--手机-->
           <div class="info_msg">
@@ -331,6 +331,7 @@ export default {
     },
     // 修改div展示
     btnChangeinfo () {
+      console.log(323)
       this.changeSetFlag = true
       this.userInfo.sex = this.userInfo.sex + ''
       // this.option.img = this.userInfo.head
