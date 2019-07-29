@@ -57,7 +57,11 @@ export default {
         package_id: this.package_id
       }).then(data => {
         const res = data.data
-        this.courseCatalogInfo = res.data
+        if (res.code === 200) {
+          this.courseCatalogInfo = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 课程大纲(章节 video)
@@ -72,11 +76,15 @@ export default {
         course_id: item.course_id
       }).then(data => {
         const res = data.data
-        this.courseSections = res.data
-        this.secvCatalogArr.push({
-          type: item.name,
-          courseSections: res.data
-        })
+        if (res.code === 200) {
+          this.courseSections = res.data
+          this.secvCatalogArr.push({
+            type: item.name,
+            courseSections: res.data
+          })
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 跳转到播放页面

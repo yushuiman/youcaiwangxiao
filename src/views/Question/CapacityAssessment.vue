@@ -168,10 +168,14 @@ export default {
         course_id: this.$route.query.course_id
       }).then(data => {
         const res = data.data
-        this.ycfen = res.data.ycfen
-        this.nlpgInfo = res.data.data
-        this.monStatistics = res.data.monStatistics
-        this.initCharts()
+        if (res.code === 200) {
+          this.ycfen = res.data.ycfen
+          this.nlpgInfo = res.data.data
+          this.monStatistics = res.data.monStatistics
+          this.initCharts()
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     }
   }

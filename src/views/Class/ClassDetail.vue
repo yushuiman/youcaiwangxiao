@@ -137,8 +137,12 @@ export default {
         package_id: this.$route.query.package_id
       }).then(data => {
         const res = data.data
-        this.isntroduction = res.data
-        this.teacehr = res.data.teacehr
+        if (res.code === 200) {
+          this.isntroduction = res.data
+          this.teacehr = res.data.teacehr
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // tab切换 (课程简介 课程大纲)

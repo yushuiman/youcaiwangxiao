@@ -416,6 +416,8 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.$emit('getPersonalInfo')
+        } else {
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -487,6 +489,8 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.$emit('getPersonalInfo')
+        } else {
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -529,6 +533,8 @@ export default {
             this.$Message.success('密码修改成功')
             this.$router.push('/')
           }
+        } else {
+          this.$Message.error(res.msg)
         }
       })
     },

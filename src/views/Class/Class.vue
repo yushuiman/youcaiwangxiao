@@ -219,16 +219,24 @@ export default {
     // 获取数据
     getCourseList () {
       courseList(this.form).then(data => {
-        const res = data.data.data
-        this.courseList = res.data
-        this.total = res.total
+        const res = data.data
+        if (res.code === 200) {
+          this.courseList = res.data.data
+          this.total = res.total
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 科目
     getSubjects () {
       subjects().then(data => {
         const res = data.data
-        this.subject_type = res.data
+        if (res.code === 200) {
+          this.subject_type = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     sendText () {

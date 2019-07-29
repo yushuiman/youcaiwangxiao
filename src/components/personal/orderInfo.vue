@@ -105,14 +105,18 @@ export default {
         user_id: this.user_id
       }).then(data => {
         const res = data.data
-        this.orderAllList = res.data
-        this.orderAlearyPayList = res.data.filter((v, i, a) => {
-          return v.pay_status === 1
-        })
-        this.orderNoPayList = res.data.filter((v, i, a) => {
-          return v.pay_status === 2
-        })
-        this.initRes()
+        if (res.code === 200) {
+          this.orderAllList = res.data
+          this.orderAlearyPayList = res.data.filter((v, i, a) => {
+            return v.pay_status === 1
+          })
+          this.orderNoPayList = res.data.filter((v, i, a) => {
+            return v.pay_status === 2
+          })
+          this.initRes()
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     initRes () {
@@ -135,10 +139,14 @@ export default {
         order_num: item.order_num
       }).then(data => {
         const res = data.data
-        let { course, address } = res.data
-        this.orderDetail = course
-        if (address) {
-          this.orderAddress = address
+        if (res.code === 200) {
+          let { course, address } = res.data
+          this.orderDetail = course
+          if (address) {
+            this.orderAddress = address
+          }
+        } else {
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -152,7 +160,11 @@ export default {
         user_id: this.user_id,
         order_num: item.order_num
       }).then(data => {
-        console.log(data.data)
+        const res = data.data
+        if (res.code === 200) {
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     }
   }

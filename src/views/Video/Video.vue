@@ -51,7 +51,7 @@
       </div>
       <div id="line"></div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
-        <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback()"></course-list>
+        <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
         <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" @closeModel="closeModel"></answer>
         <div class="jiangyi" v-if="flagJy">
           <div class="close-box" @click="closeModel()">
@@ -187,7 +187,11 @@ export default {
         package_id: this.$route.query.package_id
       }).then(data => {
         const res = data.data
-        this.packageList = res.data
+        if (res.code === 200) {
+          this.packageList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 课程大纲(章节 video)
@@ -206,11 +210,15 @@ export default {
         course_id: item.course_id
       }).then(data => {
         const res = data.data
-        this.courseSections = res.data
-        this.secvCatalogArr.push({
-          type: item.name,
-          courseSections: res.data
-        })
+        if (res.code === 200) {
+          this.courseSections = res.data
+          this.secvCatalogArr.push({
+            type: item.name,
+            courseSections: res.data
+          })
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 初始化展示章节
@@ -219,17 +227,21 @@ export default {
         course_id: this.$route.query.course_id
       }).then(data => {
         const res = data.data
-        this.courseSections = res.data
-        this.courseSections.forEach((v, key) => {
-          let sectionId = this.$route.query.section_id + ''
-          let videoId = this.$route.query.video_id + ''
-          v.videos.forEach((val, index) => {
-            if (sectionId.indexOf(v.section_id) > -1 && videoId.indexOf(val.video_id) > -1) {
-              let openMenu = (key + 1) + '-' + (index + 1)
-              this.openMenu = openMenu
-            }
+        if (res.code === 200) {
+          this.courseSections = res.data
+          this.courseSections.forEach((v, key) => {
+            let sectionId = this.$route.query.section_id + ''
+            let videoId = this.$route.query.video_id + ''
+            v.videos.forEach((val, index) => {
+              if (sectionId.indexOf(v.section_id) > -1 && videoId.indexOf(val.video_id) > -1) {
+                let openMenu = (key + 1) + '-' + (index + 1)
+                this.openMenu = openMenu
+              }
+            })
           })
-        })
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 获取视频凭证
@@ -238,14 +250,18 @@ export default {
         video_id: id
       }).then(data => {
         const res = data.data
-        this.VideoId = res.data.VideoId
-        // 获取视频凭证
-        let dataForm = Object.assign({ VideoId: res.data.VideoId, user_id: this.user_id, video_time: 5, quiz_image: 'dfsdfsdfsd' }, this.playCourseInfo)
-        videoCredentials(dataForm).then(data => {
-          let res = data.data
-          this.videoCredentials = res.data
-          this.videoCredentials.playtime = this.playtime // 播放到当前时间
-        })
+        if (res.code === 200) {
+          this.VideoId = res.data.VideoId
+          // 获取视频凭证
+          let dataForm = Object.assign({ VideoId: res.data.VideoId, user_id: this.user_id, video_time: 5, quiz_image: 'dfsdfsdfsd' }, this.playCourseInfo)
+          videoCredentials(dataForm).then(data => {
+            let res = data.data
+            this.videoCredentials = res.data
+            this.videoCredentials.playtime = this.playtime // 播放到当前时间
+          })
+        } else {
+          // this.$Message.error(res.msg)
+        }
       })
     },
     // 收藏
@@ -277,7 +293,12 @@ export default {
         user_id: this.user_id,
         static: this.videoCredentials.collect
       }).then(data => {
-
+        const res = data.data
+        if (res.code === 200) {
+          this.$Message.error('收藏成功')
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 个人中心

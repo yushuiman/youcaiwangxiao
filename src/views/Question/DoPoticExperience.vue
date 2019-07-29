@@ -164,20 +164,24 @@ export default {
         user_id: this.user_id
       }).then(data => {
         const res = data.data
-        let { topics, total, title } = res.data
-        this.topics = topics
-        this.total = parseInt(total)
-        this.title = title
-        this.answer_time = 50000
-        this.topics.map((val, index) => {
-          val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
-          val.flag = false // 解析展开收起交互(练习模式)
-          val.currenOption = false // 点击当前题，不能重复选择(练习模式)
-          val.userOption = ''
-          val.options.map((v, index) => {
-            v.selOption = false // 选择当前选项变蓝色，其他默认颜色，可以重复选择(除了练习模式，都是这个逻辑)
+        if (res.code === 200) {
+          let { topics, total, title } = res.data
+          this.topics = topics
+          this.total = parseInt(total)
+          this.title = title
+          this.answer_time = 50000
+          this.topics.map((val, index) => {
+            val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
+            val.flag = false // 解析展开收起交互(练习模式)
+            val.currenOption = false // 点击当前题，不能重复选择(练习模式)
+            val.userOption = ''
+            val.options.map((v, index) => {
+              v.selOption = false // 选择当前选项变蓝色，其他默认颜色，可以重复选择(除了练习模式，都是这个逻辑)
+            })
           })
-        })
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 交卷 保存 暂停
@@ -219,12 +223,16 @@ export default {
       window.sessionStorage.setItem('diffRes', '') // 区分接口请求
       experienceStati(this.experienceTopics).then(data => {
         const res = data.data
-        window.sessionStorage.setItem('experienceStatiInfo', JSON.stringify(res.data))
-        this.$router.push({ path: '/result-report',
-          query: {
-            plate_id: this.$route.query.plate_id
-          }
-        })
+        if (res.code === 200) {
+          window.sessionStorage.setItem('experienceStatiInfo', JSON.stringify(res.data))
+          this.$router.push({ path: '/result-report',
+            query: {
+              plate_id: this.$route.query.plate_id
+            }
+          })
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     }
   }

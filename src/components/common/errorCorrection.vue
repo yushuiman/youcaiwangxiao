@@ -55,8 +55,12 @@ export default {
         user_id: this.user_id,
         error_content: this.error_content
       }).then(data => {
-        this.$Message.success('纠错问题提交成功')
-        this.$emit('modalShow', false)
+        if (res.code === 200) {
+          this.$Message.success('纠错问题提交成功')
+          this.$emit('modalShow', false)
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     }
   }

@@ -103,7 +103,11 @@ export default {
         user_id: this.user_id
       }).then(data => {
         const res = data.data
-        this.errorSecList = res.data
+        if (res.code === 200) {
+          this.errorSecList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
 
@@ -123,7 +127,11 @@ export default {
         knob_id: this.getPoticData.knob_id
       }).then(data => {
         const res = data.data
-        this.knowList = res.data
+        if (res.code === 200) {
+          this.knowList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     goToPic (v, type) {

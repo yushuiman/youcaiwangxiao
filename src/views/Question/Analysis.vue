@@ -132,9 +132,13 @@ export default {
         type: this.$route.query.type
       }).then(data => {
         const res = data.data
-        this.topics = res.data.topics
-        this.title = res.data.title
-        this.answerSts(this.topics)
+        if (res.code === 200) {
+          this.topics = res.data.topics
+          this.title = res.data.title
+          this.answerSts(this.topics)
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 0元体验解析
@@ -146,9 +150,13 @@ export default {
         question_content: obj.question_content
       }).then(data => {
         const res = data.data
-        this.topics = res.data.topics
-        this.title = res.data.title
-        this.answerSts(this.topics)
+        if (res.code === 200) {
+          this.topics = res.data.topics
+          this.title = res.data.title
+          this.answerSts(this.topics)
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 答题记录论述题解析
@@ -159,9 +167,13 @@ export default {
         type: this.$route.query.type
       }).then(data => {
         const res = data.data
-        this.topics = res.data.topics
-        this.title = res.data.title
-        this.answerSts(this.topics)
+        if (res.code === 200) {
+          this.topics = res.data.topics
+          this.title = res.data.title
+          this.answerSts(this.topics)
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 错题集查看解析 全部
@@ -174,9 +186,13 @@ export default {
         user_id: this.user_id
       }).then(data => {
         const res = data.data
-        this.topics = res.data.topics
-        this.title = res.data.title
-        this.answerSts(this.topics)
+        if (res.code === 200) {
+          this.topics = res.data.topics
+          this.title = res.data.title
+          this.answerSts(this.topics)
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 错题集查看解析,全部-错题
@@ -191,9 +207,13 @@ export default {
         question_content: this.dataStorage.question_content.question
       }).then(data => {
         const res = data.data
-        this.topics = res.data.topics
-        this.title = res.data.title
-        this.answerSts(this.topics)
+        if (res.code === 200) {
+          this.topics = res.data.topics
+          this.title = res.data.title
+          this.answerSts(this.topics)
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 收藏夹
@@ -206,9 +226,13 @@ export default {
         knob_id: this.dataStorage.knob_id
       }).then(data => {
         const res = data.data
-        this.topics = res.data.topics
-        this.title = res.data.title
-        this.answerSts(this.topics)
+        if (res.code === 200) {
+          this.topics = res.data.topics
+          this.title = res.data.title
+          this.answerSts(this.topics)
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 答题卡状态，问题列表状态（解析，用户答案）

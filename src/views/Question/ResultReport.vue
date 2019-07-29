@@ -94,8 +94,12 @@ export default {
         paper_id: this.$route.query.paper_id
       }).then(data => {
         const res = data.data
-        this.resultsInfo = res.data
-        this.cardSts(res.data.question_content) // 答题卡颜色状态
+        if (res.code === 200) {
+          this.resultsInfo = res.data
+          this.cardSts(res.data.question_content) // 答题卡颜色状态
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 0元体验成绩统计
@@ -131,8 +135,12 @@ export default {
         question_content: obj.question_content.question
       }).then(data => {
         const res = data.data
-        this.resultsInfo = res.data
-        this.cardSts(res.data.question_content) // 答题卡颜色状态
+        if (res.code === 200) {
+          this.resultsInfo = res.data
+          this.cardSts(res.data.question_content) // 答题卡颜色状态
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 查看解析

@@ -402,6 +402,8 @@ export default {
               /* 保存token */
               this.$Message.error('该手机号已注册')
               this.form2.mobile = ''
+            } else {
+              this.$Message.error(res.data.msg)
             }
           })
         }
@@ -473,6 +475,8 @@ export default {
                   this.timer3 = null
                 }
               }, 1000)
+            } else {
+              this.$Message.error(res.data.msg)
             }
           })
         }
@@ -530,8 +534,8 @@ export default {
           } else if (res.data.code === 408) {
             this.$store.commit('setToken', res.data.data)
             this.$Message.error('验证码错误')
-          } else{
-            this.$Message.error(res.msg)
+          } else {
+            this.$Message.error(res.data.msg)
           }
         })
       }
@@ -545,6 +549,8 @@ export default {
         } else if (res.data.code === 408) {
           this.$store.commit('setToken', res.data.data)
           this.$Message.error('验证码错误')
+        } else {
+          this.$Message.error(res.data.msg)
         }
       })
     },
@@ -557,6 +563,8 @@ export default {
         } else if (res.data.code === 408) {
           this.$store.commit('setToken', res.data.data)
           this.$Message.error('验证码错误')
+        } else {
+          this.$Message.error(res.data.msg)
         }
       })
     },
@@ -569,6 +577,8 @@ export default {
         } else if (res.data.code === 408) {
           this.$store.commit('setToken', res.data.data)
           this.$Message.error('验证码错误')
+        } else {
+          this.$Message.error(res.data.msg)
         }
       })
     },
@@ -603,6 +613,8 @@ export default {
         quickLogin({ 'mobile': Encrypt(this.form4.mobile), 'mobilecode': this.form4.code }).then(res => {
           if (res.data.code === 200) {
             this.$Message.success('登录成功')
+          } else {
+            this.$Message.error(res.data.msg)
           }
         })
       }

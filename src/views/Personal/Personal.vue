@@ -132,6 +132,8 @@ export default {
             sex: this.personalInfo.sex
           }
           window.sessionStorage.setItem('personalInfo', JSON.stringify(obj))
+        } else {
+          this.$Message.error(res.msg)
         }
       })
     }

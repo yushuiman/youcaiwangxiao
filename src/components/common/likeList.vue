@@ -39,7 +39,11 @@ export default {
     getGuessLike () {
       guessLike().then(data => {
         const res = data.data
-        this.likeArr = res.data
+        if (res.code === 200) {
+          this.likeArr = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     }
   }

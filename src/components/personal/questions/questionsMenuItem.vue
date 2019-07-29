@@ -89,8 +89,12 @@ export default {
         page: this.page
       }).then(data => {
         const res = data.data
-        this.questionRecordList = res.data.question
-        this.total = res.data.num
+        if (res.code === 200) {
+          this.questionRecordList = res.data.question
+          this.total = res.data.num
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 分页

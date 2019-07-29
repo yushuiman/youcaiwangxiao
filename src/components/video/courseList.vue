@@ -171,7 +171,7 @@ export default {
       v.flag = true
       this.playIdx = v
       this.$forceUpdate()
-      this.$emit('getVideoPlayback', v.video_id)
+      // this.$emit('getVideoPlayback', v.video_id)
       // let openMenu = (key + 1) + '-' + (index + 1)
       // window.sessionStorage.setItem('openMenu', .openMenu)
       this.$router.replace({ path: 'class-video',
@@ -181,8 +181,8 @@ export default {
           video_id: v.video_id
         }
       })
-      // window.location.reload()
-      this.handleReload()
+      window.location.reload()
+      // this.handleReload()
     }
   }
 }

@@ -186,12 +186,16 @@ export default {
         page: this.page
       }).then(data => {
         const res = data.data
-        let { num, list } = res.data
-        this.total = num
-        this.courseAnswerList = list
-        this.courseAnswerList.map((val, index) => {
-          val.openFlag = false
-        })
+        if (res.code === 200) {
+          let { num, list } = res.data
+          this.total = num
+          this.courseAnswerList = list
+          this.courseAnswerList.map((val, index) => {
+            val.openFlag = false
+          })
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 题库答疑
@@ -202,12 +206,16 @@ export default {
         page: this.page
       }).then(data => {
         const res = data.data
-        let { num } = res.data
-        this.total = num
-        this.questionAnswerList = res.data.data
-        this.questionAnswerList.map((val, index) => {
-          val.openFlag = false
-        })
+        if (res.code === 200) {
+          let { num } = res.data
+          this.total = num
+          this.questionAnswerList = res.data.data
+          this.questionAnswerList.map((val, index) => {
+            val.openFlag = false
+          })
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 展开收起

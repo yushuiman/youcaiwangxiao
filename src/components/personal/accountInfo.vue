@@ -78,7 +78,7 @@ export default {
         2: '微信',
         3: '余额',
         4: '支付宝',
-        5: '支后台付宝',
+        5: '后台',
         6: '积分兑换'
       }
     }
@@ -112,6 +112,8 @@ export default {
         const res = data.data
         if(res.code === 200){
           this.consumptionRecordList = res.data
+        } else {
+          this.$Message.error(res.msg)
         }
       })
     }

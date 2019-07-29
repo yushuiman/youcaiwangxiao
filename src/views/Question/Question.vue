@@ -252,15 +252,16 @@ export default {
     projectList () {
       getProject({ user_id: this.user_id }).then(data => {
         const res = data.data
-        this.projectArr = res.data
-        // if (this.course_id === '') {
-        //   window.sessionStorage.setItem('course_id', res.data[0].id)
-        // }
-        this.getQuestionIndex(this.course_id || res.data[0].id, this.questionIndexSel)
-        this.experience = false
-        // 0元体验
-        if (res.data && res.data.length === 0) {
-          this.experience = true
+        if (res.code === 200) {
+          this.projectArr = res.data
+          this.getQuestionIndex(this.course_id || res.data[0].id, this.questionIndexSel)
+          this.experience = false
+          // 0元体验
+          if (res.data && res.data.length === 0) {
+            this.experience = true
+          }
+        } else {
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -275,8 +276,12 @@ export default {
         course_id: id
       }).then(data => {
         const res = data.data
-        this.questionResult = res.data
-        this.getStudentsRanking(this.course_id) // 学员排名
+        if (res.code === 200) {
+          this.questionResult = res.data
+          this.getStudentsRanking(this.course_id) // 学员排名
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 去做题 展示对应模块题库
@@ -292,7 +297,11 @@ export default {
         limit: 10
       }).then(data => {
         const res = data.data
-        this.studentsRankList = res.data
+        if (res.code === 200) {
+          this.studentsRankList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 能力评估

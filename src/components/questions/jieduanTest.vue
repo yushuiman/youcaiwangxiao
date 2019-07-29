@@ -59,7 +59,11 @@ export default {
         plate_id: this.plate_id
       }).then(data => {
         const res = data.data
-        this.courseList = res.data
+        if (res.code === 200) {
+          this.courseList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 去做题

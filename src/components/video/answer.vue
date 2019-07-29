@@ -199,10 +199,14 @@ export default {
       let vtime = window.sessionStorage.getItem('pauseWatchTime')
       let data = Object.assign({ quiz: this.quiz, video_time: vtime, quiz_image: quizImage }, this.playCourseInfo)
       answerSub(data).then(data => {
-        this.uploadList = []
-        this.quiz_image = []
-        this.quiz = ''
-        this.getAnswerList()
+        if (res.code === 200) {
+          this.uploadList = []
+          this.quiz_image = []
+          this.quiz = ''
+          this.getAnswerList()
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 问题列表
@@ -229,8 +233,11 @@ export default {
         answer_id: id
       }).then(data => {
         const res = data.data
-        console.log(res.data)
-        this.$set(this.replyList, [id], res.data)
+        if (res.code === 200) {
+          this.$set(this.replyList, [id], res.data)
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 答疑

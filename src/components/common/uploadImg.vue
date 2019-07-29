@@ -201,10 +201,15 @@ export default {
         quiz: this.quiz,
         quiz_image: quizImage
       }).then(data => {
-        this.quiz = ''
-        this.uploadList = []
-        this.quiz_image = []
-        this.questionallAnswerList()
+        const res = data.data
+        if (res.code === 200) {
+          this.quiz = ''
+          this.uploadList = []
+          this.quiz_image = []
+          this.questionallAnswerList()
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 全部答疑列表
@@ -215,10 +220,14 @@ export default {
         type: 1 // 1全部2我的提问
       }).then(data => {
         const res = data.data
-        this.questionallAnswerInfo = res.data
-        this.questionallAnswerInfo.map((val, index) => {
-          val.openFlag = false
-        })
+        if (res.code === 200) {
+          this.questionallAnswerInfo = res.data
+          this.questionallAnswerInfo.map((val, index) => {
+            val.openFlag = false
+          })
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 答疑回复内容
@@ -227,7 +236,11 @@ export default {
         answer_id: id
       }).then(data => {
         const res = data.data
-        this.$set(this.replyList, [id], res.data.reply)
+        if (res.code === 200) {
+          this.$set(this.replyList, [id], res.data.reply)
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 展开收起

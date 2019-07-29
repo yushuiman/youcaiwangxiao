@@ -106,7 +106,11 @@ export default {
         course_id: this.course_id
       }).then(data => {
         const res = data.data
-        this.sectionList = res.data
+        if (res.code === 200) {
+          this.sectionList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 选择练习考试模式
@@ -136,7 +140,11 @@ export default {
         knob_id: this.getPoticData.knob_id
       }).then(data => {
         const res = data.data
-        this.knowList = res.data
+        if (res.code === 200) {
+          this.knowList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 去做题

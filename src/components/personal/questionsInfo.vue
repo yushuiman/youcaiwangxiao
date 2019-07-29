@@ -58,7 +58,11 @@ export default {
         user_id: this.user_id
       }).then(data => {
         const res = data.data
-        this.courseList = res.data
+        if (res.code === 200) {
+          this.courseList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     }
   }

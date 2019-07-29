@@ -47,6 +47,8 @@ export default {
             Message.error('账号已被冻结，请联系管理员!')
           } else if (data.code === 406) {
             Message.error(data.msg)
+          } else {
+            this.$Message.error(data.msg)
           }
         }).catch(err => {
           reject(err)

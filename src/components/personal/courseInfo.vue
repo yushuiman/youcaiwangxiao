@@ -138,7 +138,11 @@ export default {
         user_id: this.user_id
       }).then(data => {
         const res = data.data
-        this.myCourseList = res.data
+        if (res.code === 200) {
+          this.myCourseList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 播放记录
@@ -147,7 +151,11 @@ export default {
         user_id: this.user_id
       }).then(data => {
         const res = data.data
-        this.watchRecordsList = res.data
+        if (res.code === 200) {
+          this.watchRecordsList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 收藏课程包
@@ -158,7 +166,11 @@ export default {
         page: this.page
       }).then(data => {
         const res = data.data
-        this.myCollpackageList = res.data
+        if (res.code === 200) {
+          this.myCollpackageList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 获取收藏课程目录
@@ -168,7 +180,11 @@ export default {
         package_id: val.package_id
       }).then(data => {
         const res = data.data
-        this.myCollcourseList = res.data
+        if (res.code === 200) {
+          this.myCollcourseList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 获取收藏课程目录modal
@@ -190,7 +206,11 @@ export default {
         course_id: val.course_id
       }).then(data => {
         const res = data.data
-        this.myCollvideoList = res.data.section
+        if (res.code === 200) {
+          this.myCollvideoList = res.data.section
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     // 课程去学习
