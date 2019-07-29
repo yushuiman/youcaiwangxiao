@@ -18,8 +18,8 @@
 
           <div class="login-wrap fr">
             <div class="login-l fl" v-if="!this.token">
-              <router-link to="/login">登录</router-link> |
-              <router-link to="/login">注册</router-link>
+              <router-link :to="{name: 'login',  params: { isLogin: 'login' }}">登录</router-link> |
+              <router-link :to="{name: 'login',  params: { isLogin: 'reg' }}">注册</router-link>
             </div>
             <a class="learen-btn fl">学习中心</a>
             <div class="login-r fr" v-if="this.token">

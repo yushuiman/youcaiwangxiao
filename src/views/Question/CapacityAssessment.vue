@@ -58,18 +58,22 @@ import echarts from 'echarts'
 export default {
   data () {
     return {
-      ycfen: '',
+      ycfen: 0,
       nlpgInfo: {}, // 能力评估
       monStatistics: {} // 本月统计
     }
   },
   computed: {
     ...mapState({
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      token: state => state.user.token
     })
   },
   mounted () {
-    this.getAbiAssess()
+    if(this.token){
+      this.getAbiAssess()
+    }
+    this.initCharts()
   },
   methods: {
     initCharts () {
@@ -140,12 +144,12 @@ export default {
             data: [
               {
                 value: [
-                  this.nlpgInfo.user_time,
+                  this.nlpgInfo.user_time || 0,
                   this.nlpgInfo.error_num || 0,
                   this.nlpgInfo.total_num || 0,
-                  this.nlpgInfo.ranking,
-                  this.nlpgInfo.scores,
-                  this.nlpgInfo.accuracy
+                  this.nlpgInfo.ranking || 0,
+                  this.nlpgInfo.scores || 0,
+                  this.nlpgInfo.accuracy || 0
                 ],
                 name: '能力评估',
                 areaStyle: {

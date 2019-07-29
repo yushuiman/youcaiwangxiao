@@ -75,7 +75,7 @@
             <span class="Agreement" @click="modal1 = true">《用户注册协议》</span>
             <Modal
               v-model="modal1"
-              footer-hide = "false"
+              footer-hide
               width="1200">
               <div class="content">
                 本用户协议双方为优财网校(www.youcaiwx.com)所有者优财CMA培训中心与网校使用学员，本协议具有法律效力。学员须遵守本用户协议，并在本协议中承诺遵守所有优财培训中心已经发布的或将来可能发布的各类规则。
@@ -286,7 +286,7 @@ export default {
       is_show: 2,
       is_show2: 2,
       is_forget: 'log-reg',
-      isLogin: 'login',
+      isLogin: this.$route.params.isLogin || 'login',
       show: true,
       /* 不可以点击 */
       disabled: false,

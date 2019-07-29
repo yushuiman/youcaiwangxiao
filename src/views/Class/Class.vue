@@ -3,7 +3,7 @@
     <div class="class-choose">
       <!-- 已选条件 -->
       <div class="cl-aleary-tj">
-        <div class="w-wrap class-com" v-if="classNamea != '' || form.billing_status != '' || form.ym != ''">
+        <div class="w-wrap class-com al-class-com" v-if="classNamea != '' || form.billing_status != '' || form.ym != ''">
           <span class="cl-txt">已选条件</span>
           <div class="cl-list cla-list">
             <span v-if="classNamea != ''"><em>{{classNamea}}</em><i class="del-cion" @click="delChoose('科目')"></i></span>
@@ -66,7 +66,7 @@
           <img :src="items.pc_img" alt="" class="course-main-con-img">
           <div class="course-main-info">
             <p class="ci-title">{{items.name}}</p>
-            <p class="ci-teacher-day"><span>讲师：{{items.teacher_name}}</span>有效期：730天</p>
+            <p class="ci-teacher-day"><span>讲师：{{items.teacher_name}}</span>有效期：{{items.study_days}}天</p>
             <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? '¥' + items.price : item.billing_status == 3 ? '积分兑换' : '等级进入' }}</span>
           </div>
         </div>
@@ -263,6 +263,11 @@ export default {
     .cl-aleary-tj &{
       padding: 10px 0;
       @extend %alignitem_center;
+      span{
+        &:hover{
+          color: $col333;
+        }
+      }
     }
     .class-zh &{
       line-height: 50px;
@@ -281,7 +286,7 @@ export default {
       @include lh(28, 28);
       background: $colfff;
       float: left;
-      border: 1px solid $blueColor;
+      border: 1px solid #0CA1FF;
       border-radius: 4px;
       margin-right: 21px;
       box-sizing: border-box;
@@ -291,6 +296,7 @@ export default {
         float: left;
         display: inline-block;
         height: 100%;
+        font-weight: normal;
         margin-right: 0;
       }
       em{
