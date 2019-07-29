@@ -3,7 +3,7 @@
     <ul class="tab-list">
       <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxQuestion == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
-    <div class="all-main">
+    <div class="all-main" v-if="courseList.length">
       <!-- 做题记录 -->
       <questions-menuItem v-if="selIdxQuestion == 0" :courseList="courseList"></questions-menuItem>
       <!-- 错题集 -->

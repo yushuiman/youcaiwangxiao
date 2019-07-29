@@ -33,7 +33,7 @@
       </Row>
       <Row class="practice-wrap">
         <Col span="24" class="practice-item">
-          <div class="prt-info-com prt-info prt-info-04">
+          <div class="prt-info-com prt-info prt-info-08">
             <div class="prt-flex">
               <i class="prt-icon"></i>
               <div class="prt-txt">
@@ -45,6 +45,11 @@
           </div>
         </Col>
       </Row>
+      <div class="ty-info">
+        <img src="../../assets/images/questions/ty-icon.png" alt="0元体验" class="ty-icon">
+        <p class="txt">每天坚持一点，每日进步一点</p>
+        <p class="txt-red">购买课程后相应题库会自动打开</p>
+      </div>
     </div>
     <!-- 已购买课程 有题库 -->
     <div class="qt-wrap-l fl" v-if="!experience">
@@ -130,7 +135,7 @@
             <button class="btn-com" @click="nengLiPingGu">能力评估</button>
           </div>
           <div class="cal-num">
-            {{questionResult.ranking}}
+            {{questionResult.ranking || 0}}
           </div>
         </div>
         <ul class="my-question">
@@ -138,14 +143,6 @@
             <i class="mq-icon"></i>
             <p>{{item}}</p>
           </li>
-          <!-- <li class="mq-item mq-item-02">
-            <i class="mq-icon"></i>
-            <p>我的错题</p>
-          </li>
-          <li class="mq-item mq-item-03">
-            <i class="mq-icon"></i>
-            <p>收藏夹</p>
-          </li> -->
         </ul>
       </div>
       <div class="qt-wrap-r-bottom">
@@ -176,7 +173,6 @@ import errorSection from '../../components/questions/errorSection'
 import lianxiSelf from '../../components/questions/lianxiSelf'
 import groupLianxi from '../../components/questions/groupLianxi'
 import { mapState } from 'vuex'
-// import Cookies from 'js-cookie'
 export default {
   data () {
     return {
@@ -239,12 +235,16 @@ export default {
   },
   computed: {
     ...mapState({
+      token: state => state.user.token,
       user_id: state => state.user.user_id
     })
   },
   mounted () {
-    if (this.user_id && !this.experience) {
+    if (this.token) {
       this.projectList() // 已登录，获取课程列表
+    }
+    if (!this.token) {
+      this.getStudentsRanking()
     }
   },
   methods: {
@@ -267,6 +267,10 @@ export default {
     },
     // 课程对应正确率，做题数，平均分
     getQuestionIndex (id, index) {
+      if (!this.token) {
+        this.$router.push('login')
+        return
+      }
       this.course_id = id
       window.sessionStorage.setItem('course_id', id)
       window.sessionStorage.setItem('questionIndexSel', index)
@@ -293,7 +297,7 @@ export default {
     // 学员排名
     getStudentsRanking (id) {
       studentsRanking({
-        course_id: id,
+        course_id: id || '',
         limit: 10
       }).then(data => {
         const res = data.data
@@ -306,9 +310,13 @@ export default {
     },
     // 能力评估
     nengLiPingGu () {
+      if (!this.token) {
+        this.$router.push('login')
+        return
+      }
       this.$router.push({ path: '/capacity-assessment',
         query: {
-          course_id: this.course_id
+          course_id: this.course_id || 0
         }
       })
     },
@@ -326,6 +334,10 @@ export default {
     },
     // 个人中心
     goPersonalPage (index) {
+      if (!this.token) {
+        this.$router.push('login')
+        return
+      }
       window.sessionStorage.setItem('type', 'questions')
       window.sessionStorage.setItem('course_id', this.course_id)
       window.sessionStorage.setItem('selIdxQuestion', index)
@@ -471,6 +483,9 @@ export default {
   }
   .prt-flex{
     display: flex;
+    .prt-info-08 &{
+      align-items: center;
+    }
   }
   .prt-icon{
     .prt-info-01 &{
@@ -487,6 +502,9 @@ export default {
     .prt-info-04 &{
       @include bg-img(40, 40, '../../assets/images/questions/practice-icon04.png');
       background-size: 38px 47px;
+    }
+    .prt-info-08 &{
+      @include bg-img(40, 40, '../../assets/images/questions/practice-icon08.png');
     }
   }
   .prt-txt{
@@ -522,6 +540,26 @@ export default {
       box-shadow: 0px 2px 11px 0px rgba(0, 113, 230, 0.65);
     }
   }
+  .ty-info{
+    text-align: center;
+    padding: 20px 0;
+    .ty-icon{
+      width: 110px;
+      height: 101px;
+    }
+    .txt{
+      font-size: 18px;
+      line-height: 25px;
+      font-weight: 500;
+      margin-top: 18px;
+    }
+    .txt-red{
+      color: #E84342;
+      font-size: 16px;
+      line-height: 22px;
+      margin-top: 4px;
+    }
+  }
 
   // 预测评估 答题记录 错题 收藏
   .qt-wrap-r-top, .qt-wrap-r-bottom{
@@ -529,6 +567,9 @@ export default {
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
+  }
+  .qt-wrap-r-bottom{
+    padding-bottom: 4px;
   }
   .cal-tit{
     display: flex;

@@ -407,8 +407,8 @@ export default {
     width: 900px;
   }
   .course-main-con{
-    width: 279px;
-    margin-right: 20px;
+    width: 266px;
+    margin-right: 33px;
     margin-bottom: 20px;
     border-radius: 0px 0px 10px 10px;
     &:hover{

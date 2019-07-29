@@ -222,8 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   .cass-row-mtb{
-    padding-top: 55px;
-    padding-bottom: 35px;
+    padding-top: 40px;
+    // padding-bottom: 30px;
   }
   .cass-row-pt{
     padding-top: 38px;

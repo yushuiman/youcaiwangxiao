@@ -215,9 +215,9 @@ export default {
         question_id: ID,
         type: item.collection
       }).then(data => {
-        if (res.code === 200) {
+        if (data.data.code === 200) {
         } else {
-          this.$Message.error(res.msg)
+          this.$Message.error(data.data.msg)
         }
       })
     },

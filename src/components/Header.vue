@@ -26,7 +26,7 @@
               <img src="../assets/images/global/email-icon.png" alt="email" class="email-icon">
               <img :src="avatorImgPath" alt="头像" class="head-logo" @click="goPersonalPage">
             </div>
-            <div @click="ouLogin" style="padding:0 6px;">退出</div>
+            <div @click="ouLogin" style="padding:0 6px;" v-if="this.token">退出</div>
           </div>
         </div>
       </div>
@@ -45,6 +45,7 @@ export default {
   computed: {
     ...mapState({
       token: state => state.user.token,
+      user_id: state => state.user.user_id,
       avatorImgPath: state => state.user.avatorImgPath,
       'is_change': state => state.nav.is_change
     }),
@@ -53,10 +54,14 @@ export default {
     }
   },
   mounted () {
+    if (this.token && !this.user_id) {
+      this.getUserInfo()
+    }
   },
   methods: {
     ...mapActions([
-      'handleLogOut'
+      'handleLogOut',
+      'getUserInfo'
     ]),
     ...mapMutations([
       'setChange'

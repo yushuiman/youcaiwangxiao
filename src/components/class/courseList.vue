@@ -31,6 +31,7 @@
 </template>
 <script>
 import { courseCatalog, secvCatalog } from '@/api/class'
+import { mapState } from 'vuex'
 export default {
   props: {
     package_id: {
@@ -46,6 +47,12 @@ export default {
       courseSections: [], // 课程大纲（章节 video）
       secvCatalogArr: []
     }
+  },
+  computed: {
+    ...mapState({
+      token: state => state.user.token,
+      user_id: state => state.user.user_id
+    })
   },
   mounted () {
     this.getCourseCatalog() // 课程大纲（目录）
@@ -89,6 +96,10 @@ export default {
     },
     // 跳转到播放页面
     playVideo (item, val, v, key, index) {
+      if (!this.token) {
+        this.$router.push('login')
+        return
+      }
       this.$router.push({ path: '/class-video',
         query: {
           package_id: this.package_id,

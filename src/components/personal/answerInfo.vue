@@ -187,12 +187,14 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          let { num, list } = res.data
-          this.total = num
-          this.courseAnswerList = list
-          this.courseAnswerList.map((val, index) => {
-            val.openFlag = false
-          })
+          if (res.data && res.data.list) {
+            let { num, list } = res.data
+            this.total = num
+            this.courseAnswerList = list
+            this.courseAnswerList.map((val, index) => {
+              val.openFlag = false
+            })
+          }
         } else {
           this.$Message.error(res.msg)
         }
@@ -207,12 +209,14 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          let { num } = res.data
-          this.total = num
-          this.questionAnswerList = res.data.data
-          this.questionAnswerList.map((val, index) => {
-            val.openFlag = false
-          })
+          if (res.data && res.data.data) {
+            let { num } = res.data
+            this.total = num
+            this.questionAnswerList = res.data.data
+            this.questionAnswerList.map((val, index) => {
+              val.openFlag = false
+            })
+          }
         } else {
           this.$Message.error(res.msg)
         }
@@ -225,11 +229,6 @@ export default {
         this.$forceUpdate()
         return
       }
-      this.questionAnswerList[index].openFlag = !item.openFlag
-      this.$forceUpdate()
-    },
-    // 展开收起
-    openShow2 (item, index) {
       this.questionAnswerList[index].openFlag = !item.openFlag
       this.$forceUpdate()
     },
