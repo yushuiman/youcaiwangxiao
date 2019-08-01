@@ -10,7 +10,7 @@
           <h2 class="r-section-title">{{resultsInfo.paper_name}}</h2>
           <div class="r-statistics">
             <div class="result-water">
-              <div>{{resultsInfo.accuracy}}</div>
+              <wave :accuracy="resultsInfo.accuracy" v-if="resultsInfo.accuracy >= 0"></wave>
               <p>正确率(%)</p>
             </div>
             <ul class="right-wrong-list">
@@ -56,6 +56,7 @@
 <script>
 import { resultsStati } from '@/api/questions'
 import { errorStati } from '@/api/personal'
+import wave from '../../components/common/wave'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -71,6 +72,7 @@ export default {
     })
   },
   components: {
+    wave
   },
   mounted () {
     // 0元体验做题成绩统计
@@ -79,7 +81,7 @@ export default {
       return
     }
     // 错题集成绩统计 全部和错题不能共用一个 所以又区分了
-    if (this.diffRes === '1' || this.diffRes === '11') {
+    if (parseInt(this.diffRes) === 1 || parseInt(this.diffRes) === 11) {
       this.getErrorStati()
       return
     }
@@ -208,11 +210,6 @@ export default {
   .result-water{
     width: 135px;
     text-align: center;
-    div{
-      font-size: 50px;
-      line-height: 135px;
-      @include bg-img(135, 135, '../../assets/images/questions/result-water.png');
-    }
     p{
       margin-top: 10px;
     }
@@ -283,6 +280,7 @@ export default {
       border: 1px solid $col666;
       border-radius: 14px;
       margin: 10px;
+      cursor: pointer;
       &:nth-child(5){
         margin-right: 60px;
       }
@@ -317,8 +315,4 @@ export default {
       }
     }
   }
-  // <div class="jiexi-btn">
-  //             <button class="btn-com all-btn">全部解析</button>
-  //             <button class="btn-com error-btn">错题解析</button>
-  //           </div>
 </style>

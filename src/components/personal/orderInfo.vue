@@ -31,7 +31,9 @@
           </div>
         </li>
       </ul>
-      <div v-else>暂无数据</div>
+      <div class="no-data" v-else>
+        暂无数据
+      </div>
       <Modal v-model="visible"
         :width="795"
         footer-hide
@@ -51,12 +53,12 @@
           <p>下单时间：{{orderDetail.add_time}}</p>
         </div>
         <div class="order-detail-price">
-          <p>课程价格<span>¥1880</span></p>
-          <p>优惠金额<span>¥18800</span></p>
-          <p class="actual-payment">实付款<span>¥188000</span></p>
+          <p>课程价格<span>¥{{orderDetail.price}}</span></p>
+          <p>优惠金额<span>¥{{orderDetail.coupon_price}}</span></p>
+          <p class="actual-payment">实付款<span>¥{{orderDetail.pay_price}}</span></p>
         </div>
         <div class="order-detail-btn">
-          <button class="ccs-btn">联系客服</button>
+          <button class="ccs-btn" @click="serviceLink">联系客服</button>
           <button class="cancle-pay" v-if="pay_status == 2">取消订单</button>
           <button class="go-pay" v-if="pay_status == 2">去支付</button>
           <button v-if="pay_status == 1">申请发票</button>
@@ -166,6 +168,10 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // 客服
+    serviceLink () {
+      window.open('https://awt.zoosnet.net/lr/chatpre.aspx?id=AWT95637580', '_blank')
     }
   }
 }
@@ -195,6 +201,11 @@ export default {
       color: $col333;
       &.waiting{
         color: #F99111;
+      }
+    }
+    .opi-num{
+      span{
+        margin-right: 15px;
       }
     }
   }
@@ -244,6 +255,7 @@ export default {
       .teacher-icon{
         margin-right: 8px;
         @include bg_img(16, 13, '../../assets/images/personal/teacher-icon.png');
+        background-size: contain;
       }
     }
     .opi-effective{

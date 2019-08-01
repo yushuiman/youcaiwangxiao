@@ -90,6 +90,15 @@
             <img class="stu-icon" src="@/assets/images/course/student-icon.png" alt="">
             <span>学员心声</span>
           </div>
+          <div class="tudentVoice-list">
+            <div class="tudentvoic-item" v-for="(item, index) in tudentVoiceList" :key="index">
+              <img :src="item.head" alt="">
+              <div class="tudentvoic-info">
+                <p>{{item.student_name}}</p>
+                <p class="str">{{item.title}}</p>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- 猜你喜欢 -->
         <like-list :isW="true"></like-list>
@@ -99,7 +108,7 @@
 </template>
 <script>
 import 'swiper/dist/css/swiper.css'
-import { courseIntroduction } from '@/api/class'
+import { courseIntroduction, studentVoice } from '@/api/class'
 import courseList from '@/components/class/courseList.vue'
 import likeList from '@/components/common/likeList.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
@@ -109,6 +118,7 @@ export default {
       isChoose: 'kcjj',
       isntroduction: {}, // 课程简介
       teacehr: [], // 教师信息
+      tudentVoiceList: [], // 学员心声
       swiperOptionRec: {
         autoplay: {
           delay: 3000,
@@ -129,6 +139,7 @@ export default {
   },
   mounted () {
     this.getCourseIntroduction() // 课程简介
+    this.getStudentVoice() // 学员心声
   },
   methods: {
     // 课程简介
@@ -140,6 +151,17 @@ export default {
         if (res.code === 200) {
           this.isntroduction = res.data
           this.teacehr = res.data.teacehr
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 学员心声
+    getStudentVoice () {
+      studentVoice().then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.tudentVoiceList = res.data.slice(0, 3)
         } else {
           this.$Message.error(res.msg)
         }
@@ -370,6 +392,7 @@ export default {
     span{
       padding: 0 21px;
       display: inline-block;
+      cursor: pointer;
       &.on{
         color: $blueColor;
       }
@@ -392,52 +415,40 @@ export default {
     .like-title{
       @include lh(39, 39);
       margin-bottom: 4px;
-      img{
-        @include wh(20, 20);
+      .tc-icon{
+        @include wh(16, 19);
+      }
+      .stu-icon{
+        @include wh(18, 18);
+      }
+      .stu-icon, .tc-icon{
         margin-right: 7px;
         vertical-align: middle;
         margin-top: -3px;
       }
     }
   }
-  .like-list {
+  .tudentvoic-item {
     padding: 11px 0;
     @include display_flex(flex);
     @extend %alignitem_center;
     border-top: 1px solid $borderColor;
     box-sizing: border-box;
     img{
-      @include wh(110, 60);
-      border-radius:4px;
+      @include wh(60, 60);
+      border-radius: 50%;
       margin-right: 7px;
-      &.tc-icon{
-        @include wh(16, 19);
-      }
-      &.stu-icon{
-        @include wh(18, 18);
-      }
     }
-    .course-main-student &{
-      img{
-        width: 60px;
-        border-radius: 100%;
-      }
-    }
-  }
-  .like-info {
-    flex: 1;
-    p{
-      line-height: 20px;
-      max-height: 20px;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      -webkit-line-clamp: 1;
-      &.student-instr{
-        max-height: 60px;
-        -webkit-line-clamp: 3;
-        color: $col999;
+    .tudentvoic-info{
+      flex: 1;
+      .str{
+        margin-top: 10px;
         font-size: 12px;
+        color: $col999;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
       }
     }
   }

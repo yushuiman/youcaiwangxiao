@@ -63,6 +63,7 @@ export default {
     // 去做题
     goToPic (v) {
       this.getPoticData.mock_id = v.mock_id
+      this.getPoticData.paper_type = v.mock_type
       this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }
   }

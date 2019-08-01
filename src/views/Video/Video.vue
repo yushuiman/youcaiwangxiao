@@ -43,7 +43,7 @@
         </ul> -->
       </div>
       <div class="video-info-c">
-        <ali-player v-if="videoCredentials.playAuth" :vid="VideoId" :playtime="videoCredentials.playtime" :playauth="videoCredentials.playAuth"></ali-player>
+        <ali-player ref="aliPlayers" v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
         <div class="star-collection" @click="courseCollection(videoCredentials.collect)">
           <Icon type="md-star-outline" style="color: #ffffff;" v-if="videoCredentials.collect == 2"/>
           <Icon type="md-star" style="color: #F99111;" v-if="videoCredentials.collect == 1"/>
@@ -52,7 +52,7 @@
       <div id="line"></div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
         <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
-        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" @closeModel="closeModel"></answer>
+        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel"></answer>
         <div class="jiangyi" v-if="flagJy">
           <div class="close-box" @click="closeModel()">
             <i class="close-icon"></i>
@@ -68,14 +68,9 @@
 import aliPlayer from '@/components/video/aliPlayer'
 import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
-import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, collection } from '@/api/class'
+import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, collection, initWS } from '@/api/class'
 import { mapState } from 'vuex'
-// import WebSocket from '@/libs/web-socket'
-// const initWS = (data) => {
-//   return new WebSocket(ws => {
-//     ws.send(data)
-//   })
-// }
+
 export default {
   data () {
     return {
@@ -129,6 +124,33 @@ export default {
     this.getVideoPlayback(this.$route.query.video_id)
     this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
     this.getCourseCatalog() // 课程大纲（目录）
+    // if (this.$refs.aliPlayers) {
+    //   console.log(32323)
+    // }
+    // this.$nextTick(() => {
+    //   setInterval(() => {
+    //     // this.$refs.aliPlayers.seek('52')
+    //   }, 10000)
+    // })
+    if (this.user_id) {
+      setInterval(() => {
+        let playtime = parseInt(this.$refs.aliPlayers.getCurrentTime())
+        var message = {
+          from: 1,
+          user_id: this.user_id,
+          package_id: this.$route.query.package_id,
+          course_id: this.$route.query.course_id,
+          section_id: this.$route.query.section_id,
+          video_id: this.$route.query.video_id,
+          watch_time: playtime,
+          video_type: 1, // 视频类型 1视频2直播
+          status: 1 // 播放类型 1课程视频播放
+        }
+        if (playtime > 0) {
+          initWS(JSON.stringify(message))
+        }
+      }, 30000)
+    }
   },
   methods: {
     // tab 显示关闭课程，答疑，讲义
@@ -257,7 +279,7 @@ export default {
           videoCredentials(dataForm).then(data => {
             let res = data.data
             this.videoCredentials = res.data
-            this.videoCredentials.playtime = this.playtime // 播放到当前时间
+            // this.videoCredentials.playtime = this.playtime // 播放到当前时间
           })
         } else {
           // this.$Message.error(res.msg)
@@ -280,7 +302,7 @@ export default {
     //   }).then(data => {
     //   })
     // },
-    courseCollection (collectId) {
+    courseCollection (collectId) { // 1收藏2取消收藏
       this.videoCredentials.collect = 2
       if (collectId === 2) {
         this.videoCredentials.collect = 1
@@ -295,7 +317,11 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.$Message.error('收藏成功')
+          if (this.videoCredentials.collect === 1) {
+            this.$Message.success('收藏成功')
+          } else {
+            this.$Message.success('取消成功')
+          }
         } else {
           this.$Message.error(res.msg)
         }

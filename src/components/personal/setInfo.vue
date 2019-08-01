@@ -6,14 +6,13 @@
       </li>
     </ul>
     <div class="all-main">
-
       <div v-if="selIdxSet == 0">
         <!--个人信息页面展示-->
         <div v-if="!changeSetFlag">
           <!--修改页面头部-->
           <div class="header">
             <span class="change_info">基本信息</span>
-            <button @click="btnChangeinfo" class="pwd_save"><span>修改</span></button>
+            <button @click="btnChangeinfo('baseinfo')" class="pwd_save"><span>修改</span></button>
           </div>
           <!--昵称-->
           <div class="info_msg">
@@ -35,13 +34,13 @@
           <!--地址列表-->
           <div class="info_msg">
             <span>地址</span>
-            <ul class="address-list" v-if="personalInfo.address.length">
+            <ul class="address-list" v-if="personalInfo.address && personalInfo.address.length">
               <li class="addres-item" v-for="(v, index) in personalInfo.address" :key="index">
                 <p class="info_address"><span>{{v.consignee}}</span><span>{{v.telephone}}</span><span>{{v.address}}</span></p>
                 <button class="btn_default" v-if="v.is_default == 1">默认</button>
               </li>
             </ul>
-            <button v-else class="btn_address" @click="btnChangeinfo">+ 新添加地址</button>
+            <button v-else class="btn_address" @click="btnChangeinfo('address')">+ 新添加地址</button>
           </div>
         </div>
         <!--个人信息修改-->
@@ -109,7 +108,7 @@
              </div>
            </div>
            <!--原有收获地址-->
-           <div v-if="personalInfo.address.length">
+           <div v-if="personalInfo.address && personalInfo.address.length">
              <div v-for="(v, index) in personalInfo.address" :key="index" :ref="'inputDisabled' + index" :id="'inputDisabled' + index">
                <div class="goods edixBtn">
                 <span class="g-input">{{v.consignee}}</span>
@@ -302,6 +301,7 @@ export default {
     })
   },
   mounted () {
+    console.log(this.selIdxSet)
   },
 
   methods: {
@@ -330,9 +330,11 @@ export default {
       window.sessionStorage.setItem('selIdxSet', index)
     },
     // 修改div展示
-    btnChangeinfo () {
-      console.log(323)
+    btnChangeinfo (type) {
       this.changeSetFlag = true
+      if (type === 'address') {
+        this.addAddresFlag = true
+      }
       this.userInfo.sex = this.userInfo.sex + ''
       // this.option.img = this.userInfo.head
     },
@@ -386,8 +388,8 @@ export default {
           address: this.addAddres,
           is_default: 2
         }).then(data => {
-          const res = data.data
-          console.log(res)
+          // const res = data.data
+          // console.log(res)
           // this.addAddresFlag = false
           // if (res.code === 200) {
           //   this.$emit('getPersonalInfo')
@@ -480,6 +482,7 @@ export default {
       }
       let { head, username, sex } = this.userInfo
       this.changeSetFlag = false // 修改div
+      this.addAddresFlag = false // 添加地址div
       savePersonal({
         user_id: this.user_id,
         head: head,

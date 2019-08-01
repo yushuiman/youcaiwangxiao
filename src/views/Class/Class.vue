@@ -67,7 +67,7 @@
           <div class="course-main-info">
             <p class="ci-title">{{items.name}}</p>
             <p class="ci-teacher-day"><span>讲师：{{items.teacher_name}}</span>有效期：{{items.study_days}}天</p>
-            <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? '¥' + items.price : item.billing_status == 3 ? '积分兑换' : '等级进入' }}</span>
+            <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? '¥' + items.price : items.billing_status == 3 ? '积分兑换' : '等级进入' }}</span>
           </div>
         </div>
       </div>
@@ -77,10 +77,10 @@
       </div>
     </div>
     <div style="padding: 20px; text-align: center;">
+      <!-- @on-page-size-change="onPageSizeChange" -->
       <Page
       :total="total"
       @on-change="onChange"
-      @on-page-size-change="onPageSizeChange"
       :current="form.page"
       :page-size="form.limit"
       size="small"
@@ -112,7 +112,6 @@ export default {
       }, // 课程列表 默认第一页 显示6个
       priceStart: '', // 价格筛选
       priceEnd: '', // 价格筛选
-      alearyChoose: ['2323', 332], // 已选条件
       typeInfo: [
         {
           freePay: '收费',
@@ -123,17 +122,7 @@ export default {
           courseWay: '面授课程'
         }
       ],
-      subject_type: [
-        {
-          'id': 3,
-          'class_name': '当时的'
-        },
-        {
-          'id': 2,
-          'class_name': 'sdcs都是'
-        }
-      ] // 筛选科目列表
-
+      subject_type: [] // 筛选科目列表
     }
   },
   components: {
@@ -212,17 +201,17 @@ export default {
       this.form.page = val
       this.getCourseList()
     },
-    onPageSizeChange (val) {
-      this.form.limit = val
-      this.getCourseList()
-    },
+    // onPageSizeChange (val) {
+    //   this.form.limit = val
+    //   this.getCourseList()
+    // },
     // 获取数据
     getCourseList () {
       courseList(this.form).then(data => {
         const res = data.data
         if (res.code === 200) {
           this.courseList = res.data.data
-          this.total = res.total
+          this.total = res.data.total
         } else {
           this.$Message.error(res.msg)
         }

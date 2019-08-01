@@ -8,15 +8,7 @@
               <span class="menu-title">{{title}}</span>
             </Col>
             <Col span="4">
-              <div class="answer-time">
-                <count ref="countTime" @countdownend="countdownend" :time="answer_time">
-                  <template slot-scope="props" >
-                      0{{ props.totalHours }}:
-                      {{ props.minutes }}:
-                      {{ props.seconds }}
-                    </template>
-                </count>
-              </div>
+              <count-up ref="addCountTime"></count-up>
             </Col>
           </Row>
         </div>
@@ -30,7 +22,7 @@
             <span class="topic-num"><em data-v-680035d5="">{{percentNum}}</em>/{{total}}</span>
           </div>
           <ul class="dopic-status">
-            <li class="dopstu-item dopstu-item-01" :class="['dopstu-item-0' + (index+1)]" v-for="(v, index) in stsTxtArr" :key="index" @click="submitAnswers(v)">
+            <li class="dopstu-item" :class="['dopstu-item-0' + (index+1)]" v-for="(v, index) in stsTxtArr" :key="index" @click="submitAnswers(v)">
               <span><i class="dopstu-icon"></i></span>
               <p>{{v}}</p>
             </li>
@@ -61,7 +53,7 @@
         <div class="stop-box" v-if="txtShow == '暂停'">
           <p>休息一下，马上回来</p>
           <div class="btn-box">
-            <button class="btn-com" @click="goOnDopic">继续做题</button>
+            <button class="btn-com" @click="goOnDopic('time')">继续做题</button>
           </div>
         </div>
         <div class="save-box" v-if="txtShow == '保存'">
@@ -92,13 +84,14 @@
         title="纠错"
         v-model="visibleError"
         footer-hide
+        :mask-closable=false
         :width="795"
         class="iview-modal">
         <error-correction v-if="visibleError" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
       </Modal>
     </div>
-    <div v-else>
-      没有题
+    <div class="no-data" v-else>
+      暂无数据
     </div>
   </div>
 </template>
@@ -106,7 +99,7 @@
 <script>
 import { wrongCheck, errorCenter } from '@/api/personal'
 import poticList from '../../components/poticList/poticList'
-import count from '../../components/count'
+import countUp from '../../components/common/countUp'
 import errorCorrection from '../../components/common/errorCorrection'
 import { mapState } from 'vuex'
 export default {
@@ -117,7 +110,7 @@ export default {
       visibleError: false, // 纠错show
       txtShow: '',
       topics: [], // 题列表
-      answer_time: '',
+      answer_time: 0,
       total: 0,
       title: '',
       percent: 0, // 百分比
@@ -129,24 +122,21 @@ export default {
         knob_id: this.$route.query.knob_id,
         know_id: this.$route.query.know_id,
         mock_id: this.$route.query.mock_id,
-        user_id: this.$route.query.user_id,
         plate_id: this.$route.query.plate_id,
         num: this.$route.query.num,
-        paper_mode: this.$route.query.paper_mode || 2, // 练习1 考试2
-        paper_type: this.$route.query.paper_mode || 2 // 练习1 考试2
+        paper_mode: this.$route.query.paper_mode || 2 // 练习1 考试2
       },
       subTopics: { // 交卷
-        user_id: this.$route.query.user_id,
         status: 1, // 交卷状态 1交卷 2保存
         course_id: this.$route.query.course_id,
-        used_time: 600,
+        used_time: 0,
         section_id: this.$route.query.section_id || 0,
         knob_id: this.$route.query.knob_id || 0,
         know_id: this.$route.query.know_id || 0,
         paper_id: this.$route.query.paper_id || 0,
         mock_id: this.$route.query.mock_id || 0,
         plate_id: this.$route.query.plate_id,
-        paper_type: this.$route.query.paper_mode || 2, // 练习1 考试2
+        paper_type: 2, // 练习1 考试2(错题集没有练习模式)
         question_content: {
           knob_id: this.$route.query.knob_id || 0,
           know_id: this.$route.query.know_id || 0,
@@ -166,14 +156,10 @@ export default {
   },
   components: {
     poticList,
-    count,
+    countUp,
     errorCorrection
   },
-  destroyed () {
-    window.removeEventListener('scroll', this.scrollToTop)
-  },
   mounted () {
-    window.addEventListener('scroll', this.scrollToTop)
     this.getTopicList()
   },
   methods: {
@@ -213,8 +199,7 @@ export default {
           this.topics = topics
           this.total = parseInt(total)
           this.title = title
-          // this.answer_time = parseInt(res.data.answer_time)
-          this.answer_time = 100000
+          this.answer_time = res.data.answer_time // 错题记录没有用到
           this.topics.map((val, index) => {
             val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
             val.flag = false // 解析展开收起交互(练习模式)
@@ -264,20 +249,21 @@ export default {
       this.visible = true
       this.txtShow = v
       if (v === '暂停') {
-        this.$refs.countTime.pause()
+        this.$refs.addCountTime.stop()
       }
     },
     // 继续
-    goOnDopic () {
+    goOnDopic (type) {
       this.visible = false
-      this.$refs.countTime.start()
+      if (type === 'time') {
+        this.$refs.addCountTime.start()
+      }
     },
     countdownend () {
       console.log('倒计时结束')
     },
     // 交卷
     jiaojuan (type) {
-      this.visible = false
       for (var i = 0; i < this.topics.length; i++) {
         this.subTopics.question_content.question.push({
           question_id: this.topics[i].ID,
@@ -285,6 +271,8 @@ export default {
           user_answer: this.topics[i].userOption || ''
         })
       }
+      this.visible = false
+      this.subTopics.used_time = this.$refs.addCountTime.userAnswerTime
       if (type === 'save') {
         this.subTopics.status = 2
       }
@@ -391,6 +379,7 @@ export default {
   }
   .dopstu-item{
     text-align: center;
+    cursor: pointer;
     span{
       height: 35px;
       display: block;
@@ -445,6 +434,7 @@ export default {
       border: 1px solid $col666;
       border-radius: 14px;
       margin: 10px;
+      cursor: pointer;
       &.blue-bg, &.red-bg, &.green-bg{
         border: 0;
         color: $colfff;

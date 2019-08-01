@@ -59,8 +59,8 @@ export default {
       default: ''
     },
     playtime: {
-      type: String,
-      default: ''
+      type: Number,
+      default: 0
     },
     cover: {
       type: String,
@@ -234,15 +234,15 @@ export default {
       playerId: 'aliplayer_' + Math.random() * 100000000000000000,
       scriptTagStatus: 0,
       instance: null,
-      playStatus: ''
+      playStatus: false
     }
   },
-  computed: {
-    ...mapState({
-      token: state => state.user.token,
-      user_id: state => state.user.user_id
-    })
-  },
+  // computed: {
+  //   ...mapState({
+  //     token: state => state.user.token,
+  //     user_id: state => state.user.user_id
+  //   })
+  // },
   mounted () {
     if (window.Aliplayer !== undefined) {
       // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
@@ -272,43 +272,6 @@ export default {
       this.pause()
       window.sessionStorage.setItem('pauseWatchTime', parseInt(this.getCurrentTime()))
     })
-    setInterval(() => {
-      let playtime = parseInt(this.getCurrentTime())
-      var message = {
-        from: 1,
-        user_id: this.user_id,
-        package_id: this.$route.query.package_id,
-        course_id: this.$route.query.course_id,
-        section_id: this.$route.query.section_id,
-        video_id: this.$route.query.video_id,
-        watch_time: playtime,
-        video_type: 1, // 视频类型 1视频2直播
-        status: 1 // 播放类型 1课程视频播放
-      }
-      initWS(JSON.stringify(message))
-      // var message = {
-      //   from: 1,
-      //   user_id: 20,
-      //   package_id: 1,
-      //   course_id: 1,
-      //   section_id: 1,
-      //   video_id: 6,
-      //   watch_time: 17,
-      //   video_type: 1, // 视频类型 1视频2直播
-      //   status: 1 // 播放类型 1课程视频播放
-      // }
-      // let ws
-      // ws = new WebSocket('ws://ycapi.youcaiwx.com:2346')
-      // ws.onopen = function () {
-      //   console.log('连接成功')
-      //   ws.send(JSON.stringify(message))
-      //   console.log(JSON.stringify(message))
-      //   console.log('给服务端发送一个字符串：My')
-      // }
-      // ws.onmessage = function (e) {
-      //   console.log('收到服务端的消息：' + e.data)
-      // }
-    }, 30000)
   },
   methods: {
     insertScriptTag () {
@@ -403,6 +366,7 @@ export default {
        */
     pause: function () {
       this.instance.pause()
+      console.log(this.instance)
     },
     /**
        * 重播视频

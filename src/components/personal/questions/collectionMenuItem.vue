@@ -6,10 +6,10 @@
       </select>
       <Icon type="md-arrow-dropdown" style="font-size:24px; position:absolute; right: 5px; top: 3px;" />
     </div>
-    <Row>
+    <Row v-if="collSecList.length">
       <Col span="24">
         <Menu accordion width="100%" class="error-menu-list">
-          <Submenu :name="index+1" class="error-menu-item" v-for="(item, index) in errorSecList" :key="index">
+          <Submenu :name="index+1" class="error-menu-item" v-for="(item, index) in collSecList" :key="index">
             <template slot="title">
               <div class="menu-section-title">
                 {{item.know_section_name}}
@@ -29,6 +29,9 @@
         </Menu>
       </Col>
     </Row>
+    <div class="no-data" v-else>
+      暂无数据
+    </div>
     <!-- 知识点 -->
     <Modal v-model="visible"
       :width="795"
@@ -63,7 +66,7 @@ export default {
   data () {
     return {
       course_id: window.sessionStorage.getItem('course_id') || '',
-      errorSecList: [], // 知识点章节
+      collSecList: [], // 知识点章节
       getPoticData: {
         course_id: window.sessionStorage.getItem('course_id'),
         paper_id: '', // 阶段测试,论述题
@@ -104,7 +107,7 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.errorSecList = res.data
+          this.collSecList = res.data
         } else {
           this.$Message.error(res.msg)
         }

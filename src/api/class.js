@@ -19,6 +19,13 @@ export const guessLike = (data) => { // 猜你喜欢
     method: 'post'
   })
 }
+export const studentVoice = (data) => { // 学员心声
+  return axios.request({
+    url: '/web/Course/studentVoice',
+    data,
+    method: 'post'
+  })
+}
 export const subjects = (data) => { // 筛选科目
   return axios.request({
     url: '/web/Course/subjects',
@@ -89,13 +96,13 @@ export const collection = (data) => { // 收藏
     method: 'post'
   })
 }
-export const test = (data) => { // 测试
-  return axios.request({
-    url: 'web/Personal/test',
-    data,
-    method: 'post'
-  })
-}
+// export const test = (data) => { // 测试
+//   return axios.request({
+//     url: 'web/Personal/test',
+//     data,
+//     method: 'post'
+//   })
+// }
 // test(message).then(data => {
 //   const res = data.data
 //   console.log(res)

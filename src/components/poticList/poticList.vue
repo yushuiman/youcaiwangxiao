@@ -20,7 +20,7 @@
         </div>
         <!-- 论述题样式 -->
         <div v-if="getQuestion.plate_id == 3">
-          <textarea autofocus v-model="item.discuss_useranswer" disabled class="texta-discuss"></textarea>
+          <textarea autofocus v-model.trim="item.discuss_useranswer" disabled class="texta-discuss"></textarea>
         </div>
         <!-- 做题ABCD样式 else -->
         <ul class="topic-opition" v-else>
@@ -90,7 +90,7 @@
         </ul>
         <!-- 论述题：没有ABCD样式 -->
         <div v-if="getQuestion.plate_id == 3">
-          <textarea autofocus v-model="item.discuss_useranswer" class="texta-discuss" placeholder="请填写您的答案" v-on:focus="doPoticDiscuss(item, index)"></textarea>
+          <textarea autofocus v-model.trim="item.discuss_useranswer" class="texta-discuss" placeholder="请填写您的答案" v-on:focus="doPoticDiscuss(item, index)"></textarea>
         </div>
       </div>
       <!-- 练习模式答错才显示解析 -->
@@ -192,7 +192,6 @@ export default {
       let num = this.topics.filter((v) => { // 已做题数
         return v.currenOption
       })
-
       this.$forceUpdate()
       this.$emit('doPoticInfo', num.length)
     },
@@ -263,6 +262,7 @@ export default {
     li{
       display: inline-block;
       margin-left: 30px;
+      cursor: pointer;
       p{
         color: $col999;
         font-size: 12px;
@@ -308,6 +308,7 @@ export default {
           border: 1px solid $col666;
           margin-right: 26px;
           box-sizing: border-box;
+          cursor: pointer;
           &.blue-bg{
             border: 1px solid $blueColor;
             color: $blueColor;
@@ -341,6 +342,7 @@ export default {
       display: inline-block;
       color: $blueColor;
       background: #F3F8FF;
+      cursor: pointer;
       i{
         &.shouqi{
           transform: rotate(-180deg)

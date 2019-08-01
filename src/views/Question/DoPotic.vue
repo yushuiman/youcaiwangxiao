@@ -8,15 +8,16 @@
               <span class="menu-title">{{title}}</span>
             </Col>
             <Col span="4">
-              <div class="answer-time">
-                <count ref="countTime" @countdownend="countdownend" :time="answer_time">
-                  <template slot-scope="props" >
-                      0{{ props.totalHours }}:
-                      {{ props.minutes }}:
-                      {{ props.seconds }}
-                    </template>
-                </count>
+              <div class="answer-time" v-if="this.getQuestion.plate_id == 6">
+                <count-down ref="reduceCountTime" @countdownend="countdownend" :time="answer_time">
+                  <template slot-scope="props">
+                    0{{ props.totalHours }}:
+                    {{ props.minutes }}:
+                    {{ props.seconds }}
+                  </template>
+                </count-down>
               </div>
+              <count-up ref="addCountTime" v-else></count-up>
             </Col>
           </Row>
         </div>
@@ -30,7 +31,7 @@
             <span class="topic-num"><em data-v-680035d5="">{{percentNum}}</em>/{{total}}</span>
           </div>
           <ul class="dopic-status">
-            <li class="dopstu-item dopstu-item-01" :class="['dopstu-item-0' + (index+1)]" v-for="(v, index) in stsTxtArr" :key="index" @click="submitAnswers(v)">
+            <li class="dopstu-item" :class="['dopstu-item-0' + (index+1)]" v-for="(v, index) in stsTxtArr" :key="index" @click="submitAnswers(v)">
               <span><i class="dopstu-icon"></i></span>
               <p>{{v}}</p>
             </li>
@@ -56,12 +57,13 @@
       <Modal v-model="visible"
         :width="447"
         :title="txtShow"
+        :mask-closable=false
         footer-hide
         class="dopic-modal">
         <div class="stop-box" v-if="txtShow == '暂停'">
           <p>休息一下，马上回来</p>
           <div class="btn-box">
-            <button class="btn-com" @click="goOnDopic">继续做题</button>
+            <button class="btn-com" @click="goOnDopic('time')">继续做题</button>
           </div>
         </div>
         <div class="save-box" v-if="txtShow == '保存'">
@@ -97,8 +99,8 @@
         <error-correction v-if="visibleError" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
       </Modal>
     </div>
-    <div v-else>
-      没有题
+    <div class="no-data" v-else>
+      暂无数据
     </div>
   </div>
 </template>
@@ -106,7 +108,8 @@
 <script>
 import { topicList, getPapers } from '@/api/questions'
 import poticList from '../../components/poticList/poticList'
-import count from '../../components/count'
+import countDown from '../../components/count'
+import countUp from '../../components/common/countUp'
 import errorCorrection from '../../components/common/errorCorrection'
 import { mapState } from 'vuex'
 export default {
@@ -117,7 +120,9 @@ export default {
       visibleError: false, // 纠错show
       txtShow: '',
       topics: [], // 题列表
-      answer_time: '',
+      answer_time: 0,
+      timers: null,
+      user_s: 0, // 用时秒数
       total: 0,
       title: '',
       percent: 0, // 百分比
@@ -129,17 +134,15 @@ export default {
         knob_id: this.$route.query.knob_id,
         know_id: this.$route.query.know_id,
         mock_id: this.$route.query.mock_id,
-        user_id: this.$route.query.user_id,
         plate_id: this.$route.query.plate_id,
         num: this.$route.query.num,
         paper_mode: this.$route.query.paper_mode || 2, // 练习1 考试2
-        paper_type: this.$route.query.paper_mode || 2 // 练习1 考试2
+        paper_type: this.$route.query.paper_type // 1单选2论述题
       },
       subTopics: { // 交卷
-        user_id: this.$route.query.user_id,
         status: 1, // 交卷状态 1交卷 2保存
         course_id: this.$route.query.course_id,
-        used_time: 600,
+        used_time: 0,
         section_id: this.$route.query.section_id || 0,
         knob_id: this.$route.query.knob_id || 0,
         know_id: this.$route.query.know_id || 0,
@@ -166,14 +169,12 @@ export default {
   },
   components: {
     poticList,
-    count,
+    countDown,
+    countUp,
     errorCorrection
   },
-  destroyed () {
-    window.removeEventListener('scroll', this.scrollToTop)
-  },
+
   mounted () {
-    window.addEventListener('scroll', this.scrollToTop)
     this.getTopicList()
   },
   methods: {
@@ -201,6 +202,7 @@ export default {
     },
     // 拿题
     getTopicList () {
+      this.getQuestion.user_id = this.user_id
       topicList(this.getQuestion).then(data => {
         const res = data.data
         if (res.code === 200) {
@@ -208,8 +210,7 @@ export default {
           this.topics = topics
           this.total = parseInt(total)
           this.title = title
-          // this.answer_time = parseInt(res.data.answer_time)
-          this.answer_time = 100000
+          this.answer_time = parseInt(res.data.answer_time) * 1000
           if (topics && topics.length) {
             this.topics.map((val, index) => {
               val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
@@ -220,37 +221,65 @@ export default {
                 v.selOption = false // 选择当前选项变蓝色，其他默认颜色，可以重复选择(除了练习模式，都是这个逻辑)
               })
             })
+            // 拿到题，开始倒计时
+            if (parseInt(this.getQuestion.plate_id) === 6) {
+              this.timerDown()
+            }
           }
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
+    // 组卷末考倒计时
+    timerDown () {
+      this.timers = setInterval(() => {
+        this.user_s = this.user_s + 1
+      }, 1000)
+    },
     // 交卷 保存 暂停
     submitAnswers (v) {
       this.visible = true
       this.txtShow = v
       if (v === '暂停') {
-        this.$refs.countTime.pause()
+        if (parseInt(this.getQuestion.plate_id) === 6) { // 组卷模考 为倒计时 其他为正计时
+          this.$refs.reduceCountTime.pause()
+          clearInterval(this.timers)
+          return
+        }
+        this.$refs.addCountTime.stop()
       }
     },
     // 继续
-    goOnDopic () {
+    goOnDopic (type) {
       this.visible = false
-      this.$refs.countTime.start()
+      if (type === 'time') {
+        if (parseInt(this.getQuestion.plate_id) === 6) { // 组卷模考 为倒计时 其他为正计时
+          this.$refs.reduceCountTime.start()
+          this.timerDown()
+          return
+        }
+        this.$refs.addCountTime.start()
+      }
     },
     countdownend () {
-      console.log('倒计时结束')
+      this.jiaojuan()
     },
     // 交卷
     jiaojuan (type) {
-      this.visible = false
       for (var i = 0; i < this.topics.length; i++) {
         this.subTopics.question_content.question.push({
           question_id: this.topics[i].ID,
           true_options: this.topics[i].options[0].right,
           user_answer: this.topics[i].discuss_useranswer || this.topics[i].userOption
         })
+      }
+      this.visible = false
+      this.subTopics.user_id = this.user_id
+      if (parseInt(this.getQuestion.plate_id) === 6) {
+        this.subTopics.used_time = this.user_s
+      } else {
+        this.subTopics.used_time = this.$refs.addCountTime.userAnswerTime
       }
       if (type === 'save') {
         this.subTopics.status = 2
@@ -269,7 +298,7 @@ export default {
             return
           }
           // 论述题板块 直接跳转到解析页面
-          if (this.getQuestion.plate_id === 3) {
+          if (parseInt(this.getQuestion.plate_id) === 3) {
             this.$router.push({ path: '/analysis',
               query: {
                 paper_id: res.data.paper_id,
@@ -280,7 +309,7 @@ export default {
             })
           }
           // 其他板块 跳转到结果页面
-          if (this.getQuestion.plate_id !== 3) {
+          if (parseInt(this.getQuestion.plate_id) !== 3) {
             this.$router.push({ path: '/result-report',
               query: {
                 paper_id: res.data.paper_id,
@@ -298,6 +327,9 @@ export default {
       this.visibleError = flag
       this.getQuestion.question_id = qId
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.timers)
   }
 }
 </script>
@@ -367,6 +399,7 @@ export default {
   }
   .dopstu-item{
     text-align: center;
+    cursor: pointer;
     span{
       height: 35px;
       display: block;
@@ -421,6 +454,7 @@ export default {
       border: 1px solid $col666;
       border-radius: 14px;
       margin: 10px;
+      cursor: pointer;
       &.blue-bg, &.red-bg, &.green-bg{
         border: 0;
         color: $colfff;

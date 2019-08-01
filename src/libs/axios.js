@@ -1,5 +1,8 @@
 import axios from 'axios'
-import { getToken } from '@/libs/utils'
+import {
+  getToken,
+  clearLoginInfo
+} from '@/libs/utils'
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 // import { Spin } from 'iview'
@@ -38,8 +41,15 @@ class HttpRequest {
     // 响应拦截
     instance.interceptors.response.use(res => {
       this.distroy(url)
-      const { data, status } = res
-      return { data, status }
+      const { data, status, code } = res
+      if (code === 401) {
+        clearLoginInfo()
+      }
+      return {
+        data,
+        status,
+        code
+      }
     }, error => {
       this.distroy(url)
       return Promise.reject(error)

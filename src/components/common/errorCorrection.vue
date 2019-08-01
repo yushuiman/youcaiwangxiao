@@ -1,6 +1,6 @@
 <template>
   <div class="error-wrap">
-    <textarea autofocus v-model="error_content" class="texta" placeholder="请输入纠错内容，我们在收到后会及时为您解决。" cols="3" rows="3"></textarea>
+    <textarea autofocus v-model.trim="error_content" class="texta" placeholder="请输入纠错内容，我们在收到后会及时为您解决。" cols="3" rows="3"></textarea>
     <div class="ts-box">{{errorTs}}</div>
     <div class="btn-box">
       <!-- <button class="btn-com" @click="cancleFun">取消</button> -->
@@ -55,6 +55,7 @@ export default {
         user_id: this.user_id,
         error_content: this.error_content
       }).then(data => {
+        const res = data.data
         if (res.code === 200) {
           this.$Message.success('纠错问题提交成功')
           this.$emit('modalShow', false)

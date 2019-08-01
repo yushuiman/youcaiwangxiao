@@ -3,7 +3,7 @@
     <header v-show="$route.meta.showHeader">
       <div class="head-wrap">
         <div class="head-w">
-          <div class="head-list fl">
+          <div class="head-list">
             <img src="../assets/images/global/yc-logo.png" alt="logo" class="yc-logo fl">
             <ul class="item-list fl">
               <li :class="isChange === 'shouye' ? 'on_change' : ''" @click="onChange('shouye')"><router-link to="/">首页</router-link></li>
@@ -15,18 +15,19 @@
               <li :class="isChange ==='app' ? 'on_change' : ''" @click="onChange('app')"><router-link to="/app">App</router-link></li>
             </ul>
           </div>
-
-          <div class="login-wrap fr">
+          <div class="login-wrap">
             <div class="login-l fl" v-if="!this.token">
-              <router-link :to="{name: 'login',  params: { isLogin: 'login' }}">登录</router-link> |
-              <router-link :to="{name: 'login',  params: { isLogin: 'reg' }}">注册</router-link>
+              <router-link :to="{path: 'login', query: {type:'login', is_forget: 'log-reg'}}">登录</router-link>
+              <a>|</a>
+              <router-link :to="{path: 'login', query: {type:'reg', is_forget: 'log-reg'}}">注册</router-link>
             </div>
-            <a class="learen-btn fl">学习中心</a>
             <div class="login-r fr" v-if="this.token">
+              <a @click="ouLogin" class="out-login">退出登录</a>
+              <a class="learen-btn" @click="goLearning">学习中心</a>
               <img src="../assets/images/global/email-icon.png" alt="email" class="email-icon">
               <img :src="avatorImgPath" alt="头像" class="head-logo" @click="goPersonalPage">
+              <span>{{userName}}</span>
             </div>
-            <div @click="ouLogin" style="padding:0 6px;" v-if="this.token">退出</div>
           </div>
         </div>
       </div>
@@ -47,15 +48,19 @@ export default {
       token: state => state.user.token,
       user_id: state => state.user.user_id,
       avatorImgPath: state => state.user.avatorImgPath,
-      'is_change': state => state.nav.is_change
+      userName: state => state.user.userName,
+      'is_change': state => state.nav.is_change,
+      isLogin: state => state.nav.isLogin
     }),
     isChange () {
       return this.is_change
     }
   },
   mounted () {
-    if (this.token && !this.user_id) {
-      this.getUserInfo()
+    if (this.token) {
+      if (!this.user_id) {
+        this.getUserInfo()
+      }
     }
   },
   methods: {
@@ -64,7 +69,8 @@ export default {
       'getUserInfo'
     ]),
     ...mapMutations([
-      'setChange'
+      'setChange',
+      'setLogin'
     ]),
     onChange (navName) {
       this.setChange(navName)
@@ -77,6 +83,17 @@ export default {
     goPersonalPage (index) {
       window.sessionStorage.setItem('type', 'course')
       this.$router.push('/personal')
+      this.setChange('')
+    },
+    // 登录
+    goLogin (type) {
+      this.$router.push('login')
+      this.setChange('')
+    },
+    // 学习中心
+    goLearning (type) {
+      this.$router.push('learning-center')
+      this.setChange('')
     }
   }
 }
@@ -88,8 +105,12 @@ export default {
     position: fixed;
     background: $colfff;
     z-index: 1000;
+    height: 70px;
     .head-w {
-      @include whl(1300, 70, 70);
+      width: 1300px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       overflow: hidden;
       margin: 0 auto;
     }
@@ -104,6 +125,7 @@ export default {
   .item-list{
     padding-left: 39px;
     li{
+      line-height: 70px;
       font-size: 14px;
       padding: 0 21px;
       float: left;
@@ -142,26 +164,36 @@ export default {
   .login-wrap{
     @include display_flex(flex);
     @extend %alignitem_center;
-    text-align: center;
   }
   .login-l{
     color: $blueColor;
+    font-size: 0;
     a{
       color: $blueColor;
-      display: inline-block;
-      margin: 0 3px;
+      // display: inline-block;
+      // margin: 0 3px;
+      float: left;
+      font-size: 14px;
     }
   }
-  .learen-btn{
-    @include whl(100, 28, 28);
-    border-radius: 14px;
-    color: $colfff;
-    background: $blueColor;
-    margin-left: 16px;
-  }
   .login-r{
+    height: 30px;
+    line-height: 30px;
+    .out-login{
+      color: #0267FF;
+    }
+    .learen-btn{
+      @include whl(100, 28, 28);
+      border-radius: 14px;
+      color: $colfff;
+      background: $blueColor;
+      margin-left: 16px;
+      display: inline-block;
+      text-align: center;
+    }
     img{
       vertical-align: middle;
+      cursor: pointer;
       &.email-icon{
         @include wh(18, 14);
         margin: 0 31px;
@@ -169,7 +201,11 @@ export default {
       &.head-logo{
         @include wh(30, 30);
         border-radius: 50%;
+        margin-right: 10px;
       }
+    }
+    span{
+      cursor: pointer;
     }
   }
 </style>

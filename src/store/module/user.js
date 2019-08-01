@@ -45,10 +45,8 @@ export default {
             resolve(data.data)
           } else if (data.code === 403) {
             Message.error('账号已被冻结，请联系管理员!')
-          } else if (data.code === 406) {
-            Message.error(data.msg)
           } else {
-            this.$Message.error(data.msg)
+            Message.error(data.msg)
           }
         }).catch(err => {
           reject(err)
@@ -80,9 +78,13 @@ export default {
       return new Promise((resolve, reject) => {
         getUserInfo().then(res => {
           const data = res.data
-          commit('setAvator', data.data.head)
-          commit('setUserName', data.data.username)
-          commit('setUserId', data.data.id)
+          if (data.code === 200) {
+            commit('setAvator', data.data.head)
+            commit('setUserName', data.data.username)
+            commit('setUserId', data.data.id)
+          } else {
+            Message.error(data.msg)
+          }
           // Cookies.set('user_id', data.data.id, {
           //   expires: config.cookieExpires || 1
           // })

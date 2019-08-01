@@ -8,15 +8,7 @@
               <span class="menu-title">{{title}}</span>
             </Col>
             <Col span="4">
-              <div class="answer-time">
-                <count ref="countTime" @countdownend="countdownend" :time="answer_time">
-                  <template slot-scope="props" >
-                      0{{ props.totalHours }}:
-                      {{ props.minutes }}:
-                      {{ props.seconds }}
-                    </template>
-                </count>
-              </div>
+              <count-up ref="addCountTime"></count-up>
             </Col>
           </Row>
         </div>
@@ -57,7 +49,7 @@
         <div class="stop-box" v-if="txtShow == '暂停'">
           <p>休息一下，马上回来</p>
           <div class="btn-box">
-            <button class="btn-com" @click="goOnDopic">继续做题</button>
+            <button class="btn-com" @click="goOnDopic('time')">继续做题</button>
           </div>
         </div>
         <div class="jiaojuan-box" :class="{'jiaojuan-finish': percentNum == total}" v-if="txtShow == '交卷'">
@@ -84,7 +76,7 @@
 <script>
 import { zExperience, experienceStati } from '@/api/questions'
 import poticList from '../../components/poticList/poticList'
-import count from '../../components/count'
+import countUp from '../../components/common/countUp'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -106,13 +98,11 @@ export default {
         knob_id: this.$route.query.knob_id,
         know_id: this.$route.query.know_id,
         mock_id: this.$route.query.mock_id,
-        user_id: this.$route.query.user_id,
         plate_id: this.$route.query.plate_id,
-        paper_type: 2 // 考试模式
+        paper_type: 2 // 体验考试模式
       },
       experienceTopics: {
-        user_id: '',
-        used_time: 600,
+        used_time: 0,
         question_content: [] // 交卷信息
       },
       ID: '#anchor-0',
@@ -126,14 +116,13 @@ export default {
   },
   components: {
     poticList,
-    count
-  },
-  destroyed () {
-    window.removeEventListener('scroll', this.scrollToTop)
+    countUp
   },
   mounted () {
-    window.addEventListener('scroll', this.scrollToTop)
     this.getZExperience()
+    // if (this.topics && this.topics.length) {
+    //   window.addEventListener('scroll', this.scrollToTop)
+    // }
   },
   methods: {
     scrollToTop () {
@@ -169,7 +158,7 @@ export default {
           this.topics = topics
           this.total = parseInt(total)
           this.title = title
-          this.answer_time = 50000
+          this.answer_time = res.data.answer_time // 0元体验没有用到
           this.topics.map((val, index) => {
             val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
             val.flag = false // 解析展开收起交互(练习模式)
@@ -189,13 +178,15 @@ export default {
       this.visible = true
       this.txtShow = v
       if (v === '暂停') {
-        this.$refs.countTime.pause()
+        this.$refs.addCountTime.stop()
       }
     },
     // 继续
-    goOnDopic () {
+    goOnDopic (type) {
       this.visible = false
-      this.$refs.countTime.start()
+      if (type === 'time') {
+        this.$refs.addCountTime.start()
+      }
     },
     countdownend () {
       console.log('倒计时结束')
@@ -206,8 +197,6 @@ export default {
     },
     // 交卷
     jiaojuan () {
-      this.visible = false
-      this.experienceTopics.user_id = this.user_id
       // 未做题，直接点击交卷，做题信息user_answer=‘’
       for (var j = 0; j < this.topics.length; j++) {
         this.experienceTopics.question_content.push({
@@ -216,6 +205,9 @@ export default {
           user_answer: this.topics[j].userOption || ''
         })
       }
+      this.visible = false
+      this.experienceTopics.user_id = this.user_id
+      this.experienceTopics.used_time = this.$refs.addCountTime.userAnswerTime
       this.getExperienceStati()
     },
     getExperienceStati () {
@@ -356,6 +348,7 @@ export default {
       border: 1px solid $col666;
       border-radius: 14px;
       margin: 10px;
+      cursor: pointer;
       &.blue-bg, &.red-bg, &.green-bg{
         border: 0;
         color: $colfff;

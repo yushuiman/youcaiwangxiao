@@ -6,24 +6,29 @@
       </select>
       <Icon type="md-arrow-dropdown" style="font-size:24px; position:absolute; right: 5px; top: 3px;" />
     </div>
-    <ul class="ucr-do-list">
-      <li class="ucr-do-item" v-for="(item, index) in questionRecordList" :key="index">
-        <div class="ucr-do-l">
-          <h2>{{item.paper_name}}</h2>
-          <p>{{item.create_time}}</p>
-        </div>
-        <button :class="{'yellow-btn': item.state == 1, 'blue-btn': item.state == 2, 'green-btn': item.state == 3}"
-        @click="goPage(item)">{{btnSts[item.state]}}</button>
-      </li>
-    </ul>
-    <div style="padding: 20px; text-align: center;">
-      <Page
-      :total="total"
-      @on-change="onChange"
-      :current="page"
-      :page-size="limit"
-      size="small"
-      />
+    <div v-if="questionRecordList.length">
+      <ul class="ucr-do-list">
+        <li class="ucr-do-item" v-for="(item, index) in questionRecordList" :key="index">
+          <div class="ucr-do-l">
+            <h2>{{item.paper_name}}</h2>
+            <p>{{item.create_time}}</p>
+          </div>
+          <button :class="{'yellow-btn': item.state == 1, 'blue-btn': item.state == 2, 'green-btn': item.state == 3}"
+          @click="goPage(item)">{{btnSts[item.state]}}</button>
+        </li>
+      </ul>
+      <div style="padding: 20px; text-align: center;">
+        <Page
+        :total="total"
+        @on-change="onChange"
+        :current="page"
+        :page-size="limit"
+        size="small"
+        />
+      </div>
+    </div>
+    <div class="no-data" v-else>
+      暂无数据
     </div>
   </div>
 </template>
@@ -117,20 +122,19 @@ export default {
         window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
         this.getPoticData.id = item.id
         this.getPoticData.course_id = item.course_id
-        this.getPoticData.paper_id = item.paper_id
+        this.getPoticData.paper_id = item.paper_id // 阶段测试,论述题
         this.getPoticData.section_id = item.section_id
         this.getPoticData.knob_id = item.knob_id
         this.getPoticData.know_id = item.know_id
         this.getPoticData.mock_id = item.mock_id
         this.getPoticData.plate_id = item.plate_id
         this.getPoticData.paper_mode = item.paper_type // 1练习模式 2考试模式
-        this.getPoticData.paper_type = item.paper_type // 1练习模式 2考试模式
         this.$router.push({ path: 'dopotic-continue',
           query: this.getPoticData
         })
         window.sessionStorage.setItem('subTopics', JSON.stringify(this.getPoticData))
       }
-      if (item.state === 3) { // 查看解析 论述题才有查看解析
+      if (item.state === 3) { // 论述题是查看解析
         window.sessionStorage.setItem('diffRes', 0) // 区分不同接口请求
         window.sessionStorage.setItem('diffTxt', 0) // 区分查看报告按钮，返回个人中心
         this.$router.push({ path: 'analysis',
@@ -149,6 +153,9 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../../assets/scss/app";
+  // .uc-do-record{
+  //   position: relative;
+  // }
   .ucr-do-list{
     box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
     border-radius: 8px;

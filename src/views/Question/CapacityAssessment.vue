@@ -70,7 +70,7 @@ export default {
     })
   },
   mounted () {
-    if(this.token){
+    if (this.token) {
       this.getAbiAssess()
     }
     this.initCharts()
@@ -98,6 +98,12 @@ export default {
               { text: '学员排名', max: 10000 },
               { text: '平均分', max: 100 },
               { text: '正确率', max: 100 }
+              // { text: '答题时间', max: 100 },
+              // { text: '错题数', max: 100 },
+              // { text: '做题数', max: 100 },
+              // { text: '学员排名', max: 100 },
+              // { text: '平均分', max: 100 },
+              // { text: '正确率', max: 100 }
             ],
             splitArea: {
               show: true,
@@ -144,12 +150,18 @@ export default {
             data: [
               {
                 value: [
-                  this.nlpgInfo.user_time || 0,
+                  this.nlpgInfo.user_time + '秒/道' || 0,
                   this.nlpgInfo.error_num || 0,
                   this.nlpgInfo.total_num || 0,
                   this.nlpgInfo.ranking || 0,
                   this.nlpgInfo.scores || 0,
-                  this.nlpgInfo.accuracy || 0
+                  this.nlpgInfo.accuracy + '%' || 0 + '%'
+                  // 98 + '秒/道' || 0,
+                  // 77 || 0,
+                  // 164 || 0,
+                  // 2476 || 0,
+                  // 29 || 0,
+                  // 29 + '%' || 0 + '%'
                 ],
                 name: '能力评估',
                 areaStyle: {

@@ -208,6 +208,20 @@ input[type='search'] {
   border: 1px solid rgba(2, 103, 255, 1);
   color: #0267FF;
 }
+.no-data{
+  width: 187px;
+  background: url('../../assets/images/global/icon_empty@3x.png') no-repeat center top;
+  background-size: 187px 144px;
+  padding-top: 144px;
+  font-size: 16px;
+  color: #666666;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 6%;
+}
+.no-data-course{
+  background: url('../../assets/images/global/icon_nodata@3x.png') no-repeat center top;
+}
 /* 做题页 只有一个样式需要覆盖 所有没有新建css */
 .progress-info .ivu-progress-inner {
   background: none;

@@ -168,6 +168,7 @@ export default {
     span{
       font-size: 18px;
       margin-right: 34px;
+      cursor: pointer;
       i{
         width: 16px;
         height: 16px;

@@ -2,10 +2,10 @@
   <div class="logReg">
     <img class="Bookend" :src="Bookend" alt="">
     <div class="background">
-      <div class="con" v-if="is_forget == 'log-reg'">
+      <div class="con" v-if="isForget == 'log-reg'">
         <div class="login_nav">
-          <span :class="isLogin == 'login' ? 'span_on' : ''" @click="isLogin = 'login'">登录</span>
-          <span :class="isLogin == 'reg' ? 'span_on' : ''" @click="isLogin = 'reg'">注册</span>
+          <span :class="isLogin == 'login' || isLogin == 'fast_login' ? 'span_on' : ''" @click="tabLogin('login')">登录</span>
+          <span :class="isLogin == 'reg' ? 'span_on' : ''" @click="tabLogin('reg')">注册</span>
         </div>
         <!-- 登录 -->
         <div v-if="isLogin == 'login'">
@@ -21,7 +21,7 @@
             <img :src="password" alt="">
             <input type="password" v-model.trim="form.password" placeholder="请输入密码" maxlength="16">
           </div>
-          <div class="forget" @click="is_forget = 'forget'">忘记密码 ?</div>
+          <div class="forget" @click="forgetPasw('forget')">忘记密码 ?</div>
           <i-button type="primary" class="log" @click="accountLogin">登录</i-button>
           <div class="line">
             <span class="line-lr"></span>
@@ -36,7 +36,7 @@
             </div>
             <div class="Third-right">
               <img :src="dx" v-if="is_show2 == 2" @mouseenter="onMouseOver2" @mouseleave="onMouseOut2"/>
-              <img :src="dx2" v-if="is_show2 == 1" @click="isLogin = 'fast_login'" @mouseenter="onMouseOver2" @mouseleave="onMouseOut2"/>
+              <img :src="dx2" v-if="is_show2 == 1" @click="tabLogin('fast_login')" @mouseenter="onMouseOver2" @mouseleave="onMouseOut2"/>
               <p>手机短信登录</p>
             </div>
           </div>
@@ -55,8 +55,8 @@
           <div class="tel">
             <img :src="code" alt="">
             <input type="text" v-model="form2.code" placeholder="请输入手机验证码" maxlength="6">
-            <i-button type="primary" class="getCode" v-show="show"  @click="getCode">获取验证码</i-button>
-            <i-button type="primary" class="count" v-show="!show">{{count}} s</i-button>
+            <button type="primary" class="getCode" v-show="show" @click="getCode">获取验证码</button>
+            <button type="primary" class="count" v-show="!show">{{count}} s</button>
           </div>
           <div class="voice" v-show="Sms_no == true">
             <p>收不到短信,试试</p>
@@ -160,7 +160,7 @@
           <div class="yc-bot">优财智业（北京）科技发展有限公司</div>
         </div>
         <!-- 快速登录 -->
-        <div v-if="isLogin == 'fast_login'">
+        <div v-if="this.$route.query.type == 'fast_login'">
           <div class="logo_img">
             <img :src="logoImg" alt="">
           </div>
@@ -172,8 +172,8 @@
           <div class="tel">
             <img :src="code" alt="">
             <input type="text" v-model="form4.code" placeholder="请输入手机验证码" maxlength="6">
-            <i-button type="primary" class="getCode" v-show="show3"  @click="getCode3">获取验证码</i-button>
-            <i-button type="primary" class="count" v-show="!show3">{{count3}} s</i-button>
+            <button type="primary" class="getCode" v-show="show3"  @click="getCode3">获取验证码</button>
+            <button type="primary" class="count" v-show="!show3">{{count3}} s</button>
           </div>
           <div class="voice2" v-show="Sms_no == true">
             <p>收不到短信,试试</p>
@@ -193,7 +193,7 @@
             </div>
             <div class="Third-right">
               <img :src="icon" v-if="is_show2 == 2" @mouseenter="onMouseOver2" @mouseleave="onMouseOut2"/>
-              <img :src="icon2" v-if="is_show2 == 1" @click="isLogin = 'login'" @mouseenter="onMouseOver2" @mouseleave="onMouseOut2"/>
+              <img :src="icon2" v-if="is_show2 == 1" @click="tabLogin('login')" @mouseenter="onMouseOver2" @mouseleave="onMouseOut2"/>
               <p>账号登录</p>
             </div>
           </div>
@@ -201,7 +201,7 @@
         </div>
       </div>
       <!-- 忘记密码 -->
-      <div class="forget-pwd"  v-if="is_forget == 'forget'">
+      <div class="forget-pwd"  v-if="isForget == 'forget'">
         <div class="logo_img3">
           <img :src="logoImg" alt="">
         </div>
@@ -213,7 +213,7 @@
         <div class="tel">
           <img :src="code" alt="">
           <input v-model="form3.code" placeholder="验证码" maxlength="6">
-          <i-button type="primary" class="getCode" v-show="show2"  @click="forgetPaw">获取验证码</i-button>
+          <button type="primary" class="getCode" v-show="show2" @click="forgetPaw">获取验证码</button>
           <i-button type="primary" class="count" v-show="!show2">{{count2}} s</i-button>
         </div>
         <div class="voice2" v-show="Sms_no == true">
@@ -228,7 +228,7 @@
         <div class="yc-bot2">优财智业（北京）科技发展有限公司</div>
       </div>
       <!-- 欢迎页 -->
-      <div class="finish" v-if="is_forget == 'finish'">
+      <div class="finish" v-if="isForget == 'finish'">
         <div class="logo_img">
           <img :src="logoImg" alt="">
         </div>
@@ -237,8 +237,8 @@
           <img :src="success" alt="">
         </div>
         <div class="prompt">恭喜您注册成功</div>
-        <i-button type="primary" shape="circle" class="log"  style="width:320px;height:50px;cursor: pointer;color:#fff;outline:none;border:none;border-radius:25px;font-size:24px;">开始学习</i-button>
-        <div class="perfect">完善资料</div>
+        <i-button type="primary" shape="circle" class="log" @click="startLearn" style="width:320px;height:50px;cursor: pointer;color:#fff;outline:none;border:none;border-radius:25px;font-size:24px;">开始学习</i-button>
+        <div class="perfect" @click="writUserInfo">完善资料</div>
         <div class="yc-bot4">优财智业（北京）科技发展有限公司</div>
       </div>
     </div>
@@ -284,8 +284,9 @@ export default {
       type_num: 1,
       is_show: 2,
       is_show2: 2,
-      is_forget: 'log-reg',
-      isLogin: this.$route.params.isLogin || 'login',
+      // is_forget: 'log-reg',
+      // isLogin: this.$route.params.isLogin || 'login',
+      // isLogin: this.$route.query.type || 'login',
       show: true,
       /* 不可以点击 */
       disabled: false,
@@ -325,9 +326,16 @@ export default {
     }),
     isChange () {
       return this.is_change
+    },
+    isLogin () {
+      return this.$route.query.type || 'login'
+    },
+    isForget () {
+      return this.$route.query.is_forget || 'log-reg'
     }
   },
   mounted () {
+    console.log(this.isLogin)
   },
   methods: {
     ...mapActions([
@@ -358,6 +366,22 @@ export default {
     },
     sendText () {
       this.Ws.send(222)
+    },
+    tabLogin (type) {
+      this.$router.replace({ path: 'login',
+        query: {
+          ...this.$route.query,
+          type: type
+        }
+      })
+    },
+    forgetPasw (type) {
+      this.$router.replace({ path: 'login',
+        query: {
+          ...this.$route.query,
+          is_forget: type
+        }
+      })
     },
     // 注册--获取验证码
     getCode () {
@@ -413,10 +437,10 @@ export default {
     // 忘记密码--获取验证码
     forgetPaw () {
       const TIME_COUNT2 = 60
-       const re = /^[1][3,4,5,7,8,9][0-9]{9}$/
+      const re = /^[1][3,4,5,7,8,9][0-9]{9}$/
       if (this.form3.mobile === '') {
         this.$Message.error('请输入手机号')
-      } else if(!re.test(this.form3.mobile)) {
+      } else if (!re.test(this.form3.mobile)) {
         this.$Message.error('该手机号不符合格式')
       } else {
         if (!this.timer2) {
@@ -440,7 +464,7 @@ export default {
                   this.timer2 = null
                 }
               }, 1000)
-            } else{
+            } else {
               this.$Message.error(res.data.msg)
             }
           })
@@ -520,18 +544,28 @@ export default {
       } else {
         webReg({ 'mobile': Encrypt(this.form2.mobile), 'password': this.form2.text_pwd, 'pass': this.form2.confirm_pwd, 'mobilecode': this.form2.code }).then(res => {
           if (res.data.code === 200) {
-            this.$store.commit('setToken', res.data.data)
-            this.$Message.success('注册成功')
-            this.is_forget = 'finish'
-            this.form2.mobile = ''
-            this.form2.confirm_pwd = ''
-            this.form2.text_pwd = ''
-            this.form2.code = ''
+            // 开始学习 完善资料
+            this.$router.replace({ path: 'login',
+              query: {
+                ...this.$route.query,
+                is_forget: 'finish'
+              }
+            })
+            // 注册成功后调登录
+            this.handleLogin({ mobile: Encrypt(this.form2.mobile), password: this.form2.text_pwd }).then(data => {
+              this.form2.mobile = ''
+              this.form2.confirm_pwd = ''
+              this.form2.text_pwd = ''
+              this.form2.code = ''
+              if (this.token) {
+                this.getUserInfo()
+              }
+            })
           } else if (res.data.code === 406) {
-            this.$store.commit('setToken', res.data.data)
+            // this.$store.commit('setToken', res.data.data)
             this.$Message.error('账号 or 密码错误')
           } else if (res.data.code === 408) {
-            this.$store.commit('setToken', res.data.data)
+            // this.$store.commit('setToken', res.data.data)
             this.$Message.error('验证码错误')
           } else {
             this.$Message.error(res.data.msg)
@@ -546,7 +580,7 @@ export default {
           this.$store.commit('setToken', res.data.data)
           this.$Message.success('语音电话拨打成功，请注意接听')
         } else if (res.data.code === 408) {
-          this.$store.commit('setToken', res.data.data)
+          // this.$store.commit('setToken', res.data.data)
           this.$Message.error('验证码错误')
         } else {
           this.$Message.error(res.data.msg)
@@ -560,7 +594,7 @@ export default {
           this.$store.commit('setToken', res.data.data)
           this.$Message.success('语音电话拨打成功，请注意接听')
         } else if (res.data.code === 408) {
-          this.$store.commit('setToken', res.data.data)
+          // this.$store.commit('setToken', res.data.data)
           this.$Message.error('验证码错误')
         } else {
           this.$Message.error(res.data.msg)
@@ -574,7 +608,7 @@ export default {
           this.$store.commit('setToken', res.data.data)
           this.$Message.success('语音电话拨打成功，请注意接听')
         } else if (res.data.code === 408) {
-          this.$store.commit('setToken', res.data.data)
+          // this.$store.commit('setToken', res.data.data)
           this.$Message.error('验证码错误')
         } else {
           this.$Message.error(res.data.msg)
@@ -596,7 +630,19 @@ export default {
             this.count2 = 0
             this.show2 = true
             this.$Message.success('密码重置成功')
-            this.isLogin = 'login'
+            this.handleLogin({ mobile: Encrypt(this.form3.mobile), password: this.form3.new_pwd }).then(data => {
+              if (this.token) {
+                this.getUserInfo()
+              }
+            })
+            this.$router.replace({ path: 'login',
+              query: {
+                ...this.$route.query,
+                type: 'login'
+              }
+            })
+          } else {
+            this.$Message.error(res.data.msg)
           }
         })
       }
@@ -617,6 +663,15 @@ export default {
           }
         })
       }
+    },
+    // 开始学习
+    startLearn () {
+      this.$router.push('/class')
+    },
+    // 完善资料
+    writUserInfo () {
+      this.$router.push('/personal')
+      window.sessionStorage.setItem('type', 'set')
     }
   }
 }
@@ -824,14 +879,15 @@ export default {
     width:100px;
     height:24px;
     margin-left: 50px;
-    line-height: 3px;
-    display: flex;
-    align-items: center;
+    // display: flex;
+    // align-items: center;
     background:rgba(88,199,255,1);
     border:1px solid rgba(88,199,255,1);
     border-radius:12px;
     font-size: 13px;
     color: #FFFFFF;
+    text-align: center;
+    display: inline-block;
   }
   .read {
     margin-top: 20px;

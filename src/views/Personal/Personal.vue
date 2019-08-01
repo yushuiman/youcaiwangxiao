@@ -81,7 +81,7 @@ export default {
         }
       ],
       clkTit: window.sessionStorage.getItem('type') || 'course',
-      selIdxSet: window.sessionStorage.getItem('selIdxSet'),
+      // selIdxSet: window.sessionStorage.getItem('selIdxSet'),
       personalInfo: {} // 个人信息
     }
   },
@@ -109,7 +109,8 @@ export default {
     },
     setBaseInfo () {
       this.clkTit = 'set'
-      window.sessionStorage.setItem('selIdxSet', this.selIdxSet)
+      window.sessionStorage.setItem('clkTit', 'set')
+      // window.sessionStorage.setItem('selIdxSet', this.selIdxSet)
     },
     // 用户信息
     getPersonalInfo () {
@@ -168,6 +169,7 @@ export default {
       margin-left: 16px;
       background: $colfff;
       color: #112441;
+      cursor: pointer;
     }
   }
   .user-flex{
@@ -184,6 +186,7 @@ export default {
       border: 4px solid $colfff;
       border-radius: 50%;
       box-sizing: border-box;
+      cursor: pointer;
     }
   }
   .user-name-instr{
@@ -241,6 +244,7 @@ export default {
     line-height: 46px;
     text-align: center;
     color: $col666;
+    cursor: pointer;
     &.curren, &:hover{
       color: $colfff;
       background: $blueColor;

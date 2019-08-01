@@ -39,3 +39,13 @@ export const getcookiesInClient = function (token) {
 export const getCode = (mobile) => {
 
 }
+
+// 清除登录信息， store状态重置
+// export const clearLoginInfo = () => {
+//   removeToken() // cookie token
+//   store.commit('setToken', '')
+//   store.commit('setAvator', '')
+//   store.commit('setUserId', '')
+//   store.commit('setUserName', '')
+//   this.$route.push('/login')
+// }

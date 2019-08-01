@@ -49,7 +49,7 @@
             <img :src="item.head" alt="" class="head-logo">
             <div class="othq-info">
               <h3>{{item.username}}</h3>
-              <p>{{item.create_time}}</p>
+              <p>{{item.creates_time}}</p>
             </div>
             <span class="othq-huifu" v-if="item.reply_status == 1">老师已回复</span>
           </div>
@@ -74,7 +74,7 @@
                 <img :src="replyList[item.id].head_img" alt="" class="head-logo">
                 <div class="othq-info">
                   <h3>{{replyList[item.id].reply_user_name}}<span class="teacher-light">老师</span></h3>
-                  <p>{{replyList[item.id].reply_times}}</p>
+                  <p>{{replyList[item.id].repls_time}}</p>
                 </div>
               </div>
               <p class="othq-txt">{{replyList[item.id].reply_quiz}}</p>
@@ -106,6 +106,9 @@ export default {
   props: {
     playCourseInfo: {
       type: Object
+    },
+    user_id: {
+      type: Number
     }
   },
   data () {
@@ -197,8 +200,9 @@ export default {
       this.errorTs = ''
       let quizImage = this.quiz_image.join(',')
       let vtime = window.sessionStorage.getItem('pauseWatchTime')
-      let data = Object.assign({ quiz: this.quiz, video_time: vtime, quiz_image: quizImage }, this.playCourseInfo)
+      let data = Object.assign({ quiz: this.quiz, video_time: vtime, quiz_image: quizImage, user_id: this.user_id }, this.playCourseInfo)
       answerSub(data).then(data => {
+        const res = data.data
         if (res.code === 200) {
           this.uploadList = []
           this.quiz_image = []
@@ -358,6 +362,7 @@ export default {
       }
     }
     .open-txt{
+      cursor: pointer;
       font-size: 13px;
       color: $blueColor;
       text-align: right;

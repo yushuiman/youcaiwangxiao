@@ -5,123 +5,131 @@
     </ul>
     <div class="all-main">
       <div v-if="selIdxAnswer == 0">
-        <ul class="othq-list" v-if="courseAnswerList && courseAnswerList.length">
-          <li class="othq-item" v-for="(item, index) in courseAnswerList" :key="index">
-            <div class="othq-item-t">
-              <img :src="item.data.head" alt="" class="head-logo">
-              <div class="othq-info">
-                <h3>{{item.data.username}}</h3>
-                <p>{{item.data.create_times}}</p>
-              </div>
-              <span class="othq-huifu" v-if="item.data.reply_status == 1">老师已回复</span>
-            </div>
-            <p class="othq-txt" :class="!item.openFlag? 'sl' : ''">{{item.data.quiz}}</p>
-            <div class="quiz-image-list course_img">
-              <div class="demo-upload-list" v-for="(val, index) in item.data.quiz_image" :key="index">
-                <template>
-                  <img :src="val">
-                  <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleView(val)"></Icon>
-                  </div>
-                </template>
-              </div>
-            </div>
-            <div class="open-txt" @click="openShow(item, index, 0)">
-              {{item.openFlag ? '收起':'展开'}}
-            </div>
-            <ul class="othq-list-teacher" v-if="item.data.reply_status == 1 && item.openFlag">
-              <li class="othq-item">
-                <div class="othq-item-t">
-                  <img :src="item.reply.head_img" alt="" class="head-logo">
-                  <div class="othq-info">
-                    <h3>{{item.reply.reply_user_name}}<span class="teacher-light">老师</span></h3>
-                    <p>{{item.reply.repls_time}}</p>
-                  </div>
+        <div v-if="courseAnswerList && courseAnswerList.length">
+          <ul class="othq-list">
+            <li class="othq-item" v-for="(item, index) in courseAnswerList" :key="index">
+              <div class="othq-item-t">
+                <img :src="item.data.head" alt="" class="head-logo">
+                <div class="othq-info">
+                  <h3>{{item.data.username}}</h3>
+                  <p>{{item.data.create_times}}</p>
                 </div>
-                <p class="othq-txt">{{item.reply.reply_quiz}}</p>
-                <div class="quiz-image-list course_img">
-                  <div class="demo-upload-list" v-for="(v, index) in item.reply.reply_image" :key="index">
-                    <template>
-                      <img :src="v" alt="">
-                      <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleView(v)"></Icon>
-                      </div>
-                    </template>
-                  </div>
+                <span class="othq-huifu" v-if="item.data.reply_status == 1">老师已回复</span>
+              </div>
+              <p class="othq-txt" :class="!item.openFlag? 'sl' : ''">{{item.data.quiz}}</p>
+              <div class="quiz-image-list course_img">
+                <div class="demo-upload-list" v-for="(val, index) in item.data.quiz_image" :key="index">
+                  <template>
+                    <img :src="val">
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleView(val)"></Icon>
+                    </div>
+                  </template>
                 </div>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <div v-else>暂无数据</div>
-        <div style="padding: 20px; text-align: center;">
-          <Page
-          :total="total"
-          @on-change="onChange"
-          :current="page"
-          :page-size="limit"
-          size="small"
-          />
+              </div>
+              <div class="open-txt" @click="openShow(item, index, 0)">
+                {{item.openFlag ? '收起':'展开'}}
+              </div>
+              <ul class="othq-list-teacher" v-if="item.data.reply_status == 1 && item.openFlag">
+                <li class="othq-item">
+                  <div class="othq-item-t">
+                    <img :src="item.reply.head_img" alt="" class="head-logo">
+                    <div class="othq-info">
+                      <h3>{{item.reply.reply_user_name}}<span class="teacher-light">老师</span></h3>
+                      <p>{{item.reply.repls_time}}</p>
+                    </div>
+                  </div>
+                  <p class="othq-txt">{{item.reply.reply_quiz}}</p>
+                  <div class="quiz-image-list course_img">
+                    <div class="demo-upload-list" v-for="(v, index) in item.reply.reply_image" :key="index">
+                      <template>
+                        <img :src="v" alt="">
+                        <div class="demo-upload-list-cover">
+                          <Icon type="ios-eye-outline" @click.native="handleView(v)"></Icon>
+                        </div>
+                      </template>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <div style="padding: 20px; text-align: center;">
+            <Page
+            :total="total"
+            @on-change="onChange"
+            :current="page"
+            :page-size="limit"
+            size="small"
+            />
+          </div>
+        </div>
+        <div class="no-data" v-else>
+          暂无答疑
         </div>
       </div>
       <div v-if="selIdxAnswer == 1">
-        <ul class="othq-list" v-if="questionAnswerList && questionAnswerList.length">
-          <li class="othq-item" v-for="(item, index) in questionAnswerList" :key="index">
-            <div class="othq-item-t">
-              <img :src="item.data.head" alt="" class="head-logo">
-              <div class="othq-info">
-                <h3>{{item.data.username}}</h3>
-                <p>{{item.data.create_times}}</p>
-              </div>
-              <span class="othq-huifu" v-if="item.data.reply_status == 1">老师已回复</span>
-            </div>
-            <p class="othq-txt" :class="!item.openFlag? 'sl' : ''">{{item.data.quiz}}</p>
-            <div class="quiz-image-list course_img">
-              <div class="demo-upload-list" v-for="(val, index) in item.data.quiz_image" :key="index">
-                <template>
-                  <img :src="val">
-                  <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleView(val)"></Icon>
-                  </div>
-                </template>
-              </div>
-            </div>
-            <div class="open-txt" @click="openShow(item, index, 1)">
-              {{item.openFlag ? '收起':'展开'}}
-            </div>
-            <ul class="othq-list-teacher" v-if="item.data.reply_status == 1 && item.openFlag">
-              <li class="othq-item">
-                <div class="othq-item-t">
-                  <img :src="item.reply.head_img" alt="" class="head-logo">
-                  <div class="othq-info">
-                    <h3>{{item.reply.reply_user_name}}<span class="teacher-light">老师</span></h3>
-                    <p>{{item.reply.repls_time}}</p>
-                  </div>
+        <div v-if="questionAnswerList && questionAnswerList.length">
+          <ul class="othq-list">
+            <li class="othq-item" v-for="(item, index) in questionAnswerList" :key="index">
+              <div class="othq-item-t">
+                <img :src="item.data.head" alt="" class="head-logo">
+                <div class="othq-info">
+                  <h3>{{item.data.username}}</h3>
+                  <p>{{item.data.create_times}}</p>
                 </div>
-                <p class="othq-txt">{{item.reply.reply_quiz}}</p>
-                <div class="quiz-image-list course_img">
-                  <div class="demo-upload-list" v-for="(v, index) in item.reply.reply_image" :key="index">
-                    <template>
-                      <img :src="v" alt="">
-                      <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleView(v)"></Icon>
-                      </div>
-                    </template>
-                  </div>
+                <span class="othq-huifu" v-if="item.data.reply_status == 1">老师已回复</span>
+              </div>
+              <p class="othq-txt" :class="!item.openFlag? 'sl' : ''">{{item.data.quiz}}</p>
+              <div class="quiz-image-list course_img">
+                <div class="demo-upload-list" v-for="(val, index) in item.data.quiz_image" :key="index">
+                  <template>
+                    <img :src="val">
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleView(val)"></Icon>
+                    </div>
+                  </template>
                 </div>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <div v-else>暂无数据</div>
-        <div style="padding: 20px; text-align: center;">
-          <Page
-          :total="total"
-          @on-change="onChange"
-          :current="page"
-          :page-size="limit"
-          size="small"
-          />
+              </div>
+              <div class="open-txt" @click="openShow(item, index, 1)">
+                {{item.openFlag ? '收起':'展开'}}
+              </div>
+              <ul class="othq-list-teacher" v-if="item.data.reply_status == 1 && item.openFlag">
+                <li class="othq-item">
+                  <div class="othq-item-t">
+                    <img :src="item.reply.head_img" alt="" class="head-logo">
+                    <div class="othq-info">
+                      <h3>{{item.reply.reply_user_name}}<span class="teacher-light">老师</span></h3>
+                      <p>{{item.reply.repls_time}}</p>
+                    </div>
+                  </div>
+                  <p class="othq-txt">{{item.reply.reply_quiz}}</p>
+                  <div class="quiz-image-list course_img">
+                    <div class="demo-upload-list" v-for="(v, index) in item.reply.reply_image" :key="index">
+                      <template>
+                        <img :src="v" alt="">
+                        <div class="demo-upload-list-cover">
+                          <Icon type="ios-eye-outline" @click.native="handleView(v)"></Icon>
+                        </div>
+                      </template>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <div style="padding: 20px; text-align: center;">
+            <Page
+            :total="total"
+            @on-change="onChange"
+            :current="page"
+            :page-size="limit"
+            size="small"
+            />
+          </div>
+        </div>
+        <div class="no-data" v-else>
+          暂无答疑
         </div>
       </div>
     </div>
@@ -271,6 +279,7 @@ export default {
       }
     }
     .open-txt{
+      cursor: pointer;
       font-size: 13px;
       color: $blueColor;
       text-align: right;

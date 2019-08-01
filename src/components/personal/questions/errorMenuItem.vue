@@ -6,7 +6,7 @@
       </select>
       <Icon type="md-arrow-dropdown" style="font-size:24px; position:absolute; right: 5px; top: 3px;" />
     </div>
-    <Row>
+    <Row v-if="errorSecList.length">
       <Col span="24">
         <Menu accordion width="100%" class="error-menu-list">
           <Submenu :name="index+1" class="error-menu-item" v-for="(item, index) in errorSecList" :key="index">
@@ -29,6 +29,9 @@
         </Menu>
       </Col>
     </Row>
+    <div class="no-data" v-else>
+      暂无数据
+    </div>
     <!-- 知识点 -->
     <Modal v-model="visible"
       :width="795"
@@ -73,7 +76,7 @@ export default {
         mock_id: '',
         plate_id: 4, // 错题
         num: '', // 默认随机15道
-        paper_type: 1 // 单选1 论述2
+        paper_type: 1 // 单选1 论述2(错题记录没有论述)
       },
       visible: false, // 知识点显示
       knowList: [] // 知识点

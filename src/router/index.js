@@ -166,6 +166,16 @@ const router = new Router({
         showHeader: true,
         showFooter: false
       }
+    },
+    // 学习中心
+    {
+      path: '/learning-center',
+      name: 'learning-center',
+      component: () => import('@/views/LearningCenter/LearningCenter.vue'),
+      meta: {
+        showHeader: true,
+        showFooter: false
+      }
     }
   ]
 })

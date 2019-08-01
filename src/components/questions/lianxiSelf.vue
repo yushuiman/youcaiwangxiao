@@ -41,8 +41,8 @@
         <ul class="know-list">
           <li v-for="(val, key) in knowList" :key="key" @click="multipleChoices(val, key)">
             <span>
-              <label class="check" :class="{'checked': knowIdArr.indexOf(val.id)>=0}">
-                <Icon type="md-checkmark" v-if="knowIdArr.indexOf(val.id)>=0"/>
+              <label class="check" :class="{'checked': knowIdArr.indexOf(val.know_id)>=0}">
+                <Icon type="md-checkmark" v-if="knowIdArr.indexOf(val.know_id)>=0"/>
               </label>
               {{val.know_name}}
             </span>
@@ -138,8 +138,8 @@ export default {
       this.getPoticData.num = num
     },
     // 多选
-    multipleChoices ({ id }, index) {
-      let idIndex = this.knowIdArr.indexOf(id)
+    multipleChoices (val, index) {
+      let idIndex = this.knowIdArr.indexOf(val.know_id)
       if (idIndex >= 0) {
         this.knowIdArr.splice(idIndex, 1)
       } else {
@@ -147,7 +147,7 @@ export default {
           this.$Message.warning('最多选择3个')
           return
         }
-        this.knowIdArr.push(id)
+        this.knowIdArr.push(val.know_id)
       }
       this.getPoticData.know_id = this.knowIdArr.join(',')
     },

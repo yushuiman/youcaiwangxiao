@@ -4,6 +4,7 @@
     font-size: 18px;
     padding: 12px 30px;
     margin-bottom: 10px;
+    line-height: 24px;
 }
 
 .height-com {
@@ -76,12 +77,12 @@
     color: #333333;
     padding: 0;
  }
-.question-modal .ivu-modal-close,
+/* .question-modal .ivu-modal-close,
 .practiceModal .ivu-modal-close {
      top: 18px;
- }
+ } */
  .ivu-icon-md-checkmark {
-     margin-top: -18px;
+     margin-top: -14px;
  }
  .ivu-icon-md-checkmark:before {
      color: #0267ff;

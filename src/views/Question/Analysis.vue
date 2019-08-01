@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="do-potic-wrap w-wrap clearfix">
+    <div class="do-potic-wrap w-wrap clearfix" v-if="!noData">
       <div class="dptic-wrap-l fl">
         <div ref="fixedTit">
           <Row class="dptic-title">
@@ -39,6 +39,9 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="no-data" v-if="noData">
+      暂无数据
     </div>
     <Modal
       :title="typeShow=='dy'? '提问题':'纠错'"
@@ -81,7 +84,8 @@ export default {
       },
       visible: false,
       typeShow: false, // 答疑dy，纠错jc
-      dataStorage: JSON.parse(window.sessionStorage.getItem('subTopics'))
+      dataStorage: JSON.parse(window.sessionStorage.getItem('subTopics')),
+      noData: false
     }
   },
   components: {
@@ -96,7 +100,7 @@ export default {
   },
   mounted () {
     // 0元体验解析
-    if (parseInt(this.$route.query.plate_id) === 8) {
+    if (this.$route.query.plate_id === 8) {
       this.getExperienceParsing()
       return
     }
@@ -136,6 +140,8 @@ export default {
           this.topics = res.data.topics
           this.title = res.data.title
           this.answerSts(this.topics)
+        } else if (res.code === 405) {
+          this.noData = true
         } else {
           this.$Message.error(res.msg)
         }
@@ -240,7 +246,7 @@ export default {
       if (topics && topics.length) {
         topics.map((val, index) => {
           val.flag = false // 解析展开收起交互
-          if (parseInt(this.$route.query.plate_id) === 3) { // 论述题解析不需要下面的逻辑
+          if (this.$route.query.plate_id === 3) { // 论述题解析不需要下面的逻辑
             return
           }
           let userOptions = val.options[0].userOption || val.discuss_useranswer // 用户答案
@@ -390,6 +396,7 @@ export default {
       border: 1px solid $col666;
       border-radius: 14px;
       margin: 10px;
+      cursor: pointer;
       &.blue-bg, &.red-bg, &.green-bg{
         border: 0;
         color: $colfff;

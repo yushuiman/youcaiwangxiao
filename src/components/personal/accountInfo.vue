@@ -6,7 +6,7 @@
     <div class="zhibo-main">
       <div v-if="selIdxAccount == 0">
         <!-- 消费记录 -->
-        <ul class="consumption-record-list">
+        <ul class="consumption-record-list" v-if="consumptionRecordList.length">
           <li>
             <span>消费项目</span>
             <span>金额</span>
@@ -22,6 +22,9 @@
             <span>{{item.adds_time}}</span>
           </li>
         </ul>
+        <div class="no-data" v-else>
+          暂无数据
+        </div>
       </div>
       <div v-if="selIdxAccount == 1">
         <!-- 激活 -->
@@ -35,7 +38,7 @@
           </div>
           <button class="cactive-right btn-com">立即激活</button>
         </div>
-        <!-- 课程卡编号 -->
+        <!-- 课程卡编号 记得判断有无数据-->
         <ul class="card-manager-list">
           <li>
             <span>课程卡编号</span>
@@ -110,7 +113,7 @@ export default {
         user_id: this.user_id
       }).then(data => {
         const res = data.data
-        if(res.code === 200){
+        if (res.code === 200) {
           this.consumptionRecordList = res.data
         } else {
           this.$Message.error(res.msg)

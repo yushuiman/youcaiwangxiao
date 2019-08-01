@@ -2,7 +2,7 @@
   <div>
     <!--提问题-->
     <div class="ask">
-      <textarea autofocus v-model="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"></textarea>
+      <textarea autofocus v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"></textarea>
       <div class="submitAnswer clearfix">
         <div class="course_img fl">
           <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
@@ -333,6 +333,7 @@ export default {
       }
     }
     .open-txt{
+      cursor: pointer;
       font-size: 13px;
       color: $blueColor;
       text-align: right;

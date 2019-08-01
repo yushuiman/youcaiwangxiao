@@ -118,12 +118,12 @@
         footer-hide
         :title="plateTitle"
         class="practiceModal">
-        <know-section v-if="showPlateModal == '1'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></know-section>
-        <jieduan-test v-if="showPlateModal == '2'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></jieduan-test>
-        <discuss-self v-if="showPlateModal == '3'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></discuss-self>
-        <error-section v-if="showPlateModal == '4'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></error-section>
-        <lianxi-self v-if="showPlateModal == '5'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></lianxi-self>
-        <group-lianxi v-if="showPlateModal == '6'" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></group-lianxi>
+        <know-section v-if="showPlateModal == 1" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></know-section>
+        <jieduan-test v-if="showPlateModal == 2" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></jieduan-test>
+        <discuss-self v-if="showPlateModal == 3" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></discuss-self>
+        <error-section v-if="showPlateModal == 4" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></error-section>
+        <lianxi-self v-if="showPlateModal == 5" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></lianxi-self>
+        <group-lianxi v-if="showPlateModal == 6" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></group-lianxi>
       </Modal>
     </div>
     <!-- 预测评估 学员排名 -->
@@ -139,7 +139,7 @@
           </div>
         </div>
         <ul class="my-question">
-          <li class="mq-item mq-item-01" :class="['mq-item-0' + (index+1)]" v-for="(item, index) in personalTxtArr" :key="index" @click="goPersonalPage(index)">
+          <li class="mq-item" :class="['mq-item-0' + (index+1)]" v-for="(item, index) in personalTxtArr" :key="index" @click="goPersonalPage(index)">
             <i class="mq-icon"></i>
             <p>{{item}}</p>
           </li>
@@ -218,7 +218,7 @@ export default {
       ],
       personalTxtArr: ['答题记录', '我的错题', '收藏夹'],
       visible: false,
-      showPlateModal: '', // 显示弹窗对应模块
+      showPlateModal: 0, // 显示弹窗对应模块
       plateTitle: '', // 显示弹窗对应模块title问案
       questionResult: {}, // 正确率，做题数，平均分
       studentsRankList: [], // 学生排名
@@ -243,9 +243,7 @@ export default {
     if (this.token) {
       this.projectList() // 已登录，获取课程列表
     }
-    if (!this.token) {
-      this.getStudentsRanking()
-    }
+    this.getStudentsRanking()
   },
   methods: {
     // 展示课程
@@ -253,12 +251,10 @@ export default {
       getProject({ user_id: this.user_id }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.projectArr = res.data
-          this.getQuestionIndex(this.course_id || res.data[0].id, this.questionIndexSel)
-          this.experience = false
-          // 0元体验
-          if (res.data && res.data.length === 0) {
-            this.experience = true
+          if (res.data && res.data.length) {
+            this.projectArr = res.data
+            this.getQuestionIndex(this.course_id || res.data[0].id, this.questionIndexSel)
+            this.experience = false
           }
         } else {
           this.$Message.error(res.msg)
@@ -599,6 +595,7 @@ export default {
     justify-content: space-between;
     text-align: center;
     .mq-item{
+      cursor: pointer;
       p{
         color: $col999;
         margin-top: 11px;

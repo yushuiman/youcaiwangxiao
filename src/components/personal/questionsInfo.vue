@@ -11,7 +11,11 @@
       <!-- 收藏夹 -->
       <collection-menuItem v-if="selIdxQuestion == 2" :courseList="courseList"></collection-menuItem>
       <!-- 习题笔记 -->
-      <div v-if="selIdxQuestion == 3">习题笔记</div>
+      <div v-if="selIdxQuestion == 3">
+        <div class="no-data">
+          暂无数据
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -60,6 +64,10 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.courseList = res.data
+          let cId = window.sessionStorage.getItem('course_id')
+          if (!cId) {
+            window.sessionStorage.setItem('course_id', this.courseList[0].course_id)
+          }
         } else {
           this.$Message.error(res.msg)
         }

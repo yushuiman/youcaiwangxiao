@@ -40,7 +40,7 @@ export default {
       guessLike().then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.likeArr = res.data
+          this.likeArr = res.data.slice(0, 3)
         } else {
           this.$Message.error(res.msg)
         }

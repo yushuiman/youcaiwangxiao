@@ -6,14 +6,19 @@
     <div class="all-main">
       <!-- 课程 -->
       <div class="u-course-my" v-if="selIdxCourse == 0">
-        <div class="uc-item" v-for="(val, key) in myCourseList" :key="key">
-          <img :src="val.pc_img" alt="" class="uci-img">
-          <div class="uci-detail">
-            <h2 class="ucid-name">{{val.name}}</h2>
-            <p class="ucid-des">{{val.description}}</p>
-            <p class="ucid-learn" v-if="val.video">学习至{{val.video.course_id}}-{{val.video.section_id}}（{{val.video.video_id}}）{{val.video.video_name}}</p>
+        <div v-if="myCourseList.length">
+          <div class="uc-item" v-for="(val, key) in myCourseList" :key="key">
+            <img :src="val.pc_img" alt="" class="uci-img">
+            <div class="uci-detail">
+              <h2 class="ucid-name">{{val.name}}</h2>
+              <p class="ucid-des">{{val.description}}</p>
+              <p class="ucid-learn" v-if="val.video">学习至{{val.video.course_id}}-{{val.video.section_id}}（{{val.video.video_id}}）{{val.video.video_name}}</p>
+            </div>
+            <button class="btn-com uci-learn" @click="courseLearnVideo(val)">去学习</button>
           </div>
-          <button class="btn-com uci-learn" @click="courseLearnVideo(val)">去学习</button>
+        </div>
+        <div class="no-data no-data-course" v-else>
+          暂无课程
         </div>
       </div>
       <!-- 播放记录 -->
@@ -33,36 +38,43 @@
             </div>
           </div>
         </div>
-        <div v-else>暂无播放记录</div>
+        <div class="no-data no-data-course" v-else>
+          暂无课程
+        </div>
       </div>
       <!-- 收藏课程 -->
       <div v-if="selIdxCourse == 2">
-        <Row>
-          <Col span="24">
-            <Menu accordion width="100%" style="background:none;">
-              <Submenu :name="index+1" class="myCollpackageMenu" v-for="(val, index) in myCollpackageList" :key="index" style="padding:0px;">
-                <template slot="title" style="padding:0px;">
-                  <div class="uc-item-coll" @click="getMyCollcourse(val)">
-                    <img :src="val.pc_img" alt="" class="uci-img">
-                    <div class="uci-detail">
-                      <h2 class="ucid-name">{{val.name}}</h2>
-                      <p class="ucid-des">{{val.description}}</p>
-                      <!-- <p class="ucid-learn" v-if="val.video">学习至{{val.video.course_id}}-{{val.video.section_id}}（{{val.video.video_id}}）{{val.video.video_name}}</p>
-                      <p class="ucid-learn" v-else>学习至未学习</p> -->
+        <div v-if="myCollpackageList.length">
+          <Row>
+            <Col span="24">
+              <Menu accordion width="100%" style="background:none;">
+                <Submenu :name="index+1" class="myCollpackageMenu" v-for="(val, index) in myCollpackageList" :key="index" style="padding:0px;">
+                  <template slot="title" style="padding:0px;">
+                    <div class="uc-item-coll" @click="getMyCollcourse(val)">
+                      <img :src="val.pc_img" alt="" class="uci-img">
+                      <div class="uci-detail">
+                        <h2 class="ucid-name">{{val.name}}</h2>
+                        <p class="ucid-des">{{val.description}}</p>
+                        <!-- <p class="ucid-learn" v-if="val.video">学习至{{val.video.course_id}}-{{val.video.section_id}}（{{val.video.video_id}}）{{val.video.video_name}}</p>
+                        <p class="ucid-learn" v-else>学习至未学习</p> -->
+                      </div>
+                    </div>
+                  </template>
+                  <div class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(v, key) in myCollcourseList" :key="key" style="padding: 14px 40px;">
+                    <div class="menu-jie-title" style="font-size: 16px;">
+                      <div>{{v.name}}</div>
+                      <button @click="getKnow(val, v, key)" style="color: #0267FF;">查看</button>
                     </div>
                   </div>
-                </template>
-                <div class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(v, key) in myCollcourseList" :key="key" style="padding: 14px 40px;">
-                  <div class="menu-jie-title" style="font-size: 16px;">
-                    <div>{{v.name}}</div>
-                    <button @click="getKnow(val, v, key)" style="color: #0267FF;">查看</button>
-                  </div>
-                </div>
-              </Submenu>
-            </Menu>
-          </Col>
-        </Row>
-        <coll-menu-item :myCollvideoList="myCollvideoList" @collectionLearnVideo="collectionLearnVideo" v-if="visible"></coll-menu-item>
+                </Submenu>
+              </Menu>
+            </Col>
+          </Row>
+          <coll-menu-item :myCollvideoList="myCollvideoList" @collectionLearnVideo="collectionLearnVideo" v-if="visible"></coll-menu-item>
+        </div>
+        <div class="no-data no-data-course" v-else>
+          暂无课程
+        </div>
       </div>
     </div>
   </div>
