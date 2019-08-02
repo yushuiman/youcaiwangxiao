@@ -1,11 +1,9 @@
 <template>
-  <div class='prism-player' :id='playerId' :style='playStyle'></div>
+  <div class='prism-player' :id='playerId' :style='playStyle' @click="playSwitch"></div>
 </template>
 
 <script>
 import { EventBus } from '@/event-bus.js'
-import { mapState } from 'vuex'
-import { initWS } from '@/api/class'
 export default {
   name: 'Aliplayer',
   props: {
@@ -234,15 +232,9 @@ export default {
       playerId: 'aliplayer_' + Math.random() * 100000000000000000,
       scriptTagStatus: 0,
       instance: null,
-      playStatus: false
+      playStatus: true // 暂停/开始
     }
   },
-  // computed: {
-  //   ...mapState({
-  //     token: state => state.user.token,
-  //     user_id: state => state.user.user_id
-  //   })
-  // },
   mounted () {
     if (window.Aliplayer !== undefined) {
       // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
@@ -321,8 +313,7 @@ export default {
             x5_type: _this.x5_type,
             x5_fullscreen: _this.x5_fullscreen,
             x5_orientation: _this.x5_orientation,
-            autoPlayDelay: _this.autoPlayDelay,
-            autoPlayDelayDisplayText: _this.autoPlayDelayDisplayText
+            autoPlayDelay: _this.autoPlayDelay
           })
           // 绑定事件，当 AliPlayer 初始化完成后，将编辑器实例通过自定义的 ready 事件交出去
           _this.instance.on('ready', () => {
@@ -366,7 +357,6 @@ export default {
        */
     pause: function () {
       this.instance.pause()
-      console.log(this.instance)
     },
     /**
        * 重播视频
@@ -436,6 +426,15 @@ export default {
        */
     reloaduserPlayInfoAndVidRequestMts: function (vid, playauth) {
       this.instance.reloaduserPlayInfoAndVidRequestMts(vid, playauth)
+    },
+    /* 点击播放屏幕 */
+    playSwitch () {
+      this.playStatus = !this.playStatus
+      if (this.playStatus) {
+        this.pause()
+      } else {
+        this.play()
+      }
     }
   }
 }

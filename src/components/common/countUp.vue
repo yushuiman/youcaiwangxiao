@@ -24,7 +24,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.s)
     this.start()
   },
   methods: {
@@ -33,7 +32,6 @@ export default {
       if (this.ms >= 1000) {
         this.ms = 0
         this.s = this.s + 1 // 秒
-        console.log(this.s)
       }
       if (this.s >= 60) {
         this.s = 0
@@ -44,7 +42,6 @@ export default {
         this.h = this.h + 1 // 小时
       }
       this.answer_times = this.toDub(this.h) + ':' + this.toDub(this.m) + ':' + this.toDub(this.s) + ''/* +this.toDubms(this.ms)+"毫秒" */
-    // document.getElementById('mytime').innerHTML=h+"时"+m+"分"+s+"秒"+ms+"毫秒";
     },
 
     start () { // 开始

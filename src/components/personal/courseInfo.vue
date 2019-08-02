@@ -257,13 +257,13 @@ export default {
         section_id: val.video.section_id,
         video_id: val.video.video_id,
         is_zhengke: val.video.is_zhengke, // 是否正课
-        userstatus: val.video.userstatus // 是否购买
+        userstatus: 1 // 是否购买 播放记录都是已购买的数据
       }
       this.$router.push({ path: '/class-video', query: obj })
       // let openMenu = (val.video.section_id) + '-' + (val.video.video_id)
       // window.sessionStorage.setItem('openMenu', openMenu)
       window.sessionStorage.setItem('playVideoInfo', JSON.stringify(val))
-      window.sessionStorage.setItem('playtime', val.video_time) // 获取播放时间
+      window.sessionStorage.setItem('playtime', val.video.watch_time) // 获取播放时间
     },
     // 收藏记录去学习
     collectionLearnVideo (item, val) {

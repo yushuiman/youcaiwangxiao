@@ -126,7 +126,6 @@ export default {
       imgUrl: '',
       uploadList: [],
       errorTs: '',
-      playStatus: true,
       replyList: {} // 老师回复内容
     }
   },
@@ -243,13 +242,6 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-    },
-    // 答疑
-    stopPlay () {
-      this.playStatus = false
-    },
-    goPlay () {
-      this.playStatus = true
     }
   }
 }

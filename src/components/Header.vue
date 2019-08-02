@@ -10,8 +10,8 @@
               <li :class="isChange === 'kecheng' ? 'on_change' : ''" @click="onChange('kecheng')"><router-link to="/class">课程</router-link></li>
               <li :class="isChange === 'tiku' ? 'on_change' : ''" @click="onChange('tiku')"><router-link to="/question">题库</router-link></li>
               <li :class="isChange ==='liveing' ? 'on_change' : ''" @click="onChange('liveing')"><router-link to="/zhibo">直播</router-link></li>
-              <!-- <li :class="isChange === 'dayi' ? 'on_change' : ''" @click="onChange('dayi')"><router-link to="/answer">答疑</router-link></li> -->
-              <li :class="isChange === 'zixun' ? 'on_change' : ''" @click="onChange('zixun')"><router-link to="/zixun">咨讯</router-link></li>
+              <li :class="isChange === 'dayi' ? 'on_change' : ''" @click="onChange('dayi')"><router-link to="/answer">答疑</router-link></li>
+              <li :class="isChange === 'zixun' ? 'on_change' : ''" @click="onChange('zixun')"><router-link to="/zixun">资讯</router-link></li>
               <li :class="isChange ==='app' ? 'on_change' : ''" @click="onChange('app')"><router-link to="/app">App</router-link></li>
             </ul>
           </div>
@@ -26,13 +26,22 @@
               <a class="learen-btn" @click="goLearning">学习中心</a>
               <img src="../assets/images/global/email-icon.png" alt="email" class="email-icon">
               <img :src="avatorImgPath" alt="头像" class="head-logo" @click="goPersonalPage">
-              <span>{{userName}}</span>
+              <span @mouseenter="enter" @mouseleave="leave">{{userName}}</span>
             </div>
           </div>
         </div>
       </div>
       <div class="fixed-head"></div>
     </header>
+    <div v-if="flagEntrance" class="my-center">
+      <ul>
+        <li class="personal-item" :class="['personal-item0' + index]" v-for="(v, index) in personalArr" :key="index"><i></i>{{v}}</li>
+      </ul>
+      <div>
+        <p>地方不对</p>
+        <div><span>是否收到粉丝地方</span><span>继续</span></div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -41,6 +50,8 @@ import { mapMutations, mapActions, mapState } from 'vuex'
 export default {
   data () {
     return {
+      flagEntrance: true,
+      personalArr: ['我的课程', '订单中心', ' 我的答疑', '个人设置']
     }
   },
   computed: {
@@ -72,6 +83,12 @@ export default {
       'setChange',
       'setLogin'
     ]),
+    enter () {
+      this.flagEntrance = true
+    },
+    leave () {
+      this.flagEntrance = false
+    },
     onChange (navName) {
       this.setChange(navName)
     },
@@ -127,12 +144,12 @@ export default {
     li{
       line-height: 70px;
       font-size: 14px;
-      padding: 0 21px;
       float: left;
       box-sizing: border-box;
       a{
+        padding: 0 21px;
         color: $col333;
-        display: block;
+        display: inline-block;
         // border-top: 4px solid transparent;
       }
       &.on_change{
@@ -207,5 +224,12 @@ export default {
     span{
       cursor: pointer;
     }
+  }
+  // 个人中心
+  .my-center{
+    position: absolute;
+    right: 0;
+    top: 70px;
+    background: #ffffff;
   }
 </style>

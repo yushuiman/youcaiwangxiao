@@ -43,7 +43,11 @@
         </ul> -->
       </div>
       <div class="video-info-c">
-        <ali-player ref="aliPlayers" v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
+        <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
+        <div class="try-watch-dialog" v-if="tryWatchFlag">
+          <div @click="goBuy">试看结束去购买</div>
+          <div @click="replay">重新开始</div>
+        </div>
         <div class="star-collection" @click="courseCollection(videoCredentials.collect)">
           <Icon type="md-star-outline" style="color: #ffffff;" v-if="videoCredentials.collect == 2"/>
           <Icon type="md-star" style="color: #F99111;" v-if="videoCredentials.collect == 1"/>
@@ -86,7 +90,7 @@ export default {
       VideoId: '', // 视频VideoId
       videoCredentials: {
         handouts: '', // 讲义
-        playauth: '', // 获取视频凭证
+        playAuth: '', // 获取视频凭证
         collect: '', // 收藏
         watch_time: '', // 观看时间
         Title: '', // name
@@ -98,15 +102,19 @@ export default {
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
         is_zhengke: this.$route.query.is_zhengke,
-        userstatus: this.$route.query.userstatus
+        userstatus: this.$route.query.userstatus,
+        type: this.$route.query.type
       },
       packageList: [],
       secvCatalogArr: [],
       courseSections: [],
       openMenu: '1-1', // 默认播放菜单menu-index
       playVideoInfo: window.sessionStorage.getItem('playVideoInfo'), // 视频播放信息
-      playtime: window.sessionStorage.getItem('playtime'), // 视频播放时间
-      playStatus: true // 停止播放
+      playtime: window.sessionStorage.getItem('playtime') || 0, // 视频上次播放时间
+      socketTimer: null,
+      tryWatchTimer: null,
+      tryWatchFlag: false,
+      tryQatchNum: 180 // 试看3分钟
     }
   },
   components: {
@@ -124,17 +132,15 @@ export default {
     this.getVideoPlayback(this.$route.query.video_id)
     this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
     this.getCourseCatalog() // 课程大纲（目录）
-    // if (this.$refs.aliPlayers) {
-    //   console.log(32323)
-    // }
-    // this.$nextTick(() => {
-    //   setInterval(() => {
-    //     // this.$refs.aliPlayers.seek('52')
-    //   }, 10000)
-    // })
-    if (this.user_id) {
-      setInterval(() => {
-        let playtime = parseInt(this.$refs.aliPlayers.getCurrentTime())
+  },
+  methods: {
+    // 播放器
+    ready (instance) {
+      // 跳转到上次播放时间
+      instance.seek(this.playtime)
+      // 30秒监听一次socket
+      this.socketTimer = setInterval(() => {
+        this.playtime = parseInt(instance.getCurrentTime())
         var message = {
           from: 1,
           user_id: this.user_id,
@@ -142,17 +148,46 @@ export default {
           course_id: this.$route.query.course_id,
           section_id: this.$route.query.section_id,
           video_id: this.$route.query.video_id,
-          watch_time: playtime,
+          watch_time: this.playtime,
           video_type: 1, // 视频类型 1视频2直播
           status: 1 // 播放类型 1课程视频播放
         }
-        if (playtime > 0) {
+        // console.log(JSON.stringify(message))
+        // console.log(this.playtime)
+        // 已购买并且视频播放时间大于0 socket
+        if (parseInt(this.playCourseInfo.userstatus) === 1 && this.playtime > 0) {
           initWS(JSON.stringify(message))
         }
+        window.sessionStorage.setItem('playtime', this.playtime) // 防止刷新页面，也要记录当前播放时间
       }, 30000)
-    }
-  },
-  methods: {
+      // 未购买试看3分钟
+      if (parseInt(this.playCourseInfo.userstatus) === 2) {
+        this.tryWatchTimer = setInterval(() => {
+          let playtime = parseInt(instance.getCurrentTime())
+          if (playtime >= this.tryQatchNum) {
+            this.tryWatchFlag = true
+            instance.pause()
+            instance.seek(this.tryQatchNum)
+          } else {
+            window.sessionStorage.setItem('playtime', playtime) // 防止刷新页面，也要记录当前播放时间
+            instance.play()
+          }
+        }, 1000)
+      }
+    },
+    // 去购买
+    goBuy () {
+      this.$router.push({ path: '/class-detail',
+        query: {
+          package_id: this.playCourseInfo.package_id
+        }
+      })
+    },
+    // 重新试听
+    replay () {
+      this.tryWatchFlag = false
+      this.$refs.aliPlayers.replay()
+    },
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
       // this.selMenu = index
@@ -279,29 +314,12 @@ export default {
           videoCredentials(dataForm).then(data => {
             let res = data.data
             this.videoCredentials = res.data
-            // this.videoCredentials.playtime = this.playtime // 播放到当前时间
           })
         } else {
-          // this.$Message.error(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     },
-    // 收藏
-    // qtCollection (item) {
-    //   let { ID, collection } = item
-    //   if (parseInt(collection) === 1) {
-    //     item.collection = 0
-    //   } else {
-    //     item.collection = 1
-    //   }
-    //   questionCollection({
-    //     user_id: this.user_id,
-    //     course_id: this.getQuestion.course_id || window.sessionStorage.getItem('course_id'),
-    //     question_id: ID,
-    //     type: item.collection
-    //   }).then(data => {
-    //   })
-    // },
     courseCollection (collectId) { // 1收藏2取消收藏
       this.videoCredentials.collect = 2
       if (collectId === 2) {
@@ -332,6 +350,12 @@ export default {
       window.sessionStorage.setItem('type', 'course')
       this.$router.push('/personal')
     }
+  },
+  beforeDestroy () {
+    window.sessionStorage.removeItem('playtime')
+    clearInterval(this.socketTimer)
+    clearInterval(this.tryWatchTimer)
+    // clearInterval(this.intervalId)
   }
 }
 </script>
@@ -539,5 +563,20 @@ export default {
     right: 131px;
     bottom: 7px;
     font-size: 30px;
+  }
+  .try-watch-dialog{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    color: #ffffff;
+    text-align: center;
+    z-index: 333333;
+    div{
+      font-size: 16px;
+      line-height: 30px;
+    }
   }
 </style>

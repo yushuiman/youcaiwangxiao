@@ -182,6 +182,7 @@ export default {
         }
       })
       window.location.reload()
+      window.sessionStorage.removeItem('playtime')
       // this.handleReload()
     }
   }

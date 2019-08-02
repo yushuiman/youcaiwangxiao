@@ -344,7 +344,9 @@ export default {
     }
   },
   beforeDestroy () {
-    clearInterval(this.timers)
+    if (this.timers) {
+      clearInterval(this.timers)
+    }
     window.sessionStorage.removeItem('answer_times')
   }
 }
