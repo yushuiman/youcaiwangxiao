@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 尾部 -->
-    <footer id="footer" v-show="$route.meta.showFooter">
+    <footer id="footer" v-if="$route.meta.showFooter">
       <div class="footer-wrap">
         <div class="footer-top w-wrap">
           <img src="@/assets/images/global/yc-logo-gray.png" alt="logo" class="yc-logo">

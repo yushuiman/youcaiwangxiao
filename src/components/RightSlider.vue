@@ -1,5 +1,5 @@
 <template>
-  <div class="r_slider">
+  <div class="r_slider" v-if="$route.meta.showRightSlider">
     <ul class="slider-list">
       <li class="try-item">
         <i class="r-icon"></i>
@@ -53,7 +53,7 @@ export default {
     return {
       consultInfo: {}, // 在线咨询
       scrollTop: 0,
-      btnFlag: false// 默认隐藏返回头部的图片
+      btnFlag: false // 默认隐藏返回头部的图片
     }
   },
   mounted () {

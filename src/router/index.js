@@ -13,7 +13,8 @@ const router = new Router({
       component: Home,
       meta: {
         showHeader: true,
-        showFooter: true
+        showFooter: true,
+        showRightSlider: true
       }
     },
     {
@@ -22,7 +23,8 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "about" */ '@/views/Class/Class.vue'),
       meta: {
         showHeader: true,
-        showFooter: true
+        showFooter: true,
+        showRightSlider: true
       }
     },
     {
@@ -31,7 +33,8 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "about" */ '@/views/Class/ClassDetail.vue'),
       meta: {
         showHeader: true,
-        showFooter: true
+        showFooter: true,
+        showRightSlider: true
       }
     },
     {
@@ -40,7 +43,8 @@ const router = new Router({
       component: () => import('@/views/Video/Video.vue'),
       meta: {
         showHeader: false,
-        showFooter: false
+        showFooter: false,
+        showRightSlider: true
       }
     },
     {
@@ -49,7 +53,8 @@ const router = new Router({
       component: () => import('@/views/Question/Question.vue'),
       meta: {
         showHeader: true,
-        showFooter: true
+        showFooter: true,
+        showRightSlider: true
       }
     },
     {
@@ -58,7 +63,8 @@ const router = new Router({
       component: () => import('@/views/Question/DoPotic.vue'),
       meta: {
         showHeader: true,
-        showFooter: false
+        showFooter: false,
+        showRightSlider: true
       }
     },
     {
@@ -67,7 +73,8 @@ const router = new Router({
       component: () => import('@/views/Question/DoPoticExperience.vue'),
       meta: {
         showHeader: true,
-        showFooter: false
+        showFooter: false,
+        showRightSlider: true
       }
     },
     {
@@ -76,7 +83,8 @@ const router = new Router({
       component: () => import('@/views/Personal/DoPoticContinue.vue'),
       meta: {
         showHeader: true,
-        showFooter: false
+        showFooter: false,
+        showRightSlider: true
       }
     },
     {
@@ -85,7 +93,8 @@ const router = new Router({
       component: () => import('@/views/Personal/DoPoticError.vue'),
       meta: {
         showHeader: true,
-        showFooter: false
+        showFooter: false,
+        showRightSlider: true
       }
     },
     {
@@ -94,7 +103,8 @@ const router = new Router({
       component: () => import('@/views/Question/ResultReport.vue'),
       meta: {
         showHeader: true,
-        showFooter: false
+        showFooter: false,
+        showRightSlider: true
       }
     },
     {
@@ -103,7 +113,8 @@ const router = new Router({
       component: () => import('@/views/Question/Analysis.vue'),
       meta: {
         showHeader: true,
-        showFooter: false
+        showFooter: false,
+        showRightSlider: true
       }
     },
     {
@@ -112,14 +123,29 @@ const router = new Router({
       component: () => import('@/views/Question/CapacityAssessment.vue'),
       meta: {
         showHeader: true,
-        showFooter: false
+        showFooter: false,
+        showRightSlider: true
+      }
+    },
+    {
+      path: '/capacity-assessment-app',
+      name: 'capacity-assessment-app',
+      component: () => import('@/views/Question/CapacityAssessmentApp.vue'),
+      meta: {
+        showHeader: false,
+        showFooter: false,
+        showRightSlider: false
       }
     },
     {
       path: '/answer',
       name: 'answer',
       component: () => import('@/views/Answer/Answer.vue'),
-      meta: { showHeader: true }
+      meta: {
+        showHeader: false,
+        showFooter: false,
+        showRightSlider: true
+      }
     },
     {
       path: '/zhibo',
@@ -127,7 +153,8 @@ const router = new Router({
       component: () => import('@/views/Zhibo/Zhibo.vue'),
       meta: {
         showHeader: true,
-        showFooter: true
+        showFooter: true,
+        showRightSlider: true
       }
     },
     {
@@ -136,7 +163,8 @@ const router = new Router({
       component: () => import('@/views/Zixun/Zixun.vue'),
       meta: {
         showHeader: true,
-        showFooter: true
+        showFooter: true,
+        showRightSlider: true
       }
     },
     {
@@ -145,7 +173,8 @@ const router = new Router({
       component: () => import('@/views/App/App.vue'),
       meta: {
         showHeader: true,
-        showFooter: true
+        showFooter: true,
+        showRightSlider: true
       }
     },
     {
@@ -154,7 +183,8 @@ const router = new Router({
       component: () => import('@/views/Login/Login.vue'),
       meta: {
         showHeader: true,
-        showFooter: true
+        showFooter: true,
+        showRightSlider: true
       }
     },
     // 个人中心
@@ -164,7 +194,8 @@ const router = new Router({
       component: () => import('@/views/Personal/Personal.vue'),
       meta: {
         showHeader: true,
-        showFooter: false
+        showFooter: false,
+        showRightSlider: true
       }
     },
     // 学习中心
@@ -174,7 +205,8 @@ const router = new Router({
       component: () => import('@/views/LearningCenter/LearningCenter.vue'),
       meta: {
         showHeader: true,
-        showFooter: false
+        showFooter: false,
+        showRightSlider: true
       }
     }
   ]

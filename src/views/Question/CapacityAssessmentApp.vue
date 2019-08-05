@@ -1,29 +1,19 @@
 <template>
-  <div class="capacity-assessment-wrap w-wrap">
+  <div class="capacity-assessment-wrap">
     <div class="cass-row cass-row-top">
-      <Row>
-        <Col span="24">
-          <div class="cass-title">预测分<span>根据您最近十次答题情况评估</span></div>
-        </Col>
-      </Row>
-      <Row class="cass-row-mtb">
-        <Col span="12" class="yc-record-rb">
+      <div class="cass-title">预测分<span>根据您最近十次答题情况评估</span></div>
+      <div class="cass-row-mtb">
+        <div class="yc-record-rb">
           <div class="yc-record">
             <p class="yc-record-top"><em>{{ycfen}}</em>分</p>
             <p class="yc-record-bt">总分100</p>
           </div>
-        </Col>
-        <Col span="12">
-          <div ref="myEchart" style="width: 400px;height: 240px;margin:0 auto;"></div>
-        </Col>
-      </Row>
+        </div>
+        <div ref="myEchart" style="width: 400px;height: 240px;margin:0 auto;margin-top: 50px;"></div>
+      </div>
     </div>
     <div class="cass-row cass-row-bottom">
-      <Row>
-        <Col span="24">
-          <div class="cass-title">本月统计</div>
-        </Col>
-      </Row>
+      <div class="cass-title">本月统计</div>
       <Row class="cass-row-pt">
         <Col span="8">
           <div class="answer-status-item answer-status-item01">
@@ -113,7 +103,7 @@ export default {
             },
             radius: 80,
             splitNumber: 3,
-            center: ['50%', '50%'],
+            center: ['42%', '50%'],
             axisLine: { // 设置雷达图中间射线的颜色
               lineStyle: {
                 color: 'rgba(24, 116, 253, 0.2)'
@@ -210,73 +200,77 @@ document.addEventListener('DOMContentLoaded', () => {
   @function px2rem($px){
     @return $px/$ratio+rem;
   }
-  .about{
-    color: red;
-    font-size: px2rem(20);
-    width: px2rem(200);
-    background: #f00;
+  .r_slider{
+    display: none!important;
+  }
+  .capacity-assessment-wrap{
+    width: 100%;
+    overflow: hidden;
   }
   .cass-row{
-    padding: 20px;
-    margin-top: 20px;
+    padding: px2rem(40);
+    margin-top: px2rem(40);
     background: #ffffff;
-    border-radius: 8px;
     text-align: center;
     .cass-title{
-      font-size: 28px;
+      font-size: px2rem(46);
       font-weight: 500;
-      text-align-last: left;
+      text-align: left;
       span{
-        font-size: 18px;
+        font-size: px2rem(36);
         color: $col999;
-        margin-left: 14px;
+        margin-left: px2rem(24);
       }
     }
   }
   .cass-row-mtb{
-    padding-top: 40px;
+    padding-top: px2rem(80);
     // padding-bottom: 30px;
   }
   .cass-row-pt{
-    padding-top: 38px;
+    padding-top: px2rem(38);
   }
   .yc-record{
-    @include bg-img(275, 203, '../../assets/images/questions/yc-record.png');
+    width: px2rem(550);
+    height: px2rem(406);
+    background: url('../../assets/images/questions/yc-record.png') no-repeat;
+    background-size: contain;
+    margin: 0 auto;
     .yc-record-top{
-      margin-left: -10px;
-      margin-top: 85px;
+      margin-left: px2rem(-10);
+      padding-top: px2rem(170);
       em{
-        font-size: 54px;
+        font-size: px2rem(108);
       }
     }
     .yc-record-bt{
-      margin-left: -10px;
-      margin-top: 22px;
-      font-size: 16px;
+      margin-left: px2rem(-10);
+      margin-top: px2rem(42);
+      font-size: px2rem(32);
       color: $col999;
     }
   }
   .answer-status-item,.yc-record-rb{
-    position: relative;
-    &:after{
-      position: absolute;
-      content: "";
-      right: 0;
-      top: 50%;
-      margin-top: -35px;
-      width: 2px;
-      height: 70px;
-      background: #DCDCDC;
-    }
+    // position: relative;
+    // &:after{
+    //   position: absolute;
+    //   content: "";
+    //   right: 0;
+    //   top: 50%;
+    //   margin-top: -px2rem(35);
+    //   width: px2rem(2);
+    //   height: px2rem(70);
+    //   background: #DCDCDC;
+    // }
     p{
-      margin-top: 10px;
-      margin-bottom: 8px;
+      margin-top: px2rem(10);
+      margin-bottom: px2rem(8);
       em{
-        font-size: 26px;
+        font-size: px2rem(52);
       }
     }
     span{
-      font-size: 16px;
+      font-size: px2rem(32);
       color: $col999;
     }
   }
@@ -285,17 +279,17 @@ document.addEventListener('DOMContentLoaded', () => {
       width: 0;
     }
   }
-  .yc-record-rb{
-    &:after{
-      height: 112px;
-      margin-bottom: -56px;
-    }
-  }
+  // .yc-record-rb{
+  //   &:after{
+  //     height: px2rem(112);
+  //     margin-bottom: -px2rem(56);
+  //   }
+  // }
   .asi-icon{
-    width: 52px;
-    height: 55px;
+    width: px2rem(52);
+    height: px2rem(55);
     display: inline-block;
-    background-size: 52px 52px;
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: center bottom;
     .answer-status-item01 &{
@@ -306,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     .answer-status-item03 &{
       background-image: url('../../assets/images/questions/statistics-icon03.png');
-      background-size: 50px 55px;
     }
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div ref="headerRef" id="headerRef">
-    <header v-show="$route.meta.showHeader">
+    <header v-if="$route.meta.showHeader">
       <div class="head-wrap">
         <div class="head-w">
           <div class="head-list">
