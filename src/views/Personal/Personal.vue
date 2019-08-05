@@ -29,13 +29,14 @@
           </ul>
         </div>
         <div class="userm-right">
-          <course-info v-if="clkTit == 'course'"></course-info>
-          <questions-info v-if="clkTit == 'questions'"></questions-info>
-          <zhibo-info v-if="clkTit == 'zhibo'"></zhibo-info>
-          <answer-info v-if="clkTit == 'answer'"></answer-info>
-          <order-info v-if="clkTit == 'order'"></order-info>
-          <account-info v-if="clkTit == 'account'"></account-info>
-          <set-info v-if="clkTit == 'set'" :personalInfo="personalInfo" @getPersonalInfo="getPersonalInfo"></set-info>
+          <course-info v-if="clkTit == 'course'" :user_id="user_id"></course-info>
+          <questions-info v-if="clkTit == 'questions'" :user_id="user_id"></questions-info>
+          <zhibo-info v-if="clkTit == 'zhibo'" :user_id="user_id"></zhibo-info>
+          <answer-info v-if="clkTit == 'answer'" :user_id="user_id"></answer-info>
+          <order-info v-if="clkTit == 'order'" :user_id="user_id"></order-info>
+          <account-info v-if="clkTit == 'account'" :user_id="user_id"></account-info>
+          <set-info v-if="clkTit == 'set'" :personalInfo="personalInfo" :user_id="user_id" @getPersonalInfo="getPersonalInfo"></set-info>
+          <news v-if="clkTit == 'news'" :user_id="user_id"></news>
         </div>
       </div>
     </div>
@@ -49,6 +50,7 @@ import answerInfo from '../../components/personal/answerInfo'
 import orderInfo from '../../components/personal/orderInfo'
 import accountInfo from '../../components/personal/accountInfo'
 import setInfo from '../../components/personal/setInfo'
+import news from '../../components/personal/news'
 import { getPersonal } from '@/api/personal'
 import { mapState } from 'vuex'
 export default {
@@ -81,13 +83,13 @@ export default {
         }
       ],
       clkTit: window.sessionStorage.getItem('type') || 'course',
-      // selIdxSet: window.sessionStorage.getItem('selIdxSet'),
       personalInfo: {} // 个人信息
     }
   },
   computed: {
     ...mapState({
       user_id: state => state.user.user_id
+      // clkTit: state => state.nav.clkTit
     })
   },
   components: {
@@ -97,7 +99,8 @@ export default {
     answerInfo,
     orderInfo,
     accountInfo,
-    setInfo
+    setInfo,
+    news
   },
   mounted () {
     this.getPersonalInfo()
@@ -110,7 +113,6 @@ export default {
     setBaseInfo () {
       this.clkTit = 'set'
       window.sessionStorage.setItem('clkTit', 'set')
-      // window.sessionStorage.setItem('selIdxSet', this.selIdxSet)
     },
     // 用户信息
     getPersonalInfo () {

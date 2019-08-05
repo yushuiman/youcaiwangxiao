@@ -69,8 +69,13 @@
 
 <script>
 import { consumptionRecord } from '@/api/personal'
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 export default {
+  props: {
+    user_id: {
+      type: Number
+    }
+  },
   data () {
     return {
       txtArr: ['消费记录', '课程卡管理'],
@@ -86,11 +91,11 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapState({
-      user_id: state => state.user.user_id
-    })
-  },
+  // computed: {
+  //   ...mapState({
+  //     user_id: state => state.user.user_id
+  //   })
+  // },
   mounted () {
     this.initRes()
   },

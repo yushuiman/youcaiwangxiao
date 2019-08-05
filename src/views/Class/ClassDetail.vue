@@ -242,6 +242,7 @@ export default {
       margin-left: -75px;
       margin-top: -17px;
       text-align: center;
+      cursor: pointer;
       i{
         @include wh(14, 16);
         @extend %bg-img;
@@ -262,6 +263,7 @@ export default {
       padding: 0 20px;
       display: flex;
       align-items: center;
+      cursor: pointer;
       img{
         @include wh(40, 40);
         border-radius: 100%;

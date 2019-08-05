@@ -5,11 +5,11 @@
     </ul>
     <div class="all-main" v-if="courseList.length">
       <!-- 做题记录 -->
-      <questions-menuItem v-if="selIdxQuestion == 0" :courseList="courseList"></questions-menuItem>
+      <questions-menuItem v-if="selIdxQuestion == 0" :courseList="courseList" :user_id="user_id"></questions-menuItem>
       <!-- 错题集 -->
-      <error-menuItem v-if="selIdxQuestion == 1" :courseList="courseList"></error-menuItem>
+      <error-menuItem v-if="selIdxQuestion == 1" :courseList="courseList" :user_id="user_id"></error-menuItem>
       <!-- 收藏夹 -->
-      <collection-menuItem v-if="selIdxQuestion == 2" :courseList="courseList"></collection-menuItem>
+      <collection-menuItem v-if="selIdxQuestion == 2" :courseList="courseList" :user_id="user_id"></collection-menuItem>
       <!-- 习题笔记 -->
       <div v-if="selIdxQuestion == 3">
         <div class="no-data">
@@ -25,8 +25,13 @@ import questionsMenuItem from '../../components/personal/questions/questionsMenu
 import errorMenuItem from '../../components/personal/questions/errorMenuItem'
 import collectionMenuItem from '../../components/personal/questions/collectionMenuItem'
 import { getProject } from '@/api/personal'
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 export default {
+  props: {
+    user_id: {
+      type: Number
+    }
+  },
   data () {
     return {
       txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
@@ -39,12 +44,12 @@ export default {
     errorMenuItem,
     collectionMenuItem
   },
-  computed: {
-    ...mapState({
-      token: state => state.user.token,
-      user_id: state => state.user.user_id
-    })
-  },
+  // computed: {
+  //   ...mapState({
+  //     token: state => state.user.token,
+  //     user_id: state => state.user.user_id
+  //   })
+  // },
   mounted () {
     this.getProjectList()
   },

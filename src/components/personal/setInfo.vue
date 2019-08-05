@@ -237,12 +237,15 @@
 
 <script>
 import { savePersonal, defaultAddress, delAddress, addAddress, editAddress, resetPaw, uploadImage } from '@/api/personal'
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import { VueCropper } from 'vue-cropper'
 export default {
   props: {
     personalInfo: {
       type: Object
+    },
+    user_id: {
+      type: Number
     }
   },
   data () {
@@ -294,14 +297,13 @@ export default {
   components: {
     VueCropper
   },
-  computed: {
-    ...mapState({
-      token: state => state.user.token,
-      user_id: state => state.user.user_id
-    })
-  },
+  // computed: {
+  //   ...mapState({
+  //     token: state => state.user.token,
+  //     user_id: state => state.user.user_id
+  //   })
+  // },
   mounted () {
-    console.log(this.selIdxSet)
   },
 
   methods: {
@@ -570,7 +572,6 @@ export default {
     },
     // 选择本地图片
     uploadImg (e, num) {
-      console.log(e)
       var _this = this
       // 上传图片
       var file = e.target.files[0]

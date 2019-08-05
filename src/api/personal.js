@@ -236,16 +236,23 @@ export const resetPaw = (data) => { // 修改密码
     method: 'post'
   })
 }
-export const uploadImage = (data) => { // 上传图片
+export const allRead = (data) => { // 消息列表-全部已读
   return axios.request({
-    url: 'upload/Index/uploadImage',
-    params: data,
-    method: 'get'
+    url: '/web/Personal/allRead',
+    data,
+    method: 'post'
   })
 }
-export const pcuploadImage = (data) => { // 上传图片
+export const systeMessage = (data) => { // 消息列表
   return axios.request({
-    url: 'upload/Index/pcuploadImage',
+    url: '/web/Personal/systeMessage',
+    data,
+    method: 'post'
+  })
+}
+export const read = (data) => { // 消息列表-已读
+  return axios.request({
+    url: '/web/Personal/read',
     data,
     method: 'post'
   })

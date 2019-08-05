@@ -70,7 +70,7 @@
               </Menu>
             </Col>
           </Row>
-          <coll-menu-item :myCollvideoList="myCollvideoList" @collectionLearnVideo="collectionLearnVideo" v-if="visible"></coll-menu-item>
+          <coll-menu-item :myCollvideoList="myCollvideoList" :user_id="user_id" @collectionLearnVideo="collectionLearnVideo" v-if="visible"></coll-menu-item>
         </div>
         <div class="no-data no-data-course" v-else>
           暂无课程
@@ -83,8 +83,13 @@
 <script>
 import collMenuItem from '../../components/personal/course/collMenuItem'
 import { myCourse, watchRecords, myCollpackage, myCollcourse, myCollvideo } from '@/api/personal'
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 export default {
+  props: {
+    user_id: {
+      type: Number
+    }
+  },
   data () {
     return {
       visible: false,
@@ -111,12 +116,12 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapState({
-      token: state => state.user.token,
-      user_id: state => state.user.user_id
-    })
-  },
+  // computed: {
+  //   ...mapState({
+  //     token: state => state.user.token,
+  //     user_id: state => state.user.user_id
+  //   })
+  // },
   components: {
     // courseItem,
     collMenuItem
@@ -129,8 +134,8 @@ export default {
       if (!this.user_id) {
 
       }
-      window.sessionStorage.setItem('selIdxCourse', index)
       this.selIdxCourse = index
+      window.sessionStorage.setItem('selIdxCourse', index)
       this.initRes()
     },
     initRes () {

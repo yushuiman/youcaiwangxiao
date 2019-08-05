@@ -55,12 +55,15 @@
 </template>
 <script>
 import { myCollquestion, myCollquestionknob } from '@/api/personal'
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 
 export default {
   props: {
     courseList: {
       type: Array
+    },
+    user_id: {
+      type: Number
     }
   },
   data () {
@@ -85,12 +88,12 @@ export default {
   },
   components: {
   },
-  computed: {
-    ...mapState({
-      token: state => state.user.token,
-      user_id: state => state.user.user_id
-    })
-  },
+  // computed: {
+  //   ...mapState({
+  //     token: state => state.user.token,
+  //     user_id: state => state.user.user_id
+  //   })
+  // },
   mounted () {
     this.getMyCollquestion()
   },

@@ -28,18 +28,18 @@
 
 <script>
 // import { errorCorrection } from '@/api/questions'
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 export default {
   data () {
     return {
       zhiboList: []
     }
   },
-  computed: {
-    ...mapState({
-      user_id: state => state.user.user_id
-    })
-  },
+  // computed: {
+  //   ...mapState({
+  //     user_id: state => state.user.user_id
+  //   })
+  // },
   mounted () {
   },
   methods: {

@@ -364,6 +364,7 @@ export default {
     text-align: center;
     font-size: 16px;
     color: $col999;
+    cursor: pointer;
     &.curren{
       font-size: 20px;
       color: $col333;

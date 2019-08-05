@@ -54,7 +54,7 @@ export default {
       })
     },
     // 退出登录
-    handleLogOut ({ state, commit }) {
+    handleLogOut ({ commit }) {
       return new Promise((resolve, reject) => {
         outLogin().then(() => {
           removeToken() // cookie token
@@ -74,7 +74,7 @@ export default {
       })
     },
     // 获取用户相关信息
-    getUserInfo ({ state, commit }) {
+    getUserInfo ({ commit }) {
       return new Promise((resolve, reject) => {
         getUserInfo().then(res => {
           const data = res.data
