@@ -1,6 +1,10 @@
 <template>
-  <div class="capacity-assessment-wrap">
+  <div class="capacity-assessment-wrap" style="">
     <div class="cass-row cass-row-top">
+      <!-- <div>1测试user_id:{{user_id}}</div>
+      <div>1测试course_id:{{course_id}}</div>
+      <div>2测试user_id:{{this.$route.query.user_id}}</div>
+      <div>2测试course_id:{{this.$route.query.course_id}}</div> -->
       <div class="cass-title">预测分<span>根据您最近十次答题情况评估</span></div>
       <div class="cass-row-mtb">
         <div class="yc-record-rb">
@@ -9,7 +13,7 @@
             <p class="yc-record-bt">总分100</p>
           </div>
         </div>
-        <div ref="myEchart" id="myChart" style="width: 100%;height: 220px;"></div>
+        <div ref="myEchart" id="myChart" style="width:100%;height: 340px;"></div>
       </div>
     </div>
     <div class="cass-row cass-row-bottom">
@@ -42,18 +46,28 @@
 </template>
 
 <script>
+
 import { getQueryString } from '../../libs/utils'
 import { abiAssess } from '@/api/questions'
+// import { mapState } from 'vuex'
 import echarts from 'echarts'
 export default {
   data () {
     return {
+      course_id: 0,
+      user_id: 0,
       ycfen: 0,
       nlpgInfo: {}, // 能力评估
       monStatistics: {}, // 本月统计
       chart: null
     }
   },
+  // computed: {
+  //   ...mapState({
+  //     user_id: state => state.user.user_id,
+  //     token: state => state.user.token
+  //   })
+  // },
   mounted () {
     let user = this.$route.query.user_id || getQueryString('user_id')
     let course = this.$route.query.course_id || getQueryString('course_id')
@@ -76,7 +90,7 @@ export default {
           extraCssText: 'width:180px'
         },
         textStyle: {
-          fontSize: '1.2rem',
+          fontSize: 14,
           color: '#666666' // 主标题文字颜色
         },
         radar: [
@@ -182,66 +196,87 @@ export default {
     }
   }
 }
-document.addEventListener('DOMContentLoaded', () => {
-  // 获取到页面的宽度，按照10等分平分
-  let fontSize = window.innerWidth / 10
-  // 给fontsize设置最大的字体大小
-  fontSize = fontSize > 50 ? 50 : fontSize
-  // 找到根节点
-  const html = document.querySelector('html')
-  // 给html添加字体样式
-  html.style.fontSize = fontSize + 'px'
-})
+// document.addEventListener('DOMContentLoaded', () => {
+//   // 获取到页面的宽度，按照10等分平分
+//   let fontSize = window.innerWidth / 10
+//   // 给fontsize设置最大的字体大小
+//   fontSize = fontSize > 50 ? 50 : fontSize
+//   // 找到根节点
+//   const html = document.querySelector('html')
+//   // 给html添加字体样式
+//   html.style.fontSize = fontSize + 'px'
+// })
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  $ratio:375/10;
-  @function px2rem($px){
-    @return $px/$ratio+rem;
-  }
+  // $ratio:375/10;
+  // @function px2rem($px){
+  //   @return $px/$ratio+rem;
+  // }
+  // .r_slider{
+  //   display: none!important;
+  // }
+  // .capacity-assessment-wrap{
+  //   width: 100%;
+  //   overflow: hidden;
+  // }
   .cass-row{
-    padding: px2rem(20);
-    margin-top: px2rem(20);
+    @include px2rem(padding, 20);
+    @include px2rem(margin-top, 20);
     background: #ffffff;
     text-align: center;
     .cass-title{
-      font-size: px2rem(46);
+      @include font-dpr(36);
+      // font-size: px2rem(46);
       font-weight: 500;
       text-align: left;
       span{
-        font-size: px2rem(36);
+        @include font-dpr(28);
+        // font-size: px2rem(36);
         color: $col999;
-        margin-left: px2rem(24);
+        // margin-left: px2rem(24);
+         @include px2rem(margin-left, 24);
       }
     }
   }
   .cass-row-mtb{
-    padding-top: px2rem(40);
+    // padding-top: px2rem(80);
+    @include px2rem(padding-top, 80);
     // padding-bottom: 30px;
   }
   .cass-row-pt{
-    padding-top: px2rem(38);
+    // padding-top: px2rem(38);
+    @include px2rem(padding-top, 40);
   }
   .yc-record{
-    width: px2rem(495);
-    height: px2rem(365);
+    // width: px2rem(550);
+    // height: px2rem(406);
+    @include px2rem(width, 412);
+    @include px2rem(height, 304);
     background: url('../../assets/images/questions/yc-record.png') no-repeat;
     background-size: contain;
     margin: 0 auto;
     .yc-record-top{
-      padding-top: px2rem(150);
+      // margin-left: px2rem(-10);
+      // padding-top: px2rem(170);
+      @include px2rem(padding-top, 110);
       em{
-        font-size: px2rem(108);
+        // font-size: px2rem(108);
+        @include font-dpr(100);
       }
     }
     .yc-record-bt{
-      margin-top: px2rem(34);
-      margin-left: px2rem(-10);
-      font-size: px2rem(32);
+      // margin-left: px2rem(-10);
+      // margin-top: px2rem(42);
+      // font-size: px2rem(32);
+      // @include px2rem(margin-top, 40);
+      margin-top: 7.5%;
+      @include font-dpr(24);
       color: $col999;
     }
   }
+  // 275 203
   .answer-status-item,.yc-record-rb{
     // position: relative;
     // &:after{
@@ -255,14 +290,18 @@ document.addEventListener('DOMContentLoaded', () => {
     //   background: #DCDCDC;
     // }
     p{
-      margin-top: px2rem(10);
-      margin-bottom: px2rem(8);
+      // margin-top: px2rem(10);
+      // margin-bottom: px2rem(8);
+      @include px2rem(margin-top, 10);
+      @include px2rem(margin-bottom, 6);
       em{
-        font-size: px2rem(52);
+        // font-size: px2rem(52);
+        @include font-dpr(40);
       }
     }
     span{
-      font-size: px2rem(32);
+      // font-size: px2rem(32);
+      @include font-dpr(28);
       color: $col999;
     }
   }
@@ -278,8 +317,12 @@ document.addEventListener('DOMContentLoaded', () => {
   //   }
   // }
   .asi-icon{
-    width: px2rem(52);
-    height: px2rem(55);
+    // width: px2rem(52);
+    // height: px2rem(55);
+    // @include font-dpr(32);
+    @include px2rem(width, 52);
+    @include px2rem(height, 55);
+    @include font-dpr(28);
     display: inline-block;
     background-size: contain;
     background-repeat: no-repeat;
@@ -294,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
       background-image: url('../../assets/images/questions/statistics-icon03.png');
     }
   }
-  #myChart{
+   #myChart{
     // width: px2rem(800);
     // height: px2rem(480);
     // @include px2rem(width, 1600);
@@ -303,6 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // @include px2rem(height, 480);
     margin: 0 auto;
     // margin-top: px2rem(100);
-    @include px2rem(margin-top, 100);
+    // @include px2rem(margin-top, 100);
   }
 </style>

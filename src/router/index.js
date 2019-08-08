@@ -142,8 +142,8 @@ const router = new Router({
       name: 'answer',
       component: () => import('@/views/Answer/Answer.vue'),
       meta: {
-        showHeader: false,
-        showFooter: false,
+        showHeader: true,
+        showFooter: true,
         showRightSlider: true
       }
     },

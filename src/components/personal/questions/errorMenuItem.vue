@@ -16,7 +16,7 @@
                 <span>（<em>{{item.section_num}}</em>道错题）</span>
               </div>
             </template>
-            <div class="error-menu-er" v-for="(val, key) in item.knob" :key="key" style="padding: 14px 40px;">
+            <div class="error-menu-er" v-for="(val, key) in item.knob" :key="key" style="padding: 10px 40px;">
               <div class="menu-jie-title">
                 <div>
                   {{val.knob_name}}
@@ -159,5 +159,4 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../../assets/scss/app";
-  @import "../../../assets/scss/ivu-menu.css";
 </style>

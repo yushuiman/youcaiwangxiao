@@ -2,55 +2,85 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta name="keywords" content="CMA网课,CMA网络课程,CMA网校,管理会计">
-		<meta name="description" content="优财网校专注CMA培训10年，为考生提供CMA考试资料、CMA网课、CMA教材、CMA报考条件、CMA考试费用等资讯。拥有先进的CMA教学体系、智能化的平台、强大的教师团队为考生提供专业的服务！">
+    <meta name="description" content="优财网校专注CMA培训10年，为考生提供CMA考试资料、CMA网课、CMA教材、CMA报考条件、CMA考试费用等资讯。拥有先进的CMA教学体系、智能化的平台、强大的教师团队为考生提供专业的服务！">
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"> -->
     <title>CMA|CMA考试|CMA网课-优财网校-专注CMA培训10周年</title>
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <style>
-    body{background: #F3F6FF!important;}
-    html {
-    color: #333333!important;
-    background-color: #F3F6FF;
-    font-size: 14px!important;
-    overflow-y: auto;
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%
-    }
-
-    html * {
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none
-    }
-
-    html, body {
-    height: 100%;
-    font-family: "微软雅黑","Microsoft YaHei",Helvetica,STHeiTi,Arial,sans-serif;
-    min-height: 100%;
-    line-height: 1!important;
-    color: #333333!important;
-    font-size: 14px!important;
-    }
-
-    body, body * {
-    max-height: 100000000px;
-    }
-
-    body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p,
-    blockquote, th, td, hr, button, article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav,
-    section {
-    margin: 0;
-    padding: 0
-    }
-    </style>
+    <!-- <script>
+      var app = navigator.appVersion;
+      var she=["iPhone","Android","iPad"];
+      for(var index in she){
+        if (app.indexOf(she[index]) > -1) {
+          ! function (a, b) {
+          function c() {
+          var b = f.getBoundingClientRect().width;
+          b / i > 540 && (b = 540 * i);
+          var c = b / 10;
+          f.style.fontSize = c + "px", k.rem = a.rem = c
+          }
+          var d, e = a.document,
+          f = e.documentElement,
+          g = e.querySelector('meta[name="viewport"]'),
+          h = e.querySelector('meta[name="flexible"]'),
+          i = 0,
+          j = 0,
+          k = b.flexible || (b.flexible = {});
+          if (g) {
+          var l = g.getAttribute("content").match(/initial\-scale=([\d\.]+)/);
+          l && (j = parseFloat(l[1]), i = parseInt(1 / j))
+          } else {
+          if (h) {
+          var m = h.getAttribute("content");
+          if (m) {
+          var n = m.match(/initial\-dpr=([\d\.]+)/),
+          o = m.match(/maximum\-dpr=([\d\.]+)/);
+          n && (i = parseFloat(n[1]), j = parseFloat((1 / i).toFixed(2))), o && (i = parseFloat(o[1]), j =
+          parseFloat((1 / i).toFixed(2)))
+          }
+          }
+          }
+          if (!i && !j) {
+          var p = a.navigator.userAgent,
+          q = (!!p.match(/android/gi), !!p.match(/iphone/gi)),
+          r = q && !!p.match(/OS 9_3/),
+          s = a.devicePixelRatio;
+          i = q && !r ? s >= 3 && (!i || i >= 3) ? 3 : s >= 2 && (!i || i >= 2) ? 2 : 1 : 1, j = 1 / i
+          }
+          if (f.setAttribute("data-dpr", i), !g) {
+          if (g = e.createElement("meta"), g.setAttribute("name", "viewport"), g.setAttribute("content",
+          "initial-scale=" + j + ", maximum-scale=" + j + ", minimum-scale=" + j + ", user-scalable=no"), f
+          .firstElementChild) {
+          f.firstElementChild.appendChild(g)
+          } else {
+          var t = e.createElement("div");
+          t.appendChild(g), e.write(t.innerHTML)
+          }
+          }
+          a.addEventListener("resize", function () {
+          clearTimeout(d), d = setTimeout(c, 300)
+          }, !1), a.addEventListener("pageshow", function (a) {
+          a.persisted && (clearTimeout(d), d = setTimeout(c, 300))
+          }, !1), "complete" === e.readyState ? e.body.style.fontSize = 12 * i + "px" : e.addEventListener(
+          "DOMContentLoaded",
+          function () {
+          e.body.style.fontSize = 12 * i + "px"
+          }, !1), c(), k.dpr = a.dpr = i, k.refreshRem = c, k.rem2px = function (a) {
+          var b = parseFloat(a) * this.rem;
+          return "string" == typeof a && a.match(/rem$/) && (b += "px"), b
+          }, k.px2rem = function (a) {
+          var b = parseFloat(a) / this.rem;
+          return "string" == typeof a && a.match(/px$/) && (b += "rem"), b
+          }
+          }(window, window.lib || (window.lib = {}));
+        }
+      }
+    </script> -->
   </head>
   <body style="height:auto!important">
-    <noscript>
-      <strong>We're sorry but myyoucaiwangxiao doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
     <div id="app"></div>
-    <!-- built files will be auto injected -->
   </body>
 </html>

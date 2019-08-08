@@ -35,7 +35,7 @@
         <Col span="8">
           <div class="answer-status-item answer-status-item02">
             <i class="asi-icon"></i>
-            <p><em>{{monStatistics.used_time || 0}}</em>分钟</p>
+            <p><em>{{(monStatistics.used_time) || 0}}</em>分钟</p>
             <span>答题时长</span>
           </div>
         </Col>
@@ -92,10 +92,10 @@ export default {
         radar: [
           {
             indicator: [
-              { text: '答题时间', max: 100000 },
-              { text: '错题数', max: 10000 },
-              { text: '做题数', max: 100000 },
-              { text: '学员排名', max: 10000 },
+              { text: '答题时间', max: 86400 },
+              { text: '错题数', max: 400 },
+              { text: '做题数', max: 400 },
+              { text: '学员排名', max: this.nlpgInfo.user },
               { text: '平均分', max: 100 },
               { text: '正确率', max: 100 }
               // { text: '答题时间', max: 100 },
@@ -103,13 +103,14 @@ export default {
               // { text: '做题数', max: 100 },
               // { text: '学员排名', max: 100 },
               // { text: '平均分', max: 100 },
-              // { text: '正确率', max: 100 }
+              // g{ text: '正确率', max: 100 }
             ],
             splitArea: {
               show: true,
               areaStyle: {// 每个分割区域的颜色
                 color: ['#C4D8FB', '#D6E4FE', '#E9F1FE']
               }
+
             },
             radius: 80,
             splitNumber: 3,
@@ -192,30 +193,10 @@ export default {
     }
   }
 }
-document.addEventListener('DOMContentLoaded', () => {
-  // 获取到页面的宽度，按照10等分平分
-  let fontSize = window.innerWidth / 10
-  // 给fontsize设置最大的字体大小
-  fontSize = fontSize > 50 ? 50 : fontSize
-  // 找到根节点
-  const html = document.querySelector('html')
-  // 给html添加字体样式
-  html.style.fontSize = fontSize + 'px'
-})
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  $ratio:375/10;
-  @function px2rem($px){
-    @return $px/$ratio+rem;
-  }
-  .about{
-    color: red;
-    font-size: px2rem(20);
-    width: px2rem(200);
-    background: #f00;
-  }
   .cass-row{
     padding: 20px;
     margin-top: 20px;

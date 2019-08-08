@@ -60,7 +60,7 @@
                       </div>
                     </div>
                   </template>
-                  <div class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(v, key) in myCollcourseList" :key="key" style="padding: 14px 40px;">
+                  <div class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(v, key) in myCollcourseList" :key="key" style="padding: 10px 40px;">
                     <div class="menu-jie-title" style="font-size: 16px;">
                       <div>{{v.name}}</div>
                       <button @click="getKnow(val, v, key)" style="color: #0267FF;">查看</button>

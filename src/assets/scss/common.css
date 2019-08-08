@@ -1,3 +1,78 @@
+body {
+  background: #F3F6FF;
+}
+
+html {
+  color: #333333;
+  background-color: #F3F6FF;
+  font-size: 14px;
+  overflow-y: auto;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%
+}
+
+html * {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none
+}
+
+html,
+body {
+  height: 100%;
+  font-family: "微软雅黑", "Microsoft YaHei", Helvetica, STHeiTi, Arial, sans-serif;
+  min-height: 100%;
+  line-height: 1;
+  color: #333333;
+  font-size: 14px;
+}
+
+body,
+body * {
+  max-height: 100000000px;
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+textarea,
+p,
+blockquote,
+th,
+td,
+hr,
+button,
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  margin: 0;
+  padding: 0
+}
 input,
 select,
 textarea {
@@ -207,6 +282,10 @@ input[type='search'] {
   background: none;
   border: 1px solid rgba(2, 103, 255, 1);
   color: #0267FF;
+}
+.do-potic-btn{
+  width: 69px;
+  height: 25px;
 }
 .no-data{
   width: 187px;

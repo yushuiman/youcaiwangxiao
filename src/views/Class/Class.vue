@@ -62,29 +62,30 @@
     <div class="course-main w-wrap clearfix">
       <!-- 课程列表 左 -->
       <div class="course-main-left fl">
-        <div class="course-main-con fl" v-for="(items, index) in courseList" :key="index" @click="goClassDetails(items.id)">
-          <img :src="items.pc_img" alt="" class="course-main-con-img">
-          <div class="course-main-info">
-            <p class="ci-title">{{items.name}}</p>
-            <p class="ci-teacher-day"><span>讲师：{{items.teacher_name}}</span>有效期：{{items.study_days}}天</p>
-            <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? '¥' + items.price : items.billing_status == 3 ? '积分兑换' : '等级进入' }}</span>
+        <div class="clearfix">
+          <div class="course-main-con fl" v-for="(items, index) in courseList" :key="index" @click="goClassDetails(items.id)">
+            <img :src="items.pc_img" alt="" class="course-main-con-img">
+            <div class="course-main-info">
+              <p class="ci-title">{{items.name}}</p>
+              <p class="ci-teacher-day"><span>讲师：{{items.teacher_name}}</span>有效期：{{items.study_days}}天</p>
+              <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? '¥' + items.price : items.billing_status == 3 ? '积分兑换' : '等级进入' }}</span>
+            </div>
           </div>
+        </div>
+        <div style="padding: 20px; text-align: center;">
+          <Page
+          :total="total"
+          @on-change="onChange"
+          :current="form.page"
+          :page-size="form.limit"
+          size="small"
+          />
         </div>
       </div>
       <!-- 猜你喜欢 右 -->
       <div class="fr">
         <like-list></like-list>
       </div>
-    </div>
-    <div style="padding: 20px; text-align: center;">
-      <!-- @on-page-size-change="onPageSizeChange" -->
-      <Page
-      :total="total"
-      @on-change="onChange"
-      :current="form.page"
-      :page-size="form.limit"
-      size="small"
-      />
     </div>
   </div>
 </template>
@@ -239,7 +240,7 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  @import "../../assets/scss/iview.css";
+  // @import "../../assets/scss/iview.css";
   // @import '../../../node_modules/iview/dist/styles/iview.css';
   .class-tj-bg{
     background: $colfff;
@@ -274,6 +275,7 @@ export default {
   .cl-txt{
     color: $col666;
     margin-right: 24px;
+    font-weight: bold;
     .cl-aleary-tj &{
       color: $col333;
     }
@@ -399,24 +401,27 @@ export default {
     width: 266px;
     margin-right: 33px;
     margin-bottom: 20px;
-    border-radius: 0px 0px 10px 10px;
+    padding: 7px;
+    border-radius: 6px;
+    // background: #f00;
     &:hover{
       background: $colfff;
+      cursor: pointer;
     }
     .course-main-con-img{
       width: 100%;
       height: 157px;
+      border-radius: 6px;
       display: block;
-      border-radius: 10px 10px 0px 0px;
     }
     .course-main-info{
-      padding: 13px 13px 15px;
+      padding: 12px 8px 8px;
       .ci-title{
         font-size: 16px;
         @extend %singleline-ellipsis;
       }
       .ci-teacher-day{
-        padding: 10px 0;
+        padding: 8px 0;
         color: $col999;
         span{
           margin-right: 20px;

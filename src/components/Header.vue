@@ -16,13 +16,13 @@
             </ul>
           </div>
           <div class="login-wrap">
+            <a class="learen-btn" @click="goLearning">学习中心</a>
             <div class="login-l fl" v-if="!this.token">
               <router-link :to="{path: 'login', query: {type:'login', is_forget: 'log-reg'}}">登录</router-link>
               <a>|</a>
               <router-link :to="{path: 'login', query: {type:'reg', is_forget: 'log-reg'}}">注册</router-link>
             </div>
             <div class="login-r fr" v-if="this.token">
-              <a class="learen-btn" @click="goLearning">学习中心</a>
               <img src="../assets/images/global/email-icon.png" alt="email" class="email-icon" @click="goNews">
               <img :src="avatorImgPath" alt="头像" class="head-logo">
               <span @mouseenter="enter">{{userName}}</span>
@@ -129,7 +129,7 @@ export default {
     // 个人中心
     goPersonalPage ({ sign }) {
       window.sessionStorage.setItem('type', sign)
-      if (this.$route.name === 'personal' || this.$route.path === '/personal') {
+      if (this.$route.name === 'personal') {
         window.location.reload()
       }
       this.flagEntrance = false
@@ -150,6 +150,9 @@ export default {
     },
     // 消息
     goNews () {
+      if (this.$route.name === 'personal') {
+        window.location.reload()
+      }
       this.$router.push('/personal')
       window.sessionStorage.setItem('type', 'news')
       this.setChange('')
@@ -237,12 +240,20 @@ export default {
   }
   .login-l{
     color: $blueColor;
-    font-size: 0;
     a{
       color: $blueColor;
       float: left;
       font-size: 14px;
     }
+  }
+  .learen-btn{
+    @include whl(100, 28, 28);
+    border-radius: 14px;
+    color: $colfff;
+    background: $blueColor;
+    margin-right: 30px;
+    display: inline-block;
+    text-align: center;
   }
   .login-r{
     height: 30px;
@@ -250,25 +261,16 @@ export default {
     .out-login{
       color: #0267FF;
     }
-    .learen-btn{
-      @include whl(100, 28, 28);
-      border-radius: 14px;
-      color: $colfff;
-      background: $blueColor;
-      margin-left: 16px;
-      display: inline-block;
-      text-align: center;
-    }
     img{
       vertical-align: middle;
       cursor: pointer;
       &.email-icon{
         @include wh(18, 14);
-        margin: 0 31px;
       }
       &.head-logo{
         @include wh(30, 30);
         border-radius: 50%;
+        margin-left: 31px;
         margin-right: 10px;
       }
     }

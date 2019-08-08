@@ -335,7 +335,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.isLogin)
   },
   methods: {
     ...mapActions([
@@ -424,7 +423,7 @@ export default {
               this.timer = null
               /* 保存token */
               this.$Message.error('该手机号已注册')
-              this.form2.mobile = ''
+              // this.form2.mobile = ''
             } else {
               this.$Message.error(res.data.msg)
             }
@@ -474,15 +473,18 @@ export default {
     // 快捷登录--获取验证码
     getCode3 () {
       const TIME_COUNT3 = 60
+      var re = /^[1][3,4,5,7,8,9][0-9]{9}$/
       if (this.form4.mobile === '') {
         this.$Message.error('请输入手机号')
+      } else if (!re.test(this.form4.mobile)) {
+        this.$Message.error('手机号错误')
       } else {
         if (!this.timer3) {
-          this.count3 = TIME_COUNT3
-          this.show3 = false
-          this.disabled = true
           getSmsCode({ mobile: Encrypt(this.form4.mobile), state: 2 }).then(res => {
             if (res.data.code === 200) {
+              this.count3 = TIME_COUNT3
+              this.show3 = false
+              this.disabled = true
               this.timer3 = setInterval(() => {
                 if (this.count3 > 0 && this.count3 <= TIME_COUNT3) {
                   this.disabled = false
@@ -658,6 +660,12 @@ export default {
         quickLogin({ 'mobile': Encrypt(this.form4.mobile), 'mobilecode': this.form4.code }).then(res => {
           if (res.data.code === 200) {
             this.$Message.success('登录成功')
+            this.$store.commit('setToken', res.data.data)
+            this.getUserInfo()
+            setTimeout(() => {
+              this.$router.push('/')
+              this.setChange('shouye')
+            }, 1000)
           } else {
             this.$Message.error(res.data.msg)
           }

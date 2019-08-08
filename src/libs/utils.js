@@ -39,6 +39,16 @@ export const getcookiesInClient = function (token) {
 export const getCode = (mobile) => {
 
 }
+// 截取url 里面token的值
+export const getQueryString = name => {
+  let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
+  let params = window.location.search.substr(1) || window.location.href.split('?')[1]
+  let r = params && params.match(reg)
+  if (r != null) {
+    return unescape(r[2])
+  }
+  return null
+}
 
 // 清除登录信息， store状态重置
 // export const clearLoginInfo = () => {

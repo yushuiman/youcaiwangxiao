@@ -257,7 +257,7 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  @import "../../assets/scss/iview.css";
+  // @import "../../assets/scss/iview.css";
   .ask{
     padding: 0 30px;
   }

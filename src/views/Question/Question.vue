@@ -33,7 +33,7 @@
       </Row>
       <Row class="practice-wrap">
         <Col span="24" class="practice-item">
-          <div class="prt-info-com prt-info prt-info-08">
+          <div class="prt-info-com prt-info">
             <div class="prt-flex">
               <i class="prt-icon"></i>
               <div class="prt-txt">
@@ -345,9 +345,11 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  @import "../../assets/scss/questions.css";
+  // @import "../../assets/scss/questions.css";
   .question-wrap{
     padding: 20px 0;
+    // font-size: 14px;
+    // line-height: 1;
     .qt-wrap-l{
       width: 895px;
     }
@@ -480,9 +482,10 @@ export default {
   }
   .prt-flex{
     display: flex;
-    .prt-info-08 &{
-      align-items: center;
-    }
+    align-items: center;
+    // .prt-info-08 &{
+    //   align-items: center;
+    // }
   }
   .prt-icon{
     .prt-info-01 &{
@@ -511,9 +514,11 @@ export default {
     }
     h2{
       font-size: 20px;
+      line-height: 27px;
     }
     p{
-      margin-top: 10px;
+      line-height: 22px;
+      margin-top: 5px;
       font-size: 16px;
       color: $col999;
     }

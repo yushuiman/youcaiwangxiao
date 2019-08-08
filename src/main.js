@@ -1,6 +1,9 @@
 import 'babel-polyfill'
-import './assets/scss/common.css'
 import 'element-ui/lib/theme-chalk/index.css'
+import 'iview/dist/styles/iview.css'
+import './assets/scss/common.css'
+import './assets/scss/modal.css'
+import './assets/scss/ivu-menu.css'
 
 import Vue from 'vue'
 import App from './App.vue'
@@ -9,7 +12,6 @@ import store from './store/'
 import Iview from 'iview'
 import ElementUI from 'element-ui'
 import VueAwesomeSwiper from 'vue-awesome-swiper' // swiper
-import 'iview/dist/styles/iview.css'
 Vue.config.productionTip = false
 
 Vue.use(Iview)

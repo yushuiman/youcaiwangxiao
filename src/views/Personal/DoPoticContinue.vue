@@ -354,7 +354,6 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  @import "../../assets/scss/modal.css";
   .do-potic-wrap{
     padding: 20px 0;
     font-size: 18px;

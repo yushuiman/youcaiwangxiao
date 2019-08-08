@@ -429,7 +429,6 @@ $inline-block-alignment: middle !default;//设置一个默认的对齐方式
   }
 }
 
-
 $blueColor: #0267FF; //
 $col333:#333333;
 $col999:#999999;
@@ -497,15 +496,6 @@ $bgColor:#F3F6FF;
   ::-moz-placeholder          {@content}
   :-ms-input-placeholder      {@content}
 }
-.btn-com {
-  width: 79px;
-  height: 32px;
-  border-radius: 16px;
-  text-align: center;
-  background: none;
-  border: 1px solid rgba(2, 103, 255, 1);
-  color: #0267FF;
-}
 @mixin btn_com($w, $h, $bg, $boder, $bordius, $col) {
   width: $w;
   height: $h;
@@ -528,4 +518,52 @@ $state-prefix: 'is-';
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100% - $substract;
+}
+
+
+// 移动端
+@mixin px2rem($property, $values, $baseline-rem:75) {
+  $max: length($values); //返回$values列表的长度值
+  $pxValues: '';
+  $remValues: '';
+
+  @for $i from 1 through $max {
+    $value: (nth($values, $i));
+    $remValues: #{$remValues + $value/$baseline-rem}rem;
+
+    @if $i < $max {
+      $remValues: #{$remValues + " "};
+    }
+  }
+
+  #{$property}: $remValues;
+}
+//任何手机屏幕上px的统一
+//px2px(font-size, 32);
+@mixin px2px($name, $px) {
+  #{$name}: round($px/2)*1px;
+
+  [data-dpr="2"] & {
+    #{$name}: $px*1px;
+  }
+
+  [data-dpr="2.5"] & {
+    #{$name}: round($px*2.5/2)*1px;
+  }
+
+  [data-dpr="2.75"] & {
+    #{$name}: round($px*2.75/2)*1px;
+  }
+
+  [data-dpr="3"] & {
+    #{$name}: round($px*3/2)*1px;
+  }
+
+  [data-dpr="4"] & {
+    #{$name}: round($px*2)*1px;
+  }
+}
+
+@mixin font-dpr($px) {
+  @include px2px(font-size, $px)
 }

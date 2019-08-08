@@ -16,12 +16,14 @@
                     {{item.section_name}}
                   </div>
                 </template>
-                <div class="coll-menu-er" v-for="(val, key) in item.video" :key="key">
+                <div class="error-menu-er" v-for="(val, key) in item.video" :key="key" style="padding: 10px 30px 10px 60px;">
                   <div class="menu-jie-title">
                     <div>
                       {{val.video_name}}
                     </div>
-                    <button class="btn-com" @click="collectionLearnVideo(item, val)">去学习</button>
+                    <div class="error-btn">
+                      <button class="btn-com" @click="collectionLearnVideo(item, val)">去学习</button>
+                    </div>
                   </div>
                 </div>
               </Submenu>
@@ -67,18 +69,4 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../../assets/scss/app";
-  @import "../../../assets/scss/modal.css";
-  .coll-menu-er{
-    padding: 5px 20px 5px 63px;
-    .menu-jie-title{
-      align-items: center;
-    }
-    .btn-com{
-      width: 69px;
-      height: 25px;
-    }
-  }
-  .coll-menu-er:hover {
-    background: #F3F6FF;
-  }
 </style>

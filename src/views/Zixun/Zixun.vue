@@ -12,42 +12,42 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {}
   },
-  mounted() {
+  mounted () {
     this.dragControllerDiv()
   },
   methods: {
     dragControllerDiv: function () {
       window.onload = function () {
-        var resize = document.getElementById("resize")
-        var left = document.getElementById("left")
-        var right = document.getElementById("right")
-        var box = document.getElementById("box")
-        var drag = document.getElementById("drag")
+        var resize = document.getElementById('resize')
+        var left = document.getElementById('left')
+        var right = document.getElementById('right')
+        var box = document.getElementById('box')
+        var drag = document.getElementById('drag')
         resize.onmousedown = function (e) {
-          var startX = e.clientX;
-          resize.left = resize.offsetLeft;
+          var startX = e.clientX
+          resize.left = resize.offsetLeft
           document.onmousemove = function (e) {
-            var endX = e.clientX;
+            var endX = e.clientX
 
-            var moveLen = resize.left + (endX - startX);
-            var maxT = box.clientWidth - resize.offsetWidth;
-            if (moveLen < 150) moveLen = 150;
-            if (moveLen > maxT - 150) moveLen = maxT - 150;
+            var moveLen = resize.left + (endX - startX)
+            var maxT = box.clientWidth - resize.offsetWidth
+            if (moveLen < 150) moveLen = 150
+            if (moveLen > maxT - 150) moveLen = maxT - 150
 
-            resize.style.left = moveLen;
-            left.style.width = moveLen + "px";
-            right.style.width = (box.clientWidth - moveLen -10) + "px";
+            resize.style.left = moveLen
+            left.style.width = moveLen + 'px'
+            right.style.width = (box.clientWidth - moveLen - 10) + 'px'
           }
           document.onmouseup = function (evt) {
-            document.onmousemove = null;
-            document.onmouseup = null;
-            resize.releaseCapture && resize.releaseCapture();
+            document.onmousemove = null
+            document.onmouseup = null
+            resize.releaseCapture && resize.releaseCapture()
           }
-          resize.setCapture && resize.setCapture();
-          return false;
+          resize.setCapture && resize.setCapture()
+          return false
         }
       }
     }

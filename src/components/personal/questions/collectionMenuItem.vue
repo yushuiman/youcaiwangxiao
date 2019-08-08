@@ -16,7 +16,7 @@
                 <span>（收藏<em>{{item.sectioncoun}}</em>道题）</span>
               </div>
             </template>
-            <div class="error-menu-er" v-for="(val, key) in item.knob" :key="key" style="padding: 14px 40px;">
+            <div class="error-menu-er" v-for="(val, key) in item.knob" :key="key" style="padding: 10px 40px;">
               <div class="menu-jie-title">
                 <div>
                   {{val.knob_name}}

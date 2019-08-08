@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="do-potic-mian">
     <div class="do-potic-wrap w-wrap clearfix" v-if="!noData">
       <div class="dptic-wrap-l fl">
         <div ref="fixedTit">

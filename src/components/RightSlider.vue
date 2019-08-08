@@ -51,14 +51,19 @@ export default {
   name: 'RightSlider',
   data () {
     return {
-      consultInfo: {}, // 在线咨询
+      isRes: true,
+      consultInfo: JSON.parse(window.localStorage.getItem('consultInfo')) || {}, // 在线咨询
       scrollTop: 0,
-      btnFlag: false // 默认隐藏返回头部的图片
+      btnFlag: false // 默认隐藏回到顶部
     }
   },
   mounted () {
     // window.addEventListener('scroll', this.scrollToTop)
+    if (this.consultInfo.wx_code) {
+      return
+    }
     this.getConsult()
+    // this.scrollToTop()
   },
   destroyed () {
     // window.removeEventListener('scroll', this.scrollToTop)
@@ -69,6 +74,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.consultInfo = res.data[0]
+          window.localStorage.setItem('consultInfo', JSON.stringify(res.data[0]))
         } else {
           this.$Message.error(res.msg)
         }
