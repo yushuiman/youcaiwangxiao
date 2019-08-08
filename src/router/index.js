@@ -208,6 +208,16 @@ const router = new Router({
         showFooter: false,
         showRightSlider: true
       }
+    },
+    {
+      path: '/learning-center-detail',
+      name: 'learning-center-detail',
+      component: () => import('@/views/LearningCenter/LearningCenterDetail.vue'),
+      meta: {
+        showHeader: true,
+        showFooter: false,
+        showRightSlider: true
+      }
     }
   ]
 })

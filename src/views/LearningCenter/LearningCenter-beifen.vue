@@ -2,8 +2,10 @@
   <div class="learn-center-wrap">
     <!-- 左上角图片 -->
     <img class="lc-left-top-img" src="../../assets/images/learncenter/left-top-img.png" alt="">
-    <div class="lc-login-wrap">
-      <div class="lc-login-left">
+    <!-- 未登录 addlearn == 2无学习计划-->
+    <div class="lc-login-wrap" v-if="addlearn!=1">
+      <!-- 未登录 去登录注册-->
+      <div class="no-token-left lc-login-left" v-if="!token">
         <div class="yc-detail">
           <h1 class="yc-welcome">欢迎体验<span>优财CMA课程学习中心</span></h1>
           <div class="yc-logo">
@@ -39,20 +41,98 @@
           </div>
         </div>
       </div>
-      <img class="lc-login-right" src="../../assets/images/learncenter/zkz-img.png" alt="">
+      <!-- 已登录 判断是否有计划-->
+      <div class="have-token-left" v-if="token">
+        <!-- addlearn == 2无学习计划-->
+        <div class="lc-login-left" v-if="addlearn == 2">
+          <div class="yc-detail">
+            <h1 class="yc-welcome">您还没有制定<span>优财CMA课程学习计划</span></h1>
+            <div class="yc-logo">
+              <img src="../../assets/images/learncenter/logo.png" alt="">
+              <em></em>
+              <span>一个与时俱进的CMA学习平台</span>
+            </div>
+            <p class="yc-instr">提供专业与时俱进的CMA智能学习平台，培养新一代财务管理者。具有独家案例式教学模式的特色。</p>
+          </div>
+          <div class="loginSign-wrap">
+            <div class="info-bottom">
+              <button class="btn-com experience-btn" @click="planLearn()">立即制定</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <img class="lc-login-right" v-if="addlearn != 1" src="../../assets/images/learncenter/zkz-img.png" alt="">
     </div>
-    <img class="lc-right-bottom-img" src="../../assets/images/learncenter/right-bottom-img.png" alt="">
+    <!-- 已登录 addlearn == 1有学习计划-->
+    <div class="w-wrap" v-if="addlearn == 1">
+      <div class="plan-info-top">
+      打卡
+      </div>
+      <div class="plan-info-bottom">
+计划
+      </div>
+    </div>
+    <!-- 右下角图片 -->
+    <img v-if="addlearn != 1" class="lc-right-bottom-img" src="../../assets/images/learncenter/right-bottom-img.png" alt="">
+    <!-- 制定学习计划 自定义modal样式 :styles=styles -->
+    <Modal v-model="visible"
+      :width="795"
+      footer-hide
+      :title=titTxt[addLearnIdx]
+      class="plan-modal">
+      <div class="height-com" v-if="addLearnIdx == 0">
+        <div class="com-bg">
+          请选择需要学习的课程
+        </div>
+        <ul class="know-list">
+          <li v-for="(val, key) in courseListLearn" :key="key" @click="nextPage(1, val.course_id)">
+            <span>{{val.course_name}}</span>
+            <Icon type="ios-arrow-forward" style="color: #999999;"/>
+          </li>
+        </ul>
+        <div class="dot"><span class="curren"></span><span></span><span></span></div>
+      </div>
+      <div class="height-com" v-if="addLearnIdx == 1">
+        <div class="com-bg">
+          <span>请选择考试时间</span>
+          <a>返回上一步</a>
+        </div>
+        <ul class="know-list">
+          <li v-for="(val, key) in timeListLearn" :key="key" @click="nextPage(2, val.test_time)">
+            <span>{{val.test_time}}</span>
+            <Icon type="ios-arrow-forward" style="color: #999999;"/>
+          </li>
+        </ul>
+        <div class="dot"><span></span><span class="curren"></span><span></span></div>
+      </div>
+      <div class="height-com" style="height: 575px;" v-if="addLearnIdx == 2">
+        <div class="star-learning-wrap">
+          <div class="star-learning-left">
+            <h1 class="plan-finish">自定义学习计划完成</h1>
+            <p class="plan-next">接下来，希望通过本次计划顺利通过考试。成为会管理、懂业务、能决策的管理会计！</p>
+            <div class="loginSign-wrap">
+              <div class="info-bottom">
+                <button class="btn-com experience-btn" @click="getAddStudy()">开始学习之旅</button>
+              </div>
+            </div>
+          </div>
+          <img class="star-learning-right" src="../../assets/images/learncenter/zkz-img2.png" alt="">
+        </div>
+        <div class="dot"><span></span><span></span><span class="curren"></span></div>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
-import { isRegister, kRegister } from '@/api/learncenter'
+import { isRegister, kRegister, learnIndex, courseList, testTime, addStudy } from '@/api/learncenter'
 import { getSmsCode, quickLogin, accountLogin, forgetPaw, resetPaw } from '@/api/login'
 import { Encrypt } from '@/libs/crypto'
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
   data () {
     return {
+      // 以下是登录注册
       isSign: 0, // 1注册2未注册
       mobile: '',
       password: '',
@@ -62,15 +142,37 @@ export default {
       errorTxt: '', // 请输入您的手机号 您已注册，请直接登录。
       disabled: false,
       countTime: 60, // 倒计时
-      timer: null
+      timer: null,
+      // 以下是学习计划
+      visible: false,
+      addLearnIdx: 0, // 添加学习计划div 1选择课程 2考试时间时间 3计划完成
+      styles: {
+        top: '15%'
+      },
+      titTxt: {
+        0: '添加学习计划',
+        1: '添加学习计划',
+        2: ''
+      },
+      addlearn: 0, // 是否有学习计划
+      state: 0, // 是否有未完成的计划
+      user: {}, // 用户信息，打卡天数
+      plan: {}, // 学习计划
+      learnList: {}, // 学习计划详情
+      news: [], // 学习公告
+      courseListLearn: [], // 课程列表
+      timeListLearn: [], // 考试时间列表
+      is_exper: 0, // 是否是0元体验
+      planCourseId: 0, // 计划课程id
+      planTesttime: '' // 计划考试时间
     }
   },
-  // computed: {
-  //   ...mapState({
-  //     token: state => state.user.token,
-  //     user_id: state => state.user.user_id
-  //   })
-  // },
+  computed: {
+    ...mapState({
+      token: state => state.user.token,
+      user_id: state => state.user.user_id
+    })
+  },
   components: {
   },
   mounted () {
@@ -85,6 +187,86 @@ export default {
     ...mapMutations([
       'setChange'
     ]),
+    // 立即制定学习计划
+    planLearn () {
+      this.visible = true
+      this.addLearnIdx = 0
+      this.getCourseList() // 选择课程列表
+    },
+    nextPage (index, str) {
+      this.addLearnIdx = index
+      if (index === 1) {
+        this.planCourseId = str // 选择课程id
+        this.getTestTime(str) // 选择考试时间
+      }
+      if (index === 2) {
+        this.planTesttime = str // 选择考试time
+      }
+    },
+    // 学习计划首页详情
+    getLearnIndex () {
+      learnIndex({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          let { addlearn, state, user, plan, learnList, news } = res.data
+          this.addlearn = addlearn
+          this.state = state
+          this.user = user
+          this.plan = plan
+          this.learnList = learnList[0]
+          this.news = news
+          this.is_exper = this.learnList.is_exper
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 学习计划课程列表list
+    getCourseList () {
+      courseList({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.courseListLearn = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 学习计划考试时间list
+    getTestTime (id) {
+      testTime({
+        user_id: this.user_id,
+        course_id: id,
+        types: this.is_exper // 1:0元体验 2:购买课程
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.timeListLearn = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 添加学习计划
+    getAddStudy () {
+      addStudy({
+        user_id: this.user_id,
+        course_id: this.planCourseId,
+        test_time: this.planTesttime,
+        types: this.is_exper // 1为0元体验 2为购买课程
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          console.log(res)
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
     // 是否注册
     signLogin (type) {
       const re = /^[1][3,4,5,7,8,9][0-9]{9}$/
@@ -140,8 +322,7 @@ export default {
         if (res.code === 200) {
           this.$store.commit('setToken', res.data.token)
           this.getUserInfo().then(() => {
-            this.$router.push('learning-center-detail')
-            // this.getLearnIndex() // 登录成功 查询学习计划详情
+            this.getLearnIndex() // 登录成功 查询学习计划详情
           })
           // this.errorTxt = ''
           // this.visible = true
@@ -185,10 +366,9 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.$store.commit('setToken', res.data.token)
-          this.getUserInfo().then(() => {
-            this.$router.push('learning-center-detail')
-            // this.getLearnIndex() // 登录成功 查询学习计划详情
-          })
+          // this.getUserInfo().then(() => {
+          //   this.getLearnIndex() // 登录成功 查询学习计划详情
+          // })
           // this.visible = true
           // this.isSign = 0
           // this.mobile = ''
@@ -405,6 +585,47 @@ export default {
     .error-ts{
       color: #E84342;
       margin-left: 20px;
+    }
+  }
+  // modal以及内容
+  .plan-modal{
+    position: relative;
+  }
+  .dot{
+    padding: 30px 0;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    font-size: 0;
+    text-align: center;
+    span{
+      width: 10px;
+      height: 10px;
+      border-radius: 10px;
+      background:rgba(51,51,51,.3);
+      display: inline-block;
+      margin: 0 10px;
+      &.curren{
+        background: $col333;
+      }
+    }
+  }
+  .star-learning-wrap{
+    display: flex;
+    justify-content: space-between;
+    padding: 113px 30px 0 30px;
+  }
+  .star-learning-left{
+    padding-top: 49px;
+    .plan-finish{
+      font-size: 30px;
+      line-height: 42px;
+    }
+    .plan-next{
+      width: 338px;
+      font-size: 16px;
+      line-height: 26px;
+      margin-top: 7px;
     }
   }
 </style>

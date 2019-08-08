@@ -42,3 +42,10 @@ export const addStudy = (data) => { // 添加学习计划
     method: 'post'
   })
 }
+export const studyContent = (data) => { // 学习计划日期
+  return axios.request({
+    url: '/apps/Plan/studyContent',
+    data,
+    method: 'post'
+  })
+}

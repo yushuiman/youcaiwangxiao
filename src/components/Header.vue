@@ -164,7 +164,11 @@ export default {
     },
     // 学习中心
     goLearning () {
-      this.$router.push('learning-center')
+      if (this.token) {
+        this.$router.push('learning-center-detail')
+      } else {
+        this.$router.push('learning-center')
+      }
       this.setChange('')
     }
   }
