@@ -221,6 +221,7 @@ export default {
     right: 0;
     bottom: 0;
     width: 100%;
+    // width: 382px;
     overflow-y: scroll;
   }
   .vc-title{

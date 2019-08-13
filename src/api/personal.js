@@ -236,24 +236,3 @@ export const resetPaw = (data) => { // 修改密码
     method: 'post'
   })
 }
-export const allRead = (data) => { // 消息列表-全部已读
-  return axios.request({
-    url: '/web/Personal/allRead',
-    data,
-    method: 'post'
-  })
-}
-export const systeMessage = (data) => { // 消息列表
-  return axios.request({
-    url: '/web/Personal/systeMessage',
-    data,
-    method: 'post'
-  })
-}
-export const read = (data) => { // 消息列表-已读
-  return axios.request({
-    url: '/web/Personal/read',
-    data,
-    method: 'post'
-  })
-}

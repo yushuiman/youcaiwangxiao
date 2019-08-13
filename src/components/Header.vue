@@ -150,11 +150,7 @@ export default {
     },
     // 消息
     goNews () {
-      if (this.$route.name === 'personal') {
-        window.location.reload()
-      }
-      this.$router.push('/personal')
-      window.sessionStorage.setItem('type', 'news')
+      this.$router.push('/news')
       this.setChange('')
     },
     // 登录

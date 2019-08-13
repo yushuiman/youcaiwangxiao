@@ -1,6 +1,6 @@
 <template>
-
       <div id="box">
+        <div id="lef2t" style="width:100px;height:400px;backgorund:#f00;"></div>
         <div id="left"></div>
         <div id="resize" class="course-drag">
           <div class="drag">
@@ -25,7 +25,6 @@ export default {
         var left = document.getElementById('left')
         var right = document.getElementById('right')
         var box = document.getElementById('box')
-        var drag = document.getElementById('drag')
         resize.onmousedown = function (e) {
           var startX = e.clientX
           resize.left = resize.offsetLeft

@@ -159,9 +159,10 @@ export default {
       courseAnswerList: [],
       // courseMyAnswer: {},
       // courseReply: {},
-      questionAnswerList: []
+      questionAnswerList: [],
       // questionMyAnswer: {},
-      // questionReply: {}
+      // questionReply: {},
+      num: this.$route.query.num
     }
   },
   // computed: {
@@ -206,6 +207,9 @@ export default {
             this.courseAnswerList = list
             this.courseAnswerList.map((val, index) => {
               val.openFlag = false
+              if (num === val.id) {
+                val.openFlag = true
+              }
             })
           }
         } else {
@@ -223,11 +227,14 @@ export default {
         const res = data.data
         if (res.code === 200) {
           if (res.data && res.data.data) {
-            let { num } = res.data
+            let { num, data } = res.data
             this.total = num
-            this.questionAnswerList = res.data.data
+            this.questionAnswerList = data
             this.questionAnswerList.map((val, index) => {
               val.openFlag = false
+              if (num === val.id) {
+                val.openFlag = true
+              }
             })
           }
         } else {
@@ -248,7 +255,7 @@ export default {
     // 分页
     onChange (val) {
       this.page = val
-      this.getCourseAnswer()
+      this.initRes()
     }
   }
 }

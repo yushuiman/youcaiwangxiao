@@ -457,9 +457,11 @@ export default {
     margin-left: 20px;
     padding: 26px 30px;
     border-radius: 8px;
+    &:hover{
+      box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
+    }
   }
   .prt-info{
-    box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
     display: flex;
     align-items: center;
     justify-content: space-between;

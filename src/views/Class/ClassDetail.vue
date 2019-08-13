@@ -35,7 +35,7 @@
       </div>
       <div class="cdi-wrap-r fr">
         <h2 class="cdi-tit">{{isntroduction.name}}</h2>
-        <p class="cdi-instr">{{isntroduction.description}} 是否收到</p>
+        <p class="cdi-instr">{{isntroduction.description}}</p>
         <p class="cdi-teacher">讲师：{{isntroduction.teacher_name}}</p>
         <div class="cdi-type">
           <span v-if="isntroduction.vip_video == 1">VIP视频</span>

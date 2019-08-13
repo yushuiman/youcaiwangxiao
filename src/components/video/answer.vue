@@ -257,6 +257,7 @@ export default {
     right: 0;
     bottom: 0;
     width: 100%;
+    height: 100%;
     overflow-y: scroll;
     background: #F8FAFC;
   }
@@ -268,8 +269,9 @@ export default {
   }
   .ask {
     width: 495px;
+    width: 100%;
     height: 100%;
-    padding: 0 20px;
+    // padding: 0 20px;
     background: #ffffff;
     box-sizing: border-box;
     overflow-y: scroll;

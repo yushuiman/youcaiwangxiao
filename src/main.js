@@ -1,9 +1,9 @@
 import 'babel-polyfill'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'iview/dist/styles/iview.css'
-import './assets/scss/common.css'
 import './assets/scss/modal.css'
 import './assets/scss/ivu-menu.css'
+import './assets/scss/common.css'
 
 import Vue from 'vue'
 import App from './App.vue'

@@ -19,7 +19,7 @@
           </div>
         </div>
       </div>
-      <div class="video-info-l" id="left">
+      <div class="video-info-l">
         <ul class="vinfo-ul">
           <li class="vinfo-item" @click="showModel('课程<br />切换')">
             <i class="vio-icon vio-icon-01"></i>
@@ -34,15 +34,8 @@
             <p class="txt">讲义</p>
           </li>
         </ul>
-         <!-- <ul class="vinfo-ul" v-else>
-          <li class="vinfo-item" :class="[{'curren': selMenu==index}]"
-            v-for="(item, index) in vinfo" :key="index" @click="showModel(item, index)">
-            <i class="vio-icon" :class="['vio-icon-0'+(index+1)]"></i>
-            <p class="txt" v-html="item"></p>
-          </li>
-        </ul> -->
       </div>
-      <div class="video-info-c">
+      <div class="video-info-c" id="left">
         <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
         <div class="try-watch-dialog" v-if="tryWatchFlag">
           <div @click="goBuy">试看结束去购买</div>
@@ -53,8 +46,11 @@
           <Icon type="md-star" style="color: #F99111;" v-if="videoCredentials.collect == 1"/>
         </div>
       </div>
-      <div id="line"></div>
-      <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
+      <div id="resize" class="course-drag">
+        <div class="drag"></div>
+      </div>
+      <!-- <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right"> -->
+      <div class="video-info-r" id="right" style="width: 382px;">
         <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
         <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel"></answer>
         <div class="jiangyi" v-if="flagJy">
@@ -101,7 +97,7 @@ export default {
         section_id: this.$route.query.section_id,
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
-        is_zhengke: this.$route.query.is_zhengke,
+        is_zhengke: 1,
         userstatus: this.$route.query.userstatus,
         type: this.$route.query.type
       },
@@ -132,8 +128,40 @@ export default {
     this.getVideoPlayback(this.$route.query.video_id)
     this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
     this.getCourseCatalog() // 课程大纲（目录）
+    this.dragControllerDiv()
   },
   methods: {
+    dragControllerDiv: function () {
+      window.onload = function () {
+        var resize = document.getElementById('resize')
+        var left = document.getElementById('left')
+        var right = document.getElementById('right')
+        var box = document.getElementById('box')
+        resize.onmousedown = function (e) {
+          var startX = e.clientX
+          resize.left = resize.offsetLeft
+          document.onmousemove = function (e) {
+            var endX = e.clientX
+
+            var moveLen = resize.left + (endX - startX)
+            var maxT = box.clientWidth - resize.offsetWidth
+            if (moveLen < 600) moveLen = 600
+            if (moveLen > maxT - 382) moveLen = maxT - 382
+
+            resize.style.left = moveLen
+            left.style.width = moveLen + 'px'
+            right.style.width = (box.clientWidth - moveLen - 10) + 'px'
+          }
+          document.onmouseup = function (evt) {
+            document.onmousemove = null
+            document.onmouseup = null
+            resize.releaseCapture && resize.releaseCapture()
+          }
+          resize.setCapture && resize.setCapture()
+          return false
+        }
+      }
+    },
     // 播放器
     ready (instance) {
       // 跳转到上次播放时间
@@ -195,35 +223,35 @@ export default {
         this.flagCourse = !this.flagCourse
         this.flagAnswer = false
         this.flagJy = false
-        if (this.flagKc) {
-          this.wImportant = 328
-        }
+        // if (this.flagKc) {
+        //   this.wImportant = 328
+        // }
       }
       if (val === '答疑') {
         this.flagAnswer = !this.flagAnswer
         this.flagJy = false
-        if (this.flagAnswer) {
-          this.wImportant = 495
-        } else {
-          if (this.flagKc) {
-            this.wImportant = '328'
-          } else {
-            this.wImportant = '0'
-          }
-        }
+        // if (this.flagAnswer) {
+        //   this.wImportant = 495
+        // } else {
+        //   if (this.flagKc) {
+        //     this.wImportant = '328'
+        //   } else {
+        //     this.wImportant = '0'
+        //   }
+        // }
       }
       if (val === '讲义') {
         this.flagJy = !this.flagJy
         this.flagAnswer = false
-        if (this.flagJy) {
-          this.wImportant = 495
-        } else {
-          if (this.flagKc) {
-            this.wImportant = '328'
-          } else {
-            this.wImportant = '0'
-          }
-        }
+        // if (this.flagJy) {
+        //   this.wImportant = 495
+        // } else {
+        //   if (this.flagKc) {
+        //     this.wImportant = '328'
+        //   } else {
+        //     this.wImportant = '0'
+        //   }
+        // }
       }
     },
     closeModel (msg) {
@@ -578,5 +606,22 @@ export default {
       font-size: 16px;
       line-height: 30px;
     }
+  }
+  .drag {
+    position: absolute;
+    top: 50%;
+    margin-top: -20px;
+    left: 3px;
+    width: 4px;
+    height: 40px;
+    border: 1px solid #626972;
+    border-width: 0 1px 0 1px;
+  }
+  .course-drag {
+    position: relative;
+    width: 10px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 2;
   }
 </style>

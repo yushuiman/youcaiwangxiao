@@ -1,8 +1,3 @@
-
-.dopic-modal .ivu-modal-header,
-.dopic-modal .ivu-modal-close {
-    display: none;
-}
 .dopic-modal .ivu-modal-content {
     /* 暂停保存图片radius */
     border-radius: 0px; 

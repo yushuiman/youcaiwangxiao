@@ -12,10 +12,11 @@
       <collection-menuItem v-if="selIdxQuestion == 2" :courseList="courseList" :user_id="user_id"></collection-menuItem>
       <!-- 习题笔记 -->
       <div v-if="selIdxQuestion == 3">
-        <div class="no-data">
-          暂无数据
-        </div>
+        习题笔记
       </div>
+    </div>
+    <div class="no-data" v-else>
+      暂无数据
     </div>
   </div>
 </template>

@@ -11,7 +11,7 @@
         <div class="class-instru">
           <h1>CMA高清网课全科</h1>
           <p>科学的理念 + 优秀的师资 + 权威的课程</p>
-          <div class="btn-box">
+          <div class="btn-box-index">
             <button type="button" name="button" class="more-btn">更多</button>
           </div>
         </div>
@@ -21,7 +21,7 @@
         <div class="class-instru">
           <h1>体验课程</h1>
           <p>专业高效的课程，免费体验</p>
-          <div class="btn-box">
+          <div class="btn-box-index">
             <button type="button" name="button" class="ty-btn">体验</button>
           </div>
         </div>
@@ -32,7 +32,7 @@
         <div class="class-instru">
           <h1>翻转课堂</h1>
           <p>超50+CMA精选案例；提高论述题掌握程度；3天2晚互动；老师一对一沟通；团队共创；主动参与，互动交流。</p>
-          <div class="btn-box">
+          <div class="btn-box-index">
             <button type="button" name="button" class="more-btn">更多</button>
           </div>
         </div>
@@ -42,7 +42,7 @@
         <div class="class-instru">
           <h1>精选直播</h1>
           <p>最近直播：零基础运营让搜索流量稳步暴涨</p>
-          <div class="btn-box">
+          <div class="btn-box-index">
             <button type="button" name="button" class="hg-btn">往期回顾</button>
             <button type="button" name="button" class="zb-tbn">正在直播</button>
           </div>
@@ -152,7 +152,7 @@ export default {
       background-image: url('../assets/images/index/undraw_icon02.png');
     }
   }
-  .btn-box{
+  .btn-box-index{
     padding-top: 20px;
     button{
       float: left;

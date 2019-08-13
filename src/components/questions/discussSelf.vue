@@ -1,5 +1,5 @@
 <template>
-  <div class="jieduan-test height-com">
+  <div class="discuss-self height-com">
     <div class="com-bg">
       精准答案对比
     </div>
@@ -77,9 +77,5 @@ export default {
     align-items: center;
     justify-content: space-between;
     font-size: 18px;
-    .star-icon{
-      margin-left: 0;
-      margin-right: 17px;
-    }
   }
 </style>

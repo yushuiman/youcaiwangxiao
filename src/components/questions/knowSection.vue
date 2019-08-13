@@ -158,12 +158,6 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .com-bg{
-    .zsd-section-wrap &{
-      display: flex;
-      justify-content: space-between;
-    }
-  }
   .mode-tab{
     span{
       font-size: 18px;

@@ -36,7 +36,6 @@
           <order-info v-if="clkTit == 'order'" :user_id="user_id"></order-info>
           <account-info v-if="clkTit == 'account'" :user_id="user_id"></account-info>
           <set-info v-if="clkTit == 'set'" :personalInfo="personalInfo" :user_id="user_id" @getPersonalInfo="getPersonalInfo"></set-info>
-          <news v-if="clkTit == 'news'" :user_id="user_id"></news>
         </div>
       </div>
     </div>
@@ -50,7 +49,6 @@ import answerInfo from '../../components/personal/answerInfo'
 import orderInfo from '../../components/personal/orderInfo'
 import accountInfo from '../../components/personal/accountInfo'
 import setInfo from '../../components/personal/setInfo'
-import news from '../../components/personal/news'
 import { getPersonal } from '@/api/personal'
 import { mapState } from 'vuex'
 export default {
@@ -99,8 +97,7 @@ export default {
     answerInfo,
     orderInfo,
     accountInfo,
-    setInfo,
-    news
+    setInfo
   },
   mounted () {
     this.getPersonalInfo()
@@ -111,6 +108,9 @@ export default {
       window.sessionStorage.setItem('type', type)
     },
     setBaseInfo () {
+      if (this.clkTit === 'news') {
+        return
+      }
       this.clkTit = 'set'
       window.sessionStorage.setItem('clkTit', 'set')
     },

@@ -129,11 +129,12 @@
     line-height: 24px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .height-com {
     height: 507px;
-    overflow-y: scroll;
+    overflow: auto;
 }
 
 .know-list li {
@@ -229,3 +230,26 @@
 .error-menu-er:nth-child(even) {
     background: #F3F6FF;
 }
+/* 学习中心 */
+.month-answer-left .ivu-menu-vertical .ivu-menu-submenu-title-icon {
+    display: none;
+}
+.month-answer-left .ivu-menu-vertical .ivu-menu-submenu-title {
+    border-bottom: 1px solid #E6E6E6;
+}
+.month-answer-left .ivu-menu-vertical li:last-child .ivu-menu-submenu-title,
+.month-answer-left .ivu-menu-vertical li:last-child ul{
+    border: 0;
+}
+/* .learn-center-wrap .ivu-menu-vertical .ivu-menu-submenu-title {
+    border-bottom: 1px solid #E6E6E6;
+} */
+
+/* .learn-center-wrap .ivu-menu-submenu{
+    border-bottom: 1px solid #f00;
+} */
+/* .ivu-modal-footer{
+    padding: 0;
+    text-align: center;
+    border-top: 1px solid #E6E6E6;
+} */

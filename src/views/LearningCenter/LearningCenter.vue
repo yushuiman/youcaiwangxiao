@@ -299,13 +299,13 @@ export default {
     position: absolute;
     left: 0;
     top: 0;
-    width: 28%;
+    height: 292px;
   }
   .lc-right-bottom-img{
     position: absolute;
     right: 0;
     bottom: 0;
-    width: 60%;
+    height: 171px;
   }
   .lc-login-wrap{
     width: 1281px;

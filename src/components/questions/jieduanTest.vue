@@ -1,10 +1,12 @@
 <template>
   <div class="jieduan-test height-com">
-    <div class="com-bg diff-easy">
-      试卷难度：简单
-      <i class="star-icon star-easy-icon"></i>中等
-      <i class="star-icon star-middle-icon"></i>困难
-      <i class="star-icon star-diff-icon"></i>
+    <div class="com-bg">
+      <div class="diff-easy">
+        试卷难度：简单
+        <i class="star-icon star-easy-icon"></i>中等
+        <i class="star-icon star-middle-icon"></i>困难
+        <i class="star-icon star-diff-icon"></i>
+      </div>
     </div>
     <ul class="jd-test-list">
       <li class="jd-test-item" v-for="(v, index) in courseList" :key="index" @click="goToPic(v)">

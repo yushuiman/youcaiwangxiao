@@ -198,6 +198,17 @@ const router = new Router({
         showRightSlider: true
       }
     },
+    // 消息
+    {
+      path: '/news',
+      name: 'news',
+      component: () => import('@/views/News/News.vue'),
+      meta: {
+        showHeader: true,
+        showFooter: false,
+        showRightSlider: true
+      }
+    },
     // 学习中心
     {
       path: '/learning-center',

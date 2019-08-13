@@ -59,10 +59,10 @@
         </div>
         <div class="order-detail-btn">
           <button class="ccs-btn" @click="serviceLink">联系客服</button>
-          <button class="cancle-pay" v-if="pay_status == 2">取消订单</button>
-          <button class="go-pay" v-if="pay_status == 2">去支付</button>
-          <button v-if="pay_status == 1">申请发票</button>
-          <button class="succ-pay" v-if="pay_status == 1">交易成功</button>
+          <button class="cancle-pay" v-if="orderDetail.pay_status == 2">取消订单</button>
+          <button class="go-pay" v-if="orderDetail.pay_status == 2">去支付</button>
+          <button v-if="orderDetail.pay_status == 1">申请发票</button>
+          <button class="succ-pay" v-if="orderDetail.pay_status == 1">交易成功</button>
         </div>
       </Modal>
     </div>
@@ -83,7 +83,6 @@ export default {
       visible: false,
       txtArr: ['全部订单', '已支付', '未支付'],
       selIdxOrder: window.sessionStorage.getItem('selIdxOrder') || 0,
-      pay_status: 0, // 订单状态
       orderList: [], // 订单
       orderAllList: [], // 全部订单
       orderAlearyPayList: [], // 已付款
@@ -140,7 +139,7 @@ export default {
     // 查看详情
     seeDetails (item) {
       this.visible = true
-      this.pay_status = item.pay_status
+      this.orderDetail.pay_status = item.pay_status
       alreadyOrderlist({
         user_id: this.user_id,
         order_num: item.order_num
