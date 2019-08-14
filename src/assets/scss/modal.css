@@ -31,3 +31,11 @@
 .ivu-modal-body{
     line-height: 1;
 }
+/* 抽屉 */
+.ivu-drawer-body{
+    padding: 0;
+}
+.learn-drawer .ivu-drawer-close {
+    right: 20px;
+    top: 20px;
+}

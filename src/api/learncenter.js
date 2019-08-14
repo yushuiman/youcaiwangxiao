@@ -63,3 +63,10 @@ export const hangAir = (data) => { // 未完成计划
     method: 'post'
   })
 }
+export const getVideo = (data) => { // 学习视频
+  return axios.request({
+    url: '/web/Plan/getVideo',
+    data,
+    method: 'post'
+  })
+}

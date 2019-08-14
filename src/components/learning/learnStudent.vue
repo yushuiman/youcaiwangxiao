@@ -7,7 +7,7 @@
       <img class="student-head" src="../../assets/images/learncenter/outplan-small.png" alt="">
       <img class="student-head" src="../../assets/images/learncenter/r-icon01.png" alt="">
       <img class="student-head" src="../../assets/images/learncenter/r-icon01.png" alt="">
-      <img class="student-head" src="../../assets/images/learncenter/progress-icon.png" alt="">
+      <img class="student-head" src="../../assets/images/learncenter/days-gray-icon.png" alt="">
       <img class="student-head" src="../../assets/images/learncenter/status-blue.png" alt="">
       <img class="student-head" src="../../assets/images/learncenter/r-icon01.png" alt="">
     </div>

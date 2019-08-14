@@ -6,7 +6,7 @@
         <!-- 学习详情 top -->
         <div class="learn-detail-top">
           <div class="learn-course-info">
-            <div class="select-box">
+            <div class="sel-box">
               <select class="com-sel" v-model="course_id" @change="getCourseIdSel($event)">
                 <option class="com-opt" :value="v.course_id" v-for="(v, index) in learnList" :key="index">{{v.plan_name}}</option>
               </select>
@@ -43,7 +43,8 @@
               </li>
               <li class="learnvideo">
                 <span>当前学习任务</span>
-                <p>{{currenLearnInfo.plan_name}}</p>
+                <p v-if="currenLearnInfo.newVideo">{{currenLearnInfo.newVideo}}</p>
+                <p v-else>无</p>
               </li>
               <li class="learnvideo">
                 <button class="btn-com goon-learn" @click="goLearnVideo">继续学习</button>
@@ -65,21 +66,28 @@
                 <Submenu :name="index+1" v-for="(v, index) in monthList" :key="index">
                   <template slot="title">
                     <div class="month-title" @click="getEveryday(v)">
-                      <Icon type="ios-list" class="memu-list-icon"/>
+                      <Icon type="ios-list" class="menu-list-icon"/>
                       <span>{{parseInt(v)}}月计划</span>
                     </div>
                   </template>
                   <ul class="days-list">
                     <!-- days-item-blue days-item-orange days-item-gray-->
                     <!-- 今天课程已结束哦～ 继续学习吧～ 还没有开课哦～ 今天是周末哦～ -->
-                    <li class="days-item days-item-gray" :class="{'days-item-orange': v.sameday == 1}" v-for="(v, index) in everydayList" :key="index">
+                    <li class="days-item" :class="{'days-item-blue': v.beforeDate == 1, 'days-item-orange': v.currDate == 1, 'days-item-gray': v.afterDate == 1, 'days-item-rest': v.is_rest == 2}"
+                      v-for="(v, index) in everydayList" :key="index" @click="getLearnVideo(v)">
                       <i class="status-icon"></i>
                       <p>{{v.date}}</p>
-                      <div class="tips-item" v-if="v.sameday == 1">
+                      <div class="tips-item" v-if="v.beforeDate == 1">
+                        今天课程已结束哦～
+                      </div>
+                      <div class="tips-item" v-if="v.afterDate == 1">
+                        还没有开课哦～
+                      </div>
+                      <div class="tips-item" v-if="v.currDate == 1">
                         继续学习吧～
                       </div>
-                      <div class="tips-item" v-if="v.sameday == 12">
-                        还没有开课哦～
+                      <div class="tips-item" v-if="v.is_rest == 2">
+                        今天是周末哦～
                       </div>
                     </li>
                   </ul>
@@ -193,19 +201,19 @@
       footer-hide
       class="learn-modal-wrap">
       <div class="no-finish-list-wrap">
-        <div class="select-box">
+        <div class="sel-box">
           <select class="com-sel" v-model="package_id" @change="getPackageIdSel($event)">
             <option class="com-opt" :value="v.package_id" v-for="(v, index) in noFinishPlanList" :key="index">{{v.plan_name}}</option>
           </select>
           <span class="arow"><Icon type="md-arrow-dropdown" style="font-size: 30px;margin-top: -4px;color: #666666;"/></span>
         </div>
         <div class="com-bg">
-          您以下课程未学习，请自行补全学习进度
+          <span>您以下课程未学习，请自行补全学习进度</span>
+          <button class="btn-com">去学习</button>
         </div>
         <ul class="know-list">
           <li v-for="(v, key) in currenNoFinishPlan.video" :key="key" class="nofinish">
             <span>{{v.video_name}}</span>
-            <button class="btn-com">去学习</button>
           </li>
         </ul>
       </div>
@@ -227,11 +235,79 @@
         </div>
       </div>
     </Modal>
+    <!-- 学习视频 -->
+    <Drawer
+      :width="487"
+      :closable="true"
+      v-model="isDrawer"
+      class="learn-drawer"
+      >
+      <div class="learn-course-video">
+        <div class="drawer-tit">{{drawerTit}}</div>
+        <ul class="learn-course-ul">
+          <li class="learn-course-item" :class="{'gray': (item.beforeDate == 1 || item.afterDate == 1)}" v-for="(item, index) in learnVideoList" :key="index">
+            <div class="lci-top">
+              <img :src="item.CoverURL" alt="" class="lci-img">
+              <div class="lci-n-t">
+                <h1>{{item.video_name}}</h1>
+                <p>{{item.video_time}}</p>
+              </div>
+              <!-- 课程已结束并且完成 -->
+              <div v-if="item.beforeDate == 1">
+                <i class="lock-icon"></i>
+                <i class="finish-icon" v-if="item.is_watch == 1"></i>
+              </div>
+              <!-- 未开始 -->
+              <div v-if="item.afterDate == 1">
+                <i class="lock-icon"></i>
+              </div>
+              <!-- 课程正在进行 -->
+              <div v-if="item.currDate == 1">
+                <i class="finish-icon isfinish" v-if="item.is_watch == 1"></i>
+              </div>
+            </div>
+            <div class="lci-bottom">
+              <button class="jy-btn">讲义</button>
+              <button class="potic-btn">习题</button>
+            </div>
+          </li>
+          <!-- <li class="learn-course-item gray">
+            <div class="lci-top">
+              <img src="" alt="" class="lci-img">
+              <div class="lci-n-t">
+                <h1>1-1成本度量接口地方开始的</h1>
+                <p>00:25</p>
+              </div>
+              <i class="lock-icon"></i>
+              <i class="finish-icon"></i>
+            </div>
+            <div class="lci-bottom">
+              <button class="jy-btn">讲义</button>
+              <button class="potic-btn">习题</button>
+            </div>
+          </li>
+          <li class="learn-course-item gray">
+            <div class="lci-top">
+              <img src="" alt="" class="lci-img">
+              <div class="lci-n-t">
+                <h1>1-1成本度量接口地方开始的</h1>
+                <p>00:25</p>
+              </div>
+              <i class="lock-icon"></i>
+            </div>
+            <div class="lci-bottom">
+              <button class="jy-btn">讲义</button>
+              <button class="potic-btn">习题</button>
+            </div>
+          </li> -->
+        </ul>
+      </div>
+    </Drawer>
   </div>
 </template>
 
 <script>
-import { learnIndex, courseList, testTime, addStudy, everyday, outPlan, hangAir } from '@/api/learncenter'
+import { learnIndex, courseList, testTime, addStudy, everyday, outPlan, hangAir, getVideo } from '@/api/learncenter'
 import learnNotice from '../../components/learning/learnNotice'
 import learnStudent from '../../components/learning/learnStudent'
 import studentDynamic from '../../components/learning/studentDynamic'
@@ -289,10 +365,16 @@ export default {
             }]
         }
       ], // 未完成计划列表
-      currenNoFinishPlan: {} // 当前未完成计划
+      currenNoFinishPlan: {}, // 当前未完成计划
       // is_exper: 0, // 计划是否是0元体验
       // planCourseId: 0, // 计划课程id
       // planTesttime: '' // 计划考试时间
+      currDate: 0, // 当前日期
+      currMonth: 0, // 当前月
+      currDay: 0, // 当前天
+      learnVideoList: [], // 学习视频
+      isDrawer: false, // 学习视频抽屉
+      drawerTit: '' // 学习视频抽屉title
     }
   },
   computed: {
@@ -455,44 +537,101 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          // this.everydayList = res.data.date
-          this.everydayList = [
-            // {
-            //   'sameday': '是否是今天1是2不是',
-            //   'is_rest': '是否是休息日1不是2是',
-            //   'date': '当前月日期',
-            //   'days': '第几天'
-            // }
-            {
-              'sameday': '1',
-              'is_rest': '1',
-              'date': '8月15日',
-              'days': '1'
-            },
-            {
-              'sameday': '2',
-              'is_rest': '1',
-              'date': '8月16日',
-              'days': '2'
-            },
-            {
-              'sameday': '2',
-              'is_rest': '2',
-              'date': '8月17日',
-              'days': '3'
-            }
-          ]
+          this.everydayList = res.data.date
+          this.currDate = res.data.time
+          // res.data.time = '08-14'
+          // this.everydayList = [
+          //   {
+          //     'sameday': 2,
+          //     'is_rest': 1,
+          //     'days': '1',
+          //     'date': '8月13日',
+          //     'dayNum': 13,
+          //     'currDate': 14 // 手动添加
+          //   },
+          //   {
+          //     'sameday': 1,
+          //     'is_rest': 1,
+          //     'days': '2',
+          //     'date': '8月14日',
+          //     'dayNum': 14,
+          //     'currDate': 14 // 手动添加
+          //   },
+          //   {
+          //     'sameday': 2,
+          //     'is_rest': 1,
+          //     'days': '3',
+          //     'date': '8月15日',
+          //     'dayNum': 15,
+          //     'currDate': 14 // 手动添加
+          //   },
+          //   {
+          //     'sameday': 2,
+          //     'is_rest': 2,
+          //     'days': '4',
+          //     'date': '8月16日',
+          //     'dayNum': 16,
+          //     'currDate': 14 // 手动添加
+          //   }
+          // ]
+          this.currMonth = parseInt(res.data.time.split('-')[0])
+          this.currDay = parseInt(res.data.time.split('-')[1])
           this.everydayList.forEach(v => {
-            // let currDate
-            // if (v.sameday == 1) {
-            //   currDate = v.date
-            // }
-            // let dataAddyue = v.date.split('.').join('月')
-            // v.date = dataAddyue
+            v.monthNum = parseInt(v.date.split('月')[0]) // 月份
+            v.dayNum = parseInt(v.date.split('月')[1]) // 日
+            v.beforeDate = 2
+            v.afterDate = 2
+            v.currDate = 2
+            if (v.monthNum < this.currMonth) {
+              v.beforeDate = 1
+            }
+            if (v.monthNum > this.currMonth) {
+              v.afterDate = 1
+            }
+            if (v.monthNum === this.currMonth) {
+              if (v.dayNum === this.currDay) {
+                v.currDate = 1
+              }
+              if (v.dayNum < this.currDay) {
+                v.beforeDate = 1
+              }
+              if (v.dayNum > this.currDay) {
+                v.afterDate = 1
+              }
+            }
           })
         } else {
           this.$Message.error(res.msg)
         }
+      })
+    },
+    // 学习视频
+    getLearnVideo (v) {
+      this.isDrawer = true
+      if (v.beforeDate === 1) {
+        this.drawerTit = v.date + ' 课程已结束'
+      }
+      if (v.afterDate === 1) {
+        this.drawerTit = v.date + ' 课程未开始'
+      }
+      if (v.currDate === 1) {
+        this.drawerTit = v.date + ' 课程进行中'
+      }
+      getVideo({
+        user_id: this.user_id,
+        course_id: this.currenLearnInfo.course_id,
+        plan_id: this.currenLearnInfo.plan_id,
+        types: this.currenLearnInfo.is_exper,
+        days: this.currenLearnInfo.join_days,
+        sameday: 1
+      }).then(data => {
+        const res = data.data
+        this.learnVideoList = res.data.video
+        this.learnVideoList.forEach(val => {
+          val.beforeDate = v.beforeDate
+          val.afterDate = v.afterDate
+          val.currDate = v.currDate
+        })
       })
     },
     // 继续学习
@@ -689,7 +828,7 @@ export default {
     justify-content: space-between;
     align-items: center;
   }
-  .select-box {
+  .sel-box {
     display: inline-block;
     padding: 0 48px 0 10px;
     height: 46px;
@@ -756,11 +895,11 @@ export default {
     }
   }
   .outplan{
-    padding-left: 40px;
+    padding-left: 26px;
     font-size: 18px;
     color: $col999;
     background: url('../../assets/images/learncenter/outplan-small.png') no-repeat left center;
-    background-size: 30px 40px;
+    background-size: 16px 17px;
     cursor: pointer;
   }
   // bottom 进度圆环 有效期 当前学习课程
@@ -787,6 +926,7 @@ export default {
       text-align: center;
       p{
         font-size: 20px;
+        height: 28px;
         line-height: 28px;
         margin-top: 11px;
         em{
@@ -851,13 +991,13 @@ export default {
     font-size: 18px;
     box-sizing: border-box;
   }
-  .memu-list-icon{
+  .menu-list-icon{
     font-size: 28px;
     font-weight: bold;
     color: $blueColor;
     vertical-align: middle;
     margin-top: -3px;
-    margin-right: 35px;
+    margin-right: 30px;
   }
   .days-list{
     display: flex;
@@ -910,13 +1050,6 @@ export default {
       border-left: 8px solid transparent;
       border-right: 8px solid transparent;
     }
-    .days-item-gray &{
-      width: 127px;
-      @include bg-linear-gradient($btnGredientGray, left);
-      &:before{
-        border-bottom: 8px solid #C7C7C7;
-      }
-    }
     .days-item-blue &{
       width: 160px;
       @include bg-linear-gradient($btnGredientBlue, left);
@@ -931,18 +1064,33 @@ export default {
         border-bottom: 8px solid #FBAC78;
       }
     }
+    .days-item-gray &{
+      width: 127px;
+      @include bg-linear-gradient($btnGredientGray, left);
+      &:before{
+        border-bottom: 8px solid #C7C7C7;
+      }
+    }
+    .days-item-rest &{
+      width: 127px;
+      @include bg-linear-gradient($btnGredientGray, left);
+      &:before{
+        border-bottom: 8px solid #C7C7C7;
+      }
+    }
   }
   .status-icon{
     display: inline-block;
     border-radius: 50%;
-    .days-item-gray &{
-      @include bg-img(61, 61, '../../assets/images/learncenter/days-gray-icon.png');
-    }
+    @include bg-img(61, 61, '../../assets/images/learncenter/days-gray-icon.png');
     .days-item-blue &{
       @include bg-img(61, 61, '../../assets/images/learncenter/days-blue-icon.png');
     }
     .days-item-orange &{
       @include bg-img(61, 61, '../../assets/images/learncenter/days-orange-icon.png');
+    }
+    .days-item-rest &{
+      @include bg-img(61, 61, '../../assets/images/learncenter/days-rest-icon.png');
     }
   }
   // 公告学员动态
@@ -969,9 +1117,6 @@ export default {
       color: #E84342;
       line-height: 20px;
     }
-    // .nf-icon{
-    //   @include bg-img(60, 60, '../../assets/images/learncenter/queqin-icon.png');
-    // }
   }
   .btn-box-learn{
     margin-top: 20px;
@@ -992,7 +1137,7 @@ export default {
       color: #E84342;
     }
   }
-  .nofinish{
+  .no-finish-list-wrap{
     .btn-com{
       color: #E84342;
       border: 1px solid #E84342;
@@ -1001,13 +1146,64 @@ export default {
       width: 80px;
     }
   }
-  // <div class="outplan-wrap">
-  //       <i class="op-icon"></i>
-  //       <p class="op-txt">您有缺勤的课程</p>
-  //       <p class="op-txt-red">退出计划后，学习记录将无法找回</p>
-  //       <div class="btn-box-learn">
-  //         <button>再想想</button>
-  //         <button>退出</button>
-  //       </div>
-  //     </div>
+  // 学习视频
+  .drawer-tit{
+    font-size: 20px;
+    font-weight: 500;
+    padding: 64px 20px 25px 20px;
+    border-bottom: 1px solid #E6E6E6;
+  }
+  .learn-course-item{
+    border-bottom: 13px solid #F3F6FF;
+    font-size: 16px;
+    &.gray *{
+      color: $col999!important;
+    }
+  }
+  .lci-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 20px;
+    .lci-img{
+      width: 100px;
+      height: 60px;
+      border-radius: 6px;
+    }
+  }
+  .lock-icon{
+    @include bg-img(21, 28, '../../assets/images/learncenter/lock.png');
+  }
+  .finish-icon{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    @include bg-img(50, 50, '../../assets/images/learncenter/status-gray.png');
+    &.isfinish{
+      @include bg-img(50, 50, '../../assets/images/learncenter/status-blue.png');
+    }
+  }
+  .lci-n-t{
+    flex: 1;
+    margin-left: 15px;
+    h1{
+      line-height: 22px;
+    }
+    p{
+      font-size: 14px;
+      line-height: 20px;
+      margin-top: 8px;
+    }
+  }
+  .lci-bottom{
+    border-top: 1px solid #E6E6E6;
+    button{
+      width: 50%;
+      height: 46px;
+      &.potic-btn{
+        border-left: 1px solid #E6E6E6;
+      }
+    }
+  }
 </style>
