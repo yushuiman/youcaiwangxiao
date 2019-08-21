@@ -11,7 +11,7 @@
     <ul class="jd-test-list">
       <li class="jd-test-item" v-for="(v, index) in courseList" :key="index" @click="goToPic(v)">
         <div>
-          <i class="star-icon" :class="{'star-diff-icon': v.difficulty == 'A', 'star-middle-icon': v.difficulty == 'B', 'star-easy-icon': v.difficulty == 'C'}"></i>
+          <i class="star-icon" :class="{'star-diff-icon': v.difficulty == 'C', 'star-middle-icon': v.difficulty == 'B', 'star-easy-icon': v.difficulty == 'A'}"></i>
           <span>{{v.paper_name}}</span>
         </div>
         <button class="btn-com do-potic-btn">去做题</button>
@@ -25,7 +25,7 @@ import { getCourse } from '@/api/questions'
 export default {
   props: {
     course_id: {
-      type: String
+      type: Number
     },
     user_id: {
       type: Number

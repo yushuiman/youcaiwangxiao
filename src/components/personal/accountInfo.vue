@@ -63,6 +63,56 @@
           </li>
         </ul>
       </div>
+      <div v-if="selIdxAccount == 2">
+        <div class="coupon-com">
+          <p class="coupon-tit">您有<i>3</i>张可用优惠券</p>
+          <ul class="coupon-list">
+            <li class="coupon-item">
+              <span class="c-price">¥<em>150</em></span>
+              <div class="c-yuan"><i></i></div>
+              <div class="c-detail">
+                <p class="c-full-reduce">满的地方减150</p>
+                <p class="c-validity">有效期</p>
+                <span class="c-use">仅限dfs私用</span>
+              </div>
+            </li>
+            <li class="coupon-item">
+              <span class="c-price">¥<em>150</em></span>
+              <div class="c-yuan"><i></i></div>
+              <div class="c-detail">
+                <p class="c-full-reduce">满的地方减150</p>
+                <p class="c-validity">有效期</p>
+                <span class="c-use">仅限dfs私用</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="coupon-com">
+          <p class="coupon-tit">失效优惠券</p>
+          <ul class="coupon-list">
+            <li class="coupon-item gray">
+              <span class="c-price">¥<em>150</em></span>
+              <div class="c-yuan"><i></i></div>
+              <div class="c-detail">
+                <p class="c-full-reduce">满的地方减150</p>
+                <p class="c-validity">有效期</p>
+                <span class="c-use">仅限dfs私用</span>
+              </div>
+              <a class="del-coupon">X</a>
+            </li>
+            <li class="coupon-item gray">
+              <span class="c-price">¥<em>150</em></span>
+              <div class="c-yuan"><i></i></div>
+              <div class="c-detail">
+                <p class="c-full-reduce">满的地方减150</p>
+                <p class="c-validity">有效期</p>
+                <span class="c-use">仅限dfs私用</span>
+              </div>
+              <a class="del-coupon">X</a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -78,7 +128,7 @@ export default {
   },
   data () {
     return {
-      txtArr: ['消费记录', '课程卡管理'],
+      txtArr: ['消费记录', '课程卡管理', '优惠券'],
       selIdxAccount: window.sessionStorage.getItem('selIdxAccount') || 0,
       consumptionRecordList: [],
       paySts: {
@@ -112,6 +162,9 @@ export default {
       if (parseInt(this.selIdxAccount) === 1) {
         // this.getQuestionAnswer()
       }
+      if (parseInt(this.selIdxAccount) === 2) {
+        // this.getQuestionAnswer()
+      }
     },
     getConsumptionRecord () {
       consumptionRecord({
@@ -131,6 +184,8 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
+  $btnGredientOrange: #FBAC78,#FC7873;
+  $btnGredientGray: #C7C7C7, #C6C6C6;
   .consumption-record-list, .card-manager-list{
     box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
     border-radius: 8px;
@@ -227,4 +282,100 @@ export default {
       margin-top: 20px;
     }
   }
+  // 优惠券
+  .coupon-com{
+    padding: 30px 60px 20px;
+    margin-bottom: 20px;
+    background:rgba(255,255,255,1);
+    box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
+    border-radius: 8px;
+  }
+  .coupon-tit{
+    font-size: 18px;
+    line-height: 25px;
+  }
+  .coupon-list{
+    display: flex;
+  }
+  .coupon-item{
+    width: 382px;
+    display: flex;
+    align-items: center;
+    height: 112px;
+    border-radius: 16px;
+    margin: 20px 40px 0 0;
+    color: #ffffff;
+    @include bg-linear-gradient($btnGredientOrange, right);
+    overflow: hidden;
+    &.gray{
+      @include bg-linear-gradient($btnGredientGray, right);
+    }
+  }
+  .c-price{
+    width: 111px;
+    height: 112px;
+    line-height: 112px;
+    text-align: center;
+    border-right: 1px dashed rgba(255, 255, 255, .3);
+    position: relative;
+    em{
+      font-size: 30px;
+      font-weight: 600;
+    }
+    &:after, &:before{
+      position: absolute;
+      content: "";
+      width: 16px;
+      height: 16px;
+      background: #ffffff;
+      border-radius: 50%;
+    }
+    &:after{
+      right: -8px;
+      bottom: -8px;
+    }
+    &:before{
+      right: -8px;
+      top: -8px;
+    }
+  }
+  .c-use{
+    height: 30px;
+    line-height: 30px;
+    border-radius: 18px;
+    background: #ffffff;
+    text-align: center;
+  }
+  .c-detail{
+    padding: 0 22px;
+    .c-full-reduce{
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 25px;
+    }
+  }
+  // <div class="c-yuan"><i><i></div>
+  // <p class="coupon-tit">您有3张可用优惠券</p>
+  //       <ul class="coupon-list">
+  //         <li class="coupon-item">
+  //           <span class="c-price"><em>¥</em>150</span>
+  //           <div class="c-detail">
+  //             <p class="c-full-reduce">满的地方减150</p>
+  //             <p class="c-validity">有效期</p>
+  //             <span class="c-use">仅限dfs私用</span>
+  //           </div>
+  //         </li>
+  //       </ul>
+  //       <p class="coupon-tit">失效优惠券</p>
+  //       <ul class="coupon-list">
+  //         <li class="coupon-item gray">
+  //           <span class="c-price"><em>¥</em>150</span>
+  //           <div class="c-detail">
+  //             <p class="c-full-reduce">满的地方减150</p>
+  //             <p class="c-validity">有效期</p>
+  //             <span class="c-use">仅限dfs私用</span>
+  //           </div>
+  //           <a class="del-coupon">X</a>
+  //         </li>
+  //       </ul>
 </style>

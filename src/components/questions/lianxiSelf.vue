@@ -58,7 +58,7 @@ import { getSection, getKnow } from '@/api/questions'
 export default {
   props: {
     course_id: {
-      type: String
+      type: Number
     },
     user_id: {
       type: Number

@@ -58,6 +58,7 @@
 <script>
 import { questionParsing, experienceParsing, checkItem } from '@/api/questions'
 import { errorParsing, error2Parsing, myCollcsee } from '@/api/personal'
+import { questionParsingLearn } from '@/api/learncenter'
 import poticList from '../../components/poticList/poticList'
 import uploadImg from '../../components/common/uploadImg'
 import errorCorrection from '../../components/common/errorCorrection'
@@ -69,15 +70,16 @@ export default {
         0: '返回做题记录',
         1: '返回错题集',
         2: '返回收藏夹',
+        3: '返回学习中心',
         10: '查看报告'
       },
-      diffRes: window.sessionStorage.getItem('diffRes'), // 请求不同的接口
-      diffTxt: window.sessionStorage.getItem('diffTxt'), // 请求不同的接口
+      diffRes: parseInt(window.sessionStorage.getItem('diffRes')), // 请求不同的接口
+      diffTxt: parseInt(window.sessionStorage.getItem('diffTxt')), // 请求不同的接口
       topics: [],
       title: '',
       getQuestion: {
         jiexi: 1,
-        question_id: '',
+        question_id: 0, // 题id
         course_id: this.$route.query.course_id,
         plate_id: this.$route.query.plate_id,
         sc: this.$route.query.sc
@@ -105,23 +107,28 @@ export default {
       return
     }
     // 答题记录做题集(论述题)解析
-    if (this.diffRes === '0') {
+    if (this.diffRes === 0) {
       this.getCheckItem()
       return
     }
     // 答题记录错题集解析，全部
-    if (this.diffRes === '1') {
+    if (this.diffRes === 1) {
       this.getErrorParsing()
       return
     }
     // 答题记录错题集解析，全部和错题
-    if (this.diffRes === '11') {
+    if (this.diffRes === 11) {
       this.getErrorParsing2()
       return
     }
     // 收藏夹查看解析
-    if (this.diffRes === '2') {
+    if (this.diffRes === 2) {
       this.getMyCollcsee()
+      return
+    }
+    // 学习中心查看解析-全部
+    if (this.diffRes === 3) {
+      this.getQuestionParsingLearn()
       return
     }
     // 6大板块解析
@@ -222,6 +229,24 @@ export default {
         }
       })
     },
+    // 学习计划全部解析
+    getQuestionParsingLearn () {
+      questionParsingLearn({
+        paper_id: this.$route.query.paper_id,
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.topics = res.data.topics
+          this.title = res.data.title
+          this.answerSts(this.topics)
+        } else if (res.code === 405) {
+          this.noData = true
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
     // 收藏夹
     getMyCollcsee (val) {
       myCollcsee({
@@ -273,11 +298,15 @@ export default {
     },
     goResult () {
       // 如果是错题中心，查看报告
-      if (this.diffTxt === '0' || this.diffTxt === '1' || this.diffTxt === '2') {
+      if (this.diffTxt === 0 || this.diffTxt === 1 || this.diffTxt === 2) {
         this.$router.push({ path: '/personal' })
         // window.sessionStorage.setItem('type', 'questions')
         // window.sessionStorage.setItem('course_id', this.$route.query.course_id)
         // window.sessionStorage.setItem('selIdxQuestion', this.diffRes)
+        return
+      }
+      if (this.diffTxt === 3) {
+        this.$router.push({ path: '/learning-center-detail' })
         return
       }
       this.$router.push({ path: '/result-report',

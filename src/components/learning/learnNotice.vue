@@ -4,52 +4,41 @@
       <span>学习公告</span>
     </div>
     <ul class="com-list">
-      <li class="com-item" v-for="(item, index) in news" :key="index">
-        <!-- <span class="c-black">{{item.title}}</span>
-        <span class="c-gray">{{item.creates_time}}</span> -->
+      <li class="com-item" v-for="(item, index) in listNew" :key="index" @click="goJumphref(item)">
+        <span class="c-black">{{item.title}}</span>
+        <span class="c-gray">{{item.create_time.split(' ')[0]}}</span>
       </li>
-      <!-- <li class="com-item">
-        <span class="c-black">是收到粉丝地方等待323</span>
-        <span class="c-gray">2019-32-23</span>
-      </li>
-      <li class="com-item">
-        <span class="c-black">是收到粉丝地方等待323</span>
-        <span class="c-gray">2019-32-23</span>
-      </li> -->
     </ul>
   </div>
 </template>
 
 <script>
-import { guessLike } from '@/api/class'
+import { listNew } from '@/api/learncenter'
 export default {
-  props: {
-    news: {
-      type: Object
-    }
-  },
   data () {
     return {
-      likeArr: []
+      listNew: []
     }
   },
   computed: {
 
   },
   mounted () {
-    this.getGuessLike()
+    this.getListNew()
   },
   methods: {
-    // 猜你喜欢
-    getGuessLike () {
-      guessLike().then(data => {
+    getListNew () {
+      listNew().then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.likeArr = res.data.slice(0, 3)
+          this.listNew = res.data
         } else {
           this.$Message.error(res.msg)
         }
       })
+    },
+    goJumphref ({ jumphref }) {
+      window.open(jumphref, '_blank')
     }
   }
 }
@@ -78,6 +67,7 @@ export default {
       line-height: 20px;
       display: flex;
       justify-content: space-between;
+      cursor: pointer;
       .c-black{
         width: 60%;
         overflow: hidden;
@@ -92,18 +82,4 @@ export default {
       }
     }
   }
-  // <ul class="com-list">
-  //     <li class="com-item">
-  //       <span class="c-black">是收到粉丝地方等待323</span>
-  //       <span>2019-32-23</span>
-  //     </li>
-  //     <li class="com-item">
-  //       <span class="c-black">是收到粉丝地方等待323</span>
-  //       <span>2019-32-23</span>
-  //     </li>
-  //     <li class="com-item">
-  //       <span class="c-black">是收到粉丝地方等待323</span>
-  //       <span>2019-32-23</span>
-  //     </li>
-  //   </ul>
 </style>

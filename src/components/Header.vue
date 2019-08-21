@@ -10,9 +10,10 @@
               <li :class="isChange === 'kecheng' ? 'on_change' : ''" @click="onChange('kecheng')"><router-link to="/class">课程</router-link></li>
               <li :class="isChange === 'tiku' ? 'on_change' : ''" @click="onChange('tiku')"><router-link to="/question">题库</router-link></li>
               <li :class="isChange ==='liveing' ? 'on_change' : ''" @click="onChange('liveing')"><router-link to="/zhibo">直播</router-link></li>
-              <li :class="isChange === 'dayi' ? 'on_change' : ''" @click="onChange('dayi')"><router-link to="/answer">答疑</router-link></li>
+              <!-- <li :class="isChange === 'dayi' ? 'on_change' : ''" @click="onChange('dayi')"><router-link to="/answer">答疑</router-link></li> -->
               <li :class="isChange === 'zixun' ? 'on_change' : ''" @click="onChange('zixun')"><router-link to="/zixun">资讯</router-link></li>
-              <li :class="isChange ==='app' ? 'on_change' : ''" @click="onChange('app')"><router-link to="/app">App</router-link></li>
+              <li :class="isChange === 'app' ? 'on_change' : ''" @click="onChange('app')"><router-link to="/app">App</router-link></li>
+              <!-- <li :class="isChange ==='app' ? 'on_change' : ''" @click="onChange('app')"><a>App</a></li> -->
             </ul>
           </div>
           <div class="login-wrap">
@@ -24,6 +25,7 @@
             </div>
             <div class="login-r fr" v-if="this.token">
               <img src="../assets/images/global/email-icon.png" alt="email" class="email-icon" @click="goNews">
+              <i v-if="isNews == 1" class="new-dot"></i>
               <img :src="avatorImgPath" alt="头像" class="head-logo">
               <span @mouseenter="enter">{{userName}}</span>
             </div>
@@ -36,8 +38,8 @@
               </li>
             </ul>
             <div class="mc-watch">
-              <p class="mcw-title"><span><i class="center-icon"></i>地方不对</span></p>
-              <p class="mcw-section"><span>是否收到粉丝地方</span><span class="goon" @click="goonWatch">继续</span></p>
+              <p class="mcw-title"><span><i class="center-icon"></i>暂未开发</span></p>
+              <p class="mcw-section"><span>暂未开发</span><span class="goon" @click="goonWatch">继续</span></p>
             </div>
             <div class="log-out" @click="ouLogin">安全退出</div>
           </div>
@@ -49,6 +51,7 @@
 </template>
 <script>
 // import { getToken } from '@/libs/utils'
+import { indexMessage } from '@/api/message'
 import { mapMutations, mapActions, mapState } from 'vuex'
 export default {
   data () {
@@ -71,7 +74,8 @@ export default {
           type: '个人设置',
           sign: 'set'
         }
-      ]
+      ],
+      isNews: 0
     }
   },
   computed: {
@@ -92,6 +96,7 @@ export default {
       if (!this.user_id) {
         this.getUserInfo()
       }
+      this.getIndexMessage() // 有没有新公告
     }
     document.addEventListener('mouseover', (e) => {
       if (this.flagEntrance) {
@@ -109,13 +114,16 @@ export default {
     ...mapMutations([
       'setChange',
       'setLogin',
-      'centerType'
+      'setIsNews'
     ]),
     enter () {
       this.flagEntrance = true
     },
     onChange (navName) {
       this.setChange(navName)
+      // if (navName === 'app') {
+      //   window.location.href = 'http://www.youcaiwx.com/html/MAPP/Index/index.html'
+      // }
     },
     ouLogin () {
       this.$router.push('/')
@@ -155,17 +163,29 @@ export default {
     },
     // 登录
     goLogin (type) {
-      this.$router.push('login')
+      this.$router.push('/login')
       this.setChange('')
     },
     // 学习中心
     goLearning () {
       if (this.token) {
-        this.$router.push('learning-center-detail')
+        this.$router.push('/learning-center-detail')
       } else {
-        this.$router.push('learning-center')
+        this.$router.push('/learning-center')
       }
       this.setChange('')
+    },
+    // 是否有新信息
+    getIndexMessage () {
+      indexMessage({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.isNews = res.data
+          this.setIsNews(res.data)
+        }
+      })
     }
   }
 }
@@ -344,5 +364,14 @@ export default {
     line-height: 40px;
     padding: 0 20px;
     cursor: pointer;
+  }
+  .new-dot{
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: red;
+    display: inline-block;
+    position: relative;
+    top: -8px;
   }
 </style>

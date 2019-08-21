@@ -2,7 +2,7 @@
     <div class="user-wrap">
       <div class="user-top-wrap">
         <div class="w-wrap">
-          <div class="integral-signin">{{personalInfo.integral}}积分<span>签到</span></div>
+          <div class="integral-signin">{{personalInfo.integral}}积分<span @click="getLearnClock">签到</span></div>
           <div class="user-flex">
             <div class="user-info">
               <img :src="personalInfo.head" alt="头像" class="head-logo" @click="setBaseInfo">
@@ -49,7 +49,7 @@ import answerInfo from '../../components/personal/answerInfo'
 import orderInfo from '../../components/personal/orderInfo'
 import accountInfo from '../../components/personal/accountInfo'
 import setInfo from '../../components/personal/setInfo'
-import { getPersonal } from '@/api/personal'
+import { getPersonal, learnClock } from '@/api/personal'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -81,7 +81,8 @@ export default {
         }
       ],
       clkTit: window.sessionStorage.getItem('type') || 'course',
-      personalInfo: {} // 个人信息
+      personalInfo: {}, // 个人信息
+      learnClockInfo: {} // 签到打卡
     }
   },
   computed: {
@@ -139,7 +140,28 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // 签到打卡
+    getLearnClock () {
+      learnClock({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.learnClockInfo = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    window.sessionStorage.removeItem('selIdxCourse')
+    window.sessionStorage.removeItem('selIdxQuestion')
+    window.sessionStorage.removeItem('selIdxAnswer')
+    window.sessionStorage.removeItem('selIdxOrder')
+    window.sessionStorage.removeItem('selIdxAccount')
+    next()
   }
 }
 </script>

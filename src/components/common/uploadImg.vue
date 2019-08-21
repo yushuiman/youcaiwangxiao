@@ -268,7 +268,7 @@ export default {
   .othq-list{
     min-height: 320px;
     max-height: 420px;
-    overflow-y: scroll;
+    overflow: auto;
     margin-top: 20px;
   }
 
@@ -310,14 +310,14 @@ export default {
     }
   }
   .others{
-    padding: 0 10px;
+    padding: 0 30px;
   }
   .othq-list-teacher{
     border-top: 1px solid #E6E6E6;
     margin-top: 15px;
   }
   .othq-item{
-    padding: 15px 20px;
+    padding: 15px 0px;
     margin-bottom: 20px;
     background: $colfff;
     box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.1);

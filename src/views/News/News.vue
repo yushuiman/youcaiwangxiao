@@ -2,7 +2,7 @@
   <div class="user-wrap">
     <div class="user-top-wrap">
       <div class="w-wrap">
-        <div class="integral-signin">{{personalInfo.integral}}积分<span>签到</span></div>
+        <div class="integral-signin">{{personalInfo.integral}}积分<span @click="getLearnClock">签到</span></div>
         <div class="user-flex">
           <div class="user-info">
             <img :src="personalInfo.head" alt="头像" class="head-logo">
@@ -83,12 +83,12 @@
                   <p>您的提问{{item.content}}有新的回答</p>
                 </div>
                 <!-- 3订单 -->
-                <div class="news-center" v-if="item.type == 3">
+                <!-- <div class="news-center" v-if="item.type == 3">
                   <h3><span>{{item.title}}</span><em>{{item.create_time}}</em></h3>
-                  <p>{{item.content_id}}</p>
-                </div>
-                <!-- 4普通 5链接 6直播 -->
-                <div class="news-center" v-if="item.type == 4 || item.type == 5 || item.type == 6">
+                  <p>{{item.content}}</p>
+                </div> -->
+                <!-- 3订单 4普通 5链接 6直播 -->
+                <div class="news-center" v-if="item.type == 3 || item.type == 4 || item.type == 5 || item.type == 6">
                   <h3><span>{{item.title}}</span><em>{{item.create_time}}</em></h3>
                   <p>{{item.content}}</p>
                 </div>
@@ -129,7 +129,7 @@
 
 <script>
 // import news from '../../components/personal/news'
-import { getPersonal } from '@/api/personal'
+import { getPersonal, learnClock } from '@/api/personal'
 import { systeMessage, read, listMessage } from '@/api/message'
 import { mapState } from 'vuex'
 export default {
@@ -152,7 +152,8 @@ export default {
         6: '课程'
       },
       newsDetail: {},
-      newsFlag: true
+      newsFlag: true,
+      learnClockInfo: {}
     }
   },
   computed: {
@@ -176,6 +177,19 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.personalInfo = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 签到打卡
+    getLearnClock () {
+      learnClock({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.learnClockInfo = res.data
         } else {
           this.$Message.error(res.msg)
         }
@@ -232,6 +246,11 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
+          this.systeMessageList.forEach(v => {
+            if (item.message_id === v.message_id) {
+              v.status = 2
+            }
+          })
           this.diffNews(item) // 12345种消息
         }
       })
@@ -242,12 +261,12 @@ export default {
         window.sessionStorage.setItem('selIdxAnswer', 0)
         this.$router.push({ path: 'personal', query: { num: item.content_id } })
       }
-      if (item.type === 3) { // 题库回复
+      if (item.type === 2) { // 题库回复
         window.sessionStorage.setItem('type', 'answer')
         window.sessionStorage.setItem('selIdxAnswer', 1)
         this.$router.push({ path: 'personal', query: { num: item.content_id } })
       }
-      if (item.type === 2) { // 订单
+      if (item.type === 3) { // 订单
         window.sessionStorage.setItem('type', 'order')
         this.$router.push('/personal')
       }

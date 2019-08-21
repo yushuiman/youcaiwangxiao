@@ -139,6 +139,7 @@ export default {
       })
     },
     goToPic (v, type) {
+      this.visible = false
       this.getPoticData.know_id = v.know_id
       window.sessionStorage.setItem('subTopics', JSON.stringify(this.getPoticData))
       window.sessionStorage.setItem('diffRes', 1) // 区分不同的接口请求

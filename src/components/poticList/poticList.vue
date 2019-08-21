@@ -223,7 +223,6 @@ export default {
     // 答疑显示
     modalShow ({ ID }, type) {
       this.$emit('modalShow', true, ID, type)
-      console.log('emit')
     },
     // scroll
     goAnchor (selector) {

@@ -198,7 +198,7 @@ export default {
       }
       this.errorTs = ''
       let quizImage = this.quiz_image.join(',')
-      let vtime = window.sessionStorage.getItem('pauseWatchTime')
+      let vtime = window.sessionStorage.getItem('pauseWatchTime') || 0
       let data = Object.assign({ quiz: this.quiz, video_time: vtime, quiz_image: quizImage, user_id: this.user_id }, this.playCourseInfo)
       answerSub(data).then(data => {
         const res = data.data
@@ -271,7 +271,7 @@ export default {
     width: 495px;
     width: 100%;
     height: 100%;
-    // padding: 0 20px;
+    padding: 0 20px;
     background: #ffffff;
     box-sizing: border-box;
     overflow-y: scroll;
@@ -285,7 +285,7 @@ export default {
     left: 0;
     bottom: 0;
     box-sizing: border-box;
-    overflow-y: scroll;
+    overflow: auto;
     &.has-img{
       top: 348px;
     }

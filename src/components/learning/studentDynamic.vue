@@ -4,45 +4,33 @@
       <span>学员动态</span>
     </div>
     <ul class="com-list">
-      <li class="com-item">
-        是收到粉丝地方<span class="c-black">是到粉丝地方</span>是收到粉丝地方
-      </li>
-      <li class="com-item">
-        是收到粉丝地方<span class="c-black">32是收到粉丝地方</span>计划
-      </li>
-      <li class="com-item">
-        是收到粉丝地方<span class="c-black">2san</span>计划
+      <li class="com-item" v-for="(item, index) in userDynamicList" :key="index">
+        <span class="c-black">{{item}}</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
-import { guessLike } from '@/api/class'
+import { userDynamic } from '@/api/learncenter'
 export default {
-  props: {
-    isW: {
-      type: Boolean
-    }
-  },
   data () {
     return {
-      likeArr: []
+      userDynamicList: []
     }
   },
   computed: {
 
   },
   mounted () {
-    this.getGuessLike()
+    this.getUserDynamic()
   },
   methods: {
-    // 猜你喜欢
-    getGuessLike () {
-      guessLike().then(data => {
+    getUserDynamic () {
+      userDynamic().then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.likeArr = res.data.slice(0, 3)
+          this.userDynamicList = res.data
         } else {
           this.$Message.error(res.msg)
         }

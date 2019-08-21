@@ -70,3 +70,45 @@ export const getVideo = (data) => { // 学习视频
     method: 'post'
   })
 }
+export const withTopic = (data) => { // 拿题
+  return axios.request({
+    url: '/web/Plan/withTopic',
+    data,
+    method: 'post'
+  })
+}
+export const getPaper = (data) => { // 交卷
+  return axios.request({
+    url: '/web/Plan/getPaper',
+    data,
+    method: 'post'
+  })
+}
+export const questionParsingLearn = (data) => { // 错题解析
+  return axios.request({
+    url: '/web/Plan/questionParsing',
+    data,
+    method: 'post'
+  })
+}
+export const listNew = (data) => { // 学习公告
+  return axios.request({
+    url: '/web/Plan/listNew',
+    data,
+    method: 'post'
+  })
+}
+export const listuser = (data) => { // 正在学习的学员
+  return axios.request({
+    url: '/web/Plan/listuser',
+    data,
+    method: 'post'
+  })
+}
+export const userDynamic = (data) => { // 学习动态
+  return axios.request({
+    url: '/web/Plan/userDynamic',
+    data,
+    method: 'post'
+  })
+}

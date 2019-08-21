@@ -4,7 +4,8 @@
       <router-link :to="{ path: '/class-detail', query:{package_id: this.$route.query.package_id}}">></router-link>
       <span>{{videoCredentials.Title}}</span>
       <div class="login-r fr">
-        <img src="../../assets/images/global/email-icon.png" alt="email" class="email-icon">
+        <img src="../../assets/images/global/email-icon.png" alt="email" class="email-icon" @click="goNewsPage">
+        <i v-if="is_news == 1" class="new-dot"></i>
         <img :src="avatorImgPath" alt="头像" class="head-logo" @click="goPersonalPage">
       </div>
     </div>
@@ -25,7 +26,8 @@
             <i class="vio-icon vio-icon-01"></i>
             <p class="txt">课程<br />切换</p>
           </li>
-          <li class="vinfo-item" v-if="playCourseInfo.is_zhengke == 1" @click="showModel('答疑')">
+          <!-- 正课且购买 -->
+          <li class="vinfo-item" v-if="playCourseInfo.is_zhengke == 1 && playCourseInfo.userstatus == 1" @click="showModel('答疑')">
             <i class="vio-icon vio-icon-02"></i>
             <p class="txt">答疑</p>
           </li>
@@ -49,12 +51,12 @@
       <div id="resize" class="course-drag">
         <div class="drag"></div>
       </div>
-      <!-- <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right"> -->
-      <div class="video-info-r" id="right" style="width: 382px;">
+      <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
+      <!-- <div class="video-info-r" id="right" style="width: 382px;"> -->
         <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
         <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel"></answer>
         <div class="jiangyi" v-if="flagJy">
-          <div class="close-box" @click="closeModel()">
+          <div class="close-box" @click="closeModel">
             <i class="close-icon"></i>
           </div>
           <h1 class="vc-title">讲义</h1>
@@ -82,7 +84,7 @@ export default {
       flagAnswer: false,
       flagCourse: false,
       flagJy: false,
-      wImportant: '328',
+      wImportant: 382,
       VideoId: '', // 视频VideoId
       videoCredentials: {
         handouts: '', // 讲义
@@ -97,7 +99,7 @@ export default {
         section_id: this.$route.query.section_id,
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
-        is_zhengke: 1,
+        is_zhengke: this.$route.query.is_zhengke,
         userstatus: this.$route.query.userstatus,
         type: this.$route.query.type
       },
@@ -121,45 +123,45 @@ export default {
   computed: {
     ...mapState({
       avatorImgPath: state => state.user.avatorImgPath,
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      is_news: state => state.nav.is_news
     })
   },
   mounted () {
-    this.getVideoPlayback(this.$route.query.video_id)
-    this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
+    // this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
+    // this.getVideoPlayback(this.$route.query.video_id)
     this.getCourseCatalog() // 课程大纲（目录）
     this.dragControllerDiv()
   },
   methods: {
-    dragControllerDiv: function () {
-      window.onload = function () {
-        var resize = document.getElementById('resize')
-        var left = document.getElementById('left')
-        var right = document.getElementById('right')
-        var box = document.getElementById('box')
-        resize.onmousedown = function (e) {
-          var startX = e.clientX
-          resize.left = resize.offsetLeft
-          document.onmousemove = function (e) {
-            var endX = e.clientX
+    dragControllerDiv () {
+      var resize = document.getElementById('resize')
+      var left = document.getElementById('left')
+      var right = document.getElementById('right')
+      var box = document.getElementById('box')
+      resize.onmousedown = function (e) {
+        var startX = e.clientX
+        resize.left = resize.offsetLeft
+        document.onmousemove = function (e) {
+          var endX = e.clientX
+          var moveLen = resize.left + (endX - startX)
+          var maxT = box.clientWidth - resize.offsetWidth
+          if (moveLen < 600) moveLen = 600
+          if (moveLen > maxT - 382) moveLen = maxT - 382
 
-            var moveLen = resize.left + (endX - startX)
-            var maxT = box.clientWidth - resize.offsetWidth
-            if (moveLen < 600) moveLen = 600
-            if (moveLen > maxT - 382) moveLen = maxT - 382
-
-            resize.style.left = moveLen
-            left.style.width = moveLen + 'px'
-            right.style.width = (box.clientWidth - moveLen - 10) + 'px'
-          }
-          document.onmouseup = function (evt) {
-            document.onmousemove = null
-            document.onmouseup = null
-            resize.releaseCapture && resize.releaseCapture()
-          }
-          resize.setCapture && resize.setCapture()
-          return false
+          resize.style.left = moveLen
+          left.style.width = moveLen + 'px'
+          right.style.width = (box.clientWidth - moveLen - 10) + 'px'
         }
+        document.onmouseup = function (evt) {
+          document.onmousemove = null
+          document.onmouseup = null
+          resize.releaseCapture && resize.releaseCapture()
+        }
+        resize.setCapture && resize.setCapture()
+        return false
+      }
+      window.onload = function () {
       }
     },
     // 播放器
@@ -178,12 +180,15 @@ export default {
           video_id: this.$route.query.video_id,
           watch_time: this.playtime,
           video_type: 1, // 视频类型 1视频2直播
-          status: 1 // 播放类型 1课程视频播放
+          status: this.$route.query.status || 1 // 播放类型 1课程视频播放2学习中心
         }
-        // console.log(JSON.stringify(message))
-        // console.log(this.playtime)
         // 已购买并且视频播放时间大于0 socket
         if (parseInt(this.playCourseInfo.userstatus) === 1 && this.playtime > 0) {
+          if (parseInt(this.$route.query.status) === 2) {
+            message.days = this.$route.query.days
+            message.plan_id = this.$route.query.plan_id
+          }
+          // console.log(JSON.stringify(message))
           initWS(JSON.stringify(message))
         }
         window.sessionStorage.setItem('playtime', this.playtime) // 防止刷新页面，也要记录当前播放时间
@@ -223,47 +228,47 @@ export default {
         this.flagCourse = !this.flagCourse
         this.flagAnswer = false
         this.flagJy = false
-        // if (this.flagKc) {
-        //   this.wImportant = 328
-        // }
+        this.wImportant = 0
+        if (this.flagKc) {
+          this.wImportant = 382
+        }
       }
       if (val === '答疑') {
         this.flagAnswer = !this.flagAnswer
         this.flagJy = false
-        // if (this.flagAnswer) {
-        //   this.wImportant = 495
-        // } else {
-        //   if (this.flagKc) {
-        //     this.wImportant = '328'
-        //   } else {
-        //     this.wImportant = '0'
-        //   }
-        // }
+        if (this.flagAnswer) {
+          this.wImportant = 495
+        } else {
+          if (this.flagKc) {
+            this.wImportant = 382
+          } else {
+            this.wImportant = 0
+          }
+        }
       }
       if (val === '讲义') {
         this.flagJy = !this.flagJy
         this.flagAnswer = false
-        // if (this.flagJy) {
-        //   this.wImportant = 495
-        // } else {
-        //   if (this.flagKc) {
-        //     this.wImportant = '328'
-        //   } else {
-        //     this.wImportant = '0'
-        //   }
-        // }
+        if (this.flagJy) {
+          this.wImportant = 495
+        } else {
+          if (this.flagKc) {
+            this.wImportant = 382
+          } else {
+            this.wImportant = 0
+          }
+        }
       }
     },
     closeModel (msg) {
       if (msg === 'kc') {
         this.flagKc = false
-        this.wImportant = '0'
       }
       this.flagAnswer = false
       this.flagJy = false
-      this.wImportant = '0'
+      this.wImportant = 0
       if (this.flagKc) {
-        this.wImportant = '382'
+        this.wImportant = 382
       }
     },
     // 课程大纲（目录）
@@ -274,6 +279,11 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.packageList = res.data
+          // if (this.$route.query.course_id) {
+          //   return
+          // }
+          let id = this.$route.query.course_id || this.packageList[0].course_id
+          this.initSecvCatalog(id)
         } else {
           this.$Message.error(res.msg)
         }
@@ -284,7 +294,7 @@ export default {
       this.flagKc = true
       this.flagAnswer = false
       this.flagJy = false
-      this.wImportant = '382'
+      this.wImportant = 382
       this.$router.replace({ path: 'class-video',
         query: {
           ...this.$route.query,
@@ -307,23 +317,27 @@ export default {
       })
     },
     // 初始化展示章节
-    initSecvCatalog () {
+    initSecvCatalog (id) {
       secvCatalog({
-        course_id: this.$route.query.course_id
+        course_id: id
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
           this.courseSections = res.data
           this.courseSections.forEach((v, key) => {
-            let sectionId = this.$route.query.section_id + ''
-            let videoId = this.$route.query.video_id + ''
+            let sectionId = parseInt(this.$route.query.section_id)
+            let videoId = parseInt(this.$route.query.video_id)
             v.videos.forEach((val, index) => {
-              if (sectionId.indexOf(v.section_id) > -1 && videoId.indexOf(val.video_id) > -1) {
+              if (sectionId === v.section_id && videoId === val.video_id) {
                 let openMenu = (key + 1) + '-' + (index + 1)
                 this.openMenu = openMenu
               }
             })
           })
+          this.playCourseInfo.course_id = this.$route.query.course_id || this.courseSections[0].course_id
+          this.playCourseInfo.section_id = this.$route.query.section_id || this.courseSections[0].section_id
+          this.playCourseInfo.video_id = this.$route.query.video_id || this.courseSections[0].videos[0].video_id
+          this.getVideoPlayback(this.playCourseInfo.video_id)
         } else {
           this.$Message.error(res.msg)
         }
@@ -338,8 +352,14 @@ export default {
         if (res.code === 200) {
           this.VideoId = res.data.VideoId
           // 获取视频凭证
-          let dataForm = Object.assign({ VideoId: res.data.VideoId, user_id: this.user_id, video_time: 5, quiz_image: 'dfsdfsdfsd' }, this.playCourseInfo)
-          videoCredentials(dataForm).then(data => {
+          videoCredentials({
+            VideoId: res.data.VideoId,
+            user_id: this.user_id,
+            package_id: this.playCourseInfo.package_id,
+            course_id: this.playCourseInfo.course_id,
+            section_id: this.playCourseInfo.section_id,
+            video_id: this.playCourseInfo.video_id
+          }).then(data => {
             let res = data.data
             this.videoCredentials = res.data
           })
@@ -374,9 +394,13 @@ export default {
       })
     },
     // 个人中心
-    goPersonalPage (index) {
+    goPersonalPage () {
       window.sessionStorage.setItem('type', 'course')
       this.$router.push('/personal')
+    },
+    // 消息中心
+    goNewsPage () {
+      this.$router.push('/news')
     }
   },
   beforeDestroy () {
@@ -410,8 +434,10 @@ export default {
     }
   }
   .login-r{
+    position: relative;
     img{
       vertical-align: middle;
+      cursor: pointer;
       &.email-icon{
         @include wh(18, 14);
         margin: 0 31px;
@@ -499,6 +525,7 @@ export default {
   .vinfo-item{
     padding: 30px 0;
     text-align: center;
+    cursor: pointer;
     &:hover, &.curren{
       background: #26292C;
       .vio-icon-01{
@@ -623,5 +650,15 @@ export default {
     height: 100%;
     cursor: col-resize;
     z-index: 2;
+  }
+  .new-dot{
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: red;
+    display: inline-block;
+    position: absolute;
+    top: 25px;
+    left: 48px;
   }
 </style>

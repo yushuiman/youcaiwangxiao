@@ -1,13 +1,5 @@
 <template>
-      <div id="box">
-        <div id="lef2t" style="width:100px;height:400px;backgorund:#f00;"></div>
-        <div id="left"></div>
-        <div id="resize" class="course-drag">
-          <div class="drag">
-          </div>
-        </div>
-        <div id="right"></div>
-    </div>
+  <div>这是资讯页面</div>
 </template>
 
 <script>
@@ -16,40 +8,8 @@ export default {
     return {}
   },
   mounted () {
-    this.dragControllerDiv()
   },
   methods: {
-    dragControllerDiv: function () {
-      window.onload = function () {
-        var resize = document.getElementById('resize')
-        var left = document.getElementById('left')
-        var right = document.getElementById('right')
-        var box = document.getElementById('box')
-        resize.onmousedown = function (e) {
-          var startX = e.clientX
-          resize.left = resize.offsetLeft
-          document.onmousemove = function (e) {
-            var endX = e.clientX
-
-            var moveLen = resize.left + (endX - startX)
-            var maxT = box.clientWidth - resize.offsetWidth
-            if (moveLen < 150) moveLen = 150
-            if (moveLen > maxT - 150) moveLen = maxT - 150
-
-            resize.style.left = moveLen
-            left.style.width = moveLen + 'px'
-            right.style.width = (box.clientWidth - moveLen - 10) + 'px'
-          }
-          document.onmouseup = function (evt) {
-            document.onmousemove = null
-            document.onmouseup = null
-            resize.releaseCapture && resize.releaseCapture()
-          }
-          resize.setCapture && resize.setCapture()
-          return false
-        }
-      }
-    }
   }
 }
 </script>

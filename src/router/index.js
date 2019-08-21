@@ -229,6 +229,16 @@ const router = new Router({
         showFooter: false,
         showRightSlider: true
       }
+    },
+    {
+      path: '/dopotic-learn',
+      name: 'dopotic-learn',
+      component: () => import('@/views/LearningCenter/DoPoticLearn.vue'),
+      meta: {
+        showHeader: true,
+        showFooter: false,
+        showRightSlider: true
+      }
     }
   ]
 })

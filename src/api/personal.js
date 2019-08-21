@@ -236,3 +236,10 @@ export const resetPaw = (data) => { // 修改密码
     method: 'post'
   })
 }
+export const learnClock = (data) => { // 签到打卡
+  return axios.request({
+    url: '/web/Plan/learnClock',
+    data,
+    method: 'post'
+  })
+}

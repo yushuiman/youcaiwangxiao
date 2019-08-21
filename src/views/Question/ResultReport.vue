@@ -63,7 +63,7 @@ export default {
     return {
       resultsInfo: {},
       cardList: [],
-      diffRes: window.sessionStorage.getItem('diffRes')
+      diffRes: parseInt(window.sessionStorage.getItem('diffRes'))
     }
   },
   computed: {
@@ -81,7 +81,7 @@ export default {
       return
     }
     // 错题集成绩统计 全部和错题不能共用一个 所以又区分了
-    if (parseInt(this.diffRes) === 1 || parseInt(this.diffRes) === 11) {
+    if (this.diffRes === 1 || this.diffRes === 11) {
       this.getErrorStati()
       return
     }

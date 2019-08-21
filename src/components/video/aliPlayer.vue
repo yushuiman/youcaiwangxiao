@@ -429,12 +429,12 @@ export default {
     },
     /* 点击播放屏幕 */
     playSwitch () {
-      this.playStatus = !this.playStatus
-      if (this.playStatus) {
-        this.pause()
-      } else {
-        this.play()
-      }
+      // this.playStatus = !this.playStatus
+      // if (this.playStatus) {
+      //   this.pause()
+      // } else {
+      //   this.play()
+      // }
     }
   }
 }

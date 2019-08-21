@@ -54,11 +54,15 @@
     <!-- 已购买课程 有题库 -->
     <div class="qt-wrap-l fl" v-if="!experience">
       <!-- 科目标题 -->
-      <Row class="qt-subject">
+      <!-- <Row class="qt-subject">
         <Col span="6" v-for="(item, index) in projectArr" :key="index">
           <div class="qt-course" :class="{'curren': questionIndexSel == index}" @click="getQuestionIndex(item.id, index)">{{item.name}}</div>
         </Col>
-      </Row>
+      </Row> -->
+      <div class="qt-subject" style="display: flex;">
+        <div v-for="(item, index) in projectArr" :key="index" class="qt-course" :class="{'curren': questionIndexSel == index}"
+        @click="getQuestionIndex(item.id, index)" style="padding: 0 30px;">{{item.name}}</div>
+      </div>
       <!-- 答题详情(做题数 正确率 平均分) -->
       <Row class="qt-answer-detail">
         <Col span="8">
@@ -124,6 +128,7 @@
         <error-section v-if="showPlateModal == 4" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></error-section>
         <lianxi-self v-if="showPlateModal == 5" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></lianxi-self>
         <group-lianxi v-if="showPlateModal == 6" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></group-lianxi>
+        <div v-if="showPlateModal == 7" class="no-data" style="padding-bottom: 60px">暂无数据</div>
       </Modal>
     </div>
     <!-- 预测评估 学员排名 -->
@@ -172,13 +177,13 @@ import discussSelf from '../../components/questions/discussSelf'
 import errorSection from '../../components/questions/errorSection'
 import lianxiSelf from '../../components/questions/lianxiSelf'
 import groupLianxi from '../../components/questions/groupLianxi'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 export default {
   data () {
     return {
       projectArr: [], // 科目
       questionIndexSel: window.sessionStorage.getItem('questionIndexSel') || 0,
-      course_id: window.sessionStorage.getItem('course_id') || '',
+      course_id: parseInt(window.sessionStorage.getItem('course_id')) || '',
       plateList: [
         {
           id: 1,
@@ -246,6 +251,9 @@ export default {
     this.getStudentsRanking()
   },
   methods: {
+    ...mapMutations([
+      'setChange'
+    ]),
     // 展示课程
     projectList () {
       getProject({ user_id: this.user_id }).then(data => {
@@ -338,7 +346,12 @@ export default {
       window.sessionStorage.setItem('course_id', this.course_id)
       window.sessionStorage.setItem('selIdxQuestion', index)
       this.$router.push('/personal')
+      this.setChange('')
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    this.visible = false
+    next()
   }
 }
 </script>
@@ -457,9 +470,7 @@ export default {
     margin-left: 20px;
     padding: 26px 30px;
     border-radius: 8px;
-    &:hover{
-      box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
-    }
+    box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
   }
   .prt-info{
     display: flex;

@@ -35,9 +35,6 @@ import { mapState } from 'vuex'
 export default {
   inject: ['reload'],
   props: {
-    package_id: {
-      type: String
-    },
     showBox: {
       type: String,
       default: ''

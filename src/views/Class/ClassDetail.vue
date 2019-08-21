@@ -45,7 +45,8 @@
         <p class="cdi-buy-people">{{isntroduction.join_num}}人购买<span>9993次播放</span></p>
         <p class="cdi-price"><em>¥</em>{{isntroduction.price}}</p>
         <div class="cdi-buy-consult">
-          <button type="button" name="button" class="buy-btn">立即购买</button>
+          <button type="button" name="button" class="buy-btn" v-if="isntroduction.userstatus == 1" @click="goSeeVideo">立即观看</button>
+          <button type="button" name="button" class="buy-btn" v-if="isntroduction.userstatus == 2">立即购买</button>
           <button type="button" name="button" class="consult-btn" @click="consultLink">在线咨询</button>
         </div>
       </div>
@@ -175,7 +176,19 @@ export default {
       this.videoflag = true
     },
     consultLink () {
-      window.open('https://awt.zoosnet.net/LR/Chatpre.aspx?id=AWT95637580&cid=1453186017984561518698&lng=cn&sid=1519874658448243043282&p=http%3A//www.ucfo.com.cn/&rf1=&rf2=&e=%25u6765%25u81EA%25u9996%25u9875%25u81EA%25u52A8%25u9080%25u8BF7%25u7684%25u5BF9%25u8BDD&msg=&d=1519874661546', '_blank')
+      window.open('https://awt.zoosnet.net/lr/chatpre.aspx?id=AWT95637580', '_blank')
+    },
+    goSeeVideo () {
+      this.$router.push({ path: '/class-video',
+        query: {
+          package_id: this.$route.query.package_id,
+          // course_id: item.course_id,
+          // section_id: val.section_id,
+          // video_id: v.video_id,
+          is_zhengke: this.isntroduction.is_zheng, // 1正课 2非正课
+          userstatus: this.isntroduction.userstatus // 1购买 2未购买
+        }
+      })
     }
   }
 }

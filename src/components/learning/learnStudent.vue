@@ -4,42 +4,31 @@
       <span>正在学习的学员</span>
     </div>
     <div class="com-list">
-      <img class="student-head" src="../../assets/images/learncenter/outplan-small.png" alt="">
-      <img class="student-head" src="../../assets/images/learncenter/r-icon01.png" alt="">
-      <img class="student-head" src="../../assets/images/learncenter/r-icon01.png" alt="">
-      <img class="student-head" src="../../assets/images/learncenter/days-gray-icon.png" alt="">
-      <img class="student-head" src="../../assets/images/learncenter/status-blue.png" alt="">
-      <img class="student-head" src="../../assets/images/learncenter/r-icon01.png" alt="">
+      <img class="student-head" :src="item.head" alt="" v-for="(item, index) in learnuser" :key="index">
     </div>
   </div>
 </template>
 
 <script>
-import { guessLike } from '@/api/class'
+import { listuser } from '@/api/learncenter'
 export default {
-  props: {
-    isW: {
-      type: Boolean
-    }
-  },
   data () {
     return {
-      likeArr: []
+      learnuser: []
     }
   },
   computed: {
 
   },
   mounted () {
-    this.getGuessLike()
+    this.getListuser()
   },
   methods: {
-    // 猜你喜欢
-    getGuessLike () {
-      guessLike().then(data => {
+    getListuser () {
+      listuser().then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.likeArr = res.data.slice(0, 3)
+          this.learnuser = res.data
         } else {
           this.$Message.error(res.msg)
         }

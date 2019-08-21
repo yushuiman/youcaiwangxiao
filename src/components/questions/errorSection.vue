@@ -53,7 +53,7 @@ import { getErrorsection, geterrorKnow } from '@/api/questions'
 export default {
   props: {
     course_id: {
-      type: String
+      type: Number
     },
     user_id: {
       type: Number
@@ -124,6 +124,7 @@ export default {
     },
     // 去做题
     goToPic (v) {
+      this.KnowShow = false
       this.getPoticData.know_id = v.know_id
       this.$router.push({ path: '/dopotic', query: this.getPoticData })
     }

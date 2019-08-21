@@ -236,7 +236,7 @@
 </template>
 
 <script>
-import { savePersonal, defaultAddress, delAddress, addAddress, editAddress, resetPaw, uploadImage } from '@/api/personal'
+import { savePersonal, defaultAddress, delAddress, addAddress, editAddress, resetPaw } from '@/api/personal'
 import { mapActions } from 'vuex'
 import { VueCropper } from 'vue-cropper'
 export default {
@@ -613,9 +613,9 @@ export default {
           console.log(img)
           formData.append('image', data, this.fileName)
           console.log(formData.get('image'))
-          uploadImage(formData).then({
-            // 后续优化
-          })
+          // uploadImage(formData).then({
+          //   // 后续优化
+          // })
         })
       } else {
         this.$refs.cropper.getCropData((data) => {

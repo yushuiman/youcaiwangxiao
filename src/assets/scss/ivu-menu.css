@@ -147,6 +147,9 @@
 .know-list li:hover{
     background: #F3F6FF;
 }
+.know-list li:last-child:hover{
+    border-radius: 0 0 6px 6px;
+}
 
 .title-com {
     font-size: 18px;
@@ -224,9 +227,6 @@
 .menu-section-title span em, .menu-jie-title div span em {
     color: #f00;
 }
-.ivu-menu-light{
-    background: none;
-}
 .error-menu-er:nth-child(even) {
     background: #F3F6FF;
 }
@@ -240,6 +240,9 @@
 .month-answer-left .ivu-menu-vertical li:last-child .ivu-menu-submenu-title,
 .month-answer-left .ivu-menu-vertical li:last-child ul{
     border: 0;
+}
+.month-answer-left .ivu-menu-vertical .ivu-menu-submenu-title{
+    padding: 0;
 }
 /* .learn-center-wrap .ivu-menu-vertical .ivu-menu-submenu-title {
     border-bottom: 1px solid #E6E6E6;

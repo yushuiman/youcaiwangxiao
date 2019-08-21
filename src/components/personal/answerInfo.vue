@@ -1,7 +1,10 @@
 <template>
   <div class="u-course-wrap">
-    <ul class="tab-list">
+    <ul class="tab-list" v-if="answerType == 'personal'">
       <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxAnswer == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+    </ul>
+    <ul class="tab-list-learn" v-if="answerType == 'learn'">
+      <li class="tab-item-learn" v-for="(v, index) in txtArr" :class="{'active': selIdxAnswer == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
     <div class="all-main">
       <div v-if="selIdxAnswer == 0">
@@ -27,8 +30,15 @@
                   </template>
                 </div>
               </div>
-              <div class="open-txt" @click="openShow(item, index, 0)">
-                {{item.openFlag ? '收起':'展开'}}
+              <div class="othq-item-b">
+                <div class="ans-know-name">
+                  <span v-for="(v, index) in item.data.know_name" :key="index">{{v}}</span>
+                </div>
+                <div class="open-txt" @click="openShow(item, index, 0)">
+                  {{item.openFlag ? '收起':'展开'}}
+                  <Icon type="md-arrow-dropdown" style="font-size: 28px;margin-top: -3px;" v-if="answerType == 'personal' && !item.openFlag"/>
+                  <Icon type="md-arrow-dropup" style="font-size: 28px;margin-top: -3px;" v-if="answerType == 'personal' && item.openFlag"/>
+                </div>
               </div>
               <ul class="othq-list-teacher" v-if="item.data.reply_status == 1 && item.openFlag">
                 <li class="othq-item">
@@ -91,8 +101,15 @@
                   </template>
                 </div>
               </div>
-              <div class="open-txt" @click="openShow(item, index, 1)">
-                {{item.openFlag ? '收起':'展开'}}
+              <div class="othq-item-b">
+                <div class="ans-know-name">
+                  <span v-for="(v, index) in item.data.know_name" :key="index">{{v}}</span>
+                </div>
+                <div class="open-txt" @click="openShow(item, index, 1)">
+                  {{item.openFlag ? '收起':'展开'}}
+                  <Icon type="md-arrow-dropdown" style="font-size: 28px;margin-top: -3px;" v-if="answerType == 'personal' && !item.openFlag"/>
+                  <Icon type="md-arrow-dropup" style="font-size: 28px;margin-top: -3px;" v-if="answerType == 'personal' && item.openFlag"/>
+                </div>
               </div>
               <ul class="othq-list-teacher" v-if="item.data.reply_status == 1 && item.openFlag">
                 <li class="othq-item">
@@ -146,6 +163,10 @@ export default {
   props: {
     user_id: {
       type: Number
+    },
+    answerType: {
+      type: String,
+      default: 'personal'
     }
   },
   data () {
@@ -162,7 +183,7 @@ export default {
       questionAnswerList: [],
       // questionMyAnswer: {},
       // questionReply: {},
-      num: this.$route.query.num
+      num: this.$route.query.num // 如果从消息页面提醒进来，对应的消息展开
     }
   },
   // computed: {
@@ -207,7 +228,7 @@ export default {
             this.courseAnswerList = list
             this.courseAnswerList.map((val, index) => {
               val.openFlag = false
-              if (num === val.id) {
+              if (num === val.id) { // 如果从消息页面提醒进来，对应的消息展开
                 val.openFlag = true
               }
             })
@@ -232,7 +253,7 @@ export default {
             this.questionAnswerList = data
             this.questionAnswerList.map((val, index) => {
               val.openFlag = false
-              if (num === val.id) {
+              if (num === val.id) { // 如果从消息页面提醒进来，对应的消息展开
                 val.openFlag = true
               }
             })
@@ -275,13 +296,14 @@ export default {
     margin-top: 15px;
   }
   .othq-item{
-    padding: 15px 20px;
+    padding: 20px;
     margin-bottom: 20px;
     background: $colfff;
     box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.1);
     border-radius: 8px;
     .othq-txt{
       line-height: 20px;
+      margin-top: 5px;
       color: #4A4A4A;
       &.sl{
         display: -webkit-box;
@@ -304,7 +326,6 @@ export default {
     }
   }
   .othq-item-t{
-    padding-bottom: 5px;
     display: flex;
     align-items: center;
     line-height: 26px;
@@ -346,5 +367,49 @@ export default {
   .teacher-answer{
     padding: 10px 20px;
     background: #999999;
+  }
+  .tab-list-learn{
+    width: 100%;
+    padding-bottom: 20px;
+    text-align: center;
+    display: flex;
+    background: #F3F6FF;
+    li{
+      width: 107px;
+      height: 37px;
+      line-height: 37px;
+      font-size: 16px;
+      color: $col666;
+      background: #ffffff;
+      cursor: pointer;
+      &:first-child{
+        border-radius: 4px 0 0 4px;
+      }
+      &:last-child{
+        border-radius: 0 4px 4px 0;
+      }
+      &.active{
+        background: #0267FF;
+        color: #ffffff;
+      }
+    }
+  }
+  .othq-item-b{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+  }
+  .ans-know-name{
+    span{
+      padding: 0 6px;
+      height: 25px;
+      line-height: 25px;
+      background:rgba(2,103,255,.15);
+      border-radius: 6px;
+      color: $blueColor;
+      display: inline-block;
+      text-align: center;
+      margin-right: 5px;
+    }
   }
 </style>

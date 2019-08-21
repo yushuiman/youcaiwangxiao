@@ -1,13 +1,13 @@
 import axios from 'axios'
 import {
-  getToken,
-  clearLoginInfo
+  getToken
+  // clearLoginInfo
 } from '@/libs/utils'
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 // import { Spin } from 'iview'
 class HttpRequest {
-  constructor (baseUrl = baseURL) {
+  constructor (baseUrl) {
     this.baseUrl = baseUrl
     this.queue = {}
   }
@@ -43,7 +43,7 @@ class HttpRequest {
       this.distroy(url)
       const { data, status, code } = res
       if (code === 401) {
-        clearLoginInfo()
+        // clearLoginInfo()
       }
       return {
         data,
