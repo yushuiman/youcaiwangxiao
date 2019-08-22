@@ -12,9 +12,10 @@
             <div class="uci-detail">
               <h2 class="ucid-name">{{val.name}}</h2>
               <p class="ucid-des">{{val.description}}</p>
-              <p class="ucid-learn" v-if="val.video">学习至{{val.video.course_id}}-{{val.video.section_id}}（{{val.video.video_id}}）{{val.video.video_name}}</p>
+              <!-- {{val.video.course_id}}-{{val.video.section_id}} -->
+              <p class="ucid-learn" v-if="val.video">学习至{{val.video.video_name}}</p>
             </div>
-            <button class="btn-com uci-learn" @click="courseLearnVideo(val)">去学习</button>
+            <button class="btn-com" @click="courseLearnVideo(val)">去学习</button>
           </div>
         </div>
         <div class="no-data no-data-course" v-else>
@@ -31,10 +32,11 @@
               <div class="uci-detail">
                 <h2 class="ucid-name">{{val.name}}</h2>
                 <p class="ucid-des">{{val.description}}</p>
-                <p class="ucid-learn" v-if="val.video">学习至{{val.video.course_id}}-{{val.video.section_id}}（{{val.video.video_id}}）{{val.video.video_name}}</p>
+                <!-- {{val.video.course_id}}-{{val.video.section_id}} -->
+                <p class="ucid-learn" v-if="val.video">学习至{{val.video.video_name}}</p>
                 <p class="ucid-learn" v-else>学习至未学习</p>
               </div>
-              <button class="btn-com uci-learn" @click="recordLearnVideo(val)">继续学习</button>
+              <button class="btn-com uci-learn" @click="courseLearnVideo(val)">继续学习</button>
             </div>
           </div>
         </div>
@@ -45,32 +47,58 @@
       <!-- 收藏课程 -->
       <div v-if="selIdxCourse == 2">
         <div v-if="myCollpackageList.length">
-          <Row>
-            <Col span="24">
-              <Menu accordion width="100%" style="background:none;">
-                <Submenu :name="index+1" class="myCollpackageMenu" v-for="(val, index) in myCollpackageList" :key="index" style="padding:0px;">
-                  <template slot="title" style="padding:0px;">
-                    <div class="uc-item-coll" @click="getMyCollcourse(val)">
-                      <img :src="val.pc_img" alt="" class="uci-img">
-                      <div class="uci-detail">
-                        <h2 class="ucid-name">{{val.name}}</h2>
-                        <p class="ucid-des">{{val.description}}</p>
-                        <!-- <p class="ucid-learn" v-if="val.video">学习至{{val.video.course_id}}-{{val.video.section_id}}（{{val.video.video_id}}）{{val.video.video_name}}</p>
-                        <p class="ucid-learn" v-else>学习至未学习</p> -->
+          <Menu accordion width="100%">
+            <Submenu :name="index+1" class="myCollpackageMenu" v-for="(val, index) in myCollpackageList" :key="index" style="padding:0px;">
+              <template slot="title" style="padding:0px;">
+                <div class="uc-item-coll" @click="getMyCollcourse(val)">
+                  <img :src="val.pc_img" alt="" class="uci-img">
+                  <div class="uci-detail">
+                    <h2 class="ucid-name">{{val.name}}</h2>
+                    <p class="ucid-des">{{val.description}}</p>
+                    <!-- <p class="ucid-learn" v-if="val.video">学习至{{val.video.course_id}}-{{val.video.section_id}}（{{val.video.video_id}}）{{val.video.video_name}}</p>
+                    <p class="ucid-learn" v-else>学习至未学习</p> -->
+                  </div>
+                </div>
+              </template>
+              <div class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(v, key) in myCollcourseList" :key="key" style="padding: 10px 40px;">
+                <div class="menu-jie-title" style="font-size: 16px;">
+                  <div>{{v.name}}</div>
+                  <button @click="getKnow(val, v, key)" style="color: #0267FF;">查看</button>
+                </div>
+              </div>
+            </Submenu>
+          </Menu>
+          <div class="coll-section-wrap" v-if="visible">
+            <!-- 知识点 -->
+            <Modal v-model="visible"
+              :width="795"
+              footer-hide
+              title="收藏章节">
+              <div class="height-com">
+                <div class="com-bg">请选择需要学习的视频</div>
+                <Menu accordion width="100%">
+                  <Submenu :name="index+1" v-for="(item, index) in myCollvideoList" :key="index">
+                    <template slot="title">
+                      <div class="menu-section-title">
+                        {{item.section_name}}
+                      </div>
+                    </template>
+                    <div class="error-menu-er" v-for="(val, key) in item.video" :key="key" style="padding: 10px 30px 10px 60px;">
+                      <div class="menu-jie-title">
+                        <div>
+                          {{val.video_name}}
+                        </div>
+                        <div class="error-btn">
+                          <button class="btn-com" @click="collectionLearnVideo(item, val)">去学习</button>
+                        </div>
                       </div>
                     </div>
-                  </template>
-                  <div class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(v, key) in myCollcourseList" :key="key" style="padding: 10px 40px;">
-                    <div class="menu-jie-title" style="font-size: 16px;">
-                      <div>{{v.name}}</div>
-                      <button @click="getKnow(val, v, key)" style="color: #0267FF;">查看</button>
-                    </div>
-                  </div>
-                </Submenu>
-              </Menu>
-            </Col>
-          </Row>
-          <coll-menu-item :myCollvideoList="myCollvideoList" :user_id="user_id" @collectionLearnVideo="collectionLearnVideo" v-if="visible"></coll-menu-item>
+                  </Submenu>
+                </Menu>
+              </div>
+            </Modal>
+          </div>
+          <!-- <coll-menu-item :myCollvideoList="myCollvideoList" :user_id="user_id" @collectionLearnVideo="collectionLearnVideo" v-if="visible"></coll-menu-item> -->
         </div>
         <div class="no-data no-data-course" v-else>
           暂无课程
@@ -81,7 +109,7 @@
 </template>
 
 <script>
-import collMenuItem from '../../components/personal/course/collMenuItem'
+// import collMenuItem from '../../components/personal/course/collMenuItem'
 import { myCourse, watchRecords, myCollpackage, myCollcourse, myCollvideo } from '@/api/personal'
 // import { mapState } from 'vuex'
 export default {
@@ -108,11 +136,11 @@ export default {
       myCollcourseList: [], // 收藏课程
       myCollvideoList: [], // 收藏课程章节
       sessionPlayInfo: {
-        package_id: '',
-        course_id: '',
-        is_zhengke: '',
+        package_id: 0,
+        course_id: 0,
+        is_zhengke: 0,
         userstatus: 1, // 购买1 未购买2
-        video_id: ''
+        video_id: 0
       }
     }
   },
@@ -124,7 +152,7 @@ export default {
   // },
   components: {
     // courseItem,
-    collMenuItem
+    // collMenuItem
   },
   mounted () {
     this.initRes()
@@ -207,11 +235,9 @@ export default {
     // 获取收藏课程目录modal
     getKnow (val, v) {
       this.getMyCollvideo(val)
-      this.sessionPlayInfo.is_zhengke = v.is_zhengke
-      this.sessionPlayInfo.package_id = val.package_id + ''
+      this.sessionPlayInfo.package_id = val.package_id
       this.sessionPlayInfo.course_id = val.course_id
       this.sessionPlayInfo.section_id = val.section_id
-      this.sessionPlayInfo.video_id = val.video_id
       this.sessionPlayInfo.userstatus = val.is_purchase
       this.visible = true
     },
@@ -230,7 +256,7 @@ export default {
         }
       })
     },
-    // 课程去学习
+    // 课程去学习 播放记录去学习
     courseLearnVideo (val) {
       // 如果有看过的记录，继续学习
       if (val.video) {
@@ -239,45 +265,45 @@ export default {
           course_id: val.video.course_id,
           section_id: val.video.section_id,
           video_id: val.video.video_id,
-          is_zhengke: val.video.is_zhengke, // 是否正课
-          userstatus: val.video.userstatus // 是否购买
+          userstatus: 1 // 购买1未购买2
         }
         this.$router.push({ path: '/class-video', query: obj })
-        window.sessionStorage.setItem('playVideoInfo', JSON.stringify(val)) //
-        window.sessionStorage.setItem('playtime', val.video_time) // 获取播放时间
+        // window.sessionStorage.setItem('playVideoInfo', JSON.stringify(val)) //
+        window.sessionStorage.setItem('playtime', val.video.watch_time) // 获取播放时间
         return
       }
       // 否则去课程列表页面
       this.$router.push({ path: '/class-detail',
         query: {
-          package_id: val.package_id + ''
+          package_id: val.package_id
         }
       })
     },
-    // 播放记录去学习
-    recordLearnVideo (val) {
-      let obj = {
-        package_id: val.package_id + '',
-        course_id: val.video.course_id,
-        section_id: val.video.section_id,
-        video_id: val.video.video_id,
-        is_zhengke: val.video.is_zhengke, // 是否正课
-        userstatus: 1 // 是否购买 播放记录都是已购买的数据
-      }
-      this.$router.push({ path: '/class-video', query: obj })
-      // let openMenu = (val.video.section_id) + '-' + (val.video.video_id)
-      // window.sessionStorage.setItem('openMenu', openMenu)
-      window.sessionStorage.setItem('playVideoInfo', JSON.stringify(val))
-      window.sessionStorage.setItem('playtime', val.video.watch_time) // 获取播放时间
-    },
+    // // 播放记录去学习
+    // recordLearnVideo (val) {
+    //   let obj = {
+    //     package_id: val.package_id + '',
+    //     course_id: val.video.course_id,
+    //     section_id: val.video.section_id,
+    //     video_id: val.video.video_id,
+    //     is_zhengke: val.video.is_zhengke, // 是否正课
+    //     userstatus: 1 // 是否购买 播放记录都是已购买的数据
+    //   }
+    //   this.$router.push({ path: '/class-video', query: obj })
+    //   // let openMenu = (val.video.section_id) + '-' + (val.video.video_id)
+    //   // window.sessionStorage.setItem('openMenu', openMenu)
+    //   // window.sessionStorage.setItem('playVideoInfo', JSON.stringify(val))
+    //   window.sessionStorage.setItem('playtime', val.video.watch_time) // 获取播放时间
+    // },
     // 收藏记录去学习
     collectionLearnVideo (item, val) {
-      let playVideoObj = Object.assign({}, this.sessionPlayInfo, val)
+      // let playVideoObj = Object.assign({}, this.sessionPlayInfo, val)
+      this.sessionPlayInfo.video_id = val.id
       this.$router.push({ path: '/class-video', query: this.sessionPlayInfo })
       // let openMenu = (item.section_id) + '-' + (val.video_id)
       // window.sessionStorage.setItem('openMenu', openMenu)
-      window.sessionStorage.setItem('playVideoInfo', JSON.stringify(playVideoObj))
-      window.sessionStorage.setItem('playtime', val.video_time) // 获取播放时间
+      // window.sessionStorage.setItem('playVideoInfo', JSON.stringify(playVideoObj))
+      window.sessionStorage.setItem('playtime', val.watch_time) // 获取播放时间 待定，接口没有返回
     }
   }
 }
@@ -333,6 +359,9 @@ export default {
       background: #1874FD;
       color: $colfff;
       font-size: 16px;
+    }
+    .uci-learn{
+      width: 97px;
     }
   }
   // 观看记录

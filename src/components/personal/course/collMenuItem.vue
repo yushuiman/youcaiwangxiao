@@ -1,4 +1,5 @@
 <template>
+  <!-- 没有用到 -->
   <div class="coll-section-wrap">
     <!-- 知识点 -->
     <Modal v-model="visible"

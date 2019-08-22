@@ -92,12 +92,14 @@ export default {
   }
   .like-info {
     flex: 1;
-    margin-left: 7px;
     p{
       display: -webkit-box;
       -webkit-box-orient: vertical;
       overflow: hidden;
       -webkit-line-clamp: 1;
+      // overflow: hidden;
+      // text-overflow: ellipsis;
+      // white-space: nowrap;
       &:nth-child(2){
         color: $col999;
         font-size: 12px;

@@ -6,7 +6,21 @@
       <div class="login-r fr">
         <img src="../../assets/images/global/email-icon.png" alt="email" class="email-icon" @click="goNewsPage">
         <i v-if="is_news == 1" class="new-dot"></i>
-        <img :src="avatorImgPath" alt="头像" class="head-logo" @click="goPersonalPage">
+        <img :src="avatorImgPath" alt="头像" class="head-logo" @mouseenter="enter">
+        <!-- 个人中心入口 -->
+        <div v-show="flagEntrance" class="my-center-info">
+          <ul class="mc-list">
+            <li class="mc-item" :class="['mc-item0' + (index+1)]" v-for="(v, index) in personalArr" :key="index" @click="goPersonalPage(v, index)">
+              <i class="center-icon"></i>{{v.type}}
+            </li>
+          </ul>
+          <div class="mc-watch" v-if="watchRecordsList.video">
+            <p class="mcw-title"><span><i class="center-icon"></i>{{watchRecordsList.name}}</span></p>
+            <!-- {{watchRecordsList.video.course_id}}-{{watchRecordsList.video.section_id}} -->
+            <p class="mcw-section"><span class="mcws-name">{{watchRecordsList.video.video_name}}</span><span class="goon" @click="goonWatch">继续</span></p>
+          </div>
+          <div class="log-out" @click="ouLogin">安全退出</div>
+        </div>
       </div>
     </div>
     <div class="video-main" id="box">
@@ -70,12 +84,33 @@
 import aliPlayer from '@/components/video/aliPlayer'
 import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
+import { watchRecords } from '@/api/personal'
 import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, collection, initWS } from '@/api/class'
-import { mapState } from 'vuex'
+import { mapMutations, mapActions, mapState } from 'vuex'
 
 export default {
   data () {
     return {
+      flagEntrance: false,
+      watchRecordsList: {}, // 观看记录头像滑过
+      personalArr: [
+        {
+          type: '我的课程',
+          sign: 'course'
+        },
+        {
+          type: '订单中心',
+          sign: 'order'
+        },
+        {
+          type: '我的答疑',
+          sign: 'answer'
+        },
+        {
+          type: '个人设置',
+          sign: 'set'
+        }
+      ],
       backCount: 0,
       selMenu: 3,
       showBox: '课程<br />切换',
@@ -99,7 +134,7 @@ export default {
         section_id: this.$route.query.section_id,
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
-        is_zhengke: this.$route.query.is_zhengke,
+        is_zhengke: 0,
         userstatus: this.$route.query.userstatus,
         type: this.$route.query.type
       },
@@ -128,12 +163,25 @@ export default {
     })
   },
   mounted () {
+    document.addEventListener('mouseover', (e) => {
+      if (this.flagEntrance) {
+        if (!this.$el.contains(e.target)) {
+          this.flagEntrance = false
+        }
+      }
+    })
     // this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
     // this.getVideoPlayback(this.$route.query.video_id)
     this.getCourseCatalog() // 课程大纲（目录）
     this.dragControllerDiv()
   },
   methods: {
+    ...mapActions([
+      'handleLogOut'
+    ]),
+    ...mapMutations([
+      'setChange'
+    ]),
     dragControllerDiv () {
       var resize = document.getElementById('resize')
       var left = document.getElementById('left')
@@ -192,7 +240,7 @@ export default {
           initWS(JSON.stringify(message))
         }
         window.sessionStorage.setItem('playtime', this.playtime) // 防止刷新页面，也要记录当前播放时间
-      }, 30000)
+      }, 10000)
       // 未购买试看3分钟
       if (parseInt(this.playCourseInfo.userstatus) === 2) {
         this.tryWatchTimer = setInterval(() => {
@@ -207,6 +255,10 @@ export default {
           }
         }, 1000)
       }
+    },
+    enter () {
+      this.getWatchRecords() // 观看记录
+      this.flagEntrance = true
     },
     // 去购买
     goBuy () {
@@ -279,10 +331,12 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.packageList = res.data
-          // if (this.$route.query.course_id) {
-          //   return
-          // }
-          let id = this.$route.query.course_id || this.packageList[0].course_id
+          let id = parseInt(this.$route.query.course_id || this.packageList[0].course_id)
+          this.packageList.forEach(v => {
+            if (id === v.course_id) {
+              this.playCourseInfo.is_zhengke = v.is_zhengke
+            }
+          })
           this.initSecvCatalog(id)
         } else {
           this.$Message.error(res.msg)
@@ -295,6 +349,7 @@ export default {
       this.flagAnswer = false
       this.flagJy = false
       this.wImportant = 382
+      this.playCourseInfo.is_zhengke = item.is_zhengke
       this.$router.replace({ path: 'class-video',
         query: {
           ...this.$route.query,
@@ -369,6 +424,10 @@ export default {
       })
     },
     courseCollection (collectId) { // 1收藏2取消收藏
+      // if (parseInt(this.$route.query.status) === 2) {
+      //   this.$Message.error('试听课程，请购买后收藏')
+      //   return
+      // }
       this.videoCredentials.collect = 2
       if (collectId === 2) {
         this.videoCredentials.collect = 1
@@ -394,13 +453,51 @@ export default {
       })
     },
     // 个人中心
-    goPersonalPage () {
-      window.sessionStorage.setItem('type', 'course')
+    goPersonalPage ({ sign }) {
+      window.sessionStorage.setItem('type', sign)
+      if (this.$route.name === 'personal') {
+        window.location.reload()
+      }
+      this.flagEntrance = false
       this.$router.push('/personal')
+      // console.log(this.$route.name === 'personal' || this.$route.path === '/personal')
+      // console.log(this.$route.path === '/personal')
+      // this.$router.push({ path: 'personal', query: { type: sign } })
+      this.setChange('')
+      // this.centerType(sign)
     },
     // 消息中心
     goNewsPage () {
       this.$router.push('/news')
+    },
+    // 播放记录
+    getWatchRecords () {
+      watchRecords({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.watchRecordsList = res.data[0].list[0]
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 继续观看
+    goonWatch () {
+      let obj = {
+        package_id: this.watchRecordsList.package_id,
+        course_id: this.watchRecordsList.video.course_id,
+        section_id: this.watchRecordsList.video.section_id,
+        video_id: this.watchRecordsList.video.video_id,
+        userstatus: 1 // 是否购买
+      }
+      this.$router.push({ path: '/class-video', query: obj })
+      window.sessionStorage.setItem('playtime', this.watchRecordsList.video.watch_time) // 获取当前播放时间
+    },
+    ouLogin () {
+      this.$router.push('/')
+      this.handleLogOut()
     }
   },
   beforeDestroy () {
@@ -650,6 +747,81 @@ export default {
     height: 100%;
     cursor: col-resize;
     z-index: 2;
+  }
+  // 个人中心
+  .my-center-info{
+    position: absolute;
+    right: 0;
+    top: 70px;
+    width: 254px;
+    // height: 214px;
+    background:#ffffff;
+    border-radius: 6px;
+  }
+  .mc-list{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 16px 15px;
+    .mc-item{
+      width: 102px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      background:#F3F6FF;
+      margin: 4px 5px;
+      cursor: pointer;
+    }
+  }
+  .center-icon{
+    vertical-align: middle;
+    margin-top: -3px;
+    margin-right: 4px;
+    .mc-item01 &{
+      @include bg-img(14, 12, '../../assets/images/global/center-icon01.png');
+    }
+    .mc-item02 &{
+      @include bg-img(14, 12, '../../assets/images/global/center-icon02.png');
+    }
+    .mc-item03 &{
+      @include bg-img(15, 14, '../../assets/images/global/center-icon03.png');
+    }
+    .mc-item04 &{
+      @include bg-img(15, 15, '../../assets/images/global/center-icon04.png');
+    }
+    .mcw-title &{
+      @include bg-img(14, 14, '../../assets/images/global/center-icon05.png');
+    }
+  }
+  .mc-watch{
+    padding: 0 20px;
+    color: $col666;
+    p{
+      display: flex;
+      justify-content: space-between;
+      line-height: 20px;
+      &.mcw-section{
+        margin-top: 3px;
+        padding-left: 34px;
+        .mcws-name{
+          flex: 1;
+          height: 20px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+      .goon{
+        color: $blueColor;
+        cursor: pointer;
+      }
+    }
+  }
+  .log-out{
+    border-top: 1px solid #E6E6E6;
+    margin-top: 20px;
+    line-height: 40px;
+    padding: 0 20px;
+    cursor: pointer;
   }
   .new-dot{
     width: 6px;

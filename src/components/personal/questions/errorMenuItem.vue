@@ -6,29 +6,27 @@
       </select>
       <Icon type="md-arrow-dropdown" style="font-size:24px; position:absolute; right: 5px; top: 3px;" />
     </div>
-    <Row v-if="errorSecList.length">
-      <Col span="24">
-        <Menu accordion width="100%" class="error-menu-list">
-          <Submenu :name="index+1" class="error-menu-item" v-for="(item, index) in errorSecList" :key="index">
-            <template slot="title">
-              <div class="menu-section-title">
-                {{item.know_section_name}}
-                <span>（<em>{{item.section_num}}</em>道错题）</span>
-              </div>
-            </template>
-            <div class="error-menu-er" v-for="(val, key) in item.knob" :key="key" style="padding: 10px 40px;">
-              <div class="menu-jie-title">
-                <div>
-                  {{val.knob_name}}
-                  <span>（<em style="color:#f00;">{{val.knob_num}}</em>道错题）</span>
-                </div>
-                <button class="btn-zsd" @click="getKnow(item, val, key)">选择知识点</button>
-              </div>
+    <div v-if="errorSecList.length">
+      <Menu accordion width="100%" class="error-menu-list">
+        <Submenu :name="index+1" class="error-menu-item" v-for="(item, index) in errorSecList" :key="index">
+          <template slot="title">
+            <div class="menu-section-title">
+              {{item.know_section_name}}
+              <span>（<em>{{item.section_num}}</em>道错题）</span>
             </div>
-          </Submenu>
-        </Menu>
-      </Col>
-    </Row>
+          </template>
+          <div class="error-menu-er" v-for="(val, key) in item.knob" :key="key" style="padding: 10px 40px;">
+            <div class="menu-jie-title">
+              <div>
+                {{val.knob_name}}
+                <span>（<em style="color:#f00;">{{val.knob_num}}</em>道错题）</span>
+              </div>
+              <button class="btn-zsd" @click="getKnow(item, val, key)">选择知识点</button>
+            </div>
+          </div>
+        </Submenu>
+      </Menu>
+    </div>
     <div class="no-data" v-else>
       暂无数据
     </div>

@@ -62,10 +62,8 @@ export default {
       height: 20px;
       line-height: 20px;
       overflow: hidden;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      -webkit-line-clamp: 1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       color: $col999;
       .c-black{
         color: $col333;

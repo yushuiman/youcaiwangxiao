@@ -11,33 +11,29 @@
       </div>
     </div>
     <!-- 知识点章节 -->
-    <Row>
-      <Col span="24">
-        <Menu accordion width="100%">
-          <Submenu :name="index+1" v-for="(item, index) in sectionList" :key="index">
-            <template slot="title" >
-              <div class="menu-title">
-                <div class="menu-section-title">{{item.know_section_name}}</div>
-                <div>
-                  <Progress
-                    :percent="Number(item.correct)"
-                    :stroke-width="10"
-                    stroke-color="#0267FF"
-                    hide-info style="width: 142px;"/>
-                  <span style="margin-right: 30px; width: 68px; display: inline-block;text-align:right;">{{item.correct}}%</span>
-                </div>
-              </div>
-            </template>
-            <MenuItem :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key" style="padding-left: 60px;">
-              <div class="menu-jie-title" @click="getKnow(item, val, key)">
-                <div>{{val.knob_name}}</div>
-                <button class="btn-com do-potic-btn">去做题</button>
-              </div>
-            </MenuItem>
-          </Submenu>
-        </Menu>
-      </Col>
-    </Row>
+    <Menu accordion width="100%">
+      <Submenu :name="index+1" v-for="(item, index) in sectionList" :key="index">
+        <template slot="title" >
+          <div class="menu-title">
+            <div class="menu-section-title">{{item.know_section_name}}</div>
+            <div>
+              <Progress
+                :percent="Number(item.correct)"
+                :stroke-width="10"
+                stroke-color="#0267FF"
+                hide-info style="width: 142px;"/>
+              <span style="margin-right: 30px; width: 68px; display: inline-block;text-align:right;">{{item.correct}}%</span>
+            </div>
+          </div>
+        </template>
+        <MenuItem :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key" style="padding-left: 60px;">
+          <div class="menu-jie-title" @click="getKnow(item, val, key)">
+            <div>{{val.knob_name}}</div>
+            <button class="btn-com do-potic-btn">去做题</button>
+          </div>
+        </MenuItem>
+      </Submenu>
+    </Menu>
     <!-- 知识点 -->
     <Modal v-model="KnowShow"
       :width="795"

@@ -65,24 +65,15 @@
       </div>
       <div v-if="selIdxAccount == 2">
         <div class="coupon-com">
-          <p class="coupon-tit">您有<i>3</i>张可用优惠券</p>
+          <p class="coupon-tit">您有<i>{{num}}</i>张可用优惠券</p>
           <ul class="coupon-list">
-            <li class="coupon-item">
-              <span class="c-price">¥<em>150</em></span>
-              <div class="c-yuan"><i></i></div>
+            <li class="coupon-item" v-for="(item, index) in availableList" :key="index">
+              <span class="c-price" v-if="item.is_type == 1">¥<em>{{item.coupon_price}}</em></span>
+              <span class="c-price" v-if="item.is_type == 2"><em>{{item.coupon_price}}</em>折</span>
               <div class="c-detail">
-                <p class="c-full-reduce">满的地方减150</p>
-                <p class="c-validity">有效期</p>
-                <span class="c-use">仅限dfs私用</span>
-              </div>
-            </li>
-            <li class="coupon-item">
-              <span class="c-price">¥<em>150</em></span>
-              <div class="c-yuan"><i></i></div>
-              <div class="c-detail">
-                <p class="c-full-reduce">满的地方减150</p>
-                <p class="c-validity">有效期</p>
-                <span class="c-use">仅限dfs私用</span>
+                <p class="c-full-reduce">{{item.name}}</p>
+                <p class="c-validity">有效期至{{item.end_time}}</p>
+                <span class="c-use">{{rangeSts[item.range]}}使用</span>
               </div>
             </li>
           </ul>
@@ -90,25 +81,15 @@
         <div class="coupon-com">
           <p class="coupon-tit">失效优惠券</p>
           <ul class="coupon-list">
-            <li class="coupon-item gray">
-              <span class="c-price">¥<em>150</em></span>
-              <div class="c-yuan"><i></i></div>
+            <li class="coupon-item gray" v-for="(item, index) in InvalidList" :key="index">
+              <span class="c-price" v-if="item.is_type == 1">¥<em>{{item.coupon_price}}</em></span>
+              <span class="c-price" v-if="item.is_type == 2"><em>{{item.coupon_price}}</em>折</span>
               <div class="c-detail">
-                <p class="c-full-reduce">满的地方减150</p>
-                <p class="c-validity">有效期</p>
-                <span class="c-use">仅限dfs私用</span>
+                <p class="c-full-reduce">{{item.name}}<span v-if="item.is_type == 2">折</span></p>
+                <p class="c-validity">有效期至{{item.end_time}}</p>
+                <span class="c-use">{{rangeSts[item.range]}}使用</span>
               </div>
-              <a class="del-coupon">X</a>
-            </li>
-            <li class="coupon-item gray">
-              <span class="c-price">¥<em>150</em></span>
-              <div class="c-yuan"><i></i></div>
-              <div class="c-detail">
-                <p class="c-full-reduce">满的地方减150</p>
-                <p class="c-validity">有效期</p>
-                <span class="c-use">仅限dfs私用</span>
-              </div>
-              <a class="del-coupon">X</a>
+              <Icon type="md-close" class="del-coupon" @click="doDelcoupon(item.coupon_id, index)" />
             </li>
           </ul>
         </div>
@@ -118,7 +99,7 @@
 </template>
 
 <script>
-import { consumptionRecord } from '@/api/personal'
+import { consumptionRecord, coupons, delcoupon } from '@/api/personal'
 // import { mapState } from 'vuex'
 export default {
   props: {
@@ -138,7 +119,15 @@ export default {
         4: '支付宝',
         5: '后台',
         6: '积分兑换'
-      }
+      },
+      rangeSts: {
+        1: '仅限正课',
+        2: '仅限直播',
+        3: '全局使用'
+      },
+      num: 0, // 有效个数
+      availableList: [], // 有效
+      InvalidList: [] // 失效
     }
   },
   // computed: {
@@ -160,12 +149,13 @@ export default {
         this.getConsumptionRecord()
       }
       if (parseInt(this.selIdxAccount) === 1) {
-        // this.getQuestionAnswer()
+        // this.getCoupons()
       }
       if (parseInt(this.selIdxAccount) === 2) {
-        // this.getQuestionAnswer()
+        this.getCoupons()
       }
     },
+    // 消费记录
     getConsumptionRecord () {
       consumptionRecord({
         user_id: this.user_id
@@ -173,6 +163,120 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.consumptionRecordList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 优惠券列表
+    getCoupons () {
+      coupons({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          let { num, available, Invalid } = res.data
+          this.num = num
+          this.availableList = available
+          this.InvalidList = Invalid
+          // this.availableList = [
+          //   {// 可用卷
+          //     'coupon_id': '1',
+          //     'range': 1,
+          //     'name': '优惠券名',
+          //     'coupon_price': '50',
+          //     'end_time': '到期时间',
+          //     'is_type': 1
+          //   },
+          //   {// 可用卷
+          //     'coupon_id': '2',
+          //     'range': 2,
+          //     'name': '优惠券名',
+          //     'coupon_price': '3.8',
+          //     'end_time': '3232323',
+          //     'is_type': 2
+          //   },
+          //   {// 可用卷
+          //     'coupon_id': '1',
+          //     'range': 1,
+          //     'name': '优惠券名',
+          //     'coupon_price': '50',
+          //     'end_time': '到期时间',
+          //     'is_type': 1
+          //   },
+          //   {// 可用卷
+          //     'coupon_id': '2',
+          //     'range': 2,
+          //     'name': '优惠券名',
+          //     'coupon_price': '3.8',
+          //     'end_time': '3232323',
+          //     'is_type': 2
+          //   }
+          // ]
+          // this.InvalidList = [
+          //   {// 可用卷
+          //     'coupon_id': '3',
+          //     'range': 3,
+          //     'name': '优惠券名',
+          //     'coupon_price': '50',
+          //     'end_time': '到期时间',
+          //     'is_type': 2
+          //   },
+          //   {// 可用卷
+          //     'coupon_id': '4',
+          //     'range': 2,
+          //     'name': '优惠券名',
+          //     'coupon_price': '100',
+          //     'end_time': '到期时间',
+          //     'is_type': 1
+          //   },
+          //   {// 可用卷
+          //     'coupon_id': '3',
+          //     'range': 3,
+          //     'name': '优惠券名',
+          //     'coupon_price': '50',
+          //     'end_time': '到期时间',
+          //     'is_type': 2
+          //   },
+          //   {// 可用卷
+          //     'coupon_id': '4',
+          //     'range': 2,
+          //     'name': '优惠券名',
+          //     'coupon_price': '100',
+          //     'end_time': '到期时间',
+          //     'is_type': 1
+          //   },
+          //   {// 可用卷
+          //     'coupon_id': '3',
+          //     'range': 3,
+          //     'name': '优惠券名',
+          //     'coupon_price': '50',
+          //     'end_time': '到期时间',
+          //     'is_type': 2
+          //   },
+          //   {// 可用卷
+          //     'coupon_id': '4',
+          //     'range': 2,
+          //     'name': '优惠券名',
+          //     'coupon_price': '100',
+          //     'end_time': '到期时间',
+          //     'is_type': 1
+          //   }
+          // ]
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 删除
+    doDelcoupon (id, index) {
+      delcoupon({
+        user_id: this.user_id,
+        coupon_id: id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.InvalidList.splice(index, 1)
         } else {
           this.$Message.error(res.msg)
         }
@@ -185,7 +289,6 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   $btnGredientOrange: #FBAC78,#FC7873;
-  $btnGredientGray: #C7C7C7, #C6C6C6;
   .consumption-record-list, .card-manager-list{
     box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
     border-radius: 8px;
@@ -284,6 +387,8 @@ export default {
   }
   // 优惠券
   .coupon-com{
+    // height: 470px;
+    // overflow: auto;
     padding: 30px 60px 20px;
     margin-bottom: 20px;
     background:rgba(255,255,255,1);
@@ -293,9 +398,14 @@ export default {
   .coupon-tit{
     font-size: 18px;
     line-height: 25px;
+    i{
+      color: $blueColor;
+      font-style: normal;
+    }
   }
   .coupon-list{
     display: flex;
+    flex-wrap: wrap;
   }
   .coupon-item{
     width: 382px;
@@ -307,8 +417,13 @@ export default {
     color: #ffffff;
     @include bg-linear-gradient($btnGredientOrange, right);
     overflow: hidden;
+    position: relative;
     &.gray{
-      @include bg-linear-gradient($btnGredientGray, right);
+      background: #DCDCDC;
+      .c-use{
+        background: #ffffff;
+        color: #DDDDDD;
+      }
     }
   }
   .c-price{
@@ -339,13 +454,6 @@ export default {
       top: -8px;
     }
   }
-  .c-use{
-    height: 30px;
-    line-height: 30px;
-    border-radius: 18px;
-    background: #ffffff;
-    text-align: center;
-  }
   .c-detail{
     padding: 0 22px;
     .c-full-reduce{
@@ -353,29 +461,26 @@ export default {
       font-weight: 400;
       line-height: 25px;
     }
+    .c-validity{
+      line-height: 22px;
+      font-size: 16px;
+    }
+    .c-use{
+      padding: 4px;
+      color: #FD7D74;
+      background:rgba(255,255,255,.7);
+      border-radius: 16px;
+      margin-top: 8px;
+      display: inline-block;
+      text-align: center;
+    }
   }
-  // <div class="c-yuan"><i><i></div>
-  // <p class="coupon-tit">您有3张可用优惠券</p>
-  //       <ul class="coupon-list">
-  //         <li class="coupon-item">
-  //           <span class="c-price"><em>¥</em>150</span>
-  //           <div class="c-detail">
-  //             <p class="c-full-reduce">满的地方减150</p>
-  //             <p class="c-validity">有效期</p>
-  //             <span class="c-use">仅限dfs私用</span>
-  //           </div>
-  //         </li>
-  //       </ul>
-  //       <p class="coupon-tit">失效优惠券</p>
-  //       <ul class="coupon-list">
-  //         <li class="coupon-item gray">
-  //           <span class="c-price"><em>¥</em>150</span>
-  //           <div class="c-detail">
-  //             <p class="c-full-reduce">满的地方减150</p>
-  //             <p class="c-validity">有效期</p>
-  //             <span class="c-use">仅限dfs私用</span>
-  //           </div>
-  //           <a class="del-coupon">X</a>
-  //         </li>
-  //       </ul>
+  .del-coupon{
+    color: #ffffff;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 22px;
+    cursor: pointer;
+  }
 </style>

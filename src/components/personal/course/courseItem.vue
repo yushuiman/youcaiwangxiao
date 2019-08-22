@@ -48,10 +48,9 @@ export default {
       .ucid-des{
         color: $col999;
         line-height: 20px;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
         overflow: hidden;
-        -webkit-line-clamp: 1;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       .ucid-learn{
         color: $blueColor;

@@ -3,29 +3,25 @@
     <div class="com-bg">
       考试模式
     </div>
-    <Row>
-      <Col span="24">
-        <Menu accordion width="100%">
-          <Submenu :name="index+1" v-for="(item, index) in errorSecList" :key="index">
-            <template slot="title" >
-              <div class="menu-section-title">
-                {{item.section_name}}
-                <span>（<em>{{item.section_num}}</em>道错题）</span>
-              </div>
-            </template>
-            <MenuItem :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key" style="padding-left: 60px;">
-              <div class="menu-jie-title" @click="getKnow(item, val, key)">
-                <div>
-                  {{val.knob_name}}
-                  <span>（<em style="color:#f00;">{{val.knob_num}}</em>道错题）</span>
-                </div>
-                <button class="btn-com do-potic-btn">去做题</button>
-              </div>
-            </MenuItem>
-          </Submenu>
-        </Menu>
-      </Col>
-    </Row>
+    <Menu accordion width="100%">
+      <Submenu :name="index+1" v-for="(item, index) in errorSecList" :key="index">
+        <template slot="title" >
+          <div class="menu-section-title">
+            {{item.section_name}}
+            <span>（<em>{{item.section_num}}</em>道错题）</span>
+          </div>
+        </template>
+        <MenuItem :name="(index+1)+ '-' + (key+1)" v-for="(val, key) in item.knob" :key="key" style="padding-left: 60px;">
+          <div class="menu-jie-title" @click="getKnow(item, val, key)">
+            <div>
+              {{val.knob_name}}
+              <span>（<em style="color:#f00;">{{val.knob_num}}</em>道错题）</span>
+            </div>
+            <button class="btn-com do-potic-btn">去做题</button>
+          </div>
+        </MenuItem>
+      </Submenu>
+    </Menu>
     <!-- 知识点 -->
     <Modal v-model="KnowShow"
       :width="795"

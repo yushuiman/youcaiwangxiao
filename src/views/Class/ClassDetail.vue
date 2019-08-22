@@ -62,7 +62,7 @@
             <img :src="isntroduction.brief_img" alt="" width="100%">
           </div>
           <div class="clt-kcdg" v-show="isChoose == 'kjdg'">
-            <course-list :package_id="this.$route.query.package_id" :userstatus="isntroduction.userstatus"></course-list>
+            <course-list :package_id="package_id" :userstatus="isntroduction.userstatus"></course-list>
           </div>
         </div>
       </div>
@@ -116,6 +116,7 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
   data () {
     return {
+      package_id: parseInt(this.$route.query.package_id),
       isChoose: 'kcjj',
       isntroduction: {}, // 课程简介
       teacehr: [], // 教师信息
@@ -146,7 +147,7 @@ export default {
     // 课程简介
     getCourseIntroduction () {
       courseIntroduction({
-        package_id: this.$route.query.package_id
+        package_id: this.package_id
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
@@ -181,11 +182,7 @@ export default {
     goSeeVideo () {
       this.$router.push({ path: '/class-video',
         query: {
-          package_id: this.$route.query.package_id,
-          // course_id: item.course_id,
-          // section_id: val.section_id,
-          // video_id: v.video_id,
-          is_zhengke: this.isntroduction.is_zheng, // 1正课 2非正课
+          package_id: this.package_id,
           userstatus: this.isntroduction.userstatus // 1购买 2未购买
         }
       })
@@ -285,10 +282,9 @@ export default {
       span{
         width: 87%;
         height: 48px;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 1;
         overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       &:after{
         position: absolute;

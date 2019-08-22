@@ -156,6 +156,7 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
+    // window.sessionStorage.removeItem('type')
     window.sessionStorage.removeItem('selIdxCourse')
     window.sessionStorage.removeItem('selIdxQuestion')
     window.sessionStorage.removeItem('selIdxAnswer')

@@ -28,20 +28,20 @@
               <i v-if="isNews == 1" class="new-dot"></i>
               <img :src="avatorImgPath" alt="头像" class="head-logo">
               <span @mouseenter="enter">{{userName}}</span>
+              <!-- 个人中心入口 -->
+              <div v-show="flagEntrance" class="my-center-info">
+                <ul class="mc-list">
+                  <li class="mc-item" :class="['mc-item0' + (index+1)]" v-for="(v, index) in personalArr" :key="index" @click="goPersonalPage(v, index)">
+                    <i class="center-icon"></i>{{v.type}}
+                  </li>
+                </ul>
+                <div class="mc-watch" v-if="watchRecordsList.video">
+                  <p class="mcw-title"><span><i class="center-icon"></i>{{watchRecordsList.name}}</span></p>
+                  <p class="mcw-section"><span class="mcws-name">{{watchRecordsList.video.video_name}}</span><span class="goon" @click="goonWatch">继续</span></p>
+                </div>
+                <div class="log-out" @click="ouLogin">安全退出</div>
+              </div>
             </div>
-          </div>
-          <!-- 个人中心入口 -->
-          <div v-show="flagEntrance" class="my-center-info">
-            <ul class="mc-list">
-              <li class="mc-item" :class="['mc-item0' + (index+1)]" v-for="(v, index) in personalArr" :key="index" @click="goPersonalPage(v, index)">
-                <i class="center-icon"></i>{{v.type}}
-              </li>
-            </ul>
-            <div class="mc-watch">
-              <p class="mcw-title"><span><i class="center-icon"></i>暂未开发</span></p>
-              <p class="mcw-section"><span>暂未开发</span><span class="goon" @click="goonWatch">继续</span></p>
-            </div>
-            <div class="log-out" @click="ouLogin">安全退出</div>
           </div>
         </div>
       </div>
@@ -52,6 +52,7 @@
 <script>
 // import { getToken } from '@/libs/utils'
 import { indexMessage } from '@/api/message'
+import { watchRecords } from '@/api/personal'
 import { mapMutations, mapActions, mapState } from 'vuex'
 export default {
   data () {
@@ -75,7 +76,8 @@ export default {
           sign: 'set'
         }
       ],
-      isNews: 0
+      isNews: 0,
+      watchRecordsList: {} // 观看记录
     }
   },
   computed: {
@@ -96,7 +98,7 @@ export default {
       if (!this.user_id) {
         this.getUserInfo()
       }
-      this.getIndexMessage() // 有没有新公告
+      this.getWatchRecords() // 观看记录
     }
     document.addEventListener('mouseover', (e) => {
       if (this.flagEntrance) {
@@ -113,10 +115,10 @@ export default {
     ]),
     ...mapMutations([
       'setChange',
-      'setLogin',
       'setIsNews'
     ]),
     enter () {
+      this.getWatchRecords() // 观看记录
       this.flagEntrance = true
     },
     onChange (navName) {
@@ -145,16 +147,8 @@ export default {
       // console.log(this.$route.name === 'personal' || this.$route.path === '/personal')
       // console.log(this.$route.path === '/personal')
       // this.$router.push({ path: 'personal', query: { type: sign } })
-      // this.setChange('')
+      this.setChange('')
       // this.centerType(sign)
-    },
-    // 继续观看
-    goonWatch () {
-      this.$router.push('/personal')
-      window.sessionStorage.setItem('type', 'course')
-      window.sessionStorage.setItem('selIdxCourse', 1)
-      // this.setChange('')
-      // this.centerType('course', 1)
     },
     // 消息
     goNews () {
@@ -186,6 +180,31 @@ export default {
           this.setIsNews(res.data)
         }
       })
+    },
+    // 播放记录
+    getWatchRecords () {
+      watchRecords({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.watchRecordsList = res.data[0].list[0]
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 继续观看
+    goonWatch () {
+      let obj = {
+        package_id: this.watchRecordsList.package_id,
+        course_id: this.watchRecordsList.video.course_id,
+        section_id: this.watchRecordsList.video.section_id,
+        video_id: this.watchRecordsList.video.video_id,
+        userstatus: 1 // 是否购买
+      }
+      this.$router.push({ path: '/class-video', query: obj })
+      window.sessionStorage.setItem('playtime', this.watchRecordsList.video.watch_time) // 获取当前播放时间
     }
   }
 }
@@ -344,6 +363,7 @@ export default {
   }
   .mc-watch{
     padding: 0 20px;
+    color: $col666;
     p{
       display: flex;
       justify-content: space-between;
@@ -351,6 +371,13 @@ export default {
       &.mcw-section{
         margin-top: 3px;
         padding-left: 34px;
+        .mcws-name{
+          flex: 1;
+          height: 20px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
       }
       .goon{
         color: $blueColor;

@@ -35,7 +35,7 @@ import { mapState } from 'vuex'
 export default {
   props: {
     package_id: {
-      type: String
+      type: Number
     },
     userstatus: {
       type: Number
@@ -106,7 +106,6 @@ export default {
           course_id: item.course_id,
           section_id: val.section_id,
           video_id: v.video_id,
-          is_zhengke: item.is_zhengke, // 1正课 2非正课
           userstatus: this.userstatus // 1购买 2未购买
         }
       })

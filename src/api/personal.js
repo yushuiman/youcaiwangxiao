@@ -243,3 +243,17 @@ export const learnClock = (data) => { // 签到打卡
     method: 'post'
   })
 }
+export const coupons = (data) => { // 优惠券
+  return axios.request({
+    url: '/web/Personal/coupons',
+    data,
+    method: 'post'
+  })
+}
+export const delcoupon = (data) => { // 删除过期优惠券
+  return axios.request({
+    url: '/web/Personal/delcoupon',
+    data,
+    method: 'post'
+  })
+}

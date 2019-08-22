@@ -144,7 +144,7 @@ export default {
           query: {
             paper_id: item.id, // 试卷id(阶段，论述才有)
             plate_id: item.plate_id, // 板块
-            course_id: item.course_id, // 板块
+            course_id: item.course_id,
             type: 2 // 所有解析
           }
         })

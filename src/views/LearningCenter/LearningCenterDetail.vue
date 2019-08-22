@@ -34,7 +34,13 @@
               :stroke-width="8"
               :percent="currenLearnInfo.percent"
               stroke-color="#FC7873">
-              <div class="circle-box">{{currenLearnInfo.schedule}}天<span>出勤</span></div>
+              <div class="circle-box">
+                {{currenLearnInfo.schedule}}天
+                <span>出勤</span>
+                <div class="head-bor">
+                  <img :src="user.head" alt="" class="canvas-head">
+                </div>
+              </div>
             </i-circle>
           </div>
           <div class="cur-learning">
@@ -86,7 +92,7 @@
                       <div class="tips-item" v-if="v.beforeDate == 1">今天课程已结束哦～</div>
                       <div class="tips-item" v-if="v.afterDate == 1 && v.is_rest != 2">还没有开课哦～</div>
                       <div class="tips-item" v-if="v.currDate == 1 && v.is_rest != 2">继续学习吧～</div>
-                      <div class="tips-item" v-if="v.is_rest == 2">今天是休息日哦～</div>
+                      <div class="tips-item" v-if="v.is_rest == 2">今天休息啦～</div>
                     </li>
                   </ul>
               </Submenu>
@@ -269,7 +275,10 @@
             </div>
           </li>
         </ul>
-        <div v-else>休息日</div>
+        <div class="reset-day" v-else>
+          <img src="../../assets/images/learncenter/days-rest-icon.png" alt="">
+          <p>今天休息啦～</p>
+        </div>
       </div>
     </Drawer>
   </div>
@@ -318,6 +327,7 @@ export default {
       currenNoFinishPlan: {}, // 当前未完成计划列表
       currMonth: 0, // 当前月
       currDay: 0, // 当前天
+      systemTime: '', // 系统时间，用来取当天时间
       learnVideoList: [], // 学习视频
       isDrawer: false, // 学习视频抽屉
       drawerTit: '' // 学习视频抽屉title
@@ -374,8 +384,9 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          let { addlearn, state, user, plan, learnList } = res.data
+          let { addlearn, time, state, user, plan, learnList } = res.data
           this.addlearn = addlearn
+          this.systemTime = time
           this.user = user
           this.learnList = learnList
           if (state === 1) { // state==1有未读2已读
@@ -470,8 +481,34 @@ export default {
         }
       })
     },
+    // 开始学习
     goLearnVideo () {
-      alert('开始学习')
+      getVideo({
+        user_id: this.user_id,
+        course_id: this.currenLearnInfo.course_id,
+        plan_id: this.currenLearnInfo.plan_id,
+        types: this.currenLearnInfo.is_exper,
+        days: this.currenLearnInfo.join_days,
+        sameday: 1 // 是今天1不是2
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.isDrawer = true
+          if (res.data && res.data.video) {
+            this.drawerTit = this.systemTime + ' 课程进行中'
+            this.learnVideoList = res.data.video
+            this.learnVideoList.forEach(val => {
+              val.beforeDate = 2
+              val.afterDate = 2
+              val.currDate = 1
+            })
+          } else {
+            this.drawerTit = this.systemTime + ' 休息日'
+          }
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     },
     // 首页切换课程学习计划
     selCourseList () {
@@ -560,6 +597,7 @@ export default {
     },
     // 学习视频
     getLearnVideo (v) {
+      this.learnVideoList = []
       if (v.beforeDate === 1) {
         this.drawerTit = v.date + ' 课程已结束'
       }
@@ -571,6 +609,7 @@ export default {
       }
       if (v.is_rest === 2) {
         this.drawerTit = v.date + ' 休息日'
+        this.isDrawer = true
         return
       }
       getVideo({
@@ -578,7 +617,7 @@ export default {
         course_id: this.currenLearnInfo.course_id,
         plan_id: this.currenLearnInfo.plan_id,
         types: this.currenLearnInfo.is_exper,
-        days: this.currenLearnInfo.join_days,
+        days: v.days,
         sameday: v.sameday
       }).then(data => {
         const res = data.data
@@ -606,7 +645,6 @@ export default {
           course_id: val.course_id,
           section_id: val.section_id,
           video_id: val.video_id,
-          is_zhengke: val.is_zhengke, // 1正课 2非正课
           userstatus: val.userstatus || 1, // 1购买 2未购买
           plan_id: this.currenLearnInfo.plan_id, // 计划id
           days: this.currenLearnInfo.join_days, // 第几天
@@ -1001,6 +1039,21 @@ export default {
       line-height: 20px;
       color: $col666;
     }
+    .head-bor{
+      position: absolute;
+      right: 0;
+      top: -10px;
+      width: 24px;
+      height: 24px;
+      border: 3px solid #FC8974;
+      border-radius: 50%;
+      font-size: 0;
+    }
+    .canvas-head{
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
   }
   .learning-ul{
     li{
@@ -1295,6 +1348,14 @@ export default {
       height: 100px;
       line-height: 100px;
       background: #f00;
+    }
+  }
+  .reset-day{
+    text-align: center;
+    padding: 30px 0;
+    font-size: 16px;
+    img{
+      width: 62px;
     }
   }
 </style>

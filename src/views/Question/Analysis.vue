@@ -299,16 +299,17 @@ export default {
     goResult () {
       // 如果是错题中心，查看报告
       if (this.diffTxt === 0 || this.diffTxt === 1 || this.diffTxt === 2) {
+        window.sessionStorage.setItem('type', 'questions')
+        window.sessionStorage.setItem('selIdxQuestion', this.diffTxt)
         this.$router.push({ path: '/personal' })
-        // window.sessionStorage.setItem('type', 'questions')
-        // window.sessionStorage.setItem('course_id', this.$route.query.course_id)
-        // window.sessionStorage.setItem('selIdxQuestion', this.diffRes)
         return
       }
+      // 如果是学习中心
       if (this.diffTxt === 3) {
         this.$router.push({ path: '/learning-center-detail' })
         return
       }
+      // 正常回到查看报告页
       this.$router.push({ path: '/result-report',
         query: {
           paper_id: this.$route.query.paper_id,
@@ -317,6 +318,7 @@ export default {
         }
       })
     },
+    // 论述题
     goPersonal () {
       this.$router.push({ path: '/personal',
         query: {
