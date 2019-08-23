@@ -8,6 +8,7 @@ export default {
     return {}
   },
   mounted () {
+    window.open('http://www.youcaiwx.com/html/Article/Index/index.html', '_blank')
   },
   methods: {
   }

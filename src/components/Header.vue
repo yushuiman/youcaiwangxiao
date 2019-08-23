@@ -98,7 +98,7 @@ export default {
       if (!this.user_id) {
         this.getUserInfo()
       }
-      this.getWatchRecords() // 观看记录
+      this.getIndexMessage() // 系统消息
     }
     document.addEventListener('mouseover', (e) => {
       if (this.flagEntrance) {
@@ -123,9 +123,6 @@ export default {
     },
     onChange (navName) {
       this.setChange(navName)
-      // if (navName === 'app') {
-      //   window.location.href = 'http://www.youcaiwx.com/html/MAPP/Index/index.html'
-      // }
     },
     ouLogin () {
       this.$router.push('/')

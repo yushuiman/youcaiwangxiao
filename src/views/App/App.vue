@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" style="display: flex;background:#f00;">
+  <div class="wrapper">
     这是app页面
   </div>
 
@@ -13,6 +13,7 @@ export default {
     }
   },
   mounted () {
+    window.open('http://www.youcaiwx.com/html/MAPP/Index/index.html', '_blank')
   },
   methods: {}
 

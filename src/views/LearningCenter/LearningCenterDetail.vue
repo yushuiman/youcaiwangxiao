@@ -830,7 +830,7 @@ export default {
     display: inline-block;
     color: #ffffff;
     font-style: normal;
-    @include bg-linear-gradient($btnGredientOrange, left);
+    @include bg-linear-gradient($btnGredientOrange, to left);
     border-radius: 4px;
     &:after{
       position: absolute;
@@ -984,12 +984,12 @@ export default {
     line-height: 32px;
     font-size: 18px;
     color: $colfff;
-    @include bg-linear-gradient($btnGredientOrange, left);
+    @include bg-linear-gradient($btnGredientOrange, to left);
     border-radius: 20px;
     text-align: center;
     display: inline-block;
     &.gray{
-      @include bg-linear-gradient($btnGredientGray, left);
+      @include bg-linear-gradient($btnGredientGray, to left);
     }
   }
   .ewm-box{
@@ -1098,7 +1098,7 @@ export default {
         font-size: 16px;
         color: #ffffff;
         &.gray{
-          @include bg-linear-gradient($btnGredientGray, left);
+          @include bg-linear-gradient($btnGredientGray, to left);
           border: 0;
         }
       }
@@ -1195,21 +1195,21 @@ export default {
     }
     .days-item-blue &{
       width: 160px;
-      @include bg-linear-gradient($btnGredientBlue, left);
+      @include bg-linear-gradient($btnGredientBlue, to left);
       &:before{
         border-bottom: 8px solid #39BBFD;
       }
     }
     .days-item-orange &{
       width: 110px;
-      @include bg-linear-gradient($btnGredientOrange, left);
+      @include bg-linear-gradient($btnGredientOrange, to left);
       &:before{
         border-bottom: 8px solid #FBAC78;
       }
     }
     .days-item-gray &,.days-item-rest &{
       width: 127px;
-      @include bg-linear-gradient($btnGredientGray, left);
+      @include bg-linear-gradient($btnGredientGray, to left);
       &:before{
         border-bottom: 8px solid #C7C7C7;
       }
