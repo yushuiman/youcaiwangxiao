@@ -13,8 +13,8 @@
           </div>
           <div class="go-on-some">
             <a class="zhibo"><Icon type="ios-play" />最近直播</a>
-            <a>继续学习</a>
-            <a>继续做题</a>
+            <a @click="goStudy">继续学习</a>
+            <a @click="goDotopic">继续做题</a>
           </div>
         </div>
       </div>
@@ -136,6 +136,7 @@ export default {
   data () {
     return {
       personalInfo: {}, // 个人信息
+      learnClockInfo: {}, // 签到
       txtArr: ['网校公告', '系统消息'],
       // selIdxNews: window.sessionStorage.getItem('selIdxNews') || 0,
       selIdxNews: 0,
@@ -152,8 +153,7 @@ export default {
         6: '课程'
       },
       newsDetail: {},
-      newsFlag: true,
-      learnClockInfo: {}
+      newsFlag: true
     }
   },
   computed: {
@@ -194,6 +194,14 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // 继续学习
+    goStudy () {
+      this.$router.push('/class')
+    },
+    // 继续做题
+    goDotopic () {
+      this.$router.push('/question')
     },
     tabClk (v, index) {
       if (!this.user_id) {
@@ -326,7 +334,7 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  @import "../../assets/scss/personal.css";
+  // @import "../../assets/scss/personal.css";
   .user-top-wrap{
     font-size: 18px;
     height: 206px;
@@ -405,45 +413,35 @@ export default {
       }
     }
   }
-  .user-main{
-    @include flexJustify;
-    padding-top: 38px;
-    .userm-left{
-      width: 142px;
+  /* tab */
+  .tab-list {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 20px;
       font-size: 18px;
-    }
-    .userm-right{
-      width: 971px;
-    }
   }
-  .userm-list{
-    padding-top: 15px;
-  }
-  .userm-item{
-    margin: 15px 0;
-    height: 46px;
-    line-height: 46px;
-    text-align: center;
-    color: $col666;
-    cursor: pointer;
-    &.curren, &:hover{
-      color: $colfff;
-      background: $blueColor;
-      border-radius: 8px 0px 0px 8px;
+  .tab-list .tab-item {
+      margin: 0 30px;
       position: relative;
-      &:before{
-        position: absolute;
-        content: "";
-        right: -30px;
-        top: 0px;
-        width: 0;
-        height: 0;
-        border: 23px solid transparent;
-        border-right-width: 15px;
-        border-left-color: $blueColor;
-        border-left-width: 15px;
-      }
-    }
+      cursor: pointer;
+  }
+  .tab-list .tab-item:before {
+      position: absolute;
+      content: "";
+      left: 50%;
+      width: 36px;
+      height: 2px;
+      background: none;
+      margin-top: 22px;
+      margin-left: -18px;
+  }
+
+  .tab-list .tab-item.active {
+      color: #0267FF;
+  }
+  .tab-list .tab-item.active:before {
+      background: #0267FF;
   }
   // 消息
   .u-news-wrap{

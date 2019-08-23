@@ -144,7 +144,6 @@ export default {
     right: 0;
     z-index: 13;
     background: rgba(0,0,0,.5);
-    // display: none;
   }
   .slider-list {
     li{
@@ -153,6 +152,7 @@ export default {
       padding: 12.5px 0;
       color: $colfff;
       &:hover{
+        cursor: pointer;
         background: $blueColor;
       }
       .r-txt {

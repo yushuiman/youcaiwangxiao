@@ -13,8 +13,8 @@
             </div>
             <div class="go-on-some">
               <a class="zhibo"><Icon type="ios-play" />最近直播</a>
-              <a>继续学习</a>
-              <a>继续做题</a>
+              <a @click="goStudy">继续学习</a>
+              <a @click="goDotopic">继续做题</a>
             </div>
           </div>
         </div>
@@ -113,7 +113,7 @@ export default {
         return
       }
       this.clkTit = 'set'
-      window.sessionStorage.setItem('clkTit', 'set')
+      window.sessionStorage.setItem('type', 'set')
     },
     // 用户信息
     getPersonalInfo () {
@@ -153,6 +153,14 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // 继续学习
+    goStudy () {
+      this.$router.push('/class')
+    },
+    // 继续做题
+    goDotopic () {
+      this.$router.push('/question')
     }
   },
   beforeRouteLeave (to, from, next) {
