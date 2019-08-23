@@ -1,15 +1,15 @@
 import axios from '@/libs/api.request'
 
-export const couAnswerList = (data) => {
+export const consult = (data) => { // 悬浮窗
   return axios.request({
-    url: '/web/Content/indexContent',
+    url: '/web/consult/consult',
     data,
     method: 'post'
   })
 }
-export const consult = (data) => { // 悬浮窗
+export const thickness = (data) => { // 活动弹窗
   return axios.request({
-    url: '/web/consult/consult',
+    url: '/web/Register/thickness',
     data,
     method: 'post'
   })

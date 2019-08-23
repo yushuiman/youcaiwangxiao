@@ -200,11 +200,12 @@ export default {
         package_id: this.watchRecordsList.package_id,
         course_id: this.watchRecordsList.video.course_id,
         section_id: this.watchRecordsList.video.section_id,
-        video_id: this.watchRecordsList.video.video_id,
-        userstatus: 1 // 是否购买
+        video_id: this.watchRecordsList.video.video_id
+        // userstatus: 1 // 是否购买 未购买是没有记录的 所以是1
       }
-      this.$router.push({ path: '/class-video', query: obj })
+      window.sessionStorage.setItem('userstatus', 1) // 是否购买
       window.sessionStorage.setItem('playtime', this.watchRecordsList.video.watch_time) // 获取当前播放时间
+      this.$router.push({ path: '/class-video', query: obj })
     }
   }
 }

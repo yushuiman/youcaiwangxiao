@@ -5,7 +5,7 @@
         <i class="r-icon"></i>
         <p class="r-txt">试听<br />课程</p>
         <div class="com-show r-try">
-          <div class="com-btn">免费领取</div>
+          <div class="com-btn" @click="freeGet">免费领取</div>
         </div>
       </li>
       <li class="service-item" v-if="consultInfo.status == 1">
@@ -47,6 +47,7 @@
 
 <script>
 import { consult } from '@/api/index'
+import { mapState } from 'vuex'
 export default {
   name: 'RightSlider',
   data () {
@@ -56,6 +57,12 @@ export default {
       scrollTop: 0,
       btnFlag: false // 默认隐藏回到顶部
     }
+  },
+  computed: {
+    ...mapState({
+      token: state => state.user.token,
+      user_id: state => state.user.user_id
+    })
   },
   mounted () {
     // window.addEventListener('scroll', this.scrollToTop)
@@ -110,6 +117,19 @@ export default {
         let cmaHref = 'https://shang.qq.com/wpa/qunwpa?idkey=e33037fc4880b2d99424c556bc769a8f15c7793538ff38e32a581a7dc55debd2'
         window.open(cmaHref, '_blank')
       }
+    },
+    // 免费领取
+    freeGet () {
+      if (!this.token) {
+        this.$router.push({ path: '/login',
+          query: {
+            type: 'login',
+            is_forget: 'log-reg'
+          }
+        })
+        return
+      }
+      this.$router.push('/class')
     }
   }
 }

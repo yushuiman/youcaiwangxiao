@@ -1,7 +1,8 @@
 <template>
   <div class="video-wrap">
     <div class="video-header">
-      <router-link :to="{ path: '/class-detail', query:{package_id: this.$route.query.package_id}}">></router-link>
+      <router-link v-if="playCourseInfo.status == 1" :to="{ path: '/class-detail', query:{package_id: this.$route.query.package_id}}">></router-link>
+      <router-link v-if="playCourseInfo.status == 2" :to="{ path: '/learning-center-detail', query:{package_id: this.$route.query.package_id}}">></router-link>
       <span>{{videoCredentials.Title}}</span>
       <div class="login-r fr">
         <img src="../../assets/images/global/email-icon.png" alt="email" class="email-icon" @click="goNewsPage">
@@ -36,7 +37,7 @@
       </div>
       <div class="video-info-l">
         <ul class="vinfo-ul">
-          <li class="vinfo-item" @click="showModel('课程<br />切换')">
+          <li class="vinfo-item" @click="showModel('课程<br />切换')" v-if="playCourseInfo.status == 1">
             <i class="vio-icon vio-icon-01"></i>
             <p class="txt">课程<br />切换</p>
           </li>
@@ -66,8 +67,9 @@
         <div class="drag"></div>
       </div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
-      <!-- <div class="video-info-r" id="right" style="width: 382px;"> -->
-        <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
+        <course-list v-if="flagKc && playCourseInfo.status == 1" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
+        <!-- <div v-if="playCourseInfo.status == 1">
+        </div> -->
         <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel"></answer>
         <div class="jiangyi" v-if="flagJy">
           <div class="close-box" @click="closeModel">
@@ -135,8 +137,9 @@ export default {
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
         is_zhengke: 0,
-        userstatus: this.$route.query.userstatus,
-        type: this.$route.query.type
+        userstatus: window.sessionStorage.getItem('userstatus') || 2, // 1购买2未购买
+        type: this.$route.query.type,
+        status: this.$route.query.status || 1
       },
       packageList: [],
       secvCatalogArr: [],
@@ -163,6 +166,10 @@ export default {
     })
   },
   mounted () {
+    if (parseInt(this.playCourseInfo.status) === 2) {
+      this.wImportant = 0
+      this.flagKc = false
+    }
     document.addEventListener('mouseover', (e) => {
       if (this.flagEntrance) {
         if (!this.$el.contains(e.target)) {
@@ -489,10 +496,11 @@ export default {
         package_id: this.watchRecordsList.package_id,
         course_id: this.watchRecordsList.video.course_id,
         section_id: this.watchRecordsList.video.section_id,
-        video_id: this.watchRecordsList.video.video_id,
-        userstatus: 1 // 是否购买
+        video_id: this.watchRecordsList.video.video_id
+        // userstatus: 1 // 是否购买 未购买是没有记录的 所以是1
       }
       this.$router.push({ path: '/class-video', query: obj })
+      window.sessionStorage.setItem('userstatus', 1) // 是否购买
       window.sessionStorage.setItem('playtime', this.watchRecordsList.video.watch_time) // 获取当前播放时间
     },
     ouLogin () {
@@ -697,7 +705,7 @@ export default {
     right: 0;
     bottom: 0;
     width: 100%;
-    overflow-y: scroll;
+    overflow: auto;
     background: $colfff;
   }
   .close-box{

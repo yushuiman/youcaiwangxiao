@@ -100,13 +100,14 @@ export default {
         this.$router.push('login')
         return
       }
+      window.sessionStorage.setItem('userstatus', this.userstatus) // 是否购买
       this.$router.push({ path: '/class-video',
         query: {
           package_id: this.package_id,
           course_id: item.course_id,
           section_id: val.section_id,
-          video_id: v.video_id,
-          userstatus: this.userstatus // 1购买 2未购买
+          video_id: v.video_id
+          // userstatus: this.userstatus // 1购买 2未购买
         }
       })
     }

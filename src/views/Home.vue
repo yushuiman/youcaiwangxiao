@@ -74,18 +74,64 @@
         <img class="hzhb-img" src="@/assets/images/index/hzhb.png" alt="" >
       </div>
     </div>
+    <!-- 活动 -->
+    <div v-if="status == 1">
+      <Modal v-model="visible"
+        :width="495"
+        :closable=false
+        footer-hide
+        class="index-active-modal">
+        <img :src="image_url" alt="" @click="freeGet">
+      </Modal>
+    </div>
   </div>
 </template>
 
 <script>
-import { getToken } from '@/libs/utils'
+import { thickness } from '@/api/index'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      token: getToken()
+      status: 0,
+      image_url: '',
+      visible: true
     }
   },
+  computed: {
+    ...mapState({
+      token: state => state.user.token,
+      user_id: state => state.user.user_id
+    })
+  },
   mounted () {
+    this.getThickness()
+  },
+  methods: {
+    getThickness () {
+      thickness().then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.status = res.data.status
+          this.image_url = res.data.image_url
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 免费领取
+    freeGet () {
+      if (!this.token) {
+        this.$router.push({ path: '/login',
+          query: {
+            type: 'login',
+            is_forget: 'log-reg'
+          }
+        })
+        return
+      }
+      this.$router.push('/class')
+    }
   }
 }
 </script>

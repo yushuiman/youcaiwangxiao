@@ -639,13 +639,14 @@ export default {
         val.userstatus = 2
       }
       window.sessionStorage.setItem('playtime', val.watch_time) // 上次看的时间
+      window.sessionStorage.setItem('userstatus', val.userstatus || 1) // 是否购买
       this.$router.push({ path: '/class-video',
         query: {
           package_id: val.package_id,
           course_id: val.course_id,
           section_id: val.section_id,
           video_id: val.video_id,
-          userstatus: val.userstatus || 1, // 1购买 2未购买
+          // userstatus: val.userstatus || 1, // 1购买 2未购买
           plan_id: this.currenLearnInfo.plan_id, // 计划id
           days: this.currenLearnInfo.join_days, // 第几天
           status: 2 // 播放类型1课程视频播放2学习中心播放视频类型socket

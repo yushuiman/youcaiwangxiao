@@ -138,8 +138,6 @@ export default {
       sessionPlayInfo: {
         package_id: 0,
         course_id: 0,
-        is_zhengke: 0,
-        userstatus: 1, // 购买1 未购买2
         video_id: 0
       }
     }
@@ -238,7 +236,8 @@ export default {
       this.sessionPlayInfo.package_id = val.package_id
       this.sessionPlayInfo.course_id = val.course_id
       this.sessionPlayInfo.section_id = val.section_id
-      this.sessionPlayInfo.userstatus = val.is_purchase
+      // this.sessionPlayInfo.userstatus = val.is_purchase
+      window.sessionStorage.setItem('userstatus', val.is_purchase) // 是否购买
       this.visible = true
     },
     // 获取收藏课程章节
@@ -264,12 +263,13 @@ export default {
           package_id: val.package_id,
           course_id: val.video.course_id,
           section_id: val.video.section_id,
-          video_id: val.video.video_id,
-          userstatus: 1 // 购买1未购买2
+          video_id: val.video.video_id
+          // userstatus: 1 // 购买1未购买2
         }
         this.$router.push({ path: '/class-video', query: obj })
         // window.sessionStorage.setItem('playVideoInfo', JSON.stringify(val)) //
         window.sessionStorage.setItem('playtime', val.video.watch_time) // 获取播放时间
+        window.sessionStorage.setItem('userstatus', 1) // 是否购买
         return
       }
       // 否则去课程列表页面

@@ -1,3 +1,8 @@
+/* 首页活动 */
+.index-active-modal .ivu-modal-content {
+    background: transparent;
+    box-shadow: 0 0 0 transparent;
+}
 .dopic-modal .ivu-modal-content {
     /* 暂停保存图片radius */
     border-radius: 0px; 

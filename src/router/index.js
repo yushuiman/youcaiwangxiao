@@ -44,7 +44,7 @@ const router = new Router({
       meta: {
         showHeader: false,
         showFooter: false,
-        showRightSlider: true
+        showRightSlider: false
       }
     },
     {

@@ -46,7 +46,7 @@
         <p class="cdi-price"><em>¥</em>{{isntroduction.price}}</p>
         <div class="cdi-buy-consult">
           <button type="button" name="button" class="buy-btn" v-if="isntroduction.userstatus == 1" @click="goSeeVideo">立即观看</button>
-          <button type="button" name="button" class="buy-btn" v-if="isntroduction.userstatus == 2">立即购买</button>
+          <button type="button" name="button" class="buy-btn" v-if="isntroduction.userstatus == 2" @click="goPay">立即购买</button>
           <button type="button" name="button" class="consult-btn" @click="consultLink">在线咨询</button>
         </div>
       </div>
@@ -180,12 +180,17 @@ export default {
       window.open('https://awt.zoosnet.net/lr/chatpre.aspx?id=AWT95637580', '_blank')
     },
     goSeeVideo () {
+      window.sessionStorage.setItem('userstatus', this.isntroduction.userstatus) // 是否购买
       this.$router.push({ path: '/class-video',
         query: {
-          package_id: this.package_id,
-          userstatus: this.isntroduction.userstatus // 1购买 2未购买
+          package_id: this.package_id
+          // userstatus: this.isntroduction.userstatus // 1购买 2未购买
         }
       })
+    },
+    // 支付
+    goPay () {
+      alert('去支付，待开发')
     }
   }
 }
