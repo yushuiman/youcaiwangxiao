@@ -105,7 +105,9 @@ export default {
     })
   },
   mounted () {
-    this.getThickness()
+    if (!this.token) {
+      this.getThickness()
+    }
   },
   methods: {
     jumpWhere (type) {

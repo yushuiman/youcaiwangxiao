@@ -1,6 +1,6 @@
 <template>
   <div class="do-potic-mian">
-    <div class="do-potic-wrap w-wrap clearfix" v-if="!noData">
+    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length">
       <div class="dptic-wrap-l fl">
         <div ref="fixedTit">
           <Row class="dptic-title">
@@ -40,7 +40,7 @@
         </div>
       </div>
     </div>
-    <div class="no-data" v-if="noData">
+    <div class="no-data" v-else>
       暂无数据
     </div>
     <Modal
@@ -86,8 +86,7 @@ export default {
       },
       visible: false,
       typeShow: false, // 答疑dy，纠错jc
-      dataStorage: JSON.parse(window.sessionStorage.getItem('subTopics')),
-      noData: false
+      dataStorage: JSON.parse(window.sessionStorage.getItem('subTopics'))
     }
   },
   components: {
@@ -147,8 +146,6 @@ export default {
           this.topics = res.data.topics
           this.title = res.data.title
           this.answerSts(this.topics)
-        } else if (res.code === 405) {
-          this.noData = true
         } else {
           this.$Message.error(res.msg)
         }
@@ -240,8 +237,6 @@ export default {
           this.topics = res.data.topics
           this.title = res.data.title
           this.answerSts(this.topics)
-        } else if (res.code === 405) {
-          this.noData = true
         } else {
           this.$Message.error(res.msg)
         }

@@ -20,8 +20,7 @@
             <div class="ewm-box">
               <i class="ewm-icon"></i>
             </div>
-            <span class="learn-status" v-if="currenLearnInfo.join_days < currenLearnInfo.plan_days">学习中</span>
-            <span class="learn-status gray" v-if="currenLearnInfo.join_days == currenLearnInfo.plan_days">已结束</span>
+            <span class="learn-status" :class="{'gray': sameday == 2}">{{ sameday == 1 ? '学习中' : '已结束' }}</span>
             <span class="surplus-day"><i></i>离考试还有{{currenLearnInfo.number}}天</span>
           </div>
           <div class="outplan" @click="outLearnPlan"><i></i>退出计划</div>
@@ -55,12 +54,11 @@
               </li>
               <li class="learnvideo">
                 <span>当前学习任务</span>
-                <p v-if="currenLearnInfo.newVideo.video_name">{{currenLearnInfo.newVideo.video_name}}</p>
+                <p v-if="currenLearnInfo.newVideo && currenLearnInfo.newVideo.video_name">{{currenLearnInfo.newVideo.video_name}}</p>
                 <p v-else>无</p>
               </li>
               <li class="learnvideo">
-                <button class="btn-com" v-if="currenLearnInfo.newVideo.video_name" @click="goLearnVideo">开始学习</button>
-                <button class="btn-com gray" v-if="!currenLearnInfo.newVideo || (currenLearnInfo.join_days == currenLearnInfo.plan_days)">开始学习</button>
+                <button class="btn-com" :class="{'gray': sameday == 2}" @click="goLearnVideo">开始学习</button>
               </li>
             </ul>
           </div>
@@ -285,7 +283,7 @@
 </template>
 
 <script>
-import { learnIndex, courseList, testTime, addStudy, everyday, outPlan, hangAir, getVideo } from '@/api/learncenter'
+import { learnIndex, courseList, testTime, addStudy, everyday, outPlan, hangAir, getVideo, studyStatus } from '@/api/learncenter'
 import learnNotice from '../../components/learning/learnNotice'
 import learnStudent from '../../components/learning/learnStudent'
 import studentDynamic from '../../components/learning/studentDynamic'
@@ -305,6 +303,7 @@ export default {
         1: '添加学习计划',
         2: ''
       },
+      sameday: 0, // 是不是今天 判断学习中，学习结束状态
       course_id: 0, // select默认选择
       package_id: 0, // select默认选择
       selCourseName: '', // select默认选择name
@@ -401,8 +400,25 @@ export default {
             this.currenLearnInfo = this.learnList[0] // 初始化学习计划详情
             this.currenLearnInfo.percent = (this.currenLearnInfo.schedule / this.currenLearnInfo.plan_days) * 100 // 初始化学习计划圆环进度
             this.monthList = learnList[0].month // 获取当前课程对应的计划日期
+            this.getStudyStatus() //当前学习计划状态
           }
         } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 当前课程学习状态
+    getStudyStatus () {
+      studyStatus({
+        user_id: this.user_id,
+        plan_id: this.currenLearnInfo.plan_id,
+        is_exper: this.currenLearnInfo.is_exper // 1为0元体验 2为购买课程
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.sameday = res.data.sameday
+        } else {
+          this.visible = false
           this.$Message.error(res.msg)
         }
       })
@@ -426,7 +442,7 @@ export default {
       testTime({
         user_id: this.user_id,
         course_id: this.planChooseInfo.course_id,
-        types: 2 // 1:0元体验 2:购买课程
+        types: this.planChooseInfo.is_exper || 2 // 1:0元体验 2:购买课程
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
@@ -483,6 +499,9 @@ export default {
     },
     // 开始学习
     goLearnVideo () {
+      if (this.sameday == 2) {
+        return
+      }
       getVideo({
         user_id: this.user_id,
         course_id: this.currenLearnInfo.course_id,

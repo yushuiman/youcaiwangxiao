@@ -7,11 +7,11 @@
       <div class="login-r fr">
         <img src="../../assets/images/global/email-icon.png" alt="email" class="email-icon" @click="goNewsPage">
         <i v-if="is_news == 1" class="new-dot"></i>
-        <img :src="avatorImgPath" alt="头像" class="head-logo" @mouseenter="enter">
+        <img :src="avatorImgPath" alt="头像" class="head-logo" @mouseenter="enter" @click="goPersonalPage('course')">
         <!-- 个人中心入口 -->
         <div v-show="flagEntrance" class="my-center-info">
           <ul class="mc-list">
-            <li class="mc-item" :class="['mc-item0' + (index+1)]" v-for="(v, index) in personalArr" :key="index" @click="goPersonalPage(v, index)">
+            <li class="mc-item" :class="['mc-item0' + (index+1)]" v-for="(v, index) in personalArr" :key="index" @click="goPersonalPage(v.sign)">
               <i class="center-icon"></i>{{v.type}}
             </li>
           </ul>
@@ -76,7 +76,7 @@
             <i class="close-icon"></i>
           </div>
           <h1 class="vc-title">讲义</h1>
-          <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%"></iframe>
+          <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%" style="position:absolute;bottom:0;height: 88%;"></iframe>
         </div>
       </div>
     </div>
@@ -216,8 +216,6 @@ export default {
         resize.setCapture && resize.setCapture()
         return false
       }
-      window.onload = function () {
-      }
     },
     // 播放器
     ready (instance) {
@@ -247,7 +245,7 @@ export default {
           initWS(JSON.stringify(message))
         }
         window.sessionStorage.setItem('playtime', this.playtime) // 防止刷新页面，也要记录当前播放时间
-      }, 10000)
+      }, 30000)
       // 未购买试看3分钟
       if (parseInt(this.playCourseInfo.userstatus) === 2) {
         this.tryWatchTimer = setInterval(() => {
@@ -460,11 +458,8 @@ export default {
       })
     },
     // 个人中心
-    goPersonalPage ({ sign }) {
+    goPersonalPage (sign) {
       window.sessionStorage.setItem('type', sign)
-      if (this.$route.name === 'personal') {
-        window.location.reload()
-      }
       this.flagEntrance = false
       this.$router.push('/personal')
       // console.log(this.$route.name === 'personal' || this.$route.path === '/personal')
@@ -730,13 +725,16 @@ export default {
     top: 0;
     width: 100%;
     height: 100%;
-    background: #000;
+    background: rgba(0, 0, 0, .8);
     color: #ffffff;
     text-align: center;
     z-index: 333333;
     div{
-      font-size: 16px;
+      font-size: 18px;
       line-height: 30px;
+      &:first-child{
+        margin-top: 15%;
+      }
     }
   }
   .drag {

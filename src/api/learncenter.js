@@ -112,3 +112,10 @@ export const userDynamic = (data) => { // 学习动态
     method: 'post'
   })
 }
+export const studyStatus = (data) => { // 学习状态中 学习中 已经结束
+  return axios.request({
+    url: '/web/Plan/studyStatus',
+    data,
+    method: 'post'
+  })
+}

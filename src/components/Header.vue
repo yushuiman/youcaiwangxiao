@@ -26,12 +26,12 @@
             <div class="login-r fr" v-if="this.token">
               <img src="../assets/images/global/email-icon.png" alt="email" class="email-icon" @click="goNews">
               <i v-if="isNews == 1" class="new-dot"></i>
-              <img :src="avatorImgPath" alt="头像" class="head-logo">
-              <span @mouseenter="enter">{{userName}}</span>
+              <img :src="avatorImgPath" alt="头像" class="head-logo" @mouseenter="enter" @click="goPersonalPage('course')">
+              <span @mouseenter="enter" @click="goPersonalPage('course')">{{userName}}</span>
               <!-- 个人中心入口 -->
               <div v-show="flagEntrance" class="my-center-info">
                 <ul class="mc-list">
-                  <li class="mc-item" :class="['mc-item0' + (index+1)]" v-for="(v, index) in personalArr" :key="index" @click="goPersonalPage(v, index)">
+                  <li class="mc-item" :class="['mc-item0' + (index+1)]" v-for="(v, index) in personalArr" :key="index" @click="goPersonalPage(v.sign)">
                     <i class="center-icon"></i>{{v.type}}
                   </li>
                 </ul>
@@ -134,7 +134,7 @@ export default {
       this.setChange('shouye')
     },
     // 个人中心
-    goPersonalPage ({ sign }) {
+    goPersonalPage (sign) {
       window.sessionStorage.setItem('type', sign)
       if (this.$route.name === 'personal') {
         window.location.reload()
@@ -175,6 +175,8 @@ export default {
         if (res.code === 200) {
           this.isNews = res.data
           this.setIsNews(res.data)
+        } else {
+          this.$Message.error(res.msg)
         }
       })
     },

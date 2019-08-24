@@ -247,8 +247,9 @@ export default {
   mounted () {
     if (this.token) {
       this.projectList() // 已登录，获取课程列表
+      return
     }
-    this.getStudentsRanking()
+    this.getStudentsRanking() // 学员排名
   },
   methods: {
     ...mapMutations([
@@ -256,13 +257,20 @@ export default {
     ]),
     // 展示课程
     projectList () {
-      getProject({ user_id: this.user_id }).then(data => {
+      getProject({
+        user_id: this.user_id
+      }).then(data => {
         const res = data.data
         if (res.code === 200) {
+          // 非0元体验
           if (res.data && res.data.length) {
             this.projectArr = res.data
             this.getQuestionIndex(this.course_id || res.data[0].id, this.questionIndexSel)
             this.experience = false
+          }
+          // 0元体验
+          if (this.experience) {
+            this.getStudentsRanking()
           }
         } else {
           this.$Message.error(res.msg)
@@ -318,6 +326,10 @@ export default {
         this.$router.push('login')
         return
       }
+      if (this.experience) {
+        this.$Message.error('请购买课程')
+        return
+      }
       this.$router.push({ path: '/capacity-assessment',
         query: {
           course_id: this.course_id || 0
@@ -340,6 +352,10 @@ export default {
     goPersonalPage (index) {
       if (!this.token) {
         this.$router.push('login')
+        return
+      }
+      if (this.experience) {
+        this.$Message.error('请购买课程')
         return
       }
       window.sessionStorage.setItem('type', 'questions')
