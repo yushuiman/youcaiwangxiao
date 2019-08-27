@@ -170,7 +170,7 @@ export default {
         return v.currenOption
       })
       this.$forceUpdate()
-      this.$emit('doPoticInfo', num.length)
+      this.$emit('doPoticInfo', num.length, (index + 1))
     },
     // 做题考试模式
     doPotic (item, val, index, key) {
@@ -184,7 +184,7 @@ export default {
         return v.currenOption
       })
       this.$forceUpdate()
-      this.$emit('doPoticInfo', num.length)
+      this.$emit('doPoticInfo', num.length, (index + 1))
     },
     // 论述题
     doPoticDiscuss (item) {
@@ -223,11 +223,6 @@ export default {
     // 答疑显示
     modalShow ({ ID }, type) {
       this.$emit('modalShow', true, ID, type)
-    },
-    // scroll
-    goAnchor (selector) {
-      var anchor = this.$el.querySelector(selector)
-      document.documentElement.scrollTop = anchor.offsetTop
     }
   }
 }
@@ -298,9 +293,9 @@ export default {
       justify-content: flex-start;
       .opi-abcd{
         span{
-          width: 30px;
-          height: 30px;
-          line-height: 30px;
+          width: 26px;
+          height: 26px;
+          line-height: 26px;
           text-align: center;
           display: inline-block;
           border-radius: 50%;

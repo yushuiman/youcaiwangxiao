@@ -73,7 +73,7 @@
         <div class="tab-main clearfix">
           <div class="month-answer-left fl">
             <div class="month-box" v-if="tabIdx == 0">
-              <Menu width="100%">
+              <Menu accordion width="100%">
                 <Submenu :name="index+1" v-for="(v, index) in monthList" :key="index">
                   <template slot="title">
                     <div class="month-title" @click="getEveryday(v)">
@@ -133,6 +133,7 @@
         <img class="lc-login-right" src="../../assets/images/learncenter/zkz-img.png" alt="">
       </div>
     </div>
+    <img v-if="addlearn == 2" class="lc-right-bottom-img" src="../../assets/images/learncenter/right-bottom-img.png" alt="">
     <!-- 制定学习计划 自定义modal样式 :styles=styles -->
     <Modal v-model="visible"
       :width="795"
@@ -329,7 +330,8 @@ export default {
       systemTime: '', // 系统时间，用来取当天时间
       learnVideoList: [], // 学习视频
       isDrawer: false, // 学习视频抽屉
-      drawerTit: '' // 学习视频抽屉title
+      drawerTit: '', // 学习视频抽屉title
+      youhuaInfo: []
     }
   },
   computed: {
@@ -400,7 +402,7 @@ export default {
             this.currenLearnInfo = this.learnList[0] // 初始化学习计划详情
             this.currenLearnInfo.percent = (this.currenLearnInfo.schedule / this.currenLearnInfo.plan_days) * 100 // 初始化学习计划圆环进度
             this.monthList = learnList[0].month // 获取当前课程对应的计划日期
-            this.getStudyStatus() //当前学习计划状态
+            this.getStudyStatus() // 当前学习计划状态
           }
         } else {
           this.$Message.error(res.msg)
@@ -463,6 +465,8 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.addLearnIdx = 2
+        } else if (res.code === 405) { // 您已参加过
+          this.addLearnIdx = 2
         } else {
           this.visible = false
           this.$Message.error(res.msg)
@@ -499,7 +503,8 @@ export default {
     },
     // 开始学习
     goLearnVideo () {
-      if (this.sameday == 2) {
+      if (this.sameday === 2) {
+        this.$Message.error('学习计划已结束')
         return
       }
       getVideo({
@@ -651,25 +656,27 @@ export default {
     },
     // 学习视频 看视频
     goVideoPage (val) {
+      window.sessionStorage.removeItem('is_exper')
       if (val.beforeDate === 1 || val.afterDate === 1) {
         return
       }
-      if (this.currenLearnInfo.is_exper === 1) { // 0元体验 未购买 去看视频
-        val.userstatus = 2
+      let obj = {
+        package_id: val.package_id,
+        course_id: val.course_id,
+        section_id: val.section_id,
+        video_id: val.video_id,
+        plan_id: this.currenLearnInfo.plan_id, // 计划id
+        days: this.currenLearnInfo.join_days, // 第几天
+        status: 2 // 播放类型1课程视频播放2学习中心播放视频类型socket
       }
+      if (this.currenLearnInfo.is_exper === 1) { // 0元体验 未购买 去看视频
+        val.userstatus = 2 // 当0元体验的时候 2是未购买
+        window.sessionStorage.setItem('is_exper', 1) // 1是0元体验
+      }
+      window.sessionStorage.setItem('userstatus', val.userstatus || 1) // 1购买2未购买
       window.sessionStorage.setItem('playtime', val.watch_time) // 上次看的时间
-      window.sessionStorage.setItem('userstatus', val.userstatus || 1) // 是否购买
       this.$router.push({ path: '/class-video',
-        query: {
-          package_id: val.package_id,
-          course_id: val.course_id,
-          section_id: val.section_id,
-          video_id: val.video_id,
-          // userstatus: val.userstatus || 1, // 1购买 2未购买
-          plan_id: this.currenLearnInfo.plan_id, // 计划id
-          days: this.currenLearnInfo.join_days, // 第几天
-          status: 2 // 播放类型1课程视频播放2学习中心播放视频类型socket
-        }
+        query: obj
       })
     },
     // 学习视频 讲义
@@ -694,6 +701,9 @@ export default {
         section_id: val.section_id,
         know_id: val.know_id,
         video_name: val.video_name
+      }
+      if (this.currenLearnInfo.is_exper === 1) {
+        obj.plate_id = 8 // 学习计划的0元体验
       }
       window.sessionStorage.setItem('getQuestion', JSON.stringify(obj))
       this.$router.push('/dopotic-learn')
@@ -769,9 +779,14 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+    z-index: 2;
   }
   .lc-login-left{
     width: 620px;
+  }
+  .lc-login-right{
+    margin-right: 46px;
   }
   .yc-detail{
     .yc-welcome{
@@ -1138,6 +1153,7 @@ export default {
     }
   }
   .tab-main{
+    padding-bottom: 20px;
     // display: flex;
     // justify-content: space-between;
   }

@@ -17,7 +17,7 @@
           <li v-for="(item, index) in consumptionRecordList" :key="index">
             <span>{{item.package_name}}</span>
             <span>{{item.pay_price}}</span>
-            <span>{{item.add_time}}</span>
+            <span>消费</span>
             <span>{{paySts[item.pay_type]}}</span>
             <span>{{item.adds_time}}</span>
           </li>
@@ -73,7 +73,7 @@
               <div class="c-detail">
                 <p class="c-full-reduce">{{item.name}}</p>
                 <p class="c-validity">有效期至{{item.end_time}}</p>
-                <span class="c-use">{{rangeSts[item.range]}}使用</span>
+                <span class="c-use">{{rangeSts[item.range]}}</span>
               </div>
             </li>
           </ul>
@@ -87,7 +87,7 @@
               <div class="c-detail">
                 <p class="c-full-reduce">{{item.name}}<span v-if="item.is_type == 2">折</span></p>
                 <p class="c-validity">有效期至{{item.end_time}}</p>
-                <span class="c-use">{{rangeSts[item.range]}}使用</span>
+                <span class="c-use">{{rangeSts[item.range]}}</span>
               </div>
               <Icon type="md-close" class="del-coupon" @click="doDelcoupon(item.coupon_id, index)" />
             </li>
@@ -121,8 +121,8 @@ export default {
         6: '积分兑换'
       },
       rangeSts: {
-        1: '仅限正课',
-        2: '仅限直播',
+        1: '仅限正课使用',
+        2: '仅限直播使用',
         3: '全局使用'
       },
       num: 0, // 有效个数
@@ -179,90 +179,6 @@ export default {
           this.num = num
           this.availableList = available
           this.InvalidList = Invalid
-          // this.availableList = [
-          //   {// 可用卷
-          //     'coupon_id': '1',
-          //     'range': 1,
-          //     'name': '优惠券名',
-          //     'coupon_price': '50',
-          //     'end_time': '到期时间',
-          //     'is_type': 1
-          //   },
-          //   {// 可用卷
-          //     'coupon_id': '2',
-          //     'range': 2,
-          //     'name': '优惠券名',
-          //     'coupon_price': '3.8',
-          //     'end_time': '3232323',
-          //     'is_type': 2
-          //   },
-          //   {// 可用卷
-          //     'coupon_id': '1',
-          //     'range': 1,
-          //     'name': '优惠券名',
-          //     'coupon_price': '50',
-          //     'end_time': '到期时间',
-          //     'is_type': 1
-          //   },
-          //   {// 可用卷
-          //     'coupon_id': '2',
-          //     'range': 2,
-          //     'name': '优惠券名',
-          //     'coupon_price': '3.8',
-          //     'end_time': '3232323',
-          //     'is_type': 2
-          //   }
-          // ]
-          // this.InvalidList = [
-          //   {// 可用卷
-          //     'coupon_id': '3',
-          //     'range': 3,
-          //     'name': '优惠券名',
-          //     'coupon_price': '50',
-          //     'end_time': '到期时间',
-          //     'is_type': 2
-          //   },
-          //   {// 可用卷
-          //     'coupon_id': '4',
-          //     'range': 2,
-          //     'name': '优惠券名',
-          //     'coupon_price': '100',
-          //     'end_time': '到期时间',
-          //     'is_type': 1
-          //   },
-          //   {// 可用卷
-          //     'coupon_id': '3',
-          //     'range': 3,
-          //     'name': '优惠券名',
-          //     'coupon_price': '50',
-          //     'end_time': '到期时间',
-          //     'is_type': 2
-          //   },
-          //   {// 可用卷
-          //     'coupon_id': '4',
-          //     'range': 2,
-          //     'name': '优惠券名',
-          //     'coupon_price': '100',
-          //     'end_time': '到期时间',
-          //     'is_type': 1
-          //   },
-          //   {// 可用卷
-          //     'coupon_id': '3',
-          //     'range': 3,
-          //     'name': '优惠券名',
-          //     'coupon_price': '50',
-          //     'end_time': '到期时间',
-          //     'is_type': 2
-          //   },
-          //   {// 可用卷
-          //     'coupon_id': '4',
-          //     'range': 2,
-          //     'name': '优惠券名',
-          //     'coupon_price': '100',
-          //     'end_time': '到期时间',
-          //     'is_type': 1
-          //   }
-          // ]
         } else {
           this.$Message.error(res.msg)
         }
@@ -296,9 +212,10 @@ export default {
       font-size: 0;
       padding: 0 30px;
       height: 50px;
-      line-height: 50px;
       color: $col666;
       background: #ffffff;
+      display: flex;
+      align-items: center;
       &:first-child{
         color: $col333;
         border-radius: 8px 8px 0 0;
@@ -312,9 +229,10 @@ export default {
       }
       span{
         font-size: 18px;
-        display: inline-block;
+        line-height: 20px;
         &:nth-child(1){
-          width: 265px;
+          width: 255px;
+          padding-right: 10px;
         }
         &:nth-child(2){
           width: 160px;

@@ -15,7 +15,7 @@
                 <img :src="item.data.head" alt="" class="head-logo">
                 <div class="othq-info">
                   <h3>{{item.data.username}}</h3>
-                  <p>{{item.data.create_times}}</p>
+                  <p>{{item.data.creates_time}}</p>
                 </div>
                 <span class="othq-huifu" v-if="item.data.reply_status == 1">老师已回复</span>
               </div>
@@ -31,9 +31,10 @@
                 </div>
               </div>
               <div class="othq-item-b">
-                <div class="ans-know-name">
+                <div class="ans-know-name" v-if="item.data.know_name.length && item.data.know_name!=''">
                   <span v-for="(v, index) in item.data.know_name" :key="index">{{v}}</span>
                 </div>
+                <div class="ans-know-name" v-else></div>
                 <div class="open-txt" @click="openShow(item, index, 0)">
                   {{item.openFlag ? '收起':'展开'}}
                   <Icon type="md-arrow-dropdown" style="font-size: 28px;margin-top: -3px;" v-if="answerType == 'personal' && !item.openFlag"/>
@@ -102,9 +103,10 @@
                 </div>
               </div>
               <div class="othq-item-b">
-                <div class="ans-know-name">
+                <div class="ans-know-name" v-if="item.data.know_name.length && item.data.know_name!=''">
                   <span v-for="(v, index) in item.data.know_name" :key="index">{{v}}</span>
                 </div>
+                <div class="ans-know-name" v-else></div>
                 <div class="open-txt" @click="openShow(item, index, 1)">
                   {{item.openFlag ? '收起':'展开'}}
                   <Icon type="md-arrow-dropdown" style="font-size: 28px;margin-top: -3px;" v-if="answerType == 'personal' && !item.openFlag"/>
@@ -397,7 +399,7 @@ export default {
   .othq-item-b{
     display: flex;
     justify-content: space-between;
-    margin-top: 12px;
+    margin-top: 10px;
   }
   .ans-know-name{
     span{

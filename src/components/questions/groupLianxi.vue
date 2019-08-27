@@ -73,8 +73,9 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   .jd-test-item{
-    display: flex;
+    line-height: 25px;
     padding: 10px 30px;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     font-size: 18px;

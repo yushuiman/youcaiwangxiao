@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './module/user'
 import nav from './module/nav'
+import news from './module/news'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -18,6 +19,7 @@ export default new Vuex.Store({
   },
   modules: {
     user,
-    nav
+    nav,
+    news
   }
 })

@@ -3,12 +3,13 @@
     <div class="class-choose">
       <!-- 已选条件 -->
       <div class="cl-aleary-tj">
-        <div class="w-wrap class-com al-class-com" v-if="classNamea != '' || form.billing_status != '' || form.ym != ''">
+        <!-- <div class="w-wrap class-com al-class-com" v-if="classNamea != '' || form.billing_status != '' || form.ym != ''"> -->
+        <div class="w-wrap class-com al-class-com" v-if="classNamea != '' || form.billing_status != ''">
           <span class="cl-txt">已选条件</span>
           <div class="cl-list cla-list">
             <span v-if="classNamea != ''"><em>{{classNamea}}</em><i class="del-cion" @click="delChoose('科目')"></i></span>
             <span v-if="form.billing_status != ''"><em>{{form.billing_status == 1 ? '免费': '收费'}}</em><i class="del-cion" @click="delChoose('类型')"></i></span>
-            <span v-if="form.ym != ''"><em>{{form.ym == 1 ? '远程课程': '面授课程'}}</em><i class="del-cion" @click="delChoose('班型')"></i></span>
+            <!-- <span v-if="form.ym != ''"><em>{{form.ym == 1 ? '远程课程': '面授课程'}}</em><i class="del-cion" @click="delChoose('班型')"></i></span> -->
           </div>
         </div>
         <div class="w-wrap class-com" v-else></div>
@@ -33,7 +34,7 @@
         </div>
       </div>
       <!-- 班型 -->
-      <div class="class-bx class-tj-bg">
+      <!-- <div class="class-bx class-tj-bg">
         <div class="w-wrap class-com">
           <span class="cl-txt">班型:</span>
           <div class="cl-list">
@@ -41,7 +42,7 @@
             <span :class="{'curren': form.ym == 2}" @click="screenCourse('班型', form.ym = 2)">面授课程</span>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <!-- 综合 -->
     <div class="class-zh class-tj-bg">
@@ -108,21 +109,21 @@ export default {
         popularity: '',
         pricesort: '',
         limit: 6,
-        page: 1,
-        ym: ''
+        page: 1
+        // ym: '' // 班型
       }, // 课程列表 默认第一页 显示6个
       priceStart: '', // 价格筛选
       priceEnd: '', // 价格筛选
-      typeInfo: [
-        {
-          freePay: '收费',
-          courseWay: '远程课程'
-        },
-        {
-          freePay: '免费',
-          courseWay: '面授课程'
-        }
-      ],
+      // typeInfo: [
+      //   {
+      //     freePay: '收费',
+      //     courseWay: '远程课程'
+      //   },
+      //   {
+      //     freePay: '免费',
+      //     courseWay: '面授课程'
+      //   }
+      // ],
       subject_type: [] // 筛选科目列表
     }
   },
@@ -228,11 +229,6 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-    },
-    sendText () {
-      // this.Ws.send(222)
-      // console.log(Encrypt('123'))
-      // console.log(Decrypt(Encrypt('亲猪猪')))
     }
   }
 }

@@ -7,7 +7,7 @@
       </div>
       <h1 class="vc-title">提问题</h1>
       <textarea autofocus v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"
-        v-on:focus="send()" v-on:blur="goPlay()"></textarea>
+        v-on:focus="send()"></textarea>
       <div class="submitAnswer clearfix">
         <div class="course_img fl">
           <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
@@ -141,7 +141,13 @@ export default {
       this.visible = true
     },
     handleBeforeUpload () {
-      console.log('准备上传')
+      const check = this.uploadList.length < 3
+      if (!check) {
+        this.$Notice.warning({
+          title: '最多上传3张图片！'
+        })
+      }
+      return check
     },
     handleRemove3 (file) {
       let fileList = this.uploadList
@@ -180,12 +186,8 @@ export default {
     },
     // 问题提交
     answerSubmit () {
-      if (this.quiz.length < 5 && this.quiz.length > 0) {
+      if (this.quiz.length < 5 || this.quiz === '') {
         this.errorTs = '请至少输入5个字'
-        return
-      }
-      if (this.quiz === '') {
-        this.errorTs = '请输入纠错内容'
         return
       }
       if (/^\s+$/gi.test(this.quiz)) {

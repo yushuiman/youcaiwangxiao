@@ -131,7 +131,7 @@
 // import news from '../../components/personal/news'
 import { getPersonal, learnClock } from '@/api/personal'
 import { systeMessage, read, listMessage } from '@/api/message'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -169,6 +169,9 @@ export default {
     this.getSysteMessage()
   },
   methods: {
+    ...mapActions([
+      'getIndexMessage'
+    ]),
     // 用户信息
     getPersonalInfo () {
       getPersonal({
@@ -190,6 +193,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.learnClockInfo = res.data
+          this.$Message.success('签到成功第' + res.data.num + '天')
         } else {
           this.$Message.error(res.msg)
         }
@@ -254,6 +258,7 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
+          this.getIndexMessage() // 更新未读消息状态
           this.systeMessageList.forEach(v => {
             if (item.message_id === v.message_id) {
               v.status = 2

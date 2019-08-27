@@ -4,7 +4,7 @@
       <img src="../../assets/images/course/like.png" alt="">
       <span>猜你喜欢</span>
     </div>
-    <div class="like-list" v-for="(item,index) in likeArr" :key="index">
+    <div class="like-list" v-for="(item,index) in likeArr" :key="index" @click="goClassDetails(item.package_id)">
       <img :src="item.pc_img" alt="">
       <div class="like-info">
         <p>{{item.name}}</p>
@@ -45,6 +45,10 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // 跳转到课程详情页
+    goClassDetails (id) {
+      this.$router.push({ path: '/class-detail', query: { package_id: id } })
     }
   }
 }
@@ -79,6 +83,7 @@ export default {
     @include display_flex(flex);
     border-top: 1px solid $borderColor;
     box-sizing: border-box;
+    cursor: pointer;
     img{
       width: 100%;
       height: 60px;
@@ -97,9 +102,6 @@ export default {
       -webkit-box-orient: vertical;
       overflow: hidden;
       -webkit-line-clamp: 1;
-      // overflow: hidden;
-      // text-overflow: ellipsis;
-      // white-space: nowrap;
       &:nth-child(2){
         color: $col999;
         font-size: 12px;

@@ -49,8 +49,8 @@
       footer-hide
       :width="795"
       class="iview-modal">
-      <upload-img v-if="visible && typeShow == 'dy'" :getQuestion="getQuestion"></upload-img>
-      <error-correction v-if="visible && typeShow == 'jc'" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
+      <upload-img v-if="typeShow == 'dy'" :getQuestion="getQuestion"></upload-img>
+      <error-correction v-if="typeShow == 'jc'" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
     </Modal>
   </div>
 </template>
@@ -80,9 +80,9 @@ export default {
       getQuestion: {
         jiexi: 1,
         question_id: 0, // 题id
-        course_id: this.$route.query.course_id,
-        plate_id: this.$route.query.plate_id,
-        sc: this.$route.query.sc
+        course_id: parseInt(this.$route.query.course_id),
+        plate_id: parseInt(this.$route.query.plate_id),
+        sc: parseInt(this.$route.query.sc)
       },
       visible: false,
       typeShow: false, // 答疑dy，纠错jc
@@ -100,8 +100,8 @@ export default {
     })
   },
   mounted () {
-    // 0元体验解析
-    if (this.$route.query.plate_id === 8) {
+    // 0元体验解析 失误，之前没有考虑这么周全，需求一点点增加，不想改变已有的逻辑了
+    if (this.getQuestion.plate_id === 8 && this.diffRes !== 3) {
       this.getExperienceParsing()
       return
     }
@@ -412,7 +412,7 @@ export default {
   }
   .anscard-list{
     padding-top: 10px;
-    height: 426px;
+    height: 288px;
     li{
       float: left;
       width: 28px;

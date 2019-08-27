@@ -520,7 +520,10 @@ export default {
   .prism-volume{
     margin-right: 15px!important;
   }
-  .prism-cc-btn,.prism-setting-quality{
+  .prism-cc-btn{
+    display: none;
+  }
+  .prism-player .prism-setting-list .prism-setting-cc, .prism-player .prism-setting-list .prism-setting-audio{
     display: none;
   }
 </style>

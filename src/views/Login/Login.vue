@@ -3,6 +3,7 @@
     <img class="Bookend" :src="Bookend" alt="">
     <div class="background">
       <div class="con" v-if="isForget == 'log-reg'">
+        <div class="perfect" @click="writUserInfo">完善资料</div>
         <div class="login_nav">
           <span :class="isLogin == 'login' || isLogin == 'fast_login' ? 'span_on' : ''" @click="tabLogin('login')">登录</span>
           <span :class="isLogin == 'reg' ? 'span_on' : ''" @click="tabLogin('reg')">注册</span>
@@ -257,7 +258,7 @@ import icon2 from '@/assets/images/login/icon2.png'
 import Bookend from '@/assets/images/login/Bookend.png'
 import code from '@/assets/images/login/code.png'
 import success from '@/assets/images/login/success.png'
-import { mapActions, mapState, mapMutations } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 // 加密 解密
 import { Encrypt } from '@/libs/crypto'
 import { getSmsCode, webReg, voice, resetPaw, quickLogin, wxLogin, forgetPaw } from '@/api/login'
@@ -265,7 +266,6 @@ import { getSmsCode, webReg, voice, resetPaw, quickLogin, wxLogin, forgetPaw } f
 export default {
   data () {
     return {
-      Ws: '',
       phone,
       logoImg,
       password,
@@ -341,9 +341,6 @@ export default {
       'handleLogin',
       'getUserInfo'
     ]),
-    ...mapMutations([
-      'setChange'
-    ]),
     onMouseOver: function () {
       this.is_show = 1
     },
@@ -362,9 +359,6 @@ export default {
           window.open(res.data.data)
         }
       })
-    },
-    sendText () {
-      this.Ws.send(222)
     },
     tabLogin (type) {
       this.$router.replace({ path: 'login',
@@ -525,7 +519,6 @@ export default {
           }
           setTimeout(() => {
             this.$router.push('/')
-            this.setChange('shouye')
           }, 1000)
         })
       }
@@ -664,7 +657,6 @@ export default {
             this.getUserInfo()
             setTimeout(() => {
               this.$router.push('/')
-              this.setChange('shouye')
             }, 1000)
           } else {
             this.$Message.error(res.data.msg)

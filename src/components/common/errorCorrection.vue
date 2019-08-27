@@ -87,6 +87,7 @@ export default {
   }
   .ts-box{
     height: 20px;
+    line-height: 20px;
   }
   .btn-box{
     text-align: center;

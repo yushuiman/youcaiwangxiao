@@ -1,6 +1,6 @@
 <template>
-  <div class="wrapper">
-    这是app页面
+  <div style="padding: 200px 0;text-align:center;">
+    开发中<br>这是app页面
   </div>
 
 </template>

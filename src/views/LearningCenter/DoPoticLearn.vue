@@ -112,7 +112,6 @@ export default {
       txtShow: '',
       topics: [], // 题列表
       answer_time: 0,
-      timers: null,
       user_s: 0, // 用时秒数
       total: 0,
       title: '',
@@ -149,12 +148,13 @@ export default {
 
   mounted () {
     this.getTopicList()
+    window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
     scrollToTop () {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       this.scrollTop = scrollTop
-      if (this.scrollTop > 100) {
+      if (this.scrollTop > 70) {
         this.$refs.fixedTit.style.position = 'fixed'
         this.$refs.fixedTit.style.top = 70 + 'px'
         this.$refs.fixedTit.style.width = 895 + 'px'
@@ -166,12 +166,16 @@ export default {
     },
     goAnchor (selector) {
       var anchor = this.$el.querySelector(selector)
-      document.documentElement.scrollTop = anchor.offsetTop
+      document.documentElement.scrollTop = anchor.offsetTop - 150
     },
     // 已做题数量 右边进度条用
-    doPoticInfo (num = 0) {
+    doPoticInfo (num = 0, index) {
       this.percentNum = num
       this.percent = this.percentNum / this.total * 100
+      if (this.total === index) {
+        return
+      }
+      this.goAnchor('#anchor-' + index)
     },
     // 拿题
     getTopicList () {
@@ -255,11 +259,16 @@ export default {
           //     course_id: this.getQuestion.course_id
           //   }
           // })
+          let obj = {
+            paper_id: res.data.paper_id,
+            course_id: this.getQuestion.course_id,
+            plate_id: this.getQuestion.plate_id
+          }
+          // if(){
+          //   obj.plate_id = 8
+          // }
           this.$router.push({ path: '/analysis',
-            query: {
-              paper_id: res.data.paper_id,
-              course_id: this.getQuestion.course_id
-            }
+            query: obj
           })
         } else {
           this.$Message.error(res.msg)
@@ -273,14 +282,12 @@ export default {
     }
   },
   beforeDestroy () {
-    if (this.timers) {
-      clearInterval(this.timers)
-    }
+    window.removeEventListener('scroll', this.scrollToTop)
   }
 }
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-  @import "../../assets/scss/app";
+  // @import "../../assets/scss/app";
   @import "../../assets/scss/dopotic";
 </style>

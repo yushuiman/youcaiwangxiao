@@ -112,11 +112,13 @@ export default {
     },
     goPage (item) {
       if (item.state === 1) { // 成绩统计
+        this.getPoticData.course_id = item.course_id
         window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
         window.sessionStorage.setItem('diffRes', '') // 区分不同的接口请求
         this.$router.push({ path: 'result-report',
           query: {
-            paper_id: item.id
+            paper_id: item.id,
+            course_id: this.getPoticData.course_id
           }
         })
       }

@@ -379,10 +379,14 @@ export default {
       }
       this.addAddresFlag = false
       this.visibleAddress = false
+      return true
     },
+    // 保存地址
     saveNewAddres (type, v) {
       if (type === 1) {
-        this.checkForm()
+        if (!this.checkForm()) {
+          return
+        }
         addAddress({
           user_id: this.user_id,
           consignee: this.addName,
@@ -390,12 +394,26 @@ export default {
           address: this.addAddres,
           is_default: 2
         }).then(data => {
-          // const res = data.data
-          // console.log(res)
           // this.addAddresFlag = false
-          // if (res.code === 200) {
-          //   this.$emit('getPersonalInfo')
-          // }
+          // this.personalInfo.address.push({
+          //   consignee: this.addName,
+          //   telephone: this.addMobile,
+          //   address: this.addAddres
+          // })
+          // this.personalInfo.address.forEach(v => {
+          //   v.flag = false
+          //   v.value = '设置默认地址'
+          //   if (v.is_default === 1) {
+          //     v.value = '取消默认地址'
+          //   }
+          // })
+          const res = data.data
+          if (res.code === 200) {
+            this.addName = ''
+            this.addMobile = ''
+            this.addAddres = ''
+            this.$emit('getPersonalInfo')
+          }
         })
       }
       if (type === 2) {
@@ -408,7 +426,9 @@ export default {
     },
     // 修改收货地址
     editAddress () {
-      this.checkForm()
+      if (!this.checkForm()) {
+        return
+      }
       editAddress({
         user_id: this.user_id,
         address_id: this.address_id,
@@ -456,7 +476,7 @@ export default {
         user_id: this.user_id,
         address_id: v.address_id
       }).then(data => {
-        // this.personalInfo.address.splice(index, 1)
+        this.personalInfo.address.splice(index, 1)
         // const res = data.data
         // if (res.code === 200) {
         //   this.$emit('getPersonalInfo')

@@ -3,29 +3,48 @@
     <div class="com-title">
       <span>学员动态</span>
     </div>
-    <ul class="com-list">
-      <li class="com-item" v-for="(item, index) in userDynamicList" :key="index">
-        <span class="c-black">{{item}}</span>
-      </li>
-    </ul>
+    <div style="height: 124px;overflow:hidden;">
+      <ul class="com-list" :class="{'anim': animate == true}" id="con1" ref="con1">
+        <li class="com-item" v-for="(item, index) in userDynamicList" :key="index">
+          <span class="c-black">{{item}}</span>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
+
 import { userDynamic } from '@/api/learncenter'
+import { clearInterval } from 'timers'
 export default {
   data () {
     return {
-      userDynamicList: []
+      animate: false,
+      userDynamicList: [],
+      scrollTimer: null
     }
   },
   computed: {
-
+    // swiper () {
+    //   return this.$refs.mySwiper.swiper
+    // }
   },
   mounted () {
     this.getUserDynamic()
+    this.scrollTimer = setInterval(() => {
+      this.scroll()
+    }, 1500)
   },
   methods: {
+    scroll () {
+      this.animate = true // 因为在消息向上滚动的时候需要添加css3过渡动画，所以这里需要设置true
+      setTimeout(() => { //  这里直接使用了es6的箭头函数，省去了处理this指向偏移问题，代码也比之前简化了很多
+        this.userDynamicList.push(this.userDynamicList[0]) // 将数组的第一个元素添加到数组的
+        this.userDynamicList.shift() // 删除数组的第一个元素
+        this.animate = false // margin-top 为0 的时候取消过渡动画，实现无缝滚动
+      }, 300)
+    },
     getUserDynamic () {
       userDynamic().then(data => {
         const res = data.data
@@ -36,6 +55,9 @@ export default {
         }
       })
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.scrollTimer)
   }
 }
 </script>
@@ -59,8 +81,8 @@ export default {
   .com-list{
     padding: 10px 0;
     .com-item{
-      height: 20px;
-      line-height: 20px;
+      height: 22px;
+      line-height: 22px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -69,5 +91,9 @@ export default {
         color: $col333;
       }
     }
+  }
+  .anim{
+    transition: all 0.5s;
+    margin-top: -22px;
   }
 </style>

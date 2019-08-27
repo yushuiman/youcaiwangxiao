@@ -63,6 +63,7 @@
           <Icon type="md-star" style="color: #F99111;" v-if="videoCredentials.collect == 1"/>
         </div>
       </div>
+      <!-- v-if="this.flagCourse || this.flagAnswer || this.flagJy" -->
       <div id="resize" class="course-drag">
         <div class="drag"></div>
       </div>
@@ -76,7 +77,7 @@
             <i class="close-icon"></i>
           </div>
           <h1 class="vc-title">讲义</h1>
-          <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%" style="position:absolute;bottom:0;height: 88%;"></iframe>
+          <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%" style="position:absolute;top: 90px;bottom:0;width:100%;height: 88%;"></iframe>
         </div>
       </div>
     </div>
@@ -88,7 +89,7 @@ import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
 import { watchRecords } from '@/api/personal'
 import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, collection, initWS } from '@/api/class'
-import { mapMutations, mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   data () {
@@ -137,9 +138,10 @@ export default {
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
         is_zhengke: 0,
-        userstatus: window.sessionStorage.getItem('userstatus') || 2, // 1购买2未购买
+        userstatus: parseInt(window.sessionStorage.getItem('userstatus')) || 2, // 1购买2未购买
         type: this.$route.query.type,
-        status: this.$route.query.status || 1
+        status: parseInt(this.$route.query.status) || 1,
+        is_exper: parseInt(window.sessionStorage.getItem('is_exper')) || 2 // 1是学习计划0元体验,虽没购买,也可以观看完整视频，并有socket
       },
       packageList: [],
       secvCatalogArr: [],
@@ -162,14 +164,11 @@ export default {
     ...mapState({
       avatorImgPath: state => state.user.avatorImgPath,
       user_id: state => state.user.user_id,
-      is_news: state => state.nav.is_news
+      is_news: state => state.news.is_news
     })
   },
   mounted () {
-    if (parseInt(this.playCourseInfo.status) === 2) {
-      this.wImportant = 0
-      this.flagKc = false
-    }
+    this.getCourseCatalog() // 课程大纲（目录）
     document.addEventListener('mouseover', (e) => {
       if (this.flagEntrance) {
         if (!this.$el.contains(e.target)) {
@@ -177,17 +176,19 @@ export default {
         }
       }
     })
+    if (this.playCourseInfo.status === 2) {
+      this.wImportant = 0
+      this.flagKc = false
+    }
+    this.dragControllerDiv()
+    // if (this.flagCourse || this.flagAnswer || this.flagJy) {
+    // }
     // this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
     // this.getVideoPlayback(this.$route.query.video_id)
-    this.getCourseCatalog() // 课程大纲（目录）
-    this.dragControllerDiv()
   },
   methods: {
     ...mapActions([
       'handleLogOut'
-    ]),
-    ...mapMutations([
-      'setChange'
     ]),
     dragControllerDiv () {
       var resize = document.getElementById('resize')
@@ -233,21 +234,32 @@ export default {
           video_id: this.$route.query.video_id,
           watch_time: this.playtime,
           video_type: 1, // 视频类型 1视频2直播
-          status: this.$route.query.status || 1 // 播放类型 1课程视频播放2学习中心
+          status: this.playCourseInfo.status || 1 // 播放类型 1课程视频播放2学习中心
         }
         // 已购买并且视频播放时间大于0 socket
-        if (parseInt(this.playCourseInfo.userstatus) === 1 && this.playtime > 0) {
-          if (parseInt(this.$route.query.status) === 2) {
+        if (this.playCourseInfo.userstatus === 1 && this.playtime > 0) {
+          if (this.playCourseInfo.status === 2) { // 学习计划多了2个字断socket
             message.days = this.$route.query.days
             message.plan_id = this.$route.query.plan_id
           }
           // console.log(JSON.stringify(message))
           initWS(JSON.stringify(message))
         }
+        // 未购买，但是学习计划的0元体验，也有socket
+        if (this.playCourseInfo.userstatus === 2 && this.playtime > 0) {
+          if (this.playCourseInfo.is_exper === 1) {
+            message.days = this.$route.query.days
+            message.plan_id = this.$route.query.plan_id
+            initWS(JSON.stringify(message))
+          }
+        }
         window.sessionStorage.setItem('playtime', this.playtime) // 防止刷新页面，也要记录当前播放时间
       }, 30000)
       // 未购买试看3分钟
-      if (parseInt(this.playCourseInfo.userstatus) === 2) {
+      if (this.playCourseInfo.userstatus === 2) {
+        if (this.playCourseInfo.is_exper === 1) { // 如果是学习计划的0元体验,可以观看整个视频
+          return
+        }
         this.tryWatchTimer = setInterval(() => {
           let playtime = parseInt(instance.getCurrentTime())
           if (playtime >= this.tryQatchNum) {
@@ -465,7 +477,6 @@ export default {
       // console.log(this.$route.name === 'personal' || this.$route.path === '/personal')
       // console.log(this.$route.path === '/personal')
       // this.$router.push({ path: 'personal', query: { type: sign } })
-      this.setChange('')
       // this.centerType(sign)
     },
     // 消息中心

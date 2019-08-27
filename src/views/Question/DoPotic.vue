@@ -176,6 +176,7 @@ export default {
 
   mounted () {
     this.getTopicList()
+    window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
     scrollToTop () {
@@ -193,12 +194,16 @@ export default {
     },
     goAnchor (selector) {
       var anchor = this.$el.querySelector(selector)
-      document.documentElement.scrollTop = anchor.offsetTop
+      document.documentElement.scrollTop = anchor.offsetTop - 150
     },
     // 已做题数量 右边进度条用
-    doPoticInfo (num = 0) {
+    doPoticInfo (num = 0, index) {
       this.percentNum = num
       this.percent = this.percentNum / this.total * 100
+      if (this.total === index) {
+        return
+      }
+      this.goAnchor('#anchor-' + index)
     },
     // 拿题
     getTopicList () {
@@ -263,7 +268,7 @@ export default {
       }
     },
     countdownend () {
-      this.jiaojuan()
+      this.jiaojuan('sub')
     },
     // 交卷
     jiaojuan (type) {
@@ -329,6 +334,7 @@ export default {
     }
   },
   beforeDestroy () {
+    window.removeEventListener('scroll', this.scrollToTop)
     if (this.timers) {
       clearInterval(this.timers)
     }
@@ -337,6 +343,6 @@ export default {
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-  @import "../../assets/scss/app";
+  // @import "../../assets/scss/app";
   @import "../../assets/scss/dopotic";
 </style>

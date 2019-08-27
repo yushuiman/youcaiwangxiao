@@ -35,7 +35,7 @@
           <answer-info v-if="clkTit == 'answer'" :user_id="user_id"></answer-info>
           <order-info v-if="clkTit == 'order'" :user_id="user_id"></order-info>
           <account-info v-if="clkTit == 'account'" :user_id="user_id"></account-info>
-          <set-info v-if="clkTit == 'set'" :personalInfo="personalInfo" :user_id="user_id" @getPersonalInfo="getPersonalInfo"></set-info>
+          <set-info v-if="clkTit == 'set' && personalInfo.username" :user_id="user_id" :personalInfo="personalInfo" @getPersonalInfo="getPersonalInfo"></set-info>
         </div>
       </div>
     </div>
@@ -149,6 +149,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.learnClockInfo = res.data
+          this.$Message.success('签到成功第' + res.data.num + '天')
         } else {
           this.$Message.error(res.msg)
         }

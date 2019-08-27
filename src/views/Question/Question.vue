@@ -177,7 +177,7 @@ import discussSelf from '../../components/questions/discussSelf'
 import errorSection from '../../components/questions/errorSection'
 import lianxiSelf from '../../components/questions/lianxiSelf'
 import groupLianxi from '../../components/questions/groupLianxi'
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -252,9 +252,6 @@ export default {
     this.getStudentsRanking() // 学员排名
   },
   methods: {
-    ...mapMutations([
-      'setChange'
-    ]),
     // 展示课程
     projectList () {
       getProject({
@@ -362,10 +359,10 @@ export default {
       window.sessionStorage.setItem('course_id', this.course_id)
       window.sessionStorage.setItem('selIdxQuestion', index)
       this.$router.push('/personal')
-      this.setChange('')
     }
   },
   beforeRouteLeave (to, from, next) {
+    document.body.removeAttribute('style')
     this.visible = false
     next()
   }

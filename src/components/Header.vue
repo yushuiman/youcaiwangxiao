@@ -6,14 +6,9 @@
           <div class="head-list">
             <img src="../assets/images/global/yc-logo.png" alt="logo" class="yc-logo fl" @click="goIndex">
             <ul class="item-list fl">
-              <li :class="isChange === 'shouye' ? 'on_change' : ''" @click="onChange('shouye')"><router-link to="/">首页</router-link></li>
-              <li :class="isChange === 'kecheng' ? 'on_change' : ''" @click="onChange('kecheng')"><router-link to="/class">课程</router-link></li>
-              <li :class="isChange === 'tiku' ? 'on_change' : ''" @click="onChange('tiku')"><router-link to="/question">题库</router-link></li>
-              <li :class="isChange ==='liveing' ? 'on_change' : ''" @click="onChange('liveing')"><router-link to="/zhibo">直播</router-link></li>
-              <!-- <li :class="isChange === 'dayi' ? 'on_change' : ''" @click="onChange('dayi')"><router-link to="/answer">答疑</router-link></li> -->
-              <li :class="isChange === 'zixun' ? 'on_change' : ''" @click="onChange('zixun')"><router-link to="/zixun">资讯</router-link></li>
-              <li :class="isChange === 'app' ? 'on_change' : ''" @click="onChange('app')"><router-link to="/app">App</router-link></li>
-              <!-- <li :class="isChange ==='app' ? 'on_change' : ''" @click="onChange('app')"><a>App</a></li> -->
+              <li :class="{'on_change': metaTitle === v.name}" v-for="(v, index) in navArr" :key="index">
+                <router-link :to="v.path">{{v.name}}</router-link>
+              </li>
             </ul>
           </div>
           <div class="login-wrap">
@@ -25,7 +20,7 @@
             </div>
             <div class="login-r fr" v-if="this.token">
               <img src="../assets/images/global/email-icon.png" alt="email" class="email-icon" @click="goNews">
-              <i v-if="isNews == 1" class="new-dot"></i>
+              <i v-if="is_news == 1" class="new-dot"></i>
               <img :src="avatorImgPath" alt="头像" class="head-logo" @mouseenter="enter" @click="goPersonalPage('course')">
               <span @mouseenter="enter" @click="goPersonalPage('course')">{{userName}}</span>
               <!-- 个人中心入口 -->
@@ -50,14 +45,38 @@
   </div>
 </template>
 <script>
-// import { getToken } from '@/libs/utils'
-import { indexMessage } from '@/api/message'
 import { watchRecords } from '@/api/personal'
-import { mapMutations, mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   data () {
     return {
       flagEntrance: false,
+      navArr: [
+        {
+          path: '/',
+          name: '首页'
+        },
+        {
+          path: 'class',
+          name: '课程'
+        },
+        {
+          path: 'question',
+          name: '题库'
+        },
+        {
+          path: 'zhibo',
+          name: '直播'
+        },
+        {
+          path: 'zixun',
+          name: '资讯'
+        },
+        {
+          path: 'app',
+          name: 'App'
+        }
+      ],
       personalArr: [
         {
           type: '我的课程',
@@ -76,7 +95,6 @@ export default {
           sign: 'set'
         }
       ],
-      isNews: 0,
       watchRecordsList: {} // 观看记录
     }
   },
@@ -87,10 +105,14 @@ export default {
       avatorImgPath: state => state.user.avatorImgPath,
       userName: state => state.user.userName,
       'is_change': state => state.nav.is_change,
-      isLogin: state => state.nav.isLogin
+      isLogin: state => state.nav.isLogin,
+      is_news: state => state.news.is_news
     }),
     isChange () {
       return this.is_change
+    },
+    metaTitle () {
+      return this.$route.meta.title
     }
   },
   mounted () {
@@ -111,18 +133,12 @@ export default {
   methods: {
     ...mapActions([
       'handleLogOut',
-      'getUserInfo'
-    ]),
-    ...mapMutations([
-      'setChange',
-      'setIsNews'
+      'getUserInfo',
+      'getIndexMessage'
     ]),
     enter () {
       this.getWatchRecords() // 观看记录
       this.flagEntrance = true
-    },
-    onChange (navName) {
-      this.setChange(navName)
     },
     ouLogin () {
       this.$router.push('/')
@@ -131,7 +147,6 @@ export default {
     // 点击logo回到首页
     goIndex () {
       this.$router.push('/')
-      this.setChange('shouye')
     },
     // 个人中心
     goPersonalPage (sign) {
@@ -144,18 +159,15 @@ export default {
       // console.log(this.$route.name === 'personal' || this.$route.path === '/personal')
       // console.log(this.$route.path === '/personal')
       // this.$router.push({ path: 'personal', query: { type: sign } })
-      this.setChange('')
       // this.centerType(sign)
     },
     // 消息
     goNews () {
       this.$router.push('/news')
-      this.setChange('')
     },
     // 登录
     goLogin (type) {
       this.$router.push('/login')
-      this.setChange('')
     },
     // 学习中心
     goLearning () {
@@ -164,21 +176,6 @@ export default {
       } else {
         this.$router.push('/learning-center')
       }
-      this.setChange('')
-    },
-    // 是否有新信息
-    getIndexMessage () {
-      indexMessage({
-        user_id: this.user_id
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.isNews = res.data
-          this.setIsNews(res.data)
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
     },
     // 播放记录
     getWatchRecords () {

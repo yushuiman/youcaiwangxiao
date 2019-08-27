@@ -48,6 +48,7 @@
 <script>
 import { consult } from '@/api/index'
 import { mapState } from 'vuex'
+
 export default {
   name: 'RightSlider',
   data () {
@@ -65,15 +66,10 @@ export default {
     })
   },
   mounted () {
-    // window.addEventListener('scroll', this.scrollToTop)
     if (this.consultInfo.wx_code) {
       return
     }
     this.getConsult()
-    // this.scrollToTop()
-  },
-  destroyed () {
-    // window.removeEventListener('scroll', this.scrollToTop)
   },
   methods: {
     getConsult (val) {
@@ -88,23 +84,24 @@ export default {
       })
     },
     backTop () {
-      let timer = setInterval(() => {
-        let ispeed = Math.floor(-this.scrollTop / 5)
-        document.documentElement.scrollTop = document.body.scrollTop = this.scrollTop + ispeed
-        if (this.scrollTop === 0) {
-          clearInterval(timer)
-        }
-      }, 16)
+      document.documentElement.scrollTop = 0
+      // let timer = setInterval(() => {
+      //   let ispeed = Math.floor(-this.scrollTop / 5)
+      //   document.documentElement.scrollTop = document.body.scrollTop = this.scrollTop + ispeed
+      //   if (this.scrollTop === 0) {
+      //     clearInterval(timer)
+      //   }
+      // }, 500)
     },
-    scrollToTop () {
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.scrollTop > 100) {
-        this.btnFlag = true
-      } else {
-        this.btnFlag = false
-      }
-    },
+    // scrollToTop () {
+    //   let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+    //   this.scrollTop = scrollTop
+    //   if (this.scrollTop > 100) {
+    //     this.btnFlag = true
+    //   } else {
+    //     this.btnFlag = false
+    //   }
+    // },
     serviceLink () {
       window.open(this.consultInfo.consult_href, '_blank')
     },

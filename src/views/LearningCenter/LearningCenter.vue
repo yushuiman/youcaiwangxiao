@@ -49,7 +49,7 @@
 import { isRegister, kRegister } from '@/api/learncenter'
 import { getSmsCode, quickLogin, accountLogin, forgetPaw, resetPaw } from '@/api/login'
 import { Encrypt } from '@/libs/crypto'
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -65,25 +65,13 @@ export default {
       timer: null
     }
   },
-  // computed: {
-  //   ...mapState({
-  //     token: state => state.user.token,
-  //     user_id: state => state.user.user_id
-  //   })
-  // },
   components: {
   },
   mounted () {
-    if (this.token) {
-      this.getLearnIndex()
-    }
   },
   methods: {
     ...mapActions([
       'getUserInfo'
-    ]),
-    ...mapMutations([
-      'setChange'
     ]),
     // 是否注册
     signLogin (type) {
@@ -314,9 +302,14 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+    z-index: 2;
   }
   .lc-login-left{
     width: 620px;
+  }
+  .lc-login-right{
+    margin-right: 46px;
   }
   .yc-detail{
     .yc-welcome{

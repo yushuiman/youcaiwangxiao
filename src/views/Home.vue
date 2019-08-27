@@ -37,7 +37,7 @@
           </div>
         </div>
       </li>
-      <li class="class-item class-item04">
+      <!-- <li class="class-item class-item04">
         <span class="anima-icon"></span>
         <div class="class-instru">
           <h1>精选直播</h1>
@@ -48,7 +48,7 @@
           </div>
         </div>
         <img class="ci-img" src="@/assets/images/index/undraw_setup_wizard_r6mr.png" alt="">
-      </li>
+      </li> -->
     </ul>
     <!-- cma咨询 -->
     <div class="cma-consultation">

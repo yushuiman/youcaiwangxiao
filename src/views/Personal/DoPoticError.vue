@@ -162,6 +162,7 @@ export default {
   },
   mounted () {
     this.getTopicList()
+    window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
     scrollToTop () {
@@ -179,12 +180,16 @@ export default {
     },
     goAnchor (selector) {
       var anchor = this.$el.querySelector(selector)
-      document.documentElement.scrollTop = anchor.offsetTop
+      document.documentElement.scrollTop = anchor.offsetTop - 150
     },
     // 已做题数量 右边进度条用
-    doPoticInfo (num = 0) {
+    doPoticInfo (num = 0, index) {
       this.percentNum = num
       this.percent = this.percentNum / this.total * 100
+      if (this.total === index) {
+        return
+      }
+      this.goAnchor('#anchor-' + index)
     },
     // 拿题
     getTopicList () {
@@ -260,9 +265,6 @@ export default {
         this.$refs.addCountTime.start()
       }
     },
-    countdownend () {
-      console.log('倒计时结束')
-    },
     // 交卷
     jiaojuan (type) {
       for (var i = 0; i < this.topics.length; i++) {
@@ -311,178 +313,14 @@ export default {
       this.visibleError = flag
       this.getQuestion.question_id = qId
     }
+  },
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.scrollToTop)
   }
 }
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-  @import "../../assets/scss/app";
+  // @import "../../assets/scss/app";
   @import "../../assets/scss/dopotic";
-//   .do-potic-wrap{
-//     padding: 20px 0;
-//     font-size: 18px;
-//     color: $col666;
-//     .dptic-wrap-l{
-//       width: 895px;
-//     }
-//     .dptic-wrap-r{
-//       width: 285px;
-//       position: fixed;
-//       top: 90px;
-//       margin-left: 915px;
-//     }
-//   }
-//   // 封装start
-//   .right-top-wrap, .right-bottom-wrap{
-//     background: $colfff;
-//     margin-bottom: 20px;
-//     padding: 20px;
-//   }
-//   .title-com{
-//     font-size: 18px;
-//     color: $col333;
-//     display: flex;
-//     justify-content: space-between;
-//     align-items: center;
-//   }
-//    // 封装end
-//   .dptic-title{
-//     padding: 0 20px;
-//     @include lh(60, 60);
-//     border-radius: 8px;
-//     background: $colfff;
-//     margin-bottom: 20px;
-//     box-sizing: border-box;
-//     .menu-title{
-//       color: $col333;
-//       font-size: 20px;
-//     }
-//   }
-//   .answer-time{
-//     text-align: right;
-//   }
-//  // 右边做题状态
-//   .progress-info{
-//     padding-top: 20px;
-//     padding-bottom: 40px;
-//     display: flex;
-//     align-items: center;
-//     justify-content: flex-start;
-//     .topic-num{
-//      margin-left: 32px;
-//     }
-//   }
-//   .dopic-status{
-//     display: flex;
-//     justify-content: space-between;
-//     text-align: center;
-//     padding: 0 20px;
-//   }
-//   .dopstu-item{
-//     text-align: center;
-//     cursor: pointer;
-//     span{
-//       height: 35px;
-//       display: block;
-//       i{
-//         vertical-align: middle;
-//       }
-//     }
-//     p{
-//       color: $col999;
-//       font-size: 14px;
-//       margin-top: 10px;
-//     }
-//   }
-//   .dopstu-icon{
-//     .dopstu-item-01 &{
-//       @include bg-img(35, 35, '../../assets/images/questions/do-prt-icon01.png');
-//     }
-//     .dopstu-item-02 &{
-//       @include bg-img(30, 30, '../../assets/images/questions/do-prt-icon02.png');
-//     }
-//     .dopstu-item-03 &{
-//       @include bg-img(31, 33, '../../assets/images/questions/do-prt-icon03.png');
-//     }
-//   }
-//   .anscard-sts{
-//     i{
-//       width: 10px;
-//       height: 10px;
-//       border-radius: 1px;
-//       vertical-align: middle;
-//       margin-top: -3px;
-//       margin-right: 6px;
-//       display: inline-block;
-//       &.red-bg{
-//         margin-left: 20px;
-//         background: #ED7171;
-//       }
-//       &.green-bg{
-//         background: #47BF7F;
-//       }
-//     }
-//   }
-//   .anscard-list{
-//     padding-top: 10px;
-//     height: 426px;
-//     li{
-//       float: left;
-//       width: 28px;
-//       height: 28px;
-//       line-height: 28px;
-//       text-align: center;
-//       border: 1px solid $col666;
-//       border-radius: 14px;
-//       margin: 10px;
-//       cursor: pointer;
-//       &.blue-bg, &.red-bg, &.green-bg{
-//         border: 0;
-//         color: $colfff;
-//       }
-//       &.blue-bg{
-//         background: #3485FF;
-//       }
-//       &.red-bg{
-//         background: #ED7171;
-//       }
-//       &.green-bg{
-//         background: #47BF7F;
-//       }
-//     }
-//   }
-//   // modal
-//   .stop-box,.save-box,.jiaojuan-box{
-//     padding-top: 325px;
-//     text-align: center;
-//     p{
-//       padding-top: 33px;
-//       padding-bottom: 23px;
-//       font-size: 22px;
-//     }
-//     .btn-box{
-//       button{
-//         width: 122px;
-//         height: 36px;
-//         border-radius: 18px;
-//         margin: 0 21px;
-//         &:last-child{
-//           background: #0066FF;
-//           color: $colfff;
-//         }
-//       }
-//     }
-//   }
-//   .stop-box{
-//     @include bg-img(447, 465, '../../assets/images/questions/stop-time.png');
-//   }
-//   .save-box{
-//     @include bg-img(447, 465, '../../assets/images/questions/save.png');
-//   }
-//   .jiaojuan-box{
-//     @include bg-img(447, 465, '../../assets/images/questions/jiaojuan-no-finish.png');
-//     &.jiaojuan-finish{
-//       @include bg-img(447, 465, '../../assets/images/questions/jiaojuan-finish.png');
-//     }
-//   }
 </style>

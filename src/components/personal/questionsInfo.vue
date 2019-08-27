@@ -37,7 +37,8 @@ export default {
     return {
       txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
       selIdxQuestion: window.sessionStorage.getItem('selIdxQuestion') || 0,
-      courseList: [] // 课程列表
+      courseList: [], // 课程列表
+      course_id: window.sessionStorage.getItem('course_id') || ''
     }
   },
   components: {
@@ -70,9 +71,8 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.courseList = res.data
-          let cId = window.sessionStorage.getItem('course_id')
-          if (!cId) {
-            window.sessionStorage.setItem('course_id', this.courseList[0].course_id)
+          if (this.courseList.length) {
+            window.sessionStorage.setItem('course_id', this.course_id || this.courseList[0].course_id)
           }
         } else {
           this.$Message.error(res.msg)
