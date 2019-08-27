@@ -3,8 +3,8 @@
     <div class="com-title">
       <span>学员动态</span>
     </div>
-    <div style="height: 124px;overflow:hidden;">
-      <ul class="com-list" :class="{'anim': animate == true}" id="con1" ref="con1">
+    <div style="height: 124px; overflow:hidden;">
+      <ul class="com-list" :class="{'anim': animate == true}">
         <li class="com-item" v-for="(item, index) in userDynamicList" :key="index">
           <span class="c-black">{{item}}</span>
         </li>
@@ -26,9 +26,6 @@ export default {
     }
   },
   computed: {
-    // swiper () {
-    //   return this.$refs.mySwiper.swiper
-    // }
   },
   mounted () {
     this.getUserDynamic()
