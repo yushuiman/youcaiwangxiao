@@ -318,7 +318,6 @@ export default {
       planChooseInfo: {}, // 制定计划详情（课程，时间，是否为0元体验）
       tabIdx: 0, // 月份 答疑tab
       answerType: 'learn', // 答疑组件tab样式
-      monthList: [], // 计划月份
       everydayList: [], // 计划月份对应的天数
       visible2: false, // 缺勤
       visible3: false, // 缺勤详情list
@@ -401,7 +400,6 @@ export default {
             this.course_id = this.learnList[0].course_id // 初始化学习计划详情course_id
             this.currenLearnInfo = this.learnList[0] // 初始化学习计划详情
             this.currenLearnInfo.percent = (this.currenLearnInfo.schedule / this.currenLearnInfo.plan_days) * 100 // 初始化学习计划圆环进度
-            // this.monthList = this.currenLearnInfo.month // 获取当前课程对应的计划日期
             this.getStudyStatus() // 当前学习计划状态
           }
         } else {

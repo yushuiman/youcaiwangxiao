@@ -518,7 +518,6 @@ export default {
     window.sessionStorage.removeItem('playtime')
     clearInterval(this.socketTimer)
     clearInterval(this.tryWatchTimer)
-    // clearInterval(this.intervalId)
   }
 }
 </script>
