@@ -19,21 +19,29 @@
           <button class="btn-com" @click="goResult" v-else>{{txtSts[diffTxt]}}</button>
         </div>
         <div class="right-bottom-wrap">
-          <div class="answer-card">
+          <div class="answer-card" v-if="getQuestion.plate_id == 3">
             <div class="title-com">
               <h2>答题卡</h2>
               <!-- 论述题 -->
-              <div class="anscard-sts" v-if="getQuestion.plate_id == 3">
+              <div class="anscard-sts">
                 <i class="blue-bg"></i>已做
                 <i class="white-bg"></i>未做
               </div>
-              <!-- 其他板块 -->
-              <div class="anscard-sts" v-else>
+            </div>
+            <ul class="anscard-list clearfix">
+              <li :class="{'blue-bg': v.discuss_useranswer}" v-for="(v, index) in topics" :key="index">{{index+1}}</li>
+            </ul>
+          </div>
+          <div class="answer-card" v-else>
+            <!-- 其他板块 -->
+            <div class="title-com">
+              <h2>答题卡</h2>
+              <div class="anscard-sts">
                 <i class="green-bg"></i>已掌握
                 <i class="red-bg"></i>未掌握
               </div>
             </div>
-            <ul class="anscard-list clearfix" >
+            <ul class="anscard-list clearfix">
               <li :class="{'red-bg': v.redCurren, 'green-bg': v.rightCurren, 'blue-bg': v.discuss_useranswer}" v-for="(v, index) in topics" :key="index">{{index+1}}</li>
             </ul>
           </div>
@@ -100,7 +108,7 @@ export default {
     })
   },
   mounted () {
-    // 0元体验解析 失误，之前没有考虑这么周全，需求一点点增加，不想改变已有的逻辑了
+    // 0元体验解析 之前没有考虑这么周全，需求一点点增加，不想改变已有的逻辑了
     if (this.getQuestion.plate_id === 8 && this.diffRes !== 3) {
       this.getExperienceParsing()
       return
@@ -110,7 +118,7 @@ export default {
       this.getCheckItem()
       return
     }
-    // 答题记录错题集解析，全部
+    // 个人中心错题集解析，全部
     if (this.diffRes === 1) {
       this.getErrorParsing()
       return
@@ -146,6 +154,8 @@ export default {
           this.topics = res.data.topics
           this.title = res.data.title
           this.answerSts(this.topics)
+        } else if (res.code === 405) {
+          console.log('暂无数据')
         } else {
           this.$Message.error(res.msg)
         }
@@ -205,14 +215,13 @@ export default {
         }
       })
     },
-    // 错题集查看解析,全部-错题
+    // 错题集继续做题,交卷后-报告页面，查看解析,全部-错题
     getErrorParsing2 (val) {
       error2Parsing({
         type: this.$route.query.type,
         section_id: this.dataStorage.section_id,
         course_id: this.dataStorage.course_id,
         know_id: this.dataStorage.know_id,
-        knob_id: this.dataStorage.knob_id,
         user_id: this.user_id,
         question_content: this.dataStorage.question_content.question
       }).then(data => {
@@ -222,7 +231,7 @@ export default {
           this.title = res.data.title
           this.answerSts(this.topics)
         } else {
-          this.$Message.error(res.msg)
+          // this.$Message.error(res.msg)
         }
       })
     },
@@ -277,6 +286,9 @@ export default {
           if (userOptions !== '' && userOptions !== trueOptions) {
             val.redCurren = true
           }
+          if (this.getQuestion.plate_id === 3) { // 论述题
+            return
+          }
           val.options.forEach((v, index) => {
             if (val.eprone.indexOf(v.option) > -1) {
               v.eprone = true // 易错答案
@@ -315,6 +327,7 @@ export default {
     },
     // 论述题
     goPersonal () {
+      window.sessionStorage.setItem('type', 'questions')
       this.$router.push({ path: '/personal',
         query: {
           type: 'questions',

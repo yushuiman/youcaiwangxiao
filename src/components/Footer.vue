@@ -92,7 +92,7 @@
         </div>
         <div class="footer-bottom w-wrap">
           <p>客服电话：400-666-5318</p>
-          <p>2014-2019 优财智业（北京）科技发展有限公司-美国注册管理会计师CMA认证培训CMA培训专家版权所有 京IPC备10036536号-6</p>
+          <p>2014-{{curYear}} 优财智业（北京）科技发展有限公司-美国注册管理会计师CMA认证培训CMA培训专家版权所有 京IPC备10036536号-6</p>
         </div>
       </div>
     </footer>
@@ -102,20 +102,22 @@
 export default {
   data () {
     return {
+      curYear: '2019'
     }
   },
   mounted () {
+    var myDate = new Date()
+    this.curYear = myDate.getFullYear()
   }
 }
 </script>
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../assets/scss/app";
   #footer {
-    min-width: 1200px;
     height: 354px;
     background: #3B3B3B;
     .footer-wrap{
-      padding: 0 110px;
+      padding: 0 3%;
     }
    }
    .footer-top {

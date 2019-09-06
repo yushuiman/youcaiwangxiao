@@ -2,7 +2,7 @@
   <div id="app">
     <Header/>
     <RightSlider/>
-    <router-view v-if="isAlive"/>
+    <router-view/>
     <Footer/>
   </div>
 </template>
@@ -15,12 +15,10 @@ export default {
   name: 'home',
   data () {
     return {
-      isAlive: true
     }
   },
   provide () {
     return {
-      reload: this.reload
     }
   },
   components: {
@@ -31,20 +29,8 @@ export default {
   mounted () {
   },
   created () {
-    // 在页面加载时读取sessionStorage里的状态信息
-    sessionStorage.getItem('is_change') && this.$store.replaceState(Object.assign(this.$store.state, JSON.parse(sessionStorage.getItem('is_change'))))
-    // 在页面刷新时将vuex里的信息保存到sessionStorage里
-    window.addEventListener('beforeunload', () => {
-      sessionStorage.setItem('is_change', JSON.stringify(this.$store.state))
-    })
   },
   methods: {
-    reload () {
-      this.isAlive = false
-      this.$nextTick(function () {
-        this.isAlive = true
-      })
-    }
   }
 }
 </script>

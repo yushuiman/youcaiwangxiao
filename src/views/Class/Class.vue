@@ -88,13 +88,23 @@
         <like-list></like-list>
       </div>
     </div>
+    <!-- 活动 -->
+    <div v-if="status == 1">
+      <Modal v-model="visible"
+        :width="495"
+        :closable=false
+        footer-hide
+        class="index-active-modal">
+        <img :src="image_url" alt="" @click="freeGet">
+      </Modal>
+    </div>
   </div>
 </template>
 <script>
 import likeList from '@/components/common/likeList.vue'
-// // 加密 解密
-// import { Decrypt, Encrypt } from '@/libs/crypto'
 import { courseList, subjects } from '@/api/class'
+import { thickness } from '@/api/index'
+import { mapState } from 'vuex'
 
 export default {
   data () {
@@ -124,13 +134,20 @@ export default {
       //     courseWay: '面授课程'
       //   }
       // ],
-      subject_type: [] // 筛选科目列表
+      subject_type: [], // 筛选科目列表
+      visible: true,
+      status: 0,
+      image_url: ''
     }
   },
   components: {
     likeList
   },
   computed: {
+    ...mapState({
+      token: state => state.user.token,
+      user_id: state => state.user.user_id
+    }),
     classNamea () {
       if (this.form.class_id) {
         let cla = ''
@@ -148,6 +165,9 @@ export default {
   mounted () {
     this.getCourseList() // 课程列表 默认第一页，6条数据
     this.getSubjects() // 科目
+    if (!this.token) {
+      this.getThickness() // 免费领取活动
+    }
   },
   methods: {
     // 条件筛选
@@ -229,6 +249,30 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // 免费领取活动
+    getThickness () {
+      thickness().then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.status = res.data.status
+          this.image_url = res.data.image_url
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 免费领取
+    freeGet () {
+      if (!this.token) {
+        this.$router.push({ path: '/login',
+          query: {
+            call_back: 'personal'
+          }
+        })
+        return
+      }
+      this.$router.push('/personal')
     }
   }
 }
@@ -394,19 +438,18 @@ export default {
     width: 900px;
   }
   .course-main-con{
-    width: 266px;
-    margin-right: 33px;
+    width: 280px;
+    margin-right: 17px;
     margin-bottom: 20px;
     padding: 7px;
     border-radius: 6px;
-    // background: #f00;
     &:hover{
       background: $colfff;
       cursor: pointer;
     }
     .course-main-con-img{
       width: 100%;
-      height: 157px;
+      height: 147px;
       border-radius: 6px;
       display: block;
     }

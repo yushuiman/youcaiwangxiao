@@ -3,7 +3,6 @@
     <img class="Bookend" :src="Bookend" alt="">
     <div class="background">
       <div class="con" v-if="isForget == 'log-reg'">
-        <div class="perfect" @click="writUserInfo">完善资料</div>
         <div class="login_nav">
           <span :class="isLogin == 'login' || isLogin == 'fast_login' ? 'span_on' : ''" @click="tabLogin('login')">登录</span>
           <span :class="isLogin == 'reg' ? 'span_on' : ''" @click="tabLogin('reg')">注册</span>
@@ -317,7 +316,8 @@ export default {
       form4: {
         mobile: '',
         code: ''
-      }
+      },
+      callBack: this.$route.query.call_back || '/'
     }
   },
   computed: {
@@ -515,11 +515,10 @@ export default {
       } else {
         this.handleLogin({ mobile: Encrypt(this.form.mobile), password: this.form.password }).then(data => {
           if (this.token) {
-            this.getUserInfo()
+            this.getUserInfo().then(() => {
+              this.$router.push(this.callBack)
+            })
           }
-          setTimeout(() => {
-            this.$router.push('/')
-          }, 1000)
         })
       }
     },
@@ -553,14 +552,14 @@ export default {
               this.form2.text_pwd = ''
               this.form2.code = ''
               if (this.token) {
-                this.getUserInfo()
+                this.getUserInfo().then(() => {
+                  this.$router.push(this.callBack)
+                })
               }
             })
           } else if (res.data.code === 406) {
-            // this.$store.commit('setToken', res.data.data)
             this.$Message.error('账号 or 密码错误')
           } else if (res.data.code === 408) {
-            // this.$store.commit('setToken', res.data.data)
             this.$Message.error('验证码错误')
           } else {
             this.$Message.error(res.data.msg)
@@ -572,10 +571,8 @@ export default {
     voice () {
       voice({ mobile: Encrypt(this.form2.mobile) }).then(res => {
         if (res.data.code === 200) {
-          this.$store.commit('setToken', res.data.data)
           this.$Message.success('语音电话拨打成功，请注意接听')
         } else if (res.data.code === 408) {
-          // this.$store.commit('setToken', res.data.data)
           this.$Message.error('验证码错误')
         } else {
           this.$Message.error(res.data.msg)
@@ -586,10 +583,8 @@ export default {
     voice2 () {
       voice({ 'mobile': Encrypt(this.form4.mobile) }).then(res => {
         if (res.data.code === 200) {
-          this.$store.commit('setToken', res.data.data)
           this.$Message.success('语音电话拨打成功，请注意接听')
         } else if (res.data.code === 408) {
-          // this.$store.commit('setToken', res.data.data)
           this.$Message.error('验证码错误')
         } else {
           this.$Message.error(res.data.msg)
@@ -600,10 +595,8 @@ export default {
     voice3 () {
       voice({ 'mobile': Encrypt(this.form3.mobile) }).then(res => {
         if (res.data.code === 200) {
-          this.$store.commit('setToken', res.data.data)
           this.$Message.success('语音电话拨打成功，请注意接听')
         } else if (res.data.code === 408) {
-          // this.$store.commit('setToken', res.data.data)
           this.$Message.error('验证码错误')
         } else {
           this.$Message.error(res.data.msg)
@@ -627,13 +620,9 @@ export default {
             this.$Message.success('密码重置成功')
             this.handleLogin({ mobile: Encrypt(this.form3.mobile), password: this.form3.new_pwd }).then(data => {
               if (this.token) {
-                this.getUserInfo()
-              }
-            })
-            this.$router.replace({ path: 'login',
-              query: {
-                ...this.$route.query,
-                type: 'login'
+                this.getUserInfo().then(() => {
+                  this.$router.push(this.callBack)
+                })
               }
             })
           } else {
@@ -653,11 +642,11 @@ export default {
         quickLogin({ 'mobile': Encrypt(this.form4.mobile), 'mobilecode': this.form4.code }).then(res => {
           if (res.data.code === 200) {
             this.$Message.success('登录成功')
-            this.$store.commit('setToken', res.data.data)
-            this.getUserInfo()
-            setTimeout(() => {
-              this.$router.push('/')
-            }, 1000)
+            this.$store.commit('setToken', res.data.data.token)
+            window.sessionStorage.setItem('ycwxToken', res.data.data.token)
+            this.getUserInfo().then(() => {
+              this.$router.push(this.callBack)
+            })
           } else {
             this.$Message.error(res.data.msg)
           }

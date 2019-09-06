@@ -131,8 +131,7 @@ export default {
         },
         video_name: ''
       },
-      ID: '#anchor-0',
-      scrollTop: 0
+      ID: '#anchor-0'
     }
   },
   computed: {
@@ -153,20 +152,23 @@ export default {
   methods: {
     scrollToTop () {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.scrollTop > 70) {
+      if (scrollTop > 100) {
         this.$refs.fixedTit.style.position = 'fixed'
         this.$refs.fixedTit.style.top = 70 + 'px'
         this.$refs.fixedTit.style.width = 895 + 'px'
       } else {
-        this.$refs.fixedTit.style.position = ''
-        this.$refs.fixedTit.style.top = ''
-        this.$refs.fixedTit.style.width = ''
+        if (scrollTop > 0) {
+          this.$refs.fixedTit.style.position = ''
+          this.$refs.fixedTit.style.top = ''
+          this.$refs.fixedTit.style.width = ''
+        }
       }
     },
     goAnchor (selector) {
       var anchor = this.$el.querySelector(selector)
-      document.documentElement.scrollTop = anchor.offsetTop - 150
+      setTimeout(() => {
+        document.documentElement.scrollTop = anchor.offsetTop - 150
+      }, 300)
     },
     // 已做题数量 右边进度条用
     doPoticInfo (num = 0, index) {

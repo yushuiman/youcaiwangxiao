@@ -12,10 +12,12 @@
                 <span class="arow" v-if="!selCourseFlag"><Icon type="md-arrow-dropdown" style="font-size: 30px;margin-top: -4px;color: #666666;"/></span>
                 <span class="arow" v-if="selCourseFlag"><Icon type="md-arrow-dropup" style="font-size: 30px;margin-top: -4px;color: #666666;"/></span>
               </div>
-              <ul class="sel-course-list" v-if="selCourseFlag">
-                <li class="sel-course-item" v-for="(v, index) in learnList" :key="index" @click="selCourse(v)">{{v.plan_name}}</li>
-                <li class="add-course" @click="planLearn">+添加学习计划</li>
-              </ul>
+              <transition name="fade">
+                <ul class="sel-course-list" ref="selCourseRef" v-if="selCourseFlag">
+                  <li class="sel-course-item" v-for="(v, index) in learnList" :key="index" @click="selCourse(v)">{{v.plan_name}}</li>
+                  <li class="add-course" @click="planLearn">+添加学习计划</li>
+                </ul>
+              </transition>
             </div>
             <div class="ewm-box">
               <i class="ewm-icon"></i>
@@ -346,6 +348,13 @@ export default {
     answerInfo
   },
   mounted () {
+    window.addEventListener('mouseover', (e) => {
+      if (this.selCourseFlag) {
+        if (e.target.parentNode !== this.$refs.selCourseRef) {
+          this.selCourseFlag = false
+        }
+      }
+    })
     this.getLearnIndex()
   },
   methods: {
@@ -577,6 +586,7 @@ export default {
     },
     // 月份获取日
     getEveryday (v) {
+      this.everydayList = []
       everyday({
         user_id: this.user_id,
         plan_id: this.currenLearnInfo.plan_id,
@@ -654,26 +664,28 @@ export default {
     },
     // 学习视频 看视频
     goVideoPage (val) {
-      window.sessionStorage.removeItem('is_exper')
       if (val.beforeDate === 1 || val.afterDate === 1) {
         return
       }
       let obj = {
+        //     this.playCourseInfo.VideoId = v.VideoId
+      //     this.playCourseInfo.package_id = v.package_id
+      //     this.playCourseInfo.course_id = v.course_id
+      //     this.playCourseInfo.section_id = v.section_id
+      //     this.playCourseInfo.is_zhengke = v.is_zhengke
         package_id: val.package_id,
         course_id: val.course_id,
         section_id: val.section_id,
         video_id: val.video_id,
+        is_zhengke: val.is_zhengke,
         plan_id: this.currenLearnInfo.plan_id, // 计划id
-        days: this.currenLearnInfo.join_days, // 第几天
-        status: 2 // 播放类型1课程视频播放2学习中心播放视频类型socket
+        days: this.currenLearnInfo.join_days // 第几天
       }
       if (this.currenLearnInfo.is_exper === 1) { // 0元体验 未购买 去看视频
         val.userstatus = 2 // 当0元体验的时候 2是未购买
-        window.sessionStorage.setItem('is_exper', 1) // 1是0元体验
       }
       window.sessionStorage.setItem('userstatus', val.userstatus || 1) // 1购买2未购买
-      window.sessionStorage.setItem('playtime', val.watch_time) // 上次看的时间
-      this.$router.push({ path: '/class-video',
+      this.$router.push({ path: '/learn-center-video',
         query: obj
       })
     },
@@ -771,7 +783,7 @@ export default {
     height: 171px;
   }
   .lc-login-wrap{
-    width: 1281px;
+    width: 1010px;
     margin: 0 auto;
     height: 100%;
     display: flex;
@@ -781,10 +793,14 @@ export default {
     z-index: 2;
   }
   .lc-login-left{
-    width: 620px;
+    width: 410px;
+    margin-top: -110px;
+    margin-left: 3%;
   }
   .lc-login-right{
-    margin-right: 46px;
+    width: 415px;
+    height: 421px;
+    margin-right: 35px;
   }
   .yc-detail{
     .yc-welcome{
@@ -798,10 +814,11 @@ export default {
       }
     }
     .yc-logo{
-      line-height: 28px;
+      line-height: 22px;
+      margin-top: 27px;
       img{
         width: 94px;
-        height: 20px;
+        height: 16px;
         vertical-align: middle;
         margin-top: -4px;
       }
@@ -815,17 +832,17 @@ export default {
         background: #979797;
       }
       span{
-        font-size: 20px;
+        font-size: 16px;
       }
     }
     .yc-instr{
       line-height: 20px;
       color: $col999;
-      margin-top: 7px;
+      margin-top: 9px;
     }
   }
   .loginSign-wrap{
-    padding-top: 60px;
+    padding-top: 56px;
     .yc-tiyan{
       font-size: 18px;
       line-height: 30px;
@@ -862,7 +879,7 @@ export default {
     display: inline-block;
     color: #ffffff;
     font-style: normal;
-    @include bg-linear-gradient($btnGredientOrange, to left);
+    @include bg-linear-gradient($btnGredientOrange, left);
     border-radius: 4px;
     &:after{
       position: absolute;
@@ -942,6 +959,7 @@ export default {
     border: 1px solid rgba(102,102,102,1);
     box-sizing: border-box;
     cursor: pointer;
+    overflow: hidden;
     em{
       display: inline-block;
       overflow: hidden;
@@ -1002,13 +1020,18 @@ export default {
   }
   .arow{
     position: absolute;
-    top: 1px;
-    bottom: 1px;
-    right: 1px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
     width: 38px;
     text-align: center;
     background: #F5F5F5;
     border-radius: 0px 6px 6px 0;
+    .sel-box &{
+      top: 1px;
+      bottom: 1px;
+      right: 1px;
+    }
   }
   .learn-status{
     width: 100px;
@@ -1016,12 +1039,12 @@ export default {
     line-height: 32px;
     font-size: 18px;
     color: $colfff;
-    @include bg-linear-gradient($btnGredientOrange, to left);
+    @include bg-linear-gradient($btnGredientOrange, left);
     border-radius: 20px;
     text-align: center;
     display: inline-block;
     &.gray{
-      @include bg-linear-gradient($btnGredientGray, to left);
+      @include bg-linear-gradient($btnGredientGray, left);
     }
   }
   .ewm-box{
@@ -1130,7 +1153,7 @@ export default {
         font-size: 16px;
         color: #ffffff;
         &.gray{
-          @include bg-linear-gradient($btnGredientGray, to left);
+          @include bg-linear-gradient($btnGredientGray, left);
           border: 0;
         }
       }
@@ -1225,25 +1248,28 @@ export default {
       border-right: 8px solid transparent;
     }
     .days-item-blue &{
-      width: 160px;
-      @include bg-linear-gradient($btnGredientBlue, to left);
+      width: 140px;
+      @include bg-linear-gradient($btnGredientBlue, left);
       &:before{
         border-bottom: 8px solid #39BBFD;
       }
     }
     .days-item-orange &{
-      width: 110px;
-      @include bg-linear-gradient($btnGredientOrange, to left);
+      width: 100px;
+      @include bg-linear-gradient($btnGredientOrange, left);
       &:before{
         border-bottom: 8px solid #FBAC78;
       }
     }
     .days-item-gray &,.days-item-rest &{
-      width: 127px;
-      @include bg-linear-gradient($btnGredientGray, to left);
+      width: 115px;
+      @include bg-linear-gradient($btnGredientGray, left);
       &:before{
         border-bottom: 8px solid #C7C7C7;
       }
+    }
+    .days-item-rest &{
+      width: 100px;
     }
   }
   .status-icon{

@@ -65,7 +65,7 @@ export const wxLogin = (data) => {
 }
 export const getUserInfo = (data) => {
   return axios.request({
-    url: '/web/Login/getUserInfo ',
+    url: '/web/Login/getUserInfo',
     data,
     method: 'post'
   })

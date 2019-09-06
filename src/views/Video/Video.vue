@@ -1,8 +1,7 @@
 <template>
   <div class="video-wrap">
     <div class="video-header">
-      <router-link v-if="playCourseInfo.status == 1" :to="{ path: '/class-detail', query:{package_id: this.$route.query.package_id}}">></router-link>
-      <router-link v-if="playCourseInfo.status == 2" :to="{ path: '/learning-center-detail', query:{package_id: this.$route.query.package_id}}">></router-link>
+      <router-link :to="{ path: '/class-detail', query: { package_id: this.$route.query.package_id }}">></router-link>
       <span>{{videoCredentials.Title}}</span>
       <div class="login-r fr">
         <img src="../../assets/images/global/email-icon.png" alt="email" class="email-icon" @click="goNewsPage">
@@ -37,7 +36,7 @@
       </div>
       <div class="video-info-l">
         <ul class="vinfo-ul">
-          <li class="vinfo-item" @click="showModel('课程<br />切换')" v-if="playCourseInfo.status == 1">
+          <li class="vinfo-item" @click="showModel('课程<br />切换')">
             <i class="vio-icon vio-icon-01"></i>
             <p class="txt">课程<br />切换</p>
           </li>
@@ -68,7 +67,7 @@
         <div class="drag"></div>
       </div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
-        <course-list v-if="flagKc && playCourseInfo.status == 1" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
+        <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
         <!-- <div v-if="playCourseInfo.status == 1">
         </div> -->
         <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel"></answer>
@@ -114,7 +113,6 @@ export default {
           sign: 'set'
         }
       ],
-      backCount: 0,
       selMenu: 3,
       showBox: '课程<br />切换',
       vinfo: ['课程<br />切换', '答疑', '讲义'],
@@ -129,8 +127,7 @@ export default {
         playAuth: '', // 获取视频凭证
         collect: '', // 收藏
         watch_time: '', // 观看时间
-        Title: '', // name
-        playtime: 0 // 播放时间记录，下次自动跳转到当前时间
+        Title: '' // name
       },
       playCourseInfo: {
         video_id: this.$route.query.video_id,
@@ -138,17 +135,14 @@ export default {
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
         is_zhengke: 0,
-        userstatus: parseInt(window.sessionStorage.getItem('userstatus')) || 2, // 1购买2未购买
-        type: this.$route.query.type,
-        status: parseInt(this.$route.query.status) || 1,
-        is_exper: parseInt(window.sessionStorage.getItem('is_exper')) || 2 // 1是学习计划0元体验,虽没购买,也可以观看完整视频，并有socket
+        userstatus: parseInt(window.sessionStorage.getItem('userstatus')) || 2 // 1购买2未购买
       },
       packageList: [],
       secvCatalogArr: [],
       courseSections: [],
       openMenu: '1-1', // 默认播放菜单menu-index
       playVideoInfo: window.sessionStorage.getItem('playVideoInfo'), // 视频播放信息
-      playtime: window.sessionStorage.getItem('playtime') || 0, // 视频上次播放时间
+      playtime: 0, // 视频上次播放时间
       socketTimer: null,
       tryWatchTimer: null,
       tryWatchFlag: false,
@@ -176,10 +170,6 @@ export default {
         }
       }
     })
-    if (this.playCourseInfo.status === 2) {
-      this.wImportant = 0
-      this.flagKc = false
-    }
     this.dragControllerDiv()
     // if (this.flagCourse || this.flagAnswer || this.flagJy) {
     // }
@@ -234,32 +224,16 @@ export default {
           video_id: this.$route.query.video_id,
           watch_time: this.playtime,
           video_type: 1, // 视频类型 1视频2直播
-          status: this.playCourseInfo.status || 1 // 播放类型 1课程视频播放2学习中心
+          status: 1 // 播放类型 1课程视频播放2学习中心
         }
         // 已购买并且视频播放时间大于0 socket
         if (this.playCourseInfo.userstatus === 1 && this.playtime > 0) {
-          if (this.playCourseInfo.status === 2) { // 学习计划多了2个字断socket
-            message.days = this.$route.query.days
-            message.plan_id = this.$route.query.plan_id
-          }
           // console.log(JSON.stringify(message))
           initWS(JSON.stringify(message))
         }
-        // 未购买，但是学习计划的0元体验，也有socket
-        if (this.playCourseInfo.userstatus === 2 && this.playtime > 0) {
-          if (this.playCourseInfo.is_exper === 1) {
-            message.days = this.$route.query.days
-            message.plan_id = this.$route.query.plan_id
-            initWS(JSON.stringify(message))
-          }
-        }
-        window.sessionStorage.setItem('playtime', this.playtime) // 防止刷新页面，也要记录当前播放时间
       }, 30000)
       // 未购买试看3分钟
       if (this.playCourseInfo.userstatus === 2) {
-        if (this.playCourseInfo.is_exper === 1) { // 如果是学习计划的0元体验,可以观看整个视频
-          return
-        }
         this.tryWatchTimer = setInterval(() => {
           let playtime = parseInt(instance.getCurrentTime())
           if (playtime >= this.tryQatchNum) {
@@ -267,7 +241,7 @@ export default {
             instance.pause()
             instance.seek(this.tryQatchNum)
           } else {
-            window.sessionStorage.setItem('playtime', playtime) // 防止刷新页面，也要记录当前播放时间
+            this.playtime = playtime
             instance.play()
           }
         }, 1000)
@@ -434,6 +408,7 @@ export default {
           }).then(data => {
             let res = data.data
             this.videoCredentials = res.data
+            this.playtime = this.videoCredentials.watch_time
           })
         } else {
           this.$Message.error(res.msg)
@@ -474,10 +449,6 @@ export default {
       window.sessionStorage.setItem('type', sign)
       this.flagEntrance = false
       this.$router.push('/personal')
-      // console.log(this.$route.name === 'personal' || this.$route.path === '/personal')
-      // console.log(this.$route.path === '/personal')
-      // this.$router.push({ path: 'personal', query: { type: sign } })
-      // this.centerType(sign)
     },
     // 消息中心
     goNewsPage () {
@@ -507,7 +478,7 @@ export default {
       }
       this.$router.push({ path: '/class-video', query: obj })
       window.sessionStorage.setItem('userstatus', 1) // 是否购买
-      window.sessionStorage.setItem('playtime', this.watchRecordsList.video.watch_time) // 获取当前播放时间
+      this.playtime = this.watchRecordsList.video.watch_time
     },
     ouLogin () {
       this.$router.push('/')
@@ -515,7 +486,6 @@ export default {
     }
   },
   beforeDestroy () {
-    window.sessionStorage.removeItem('playtime')
     clearInterval(this.socketTimer)
     clearInterval(this.tryWatchTimer)
   }

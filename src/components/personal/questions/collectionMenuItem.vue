@@ -75,7 +75,7 @@ export default {
         knob_id: '', // 节id
         know_id: '', // 知识点id
         mock_id: '',
-        plate_id: 4, // 错题
+        plate_id: 0, // 错题
         num: '', // 默认随机15道
         paper_type: 1, // 单选1 论述2
         sc: 1 // 收藏用户答案文案不展示
@@ -139,13 +139,12 @@ export default {
       })
     },
     goToPic (v, type) {
+      // 查看解析
       this.visible = false
       this.getPoticData.know_id = v.know_id
       window.sessionStorage.setItem('subTopics', JSON.stringify(this.getPoticData))
       window.sessionStorage.setItem('diffRes', 2) // 区分不同的接口请求
-      // 查看解析
       window.sessionStorage.setItem('diffTxt', 2) // 区分查看报告按钮，返回个人中心
-      window.sessionStorage.setItem('userOptionFlag', 1) // 收藏记录查看解析，只有正确答案展示，用户答案没有
       this.$router.push({ path: '/analysis', query: this.getPoticData })
     }
   }

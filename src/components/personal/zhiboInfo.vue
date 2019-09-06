@@ -64,7 +64,7 @@ export default {
       right: 0;
       width: 76px;
       height: 74px;
-      background: url('../../assets/images/personal/yuyue.png') no-repeat;
+      background: url('../../assets/images/user/yuyue.png') no-repeat;
       background-size: contain;
     }
     .uci-img{

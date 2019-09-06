@@ -71,11 +71,11 @@
           <img src="@/assets/images/index/tit_icon.png" alt="">
           <span class="part-icon">合作伙伴</span>
         </div>
-        <img class="hzhb-img" src="@/assets/images/index/hzhb.png" alt="" >
+        <img class="hzhb-img" src="@/assets/images/index/hzhb2.png" alt="" >
       </div>
     </div>
     <!-- 活动 -->
-    <div v-if="status == 1">
+    <!-- <div v-if="status == 1">
       <Modal v-model="visible"
         :width="495"
         :closable=false
@@ -83,19 +83,19 @@
         class="index-active-modal">
         <img :src="image_url" alt="" @click="freeGet">
       </Modal>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import { thickness } from '@/api/index'
+// import { thickness } from '@/api/index'
 import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      status: 0,
-      image_url: '',
-      visible: true
+      // status: 0,
+      // image_url: '',
+      // visible: true
     }
   },
   computed: {
@@ -105,9 +105,9 @@ export default {
     })
   },
   mounted () {
-    if (!this.token) {
-      this.getThickness()
-    }
+    // if (!this.token) {
+    //   this.getThickness()
+    // }
   },
   methods: {
     jumpWhere (type) {
@@ -126,31 +126,30 @@ export default {
       if (type === 5) {
 
       }
-    },
-    getThickness () {
-      thickness().then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.status = res.data.status
-          this.image_url = res.data.image_url
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
-    // 免费领取
-    freeGet () {
-      if (!this.token) {
-        this.$router.push({ path: '/login',
-          query: {
-            type: 'login',
-            is_forget: 'log-reg'
-          }
-        })
-        return
-      }
-      this.$router.push('/class')
     }
+    // getThickness () {
+    //   thickness().then(data => {
+    //     const res = data.data
+    //     if (res.code === 200) {
+    //       this.status = res.data.status
+    //       this.image_url = res.data.image_url
+    //     } else {
+    //       this.$Message.error(res.msg)
+    //     }
+    //   })
+    // },
+    // // 免费领取
+    // freeGet () {
+    //   if (!this.token) {
+    //     this.$router.push({ path: '/login',
+    //       query: {
+    //         call_back: 'personal'
+    //       }
+    //     })
+    //     return
+    //   }
+    //   this.$router.push('/personal')
+    // }
   }
 }
 </script>

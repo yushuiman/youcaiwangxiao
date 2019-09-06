@@ -116,11 +116,10 @@ export default {
     }
   },
   mounted () {
-    if (this.token) {
-      if (!this.user_id) {
-        this.getUserInfo()
-      }
-      this.getIndexMessage() // 系统消息
+    if (this.token) { // 刷新页面vuex状态重新储存
+      this.getUserInfo().then(() => {
+        this.getIndexMessage()// 系统消息
+      })
     }
     document.addEventListener('mouseover', (e) => {
       if (this.flagEntrance) {
@@ -167,7 +166,11 @@ export default {
     },
     // 登录
     goLogin (type) {
-      this.$router.push('/login')
+      // this.$router.push({ path: '/login',
+      //   query: {
+      //     call_back: 'question'
+      //   }
+      // })
     },
     // 学习中心
     goLearning () {

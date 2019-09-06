@@ -5,7 +5,7 @@
           <div class="integral-signin">{{personalInfo.integral}}积分<span @click="getLearnClock">签到</span></div>
           <div class="user-flex">
             <div class="user-info">
-              <img :src="personalInfo.head" alt="头像" class="head-logo" @click="setBaseInfo">
+              <img ref="fixedTit" :src="personalInfo.head" alt="头像" class="head-logo" @click="setBaseInfo">
               <div class="user-name-instr">
                 <h2>{{personalInfo.username}}</h2>
                 <p>您已入学<span>{{personalInfo.day}}</span>天啦！</p>
@@ -21,7 +21,7 @@
       </div>
       <!-- main -->
       <div class="user-main w-wrap">
-        <div class="userm-left">
+        <div class="userm-left" ref="usermLeft">
           <ul class="userm-list">
             <li class="userm-item" :class="['userm-item-0' + (index+1), {'curren': clkTit == v.type}]" v-for="(v, index) in userArr" :key="index" @click="switchInfo(v, index)">
               <i class="userm-icon"></i>{{v.tit}}
@@ -87,6 +87,7 @@ export default {
   },
   computed: {
     ...mapState({
+      token: state => state.user.token,
       user_id: state => state.user.user_id
       // clkTit: state => state.nav.clkTit
     })
@@ -101,9 +102,35 @@ export default {
     setInfo
   },
   mounted () {
-    this.getPersonalInfo()
+    if (this.token) {
+      this.getPersonalInfo()
+    }
+    // window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
+    // scrollToTop () {
+    //   let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+    //   if (scrollTop > 70) {
+    //     this.$refs.fixedTit.style.position = 'fixed'
+    //     this.$refs.fixedTit.style.top = 50 + 'px'
+    //     this.$refs.fixedTit.style.width = 120 + 'px'
+    //     this.$refs.fixedTit.style.height = 120 + 'px'
+    //     this.$refs.fixedTit.style.marginLeft = 20 + 'px'
+    //     this.$refs.usermLeft.style.position = 'fixed'
+    //     this.$refs.usermLeft.style.top = 140 + 'px'
+    //   } else {
+    //     if (scrollTop > 0) {
+    //       this.$refs.fixedTit.removeAttribute('style')
+    //       this.$refs.fixedTit.style.position = ''
+    //       this.$refs.fixedTit.style.top = ''
+    //       this.$refs.fixedTit.style.width = 142 + 'px'
+    //       this.$refs.fixedTit.style.height = 142 + 'px'
+    //       this.$refs.fixedTit.style.marginLeft = 0 + 'px'
+    //       this.$refs.usermLeft.style.position = ''
+    //       this.$refs.usermLeft.style.top = 0 + 'px'
+    //     }
+    //   }
+    // },
     switchInfo ({ type }, index) {
       this.clkTit = type
       window.sessionStorage.setItem('type', type)
@@ -149,7 +176,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.learnClockInfo = res.data
-          this.$Message.success('签到成功第' + res.data.num + '天')
+          this.$Message.success('签到' + res.data.num + '次')
         } else {
           this.$Message.error(res.msg)
         }
@@ -165,12 +192,14 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    // window.sessionStorage.removeItem('type')
+    window.sessionStorage.removeItem('type')
     window.sessionStorage.removeItem('selIdxCourse')
     window.sessionStorage.removeItem('selIdxQuestion')
     window.sessionStorage.removeItem('selIdxAnswer')
     window.sessionStorage.removeItem('selIdxOrder')
     window.sessionStorage.removeItem('selIdxAccount')
+    document.body.removeAttribute('style')
+    this.visible = false
     next()
   }
 }
@@ -224,6 +253,8 @@ export default {
     }
   }
   .user-name-instr{
+    position: absolute;
+    left: 142px;
     margin-left: 28px;
     h2{
       font-size: 28px;

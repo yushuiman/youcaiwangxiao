@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 200px 0;text-align:center;">开发中<br>这是资讯页面</div>
+  <div style="padding: 200px 0;text-align:center;">开发中<br>暂时关联老平台资讯</div>
 </template>
 
 <script>

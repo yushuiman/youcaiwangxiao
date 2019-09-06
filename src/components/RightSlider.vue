@@ -1,13 +1,13 @@
 <template>
   <div class="r_slider" v-if="$route.meta.showRightSlider">
     <ul class="slider-list">
-      <li class="try-item">
+      <!-- <li class="try-item">
         <i class="r-icon"></i>
         <p class="r-txt">试听<br />课程</p>
         <div class="com-show r-try">
           <div class="com-btn" @click="freeGet">免费领取</div>
         </div>
-      </li>
+      </li> -->
       <li class="service-item" v-if="consultInfo.status == 1">
         <i class="r-icon"></i>
         <p class="r-txt">客服</p>

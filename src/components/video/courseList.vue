@@ -33,7 +33,6 @@
 import { mapState } from 'vuex'
 
 export default {
-  inject: ['reload'],
   props: {
     showBox: {
       type: String,
@@ -111,9 +110,6 @@ export default {
     // this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
   },
   methods: {
-    handleReload () {
-      this.reload() // 在想要刷新页面的时候调用reload方法
-    },
     closeModel () {
       this.videoListFlag = false
       this.$emit('closeModel', 'kc')
@@ -179,8 +175,6 @@ export default {
         }
       })
       window.location.reload()
-      window.sessionStorage.removeItem('playtime')
-      // this.handleReload()
     }
   }
 }

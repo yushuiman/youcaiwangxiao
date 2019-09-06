@@ -146,8 +146,7 @@ export default {
           question: []
         }
       },
-      ID: '#anchor-0',
-      scrollTop: 0
+      ID: '#anchor-0'
     }
   },
   computed: {
@@ -167,29 +166,34 @@ export default {
   methods: {
     scrollToTop () {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      this.scrollTop = scrollTop
-      if (this.scrollTop > 100) {
+      if (scrollTop > 100) {
         this.$refs.fixedTit.style.position = 'fixed'
         this.$refs.fixedTit.style.top = 70 + 'px'
         this.$refs.fixedTit.style.width = 895 + 'px'
       } else {
-        this.$refs.fixedTit.style.position = ''
-        this.$refs.fixedTit.style.top = ''
-        this.$refs.fixedTit.style.width = ''
+        if (scrollTop > 0) {
+          this.$refs.fixedTit.style.position = ''
+          this.$refs.fixedTit.style.top = ''
+          this.$refs.fixedTit.style.width = ''
+        }
       }
     },
     goAnchor (selector) {
       var anchor = this.$el.querySelector(selector)
-      document.documentElement.scrollTop = anchor.offsetTop - 150
+      setTimeout(() => {
+        document.documentElement.scrollTop = anchor.offsetTop - 150
+      }, 300)
     },
     // 已做题数量 右边进度条用
-    doPoticInfo (num = 0, index) {
+    doPoticInfo (num = 0, index = 0) {
       this.percentNum = num
       this.percent = this.percentNum / this.total * 100
       if (this.total === index) {
         return
       }
-      this.goAnchor('#anchor-' + index)
+      if (index > 0) {
+        this.goAnchor('#anchor-' + index)
+      }
     },
     // 拿题
     getTopicList () {
@@ -296,8 +300,6 @@ export default {
             return
           }
           window.sessionStorage.setItem('subTopics', JSON.stringify(this.subTopics))
-          window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
-          window.sessionStorage.setItem('diffRes', 11) // 区分b不同的接口请求，错题解析分为两个接口，全部，错题不能共用一个
           this.$router.push({ path: '/result-report',
             query: {
               course_id: this.getQuestion.course_id

@@ -69,7 +69,7 @@ export default {
       justify-content: space-between;
       cursor: pointer;
       .c-black{
-        width: 70%;
+        width: 65%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

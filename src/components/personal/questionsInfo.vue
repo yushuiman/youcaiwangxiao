@@ -11,9 +11,11 @@
       <!-- 收藏夹 -->
       <collection-menuItem v-if="selIdxQuestion == 2" :courseList="courseList" :user_id="user_id"></collection-menuItem>
       <!-- 习题笔记 -->
-      <div v-if="selIdxQuestion == 3">
-        习题笔记
-      </div>
+      <!-- <div v-if="selIdxQuestion == 3">
+        <div class="no-data">
+          暂无数据
+        </div>
+      </div> -->
     </div>
     <div class="no-data" v-else>
       暂无数据
@@ -35,7 +37,8 @@ export default {
   },
   data () {
     return {
-      txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
+      // txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
+      txtArr: ['做题记录', '错题集', '收藏夹'],
       selIdxQuestion: window.sessionStorage.getItem('selIdxQuestion') || 0,
       courseList: [], // 课程列表
       course_id: window.sessionStorage.getItem('course_id') || ''
@@ -85,4 +88,7 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
+  .all-main{
+    padding-top: 1px;
+  }
 </style>

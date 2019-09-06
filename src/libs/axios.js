@@ -1,7 +1,9 @@
 import axios from 'axios'
+import store from '../store/'
+import router from '../router/'
 import {
-  getToken
-  // clearLoginInfo
+// getToken
+// clearLoginInfo
 } from '@/libs/utils'
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
@@ -15,7 +17,8 @@ class HttpRequest {
     const config = {
       baseURL: this.baseUrl,
       headers: {
-        'token': getToken()
+        'token': store.state.user.token
+        // 'token': getToken()
       }
     }
     return config
@@ -41,13 +44,18 @@ class HttpRequest {
     // 响应拦截
     instance.interceptors.response.use(res => {
       this.distroy(url)
-      const { data, status, code } = res
-      if (code === 401) {
-        // clearLoginInfo()
+      const { data, code } = res
+      if (res.data.code === 401) {
+        // removeToken() // cookie token
+        window.sessionStorage.removeItem('ycwxToken')
+        store.commit('setToken', '')
+        store.commit('setAvator', '')
+        store.commit('setUserId', '')
+        store.commit('setUserName', '')
+        router.push('/login')
       }
       return {
         data,
-        status,
         code
       }
     }, error => {

@@ -78,7 +78,7 @@
             </li>
           </ul>
         </div>
-        <div class="coupon-com">
+        <div class="coupon-com" v-if="InvalidList.length">
           <p class="coupon-tit">失效优惠券</p>
           <ul class="coupon-list">
             <li class="coupon-item gray" v-for="(item, index) in InvalidList" :key="index">
@@ -333,7 +333,7 @@ export default {
     border-radius: 16px;
     margin: 20px 40px 0 0;
     color: #ffffff;
-    @include bg-linear-gradient($btnGredientOrange, to right);
+    @include bg-linear-gradient($btnGredientOrange, right);
     overflow: hidden;
     position: relative;
     &.gray{

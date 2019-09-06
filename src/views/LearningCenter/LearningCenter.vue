@@ -127,9 +127,9 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.$store.commit('setToken', res.data.token)
+          window.sessionStorage.setItem('ycwxToken', res.data.token)
           this.getUserInfo().then(() => {
             this.$router.push('learning-center-detail')
-            // this.getLearnIndex() // 登录成功 查询学习计划详情
           })
           // this.errorTxt = ''
           // this.visible = true
@@ -173,6 +173,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.$store.commit('setToken', res.data.token)
+          window.sessionStorage.setItem('ycwxToken', res.data.token)
           this.getUserInfo().then(() => {
             this.$router.push('learning-center-detail')
             // this.getLearnIndex() // 登录成功 查询学习计划详情
@@ -296,7 +297,7 @@ export default {
     height: 171px;
   }
   .lc-login-wrap{
-    width: 1281px;
+    width: 1010px;
     margin: 0 auto;
     height: 100%;
     display: flex;
@@ -306,10 +307,14 @@ export default {
     z-index: 2;
   }
   .lc-login-left{
-    width: 620px;
+    width: 410px;
+    margin-top: -110px;
+    margin-left: 3%;
   }
   .lc-login-right{
-    margin-right: 46px;
+    width: 415px;
+    height: 421px;
+    margin-right: 35px;
   }
   .yc-detail{
     .yc-welcome{
@@ -323,10 +328,11 @@ export default {
       }
     }
     .yc-logo{
-      line-height: 28px;
+      line-height: 22px;
+      margin-top: 27px;
       img{
         width: 94px;
-        height: 20px;
+        height: 16px;
         vertical-align: middle;
         margin-top: -4px;
       }
@@ -340,17 +346,17 @@ export default {
         background: #979797;
       }
       span{
-        font-size: 20px;
+        font-size: 16px;
       }
     }
     .yc-instr{
       line-height: 20px;
       color: $col999;
-      margin-top: 7px;
+      margin-top: 9px;
     }
   }
   .loginSign-wrap{
-    padding-top: 60px;
+    padding-top: 56px;
     .yc-tiyan{
       font-size: 18px;
       line-height: 30px;

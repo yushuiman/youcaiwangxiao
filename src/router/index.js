@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home.vue'
-import { getToken } from '@/libs/utils'
+// import store from '@/store/'
+// import { getToken } from '@/libs/utils'
+import {
+} from '@/api/login'
 
 Vue.use(Router)
 
@@ -190,7 +193,7 @@ const router = new Router({
       meta: {
         title: 'App',
         showHeader: true,
-        showFooter: true,
+        showFooter: false,
         showRightSlider: true
       }
     },
@@ -262,19 +265,29 @@ const router = new Router({
         showFooter: false,
         showRightSlider: true
       }
+    },
+    {
+      path: '/learn-center-video',
+      name: 'learn-center-video',
+      component: () => import('@/views/LearningCenter/LearnCenterVideo.vue'),
+      meta: {
+        title: '课程',
+        showHeader: false,
+        showFooter: false,
+        showRightSlider: false
+      }
     }
   ]
 })
-router.beforeEach((to, from, next) => {
-  let token = getToken()
-  if (to.path === '/login') {
-    next()
-  } else {
-    if (token === '' || token == null) {
-      next('/login')
-    } else {
-      next()
-    }
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   let token = store.state.user.token
+//   if (token) {
+//     store.dispatch('getUserInfo').then(() => {
+//       store.dispatch('getIndexMessage')
+//     })
+//     next()
+//   } else {
+//     next()
+//   }
+// })
 export default router

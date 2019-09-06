@@ -258,7 +258,7 @@ export default {
       margin-top: 6px;
       .teacher-icon{
         margin-right: 8px;
-        @include bg_img(16, 13, '../../assets/images/personal/teacher-icon.png');
+        @include bg_img(16, 13, '../../assets/images/user/teacher-icon.png');
         background-size: contain;
       }
     }

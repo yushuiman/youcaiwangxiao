@@ -82,11 +82,6 @@
                   <h3>{{item.title}}<em>{{item.create_time}}</em></h3>
                   <p>您的提问{{item.content}}有新的回答</p>
                 </div>
-                <!-- 3订单 -->
-                <!-- <div class="news-center" v-if="item.type == 3">
-                  <h3><span>{{item.title}}</span><em>{{item.create_time}}</em></h3>
-                  <p>{{item.content}}</p>
-                </div> -->
                 <!-- 3订单 4普通 5链接 6直播 -->
                 <div class="news-center" v-if="item.type == 3 || item.type == 4 || item.type == 5 || item.type == 6">
                   <h3><span>{{item.title}}</span><em>{{item.create_time}}</em></h3>
@@ -158,15 +153,18 @@ export default {
   },
   computed: {
     ...mapState({
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      token: state => state.user.token
     })
   },
   components: {
     // news
   },
   mounted () {
-    this.getPersonalInfo()
-    this.getSysteMessage()
+    if (this.token) {
+      this.getPersonalInfo()
+      this.getSysteMessage()
+    }
   },
   methods: {
     ...mapActions([
@@ -193,7 +191,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.learnClockInfo = res.data
-          this.$Message.success('签到成功第' + res.data.num + '天')
+          this.$Message.success('签到' + res.data.num + '次')
         } else {
           this.$Message.error(res.msg)
         }

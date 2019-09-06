@@ -19,11 +19,11 @@
           <p v-if="item.topic[4]">{{item.topic[4]}}</p>
         </div>
         <!-- 论述题样式 -->
-        <div v-if="getQuestion.plate_id == 3">
+        <div v-if="item.topicType == 2">
           <textarea autofocus v-model.trim="item.discuss_useranswer" disabled class="texta-discuss"></textarea>
         </div>
         <!-- 做题ABCD样式 else -->
-        <ul class="topic-opition" v-else>
+        <ul class="topic-opition" v-if="item.topicType == 1">
           <li class="tpc-opi" v-for="(v, key) in item.options" :key="key">
             <div class="opi-abcd">
               <span :class="{'red-bg': v.errorRed, 'green-bg': v.rightGreen}">{{v.option}}</span>
@@ -37,15 +37,15 @@
         <span class="resolve-tit" @click="resolveToggle(item.flag, index)">{{item.flag ? '收起' : '解析'}}<Icon type="ios-arrow-down" :class="{'shouqi': item.flag}"/></span>
         <div class="resolve-detail" v-show="item.flag">
           <!-- 非论述题，另外5个板块解析 -->
-          <p class="right-resolve" v-if="getQuestion.plate_id != 3 && getQuestion.sc != 1">
+          <p class="right-resolve" v-if="item.topicType == 1 && getQuestion.sc != 1">
             <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
             <span v-if="item.options[0].userOption">我的答案<em>{{item.options[0].userOption}}</em></span>
             <span v-else>我的答案<em>未作答</em></span>
           </p>
           <!-- 收藏不展示用户答案 -->
-          <p class="right-resolve" v-if="getQuestion.sc == 1">
+          <!-- <p class="right-resolve" v-if="getQuestion.sc == 1">
             <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
-          </p>
+          </p> -->
           <p class="instr-resolve"><span>解析：</span>{{item.analysis}}</p>
           <img v-if="item.analysisPic" :src="item.analysisPic" alt="">
         </div>
@@ -129,7 +129,6 @@ export default {
   },
   data () {
     return {
-      userOptionFlag: window.sessionStorage.getItem('userOptionFlag') // 收藏没有用户答案
     }
   },
   computed: {
@@ -170,7 +169,7 @@ export default {
         return v.currenOption
       })
       this.$forceUpdate()
-      this.$emit('doPoticInfo', num.length, (index + 1))
+      this.$emit('doPoticInfo', num.length, index + 1)
     },
     // 做题考试模式
     doPotic (item, val, index, key) {
@@ -184,7 +183,7 @@ export default {
         return v.currenOption
       })
       this.$forceUpdate()
-      this.$emit('doPoticInfo', num.length, (index + 1))
+      this.$emit('doPoticInfo', num.length, index + 1)
     },
     // 论述题
     doPoticDiscuss (item) {
@@ -193,7 +192,7 @@ export default {
         return v.currenOption
       })
       this.$forceUpdate()
-      this.$emit('doPoticInfo', num.length)
+      this.$emit('doPoticInfo', num.length, 0) // 论述题不要scroll
     },
     // 解析展开收起
     resolveToggle (currentFlag, index) {

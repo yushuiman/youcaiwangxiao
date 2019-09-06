@@ -2,7 +2,7 @@
   <div class="ask-wrap">
     <!--提问-->
     <div class="ask">
-      <div class="close-box" @click="closeModel()">
+      <div class="close-box" @click="closeModel">
         <i class="close-icon"></i>
       </div>
       <h1 class="vc-title">提问题</h1>
@@ -182,7 +182,7 @@ export default {
       console.log(file)
     },
     closeModel () {
-      this.$emit('closeModel', '')
+      this.$emit('closeModel')
     },
     // 问题提交
     answerSubmit () {
@@ -201,8 +201,16 @@ export default {
       this.errorTs = ''
       let quizImage = this.quiz_image.join(',')
       let vtime = window.sessionStorage.getItem('pauseWatchTime') || 0
-      let data = Object.assign({ quiz: this.quiz, video_time: vtime, quiz_image: quizImage, user_id: this.user_id }, this.playCourseInfo)
-      answerSub(data).then(data => {
+      answerSub({
+        quiz: this.quiz,
+        video_time: vtime,
+        quiz_image: quizImage,
+        user_id: this.user_id,
+        video_id: this.playCourseInfo.video_id,
+        section_id: this.playCourseInfo.section_id,
+        course_id: this.playCourseInfo.course_id,
+        package_id: this.playCourseInfo.package_id
+      }).then(data => {
         const res = data.data
         if (res.code === 200) {
           this.uploadList = []
@@ -216,7 +224,12 @@ export default {
     },
     // 问题列表
     getAnswerList () {
-      answerList(this.playCourseInfo).then(data => {
+      answerList({
+        video_id: this.playCourseInfo.video_id,
+        section_id: this.playCourseInfo.section_id,
+        course_id: this.playCourseInfo.course_id,
+        package_id: this.playCourseInfo.package_id
+      }).then(data => {
         const res = data.data
         this.answerList = res.data
         this.answerList.map((val, index) => {

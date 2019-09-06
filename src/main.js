@@ -20,7 +20,16 @@ Vue.use(VueAwesomeSwiper)
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  scrollBehavior (to, from, savedPosition) {
+    return {
+      x: 0,
+      y: 0
+    }
+  }
 }).$mount('#app')
 Vue.prototype.$Message = ElementUI.Message
 Vue.prototype.$Notice = Iview.Notice
+router.afterEach((to, from, next) => {
+  window.scrollTo(0, 0)
+})

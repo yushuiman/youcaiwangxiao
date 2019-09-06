@@ -1,19 +1,14 @@
 import { accountLogin, outLogin, getUserInfo } from '@/api/login'
 
-import {
-  setToken,
-  getToken,
-  removeToken
-} from '@/libs/utils'
-// import Cookies from 'js-cookie'
-// import config from '@/config'
 import { Message } from 'element-ui'
+let token = window.sessionStorage.getItem('ycwxToken')
 export default {
   state: {
     userName: '',
     user_id: '',
     avatorImgPath: '',
-    token: getToken()
+    token: token || '',
+    isLogin: token && token !== ''
   },
   mutations: {
     setAvator (state, avatorPath) {
@@ -27,7 +22,6 @@ export default {
     },
     setToken (state, token) {
       state.token = token
-      setToken(token)
     }
   },
   actions: {
@@ -41,6 +35,7 @@ export default {
           const data = res.data
           if (data.code === 200) {
             commit('setToken', data.data.token)
+            window.sessionStorage.setItem('ycwxToken', data.data.token)
             Message.success('登录成功!')
             resolve(data.data)
           } else if (data.code === 403) {
@@ -57,7 +52,8 @@ export default {
     handleLogOut ({ commit }) {
       return new Promise((resolve, reject) => {
         outLogin().then(() => {
-          removeToken() // cookie token
+          // removeToken() // cookie token
+          window.sessionStorage.removeItem('ycwxToken')
           commit('setToken', '')
           commit('setAvator', '')
           commit('setUserId', '')
@@ -85,9 +81,6 @@ export default {
           } else {
             Message.error(data.msg)
           }
-          // Cookies.set('user_id', data.data.id, {
-          //   expires: config.cookieExpires || 1
-          // })
           resolve(data.data)
         }).catch(err => {
           reject(err)

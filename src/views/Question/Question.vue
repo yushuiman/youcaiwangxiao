@@ -277,7 +277,11 @@ export default {
     // 课程对应正确率，做题数，平均分
     getQuestionIndex (id, index) {
       if (!this.token) {
-        this.$router.push('login')
+        this.$router.push({ path: '/login',
+          query: {
+            call_back: 'question'
+          }
+        })
         return
       }
       this.course_id = id
@@ -320,7 +324,11 @@ export default {
     // 能力评估
     nengLiPingGu () {
       if (!this.token) {
-        this.$router.push('login')
+        this.$router.push({ path: '/login',
+          query: {
+            call_back: 'question'
+          }
+        })
         return
       }
       if (this.experience) {
@@ -336,7 +344,11 @@ export default {
     // 0元体验
     zExperienceTopic () {
       if (!this.user_id) {
-        this.$router.push('/login')
+        this.$router.push({ path: '/login',
+          query: {
+            call_back: 'question'
+          }
+        })
         return
       }
       this.$router.push({ path: '/dopotic-experience',
@@ -348,7 +360,11 @@ export default {
     // 个人中心
     goPersonalPage (index) {
       if (!this.token) {
-        this.$router.push('login')
+        this.$router.push({ path: '/login',
+          query: {
+            call_back: 'question'
+          }
+        })
         return
       }
       if (this.experience) {
