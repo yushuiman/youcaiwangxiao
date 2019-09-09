@@ -62,8 +62,8 @@
           <Icon type="md-star" style="color: #F99111;" v-if="videoCredentials.collect == 1"/>
         </div>
       </div>
-      <!-- v-if="this.flagCourse || this.flagAnswer || this.flagJy" -->
-      <div id="resize" class="course-drag">
+      <!-- v-if="this.flagKc || this.flagAnswer || this.flagJy" -->
+      <div id="resize" class="course-drag" :class="{'hid': !this.flagKc && !this.flagAnswer && !this.flagJy}">
         <div class="drag"></div>
       </div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
@@ -461,7 +461,9 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.watchRecordsList = res.data[0].list[0]
+          if (res.data && res.data[0]) {
+            this.watchRecordsList = res.data[0].list[0]
+          }
         } else {
           this.$Message.error(res.msg)
         }
@@ -733,6 +735,9 @@ export default {
     height: 100%;
     cursor: col-resize;
     z-index: 2;
+  }
+  .hid{
+    visibility: hidden;
   }
   // 个人中心
   .my-center-info{

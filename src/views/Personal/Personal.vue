@@ -2,7 +2,9 @@
     <div class="user-wrap">
       <div class="user-top-wrap">
         <div class="w-wrap">
-          <div class="integral-signin">{{personalInfo.integral}}积分<span @click="getLearnClock">签到</span></div>
+          <div class="integral-signin">{{personalInfo.integral}}积分
+            <span :class="{'gray': personalInfo.is_card == 1}" @click="getLearnClock">{{personalInfo.is_card == 1 ? '已签到' : '签到'}}</span>
+          </div>
           <div class="user-flex">
             <div class="user-info">
               <img ref="fixedTit" :src="personalInfo.head" alt="头像" class="head-logo" @click="setBaseInfo">
@@ -170,12 +172,17 @@ export default {
     },
     // 签到打卡
     getLearnClock () {
+      if (this.personalInfo.is_card === 1) {
+        this.$Message.error('今日已签到')
+        return
+      }
       learnClock({
         user_id: this.user_id
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
           this.learnClockInfo = res.data
+          this.personalInfo.is_card = 1
           this.$Message.success('签到' + res.data.num + '次')
         } else {
           this.$Message.error(res.msg)
@@ -233,6 +240,10 @@ export default {
       background: $colfff;
       color: #112441;
       cursor: pointer;
+      &.gray{
+        background: #dddddd;
+        color: $col666;
+      }
     }
   }
   .user-flex{
