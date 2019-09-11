@@ -227,7 +227,7 @@ export default {
         }
       }
       span{
-        width: 84px;
+        width: 88px;
         display: inline-block;
       }
     }

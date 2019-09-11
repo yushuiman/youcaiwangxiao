@@ -1,26 +1,11 @@
 <template>
   <div class="video-wrap">
     <div class="video-header">
-      <router-link :to="{ path: '/learning-center-detail', query: { package_id: playCourseInfo.package_id }}">></router-link>
-      <span>{{videoCredentials.Title}}</span>
-      <div class="login-r fr">
-        <img src="../../assets/images/global/email-icon.png" alt="email" class="email-icon" @click="goNewsPage">
-        <i v-if="is_news == 1" class="new-dot"></i>
-        <img :src="avatorImgPath" alt="头像" class="head-logo" @mouseenter="enter" @click="goPersonalPage('course')">
-        <!-- 个人中心入口 -->
-        <div v-show="flagEntrance" class="my-center-info">
-          <ul class="mc-list">
-            <li class="mc-item" :class="['mc-item0' + (index+1)]" v-for="(v, index) in personalArr" :key="index" @click="goPersonalPage(v.sign)">
-              <i class="center-icon"></i>{{v.type}}
-            </li>
-          </ul>
-          <div class="mc-watch" v-if="watchRecordsList.video">
-            <p class="mcw-title"><span><i class="center-icon"></i>{{watchRecordsList.name}}</span></p>
-            <p class="mcw-section"><span class="mcws-name">{{watchRecordsList.video.video_name}}</span><span class="goon" @click="goonWatch">继续</span></p>
-          </div>
-          <div class="log-out" @click="ouLogin">安全退出</div>
-        </div>
+      <div>
+        <router-link :to="{ path: '/learning-center-detail', query: { package_id: playCourseInfo.package_id }}">></router-link>
+        <span>{{videoCredentials.Title}}</span>
       </div>
+      <HeadName :showName="false"></HeadName>
     </div>
     <div class="video-main" id="box">
       <!-- <div class="vid-kcqh" v-if="flagCourse">
@@ -90,7 +75,7 @@
 import aliPlayer from '@/components/video/aliPlayer'
 // import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
-import { watchRecords } from '@/api/personal'
+import HeadName from '@/components/common/HeadName'
 import { videoCredentials, collection, initWS } from '@/api/class'
 import { getVideo } from '@/api/learncenter'
 
@@ -99,7 +84,6 @@ import { mapActions, mapState } from 'vuex'
 export default {
   data () {
     return {
-      flagEntrance: false,
       watchRecordsList: {}, // 观看记录头像滑过
       personalArr: [
         {
@@ -153,24 +137,17 @@ export default {
   components: {
     aliPlayer,
     // courseList,
-    answer
+    answer,
+    HeadName
   },
   computed: {
     ...mapState({
       avatorImgPath: state => state.user.avatorImgPath,
-      user_id: state => state.user.user_id,
-      is_news: state => state.news.is_news
+      user_id: state => state.user.user_id
     })
   },
   mounted () {
     this.goLearnVideo() // 视频列表 获取讲义视频播放
-    document.addEventListener('mouseover', (e) => {
-      if (this.flagEntrance) {
-        if (!this.$el.contains(e.target)) {
-          this.flagEntrance = false
-        }
-      }
-    })
     this.dragControllerDiv()
     // this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
     // this.getVideoPlayback(this.$route.query.video_id)
@@ -233,10 +210,6 @@ export default {
           initWS(JSON.stringify(message))
         }
       }, 30000)
-    },
-    enter () {
-      this.getWatchRecords() // 观看记录
-      this.flagEntrance = true
     },
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
@@ -303,16 +276,14 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          if (res.data && res.data.video) {
-            this.learnVideoList = res.data.video
-            this.learnVideoList.forEach(v => {
-              if (parseInt(this.playCourseInfo.video_id) === v.video_id) {
-                this.playCourseInfo.VideoId = v.VideoId
-                this.playtime = v.watch_time
-              }
-            })
-            this.getVideoPlayback()
-          }
+          this.learnVideoList = res.data.video
+          this.learnVideoList.forEach(v => {
+            if (parseInt(this.playCourseInfo.video_id) === v.video_id) {
+              this.playCourseInfo.VideoId = v.VideoId
+              this.playtime = v.watch_time
+            }
+          })
+          this.getVideoPlayback()
         } else {
           this.$Message.error(res.msg)
         }
@@ -370,46 +341,6 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-    },
-    // 个人中心
-    goPersonalPage (sign) {
-      window.sessionStorage.setItem('type', sign)
-      this.flagEntrance = false
-      this.$router.push('/personal')
-    },
-    // 消息中心
-    goNewsPage () {
-      this.$router.push('/news')
-    },
-    // 播放记录
-    getWatchRecords () {
-      watchRecords({
-        user_id: this.user_id
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.watchRecordsList = res.data[0].list[0]
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
-    // 继续观看
-    goonWatch () {
-      let obj = {
-        package_id: this.watchRecordsList.package_id,
-        course_id: this.watchRecordsList.video.course_id,
-        section_id: this.watchRecordsList.video.section_id,
-        video_id: this.watchRecordsList.video.video_id
-        // userstatus: 1 // 是否购买 未购买是没有记录的 所以是1
-      }
-      this.$router.push({ path: '/class-video', query: obj })
-      window.sessionStorage.setItem('userstatus', 1) // 是否购买
-      this.playtime = this.watchRecordsList.video.watch_time
-    },
-    ouLogin () {
-      this.$router.push('/')
-      this.handleLogOut()
     }
   },
   beforeDestroy () {
@@ -427,6 +358,9 @@ export default {
     box-shadow: 0 4px 8px 0 rgba(28,31,33,.1);
     position: relative;
     z-index: 101;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     span{
       font-size: 16px;
       font-weight:500;
@@ -643,91 +577,6 @@ export default {
     height: 40px;
     border: 1px solid #626972;
     border-width: 0 1px 0 1px;
-  }
-  // 个人中心
-  .my-center-info{
-    position: absolute;
-    right: 0;
-    top: 70px;
-    width: 254px;
-    // height: 214px;
-    background:#ffffff;
-    border-radius: 6px;
-  }
-  .mc-list{
-    display: flex;
-    flex-wrap: wrap;
-    padding: 16px 15px;
-    .mc-item{
-      width: 102px;
-      height: 32px;
-      line-height: 32px;
-      text-align: center;
-      background:#F3F6FF;
-      margin: 4px 5px;
-      cursor: pointer;
-    }
-  }
-  .center-icon{
-    vertical-align: middle;
-    margin-top: -3px;
-    margin-right: 4px;
-    .mc-item01 &{
-      @include bg-img(14, 12, '../../assets/images/global/center-icon01.png');
-    }
-    .mc-item02 &{
-      @include bg-img(14, 12, '../../assets/images/global/center-icon02.png');
-    }
-    .mc-item03 &{
-      @include bg-img(15, 14, '../../assets/images/global/center-icon03.png');
-    }
-    .mc-item04 &{
-      @include bg-img(15, 15, '../../assets/images/global/center-icon04.png');
-    }
-    .mcw-title &{
-      @include bg-img(14, 14, '../../assets/images/global/center-icon05.png');
-    }
-  }
-  .mc-watch{
-    padding: 0 20px;
-    color: $col666;
-    p{
-      display: flex;
-      justify-content: space-between;
-      line-height: 20px;
-      &.mcw-section{
-        margin-top: 3px;
-        padding-left: 34px;
-        .mcws-name{
-          flex: 1;
-          height: 20px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
-      .goon{
-        color: $blueColor;
-        cursor: pointer;
-      }
-    }
-  }
-  .log-out{
-    border-top: 1px solid #E6E6E6;
-    margin-top: 20px;
-    line-height: 40px;
-    padding: 0 20px;
-    cursor: pointer;
-  }
-  .new-dot{
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: red;
-    display: inline-block;
-    position: absolute;
-    top: 25px;
-    left: 48px;
   }
   // 菜单
   .video-item{

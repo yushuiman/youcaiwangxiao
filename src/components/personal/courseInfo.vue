@@ -196,7 +196,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           if (res.data && res.data[0]) {
-            this.watchRecordsList = res.data[0].list[0]
+            this.watchRecordsList = res.data
           }
         } else {
           this.$Message.error(res.msg)

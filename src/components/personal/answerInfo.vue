@@ -287,7 +287,6 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  // @import "../../assets/scss/iview.css";
   .othq-list{
     // min-height: 320px;
     // max-height: 420px;

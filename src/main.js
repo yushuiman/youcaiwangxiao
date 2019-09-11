@@ -30,6 +30,5 @@ new Vue({
 }).$mount('#app')
 Vue.prototype.$Message = ElementUI.Message
 Vue.prototype.$Notice = Iview.Notice
-router.afterEach((to, from, next) => {
-  window.scrollTo(0, 0)
-})
+
+// ElementUI.Message.success('json.value')

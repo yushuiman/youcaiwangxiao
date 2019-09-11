@@ -474,6 +474,7 @@ export default {
           this.addLearnIdx = 2
         } else if (res.code === 405) { // 您已参加过
           this.addLearnIdx = 2
+          this.$Message.error(res.msg)
         } else {
           this.visible = false
           this.$Message.error(res.msg)

@@ -70,7 +70,6 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  // @import "../../assets/scss/iview.css";
   .error-wrap{
     padding: 0 30px 20px;
   }

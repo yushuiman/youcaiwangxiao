@@ -54,8 +54,11 @@ export default {
     background-size: 15px 16px;
   }
   .com-list{
+    height: 170px;
     padding: 10px 4px;
+    box-sizing: border-box;
     margin-bottom: 20px;
+    overflow: auto;
     .student-head{
       width: 40px;
       height: 40px;

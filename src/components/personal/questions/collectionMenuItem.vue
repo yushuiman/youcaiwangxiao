@@ -153,5 +153,4 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../../assets/scss/app";
-  @import "../../../assets/scss/ivu-menu.css";
 </style>
