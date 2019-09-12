@@ -230,7 +230,7 @@ export default {
             this.courseAnswerList = list
             this.courseAnswerList.map((val, index) => {
               val.openFlag = false
-              if (this.numNew === val.data.Id) { // 如果从消息页面提醒进来，对应的消息展开
+              if (this.numNew === val.data.id) { // 如果从消息页面提醒进来，对应的消息展开
                 val.openFlag = true
               }
             })
@@ -255,7 +255,6 @@ export default {
             this.questionAnswerList = data
             this.questionAnswerList.map((val, index) => {
               val.openFlag = false
-              console.log(this.numNew === val.data.Id)
               if (this.numNew === val.data.Id) { // 如果从消息页面提醒进来，对应的消息展开
                 val.openFlag = true
               }

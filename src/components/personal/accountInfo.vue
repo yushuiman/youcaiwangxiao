@@ -333,7 +333,7 @@ export default {
     border-radius: 16px;
     margin: 20px 40px 0 0;
     color: #ffffff;
-    @include bg-linear-gradient($btnGredientOrange, right);
+    @include bg-linear-gradient($btnGredientOrange, to right);
     overflow: hidden;
     position: relative;
     &.gray{

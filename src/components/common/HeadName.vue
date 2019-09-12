@@ -115,13 +115,9 @@ export default {
       window.sessionStorage.setItem('type', sign)
       if (this.$route.name === 'personal') {
         window.location.reload()
+        return
       }
-      this.flagEntrance = false
       this.$router.push('/personal')
-      // console.log(this.$route.name === 'personal' || this.$route.path === '/personal')
-      // console.log(this.$route.path === '/personal')
-      // this.$router.push({ path: 'personal', query: { type: sign } })
-      // this.centerType(sign)
     },
     // 消息
     goNews () {

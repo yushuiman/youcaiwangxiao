@@ -7,7 +7,7 @@
         <div class="learn-detail-top">
           <div class="learn-course-info">
             <div class="selmoni-course">
-              <div class="sel-course-name" @click="selCourseList">
+              <!-- <div class="sel-course-name" @click="selCourseList">
                 <em>{{selCourseName}}</em>
                 <span class="arow" v-if="!selCourseFlag"><Icon type="md-arrow-dropdown" style="font-size: 30px;margin-top: -4px;color: #666666;"/></span>
                 <span class="arow" v-if="selCourseFlag"><Icon type="md-arrow-dropup" style="font-size: 30px;margin-top: -4px;color: #666666;"/></span>
@@ -17,7 +17,18 @@
                   <li class="sel-course-item" v-for="(v, index) in learnList" :key="index" @click="selCourse(v)">{{v.plan_name}}</li>
                   <li class="add-course" @click="planLearn">+添加学习计划</li>
                 </ul>
-              </transition>
+              </transition> -->
+              <Dropdown trigger="click" placement="top-start" :transfer="true" @on-visible-change="dropDownVisible">
+                <div class="sel-course-name">
+                  <em>{{selCourseName}}</em>
+                  <span class="arow" v-if="!selCourseFlag"><Icon type="md-arrow-dropdown" style="font-size: 30px;margin-top: -4px;color: #666666;"/></span>
+                  <span class="arow" v-if="selCourseFlag"><Icon type="md-arrow-dropup" style="font-size: 30px;margin-top: -4px;color: #666666;"/></span>
+                </div>
+                <DropdownMenu slot="list" class='drop-list sel-course-list'>
+                  <li class="sel-course-item" v-for="(v, index) in learnList" :key="index" @click="selCourse(v)">{{v.plan_name}}</li>
+                  <li class="add-course" @click="planLearn">+添加学习计划</li>
+                </DropdownMenu>
+              </Dropdown>
             </div>
             <div class="ewm-box">
               <i class="ewm-icon"></i>
@@ -348,13 +359,13 @@ export default {
     answerInfo
   },
   mounted () {
-    window.addEventListener('mouseover', (e) => {
-      if (this.selCourseFlag) {
-        if (e.target.parentNode !== this.$refs.selCourseRef) {
-          this.selCourseFlag = false
-        }
-      }
-    })
+    // window.addEventListener('mouseover', (e) => {
+    //   if (this.selCourseFlag) {
+    //     if (e.target.parentNode !== this.$refs.selCourseRef) {
+    //       this.selCourseFlag = false
+    //     }
+    //   }
+    // })
     this.getLearnIndex()
   },
   methods: {
@@ -543,22 +554,14 @@ export default {
       })
     },
     // 首页切换课程学习计划
-    selCourseList () {
-      this.selCourseFlag = !this.selCourseFlag
+    dropDownVisible (change) {
+      this.selCourseFlag = change
     },
     // 首页切换课程学习计划详情
     selCourse (v) {
       this.currenLearnInfo = v
       this.selCourseName = v.plan_name
       this.selCourseFlag = false
-    },
-    // 首页切换课程学习计划
-    getCourseIdSel (e, val) {
-      this.learnList.map((v, index) => {
-        if (v.course_id === this.course_id) {
-          this.currenLearnInfo = v
-        }
-      })
     },
     // 切换未完成课程学习计划
     getPackageIdSel (e, val) {
@@ -880,7 +883,7 @@ export default {
     display: inline-block;
     color: #ffffff;
     font-style: normal;
-    @include bg-linear-gradient($btnGredientOrange, left);
+    @include bg-linear-gradient($btnGredientOrange, to left);
     border-radius: 4px;
     &:after{
       position: absolute;
@@ -946,6 +949,9 @@ export default {
   .selmoni-course{
     position: relative;
     width: 470px;
+    .ivu-dropdown{
+      width: 100%;
+    }
   }
   .sel-course-name{
     display: flex;
@@ -969,11 +975,11 @@ export default {
     }
   }
   .sel-course-list{
-    width: 100%;
-    position: absolute;
-    z-index: 1000;
-    top: 46px;
-    left: 0;
+    width: 470px;
+    // position: absolute;
+    // z-index: 1000;
+    // top: 46px;
+    // left: 0;
     border: 1px solid #979797;
     background: #ffffff;
     li{
@@ -1040,12 +1046,12 @@ export default {
     line-height: 32px;
     font-size: 18px;
     color: $colfff;
-    @include bg-linear-gradient($btnGredientOrange, left);
+    @include bg-linear-gradient($btnGredientOrange, to left);
     border-radius: 20px;
     text-align: center;
     display: inline-block;
     &.gray{
-      @include bg-linear-gradient($btnGredientGray, left);
+      @include bg-linear-gradient($btnGredientGray, to left);
     }
   }
   .ewm-box{
@@ -1154,7 +1160,7 @@ export default {
         font-size: 16px;
         color: #ffffff;
         &.gray{
-          @include bg-linear-gradient($btnGredientGray, left);
+          @include bg-linear-gradient($btnGredientGray, to left);
           border: 0;
         }
       }
@@ -1250,21 +1256,21 @@ export default {
     }
     .days-item-blue &{
       width: 140px;
-      @include bg-linear-gradient($btnGredientBlue, left);
+      @include bg-linear-gradient($btnGredientBlue, to left);
       &:before{
         border-bottom: 8px solid #39BBFD;
       }
     }
     .days-item-orange &{
       width: 100px;
-      @include bg-linear-gradient($btnGredientOrange, left);
+      @include bg-linear-gradient($btnGredientOrange, to left);
       &:before{
         border-bottom: 8px solid #FBAC78;
       }
     }
     .days-item-gray &,.days-item-rest &{
       width: 115px;
-      @include bg-linear-gradient($btnGredientGray, left);
+      @include bg-linear-gradient($btnGredientGray, to left);
       &:before{
         border-bottom: 8px solid #C7C7C7;
       }
