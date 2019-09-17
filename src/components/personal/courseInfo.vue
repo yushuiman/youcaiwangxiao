@@ -111,13 +111,8 @@
 <script>
 // import collMenuItem from '../../components/personal/course/collMenuItem'
 import { myCourse, watchRecords, myCollpackage, myCollcourse, myCollvideo } from '@/api/personal'
-// import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 export default {
-  props: {
-    user_id: {
-      type: Number
-    }
-  },
   data () {
     return {
       visible: false,
@@ -142,18 +137,24 @@ export default {
       }
     }
   },
-  // computed: {
-  //   ...mapState({
-  //     token: state => state.user.token,
-  //     user_id: state => state.user.user_id
-  //   })
-  // },
+  computed: {
+    ...mapState({
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
+    })
+  },
   components: {
     // courseItem,
     // collMenuItem
   },
   mounted () {
-    this.initRes()
+    if (this.isLoadHttpRequest) {
+      this.initRes()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.initRes()
+      })
+    }
   },
   methods: {
     tabClk (v, index) {
@@ -270,7 +271,7 @@ export default {
         }
         this.$router.push({ path: '/class-video', query: obj })
         // window.sessionStorage.setItem('playVideoInfo', JSON.stringify(val)) //
-        window.sessionStorage.setItem('playtime', val.video.watch_time) // 获取播放时间
+        // window.sessionStorage.setItem('playtime', val.video.watch_time) // 获取播放时间
         window.sessionStorage.setItem('userstatus', 1) // 是否购买
         return
       }
@@ -305,7 +306,7 @@ export default {
       // let openMenu = (item.section_id) + '-' + (val.video_id)
       // window.sessionStorage.setItem('openMenu', openMenu)
       // window.sessionStorage.setItem('playVideoInfo', JSON.stringify(playVideoObj))
-      window.sessionStorage.setItem('playtime', val.watch_time) // 获取播放时间 待定，接口没有返回
+      // window.sessionStorage.setItem('playtime', val.watch_time) // 获取播放时间 待定，接口没有返回
     }
   }
 }

@@ -143,12 +143,20 @@ export default {
   computed: {
     ...mapState({
       avatorImgPath: state => state.user.avatorImgPath,
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   mounted () {
-    this.goLearnVideo() // 视频列表 获取讲义视频播放
-    this.dragControllerDiv()
+    if (this.isLoadHttpRequest) {
+      this.goLearnVideo() // 视频列表 获取讲义视频播放
+      this.dragControllerDiv()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.goLearnVideo() // 视频列表 获取讲义视频播放
+        this.dragControllerDiv()
+      })
+    }
     // this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
     // this.getVideoPlayback(this.$route.query.video_id)
   },

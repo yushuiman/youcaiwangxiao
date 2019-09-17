@@ -185,7 +185,6 @@ export default {
         }
         // 已购买并且视频播放时间大于0 socket
         if (this.playCourseInfo.userstatus === 1 && this.playtime > 0) {
-          // console.log(JSON.stringify(message))
           initWS(JSON.stringify(message))
         }
       }, 30000)

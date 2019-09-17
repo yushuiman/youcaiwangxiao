@@ -100,13 +100,9 @@
 
 <script>
 import { consumptionRecord, coupons, delcoupon } from '@/api/personal'
-// import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 export default {
-  props: {
-    user_id: {
-      type: Number
-    }
-  },
+  props: ['user_id'],
   data () {
     return {
       txtArr: ['消费记录', '课程卡管理', '优惠券'],
@@ -130,13 +126,19 @@ export default {
       InvalidList: [] // 失效
     }
   },
-  // computed: {
-  //   ...mapState({
-  //     user_id: state => state.user.user_id
-  //   })
-  // },
+  computed: {
+    ...mapState({
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
+    })
+  },
   mounted () {
-    this.initRes()
+    if (this.isLoadHttpRequest) {
+      this.initRes()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.initRes()
+      })
+    }
   },
   methods: {
     tabClk (v, index) {

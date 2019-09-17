@@ -54,7 +54,7 @@ export default {
   data () {
     return {
       isRes: true,
-      consultInfo: JSON.parse(window.localStorage.getItem('consultInfo')) || {}, // 在线咨询
+      consultInfo: JSON.parse(window.sessionStorage.getItem('consultInfo')) || {}, // 在线咨询
       scrollTop: 0,
       btnFlag: false // 默认隐藏回到顶部
     }
@@ -66,9 +66,6 @@ export default {
     })
   },
   mounted () {
-    if (this.consultInfo.wx_code) {
-      return
-    }
     this.getConsult()
   },
   methods: {
@@ -77,7 +74,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.consultInfo = res.data[0]
-          window.localStorage.setItem('consultInfo', JSON.stringify(res.data[0]))
+          window.sessionStorage.setItem('consultInfo', JSON.stringify(res.data[0]))
         } else {
           this.$Message.error(res.msg)
         }

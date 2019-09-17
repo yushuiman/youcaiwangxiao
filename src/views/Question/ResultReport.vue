@@ -68,25 +68,43 @@ export default {
   },
   computed: {
     ...mapState({
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   components: {
     wave
   },
   mounted () {
-    // 0元体验做题成绩统计
-    if (parseInt(this.$route.query.plate_id) === 8) {
-      this.experienceStatiInfo()
-      return
+    if (this.isLoadHttpRequest) {
+      // 0元体验做题成绩统计
+      if (parseInt(this.$route.query.plate_id) === 8) {
+        this.experienceStatiInfo()
+        return
+      }
+      // 错题集成绩统计 全部和错题不能共用一个 所以又区分了
+      if (this.diffRes === 1 || this.diffRes === 11) {
+        this.getErrorStati()
+        return
+      }
+      // 正常做题成绩统计 答题记录成绩统计
+      this.getResultsStati()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        // 0元体验做题成绩统计
+        if (parseInt(this.$route.query.plate_id) === 8) {
+          this.experienceStatiInfo()
+          return
+        }
+        // 错题集成绩统计 全部和错题不能共用一个 所以又区分了
+        if (this.diffRes === 1 || this.diffRes === 11) {
+          this.getErrorStati()
+          return
+        }
+        // 正常做题成绩统计 答题记录成绩统计
+        this.getResultsStati()
+      })
     }
-    // 错题集成绩统计 全部和错题不能共用一个 所以又区分了
-    if (this.diffRes === 1 || this.diffRes === 11) {
-      this.getErrorStati()
-      return
-    }
-    // 正常做题成绩统计 答题记录成绩统计
-    this.getResultsStati()
   },
   methods: {
     // 正常做题成绩统计

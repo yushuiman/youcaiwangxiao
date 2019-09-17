@@ -52,6 +52,7 @@ class HttpRequest {
         store.commit('setAvator', '')
         store.commit('setUserId', '')
         store.commit('setUserName', '')
+        store.commit('isLoad', false)
         router.push('/login')
       }
       return {

@@ -7,7 +7,7 @@
     </div>
     <div class="class-detail-info clearfix">
       <div class="cdi-wrap-l fl">
-        <div class="cdi-video" @click="playVideo()">
+        <div class="cdi-video" @click="playVideo">
           <img class="cdi-img" :src="isntroduction.pc_img" alt="">
           <div class="cdi-opa">
             <p class="cdi-tit">{{isntroduction.name}}</p>
@@ -18,6 +18,9 @@
             </div>
           </div>
           <div v-if="videoflag" class="video-object">
+            <!-- <video style="position:absolute;left:0;top:0;z-index:999;" autoplay="autoplay" controls="controls" src="https://p.bokecc.com/flash/single/8E7175958932B212_FBBCC178D6FB98CC9C33DC5901307461_false_0CCEB0A89A516E59_1/player.swf" width="650" height="364">
+              <source src="https://p.bokecc.com/flash/single/8E7175958932B212_FBBCC178D6FB98CC9C33DC5901307461_false_0CCEB0A89A516E59_1/player.swf" type="video/ogg" />
+            </video> -->
             <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="650" height="364" id="cc_FBBCC178D6FB98CC9C33DC5901307461">
               <param name="movie" value="https://p.bokecc.com/flash/single/8E7175958932B212_FBBCC178D6FB98CC9C33DC5901307461_false_0CCEB0A89A516E59_1/player.swf" />
               <param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" />

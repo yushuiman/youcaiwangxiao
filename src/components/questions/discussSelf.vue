@@ -36,7 +36,6 @@ export default {
         knob_id: '', // 节id
         know_id: '', // 知识点id
         mock_id: '',
-        user_id: this.user_id,
         plate_id: this.plate_id,
         num: '', // 默认随机15道
         paper_type: 2 // 单选1 论述2

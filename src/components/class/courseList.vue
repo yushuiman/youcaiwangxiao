@@ -50,8 +50,7 @@ export default {
   },
   computed: {
     ...mapState({
-      token: state => state.user.token,
-      user_id: state => state.user.user_id
+      token: state => state.user.token
     })
   },
   mounted () {

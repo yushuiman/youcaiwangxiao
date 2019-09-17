@@ -156,16 +156,22 @@ export default {
   computed: {
     ...mapState({
       user_id: state => state.user.user_id,
-      token: state => state.user.token
+      token: state => state.user.token,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   components: {
     // news
   },
   mounted () {
-    if (this.token) {
+    if (this.isLoadHttpRequest) {
       this.getPersonalInfo()
       this.getSysteMessage()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getPersonalInfo()
+        this.getSysteMessage()
+      })
     }
   },
   methods: {

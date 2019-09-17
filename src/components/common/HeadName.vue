@@ -74,12 +74,13 @@ export default {
   mounted () {
     if (this.token) { // 刷新页面vuex状态重新储存
       this.getUserInfo().then(() => {
-        this.getIndexMessage()// 系统消息
+        this.getIndexMessage() // 系统消息
       })
       var _this = this
       var socket = io('http://ycapi.youcaiwx.com:2120')
       socket.on('connect', function () {
         socket.emit('login', 555)
+        // socket.emit('login', this.user_id)
       })
 
       // 后端推送来消息时

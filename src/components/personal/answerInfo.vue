@@ -1,5 +1,6 @@
 <template>
   <div class="u-course-wrap">
+    <!-- answerType：personal只为区分样式  -->
     <ul class="tab-list" v-if="answerType == 'personal'">
       <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxAnswer == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
@@ -160,8 +161,9 @@
 
 <script>
 import { courseAnswer, questionAnswer } from '@/api/personal'
-// import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 export default {
+  // props: ['user_id', 'answerType'],
   props: {
     user_id: {
       type: Number
@@ -188,13 +190,19 @@ export default {
       numNew: parseInt(this.$route.query.num) // 如果从消息页面提醒进来，对应的消息展开
     }
   },
-  // computed: {
-  //   ...mapState({
-  //     user_id: state => state.user.user_id
-  //   })
-  // },
+  computed: {
+    ...mapState({
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
+    })
+  },
   mounted () {
-    this.initRes()
+    if (this.isLoadHttpRequest) {
+      this.initRes()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.initRes()
+      })
+    }
   },
   methods: {
     // 图片放大

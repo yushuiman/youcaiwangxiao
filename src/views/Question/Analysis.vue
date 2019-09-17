@@ -104,42 +104,80 @@ export default {
   },
   computed: {
     ...mapState({
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   mounted () {
-    // 0元体验解析 之前没有考虑这么周全，需求一点点增加，不想改变已有的逻辑了
-    if (this.getQuestion.plate_id === 8 && this.diffRes !== 3) {
-      this.getExperienceParsing()
-      return
+    if (this.isLoadHttpRequest) {
+      // 0元体验解析 之前没有考虑这么周全，需求一点点增加，不想改变已有的逻辑了
+      if (this.getQuestion.plate_id === 8 && this.diffRes !== 3) {
+        this.getExperienceParsing()
+        return
+      }
+      // 答题记录做题集(论述题)解析
+      if (this.diffRes === 0) {
+        this.getCheckItem()
+        return
+      }
+      // 个人中心错题集解析，全部
+      if (this.diffRes === 1) {
+        this.getErrorParsing()
+        return
+      }
+      // 答题记录错题集解析，全部和错题
+      if (this.diffRes === 11) {
+        this.getErrorParsing2()
+        return
+      }
+      // 收藏夹查看解析
+      if (this.diffRes === 2) {
+        this.getMyCollcsee()
+        return
+      }
+      // 学习中心查看解析-全部
+      if (this.diffRes === 3) {
+        this.getQuestionParsingLearn()
+        return
+      }
+      // 6大板块解析
+      this.getQuestionParsing()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        // 0元体验解析 之前没有考虑这么周全，需求一点点增加，不想改变已有的逻辑了
+        if (this.getQuestion.plate_id === 8 && this.diffRes !== 3) {
+          this.getExperienceParsing()
+          return
+        }
+        // 答题记录做题集(论述题)解析
+        if (this.diffRes === 0) {
+          this.getCheckItem()
+          return
+        }
+        // 个人中心错题集解析，全部
+        if (this.diffRes === 1) {
+          this.getErrorParsing()
+          return
+        }
+        // 答题记录错题集解析，全部和错题
+        if (this.diffRes === 11) {
+          this.getErrorParsing2()
+          return
+        }
+        // 收藏夹查看解析
+        if (this.diffRes === 2) {
+          this.getMyCollcsee()
+          return
+        }
+        // 学习中心查看解析-全部
+        if (this.diffRes === 3) {
+          this.getQuestionParsingLearn()
+          return
+        }
+        // 6大板块解析
+        this.getQuestionParsing()
+      })
     }
-    // 答题记录做题集(论述题)解析
-    if (this.diffRes === 0) {
-      this.getCheckItem()
-      return
-    }
-    // 个人中心错题集解析，全部
-    if (this.diffRes === 1) {
-      this.getErrorParsing()
-      return
-    }
-    // 答题记录错题集解析，全部和错题
-    if (this.diffRes === 11) {
-      this.getErrorParsing2()
-      return
-    }
-    // 收藏夹查看解析
-    if (this.diffRes === 2) {
-      this.getMyCollcsee()
-      return
-    }
-    // 学习中心查看解析-全部
-    if (this.diffRes === 3) {
-      this.getQuestionParsingLearn()
-      return
-    }
-    // 6大板块解析
-    this.getQuestionParsing()
   },
   methods: {
     // 6大板块解析
@@ -155,7 +193,6 @@ export default {
           this.title = res.data.title
           this.answerSts(this.topics)
         } else if (res.code === 405) {
-          console.log('暂无数据')
         } else {
           this.$Message.error(res.msg)
         }

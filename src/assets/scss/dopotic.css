@@ -141,6 +141,7 @@
 .anscard-list {
   padding-top: 10px;
   height: 288px;
+  overflow: auto;
 }
 
 .anscard-list li {

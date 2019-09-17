@@ -90,8 +90,8 @@ export default {
   computed: {
     ...mapState({
       token: state => state.user.token,
-      user_id: state => state.user.user_id
-      // clkTit: state => state.nav.clkTit
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   components: {
@@ -104,8 +104,12 @@ export default {
     setInfo
   },
   mounted () {
-    if (this.token) {
+    if (this.isLoadHttpRequest) {
       this.getPersonalInfo()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getPersonalInfo()
+      })
     }
     // window.addEventListener('scroll', this.scrollToTop)
   },

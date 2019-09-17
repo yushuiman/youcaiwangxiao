@@ -349,7 +349,8 @@ export default {
   computed: {
     ...mapState({
       token: state => state.user.token,
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   components: {
@@ -359,14 +360,13 @@ export default {
     answerInfo
   },
   mounted () {
-    // window.addEventListener('mouseover', (e) => {
-    //   if (this.selCourseFlag) {
-    //     if (e.target.parentNode !== this.$refs.selCourseRef) {
-    //       this.selCourseFlag = false
-    //     }
-    //   }
-    // })
-    this.getLearnIndex()
+    if (this.isLoadHttpRequest) {
+      this.getLearnIndex()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getLearnIndex()
+      })
+    }
   },
   methods: {
     // 制定学习计划

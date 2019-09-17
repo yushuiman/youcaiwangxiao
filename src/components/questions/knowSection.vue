@@ -80,7 +80,6 @@ export default {
         knob_id: '', // 节id
         know_id: '', // 知识点id
         mock_id: '',
-        user_id: this.user_id,
         plate_id: this.plate_id,
         num: 15, // 默认随机15道
         paper_mode: 1, // 练习模式1 考试模式2
@@ -115,11 +114,7 @@ export default {
     },
     // 做题数量
     orderDoNum (num) {
-      if (num === 15) {
-        this.getPoticData.num = 15
-      } else if (num === 30) {
-        this.getPoticData.num = 30
-      }
+      this.getPoticData.num = num
     },
     // 知识点显示
     getKnow (item, val, index) {

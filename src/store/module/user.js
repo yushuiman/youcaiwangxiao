@@ -8,7 +8,8 @@ export default {
     user_id: '',
     avatorImgPath: '',
     token: token || '',
-    isLogin: token && token !== ''
+    isLogin: token && token !== '',
+    isLoadHttpRequest: false
   },
   mutations: {
     setAvator (state, avatorPath) {
@@ -22,6 +23,9 @@ export default {
     },
     setToken (state, token) {
       state.token = token
+    },
+    isLoad (state, flag) {
+      state.isLoadHttpRequest = flag
     }
   },
   actions: {
@@ -78,6 +82,7 @@ export default {
             commit('setAvator', data.data.head)
             commit('setUserName', data.data.username)
             commit('setUserId', data.data.id)
+            commit('isLoad', true)
           } else {
             Message.error(data.msg)
           }
