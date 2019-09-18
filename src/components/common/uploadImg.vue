@@ -190,7 +190,7 @@ export default {
         this.errorTs = '不能全为空格'
         return
       }
-      if (this.quiz > 200) {
+      if (this.quiz.length > 200) {
         this.errorTs = '最多输入200字'
         return
       }

@@ -3,7 +3,6 @@ const path = require('path')
 const resolve = dir => {
   return path.join(__dirname, dir)
 }
-
 // 项目部署基础
 // 默认情况下，我们假设你的应用将被部署在域的根目录下,
 // 例如：https://www.my-app.com/
@@ -63,6 +62,7 @@ module.exports = {
       .set('@', resolve('src')) // key,value自行定义，比如.set('@@', resolve('src/components'))
       .set('_c', resolve('src/components'))
       .set('_conf', resolve('config'))
+    config.plugins.delete('prefetch')
   },
   configureWebpack: () => {},
   // vue-loader 配置项

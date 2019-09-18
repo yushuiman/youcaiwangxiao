@@ -39,7 +39,7 @@ export default {
       courseList: [],
       getPoticData: {
         course_id: this.course_id,
-        paper_id: 0, // 阶段测试3,论述题2
+        paper_id: 0, // 阶段测试1,论述题2 这个取接口返回的
         section_id: 0,
         knob_id: 0, // 节id
         know_id: 0, // 知识点id

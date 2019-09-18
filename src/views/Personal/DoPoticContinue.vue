@@ -146,7 +146,7 @@ export default {
         mock_id: this.$route.query.mock_id || 0,
         plate_id: this.$route.query.plate_id, // 板块
         used_time: 0,
-        paper_type: this.$route.query.paper_type || 2, // 练习1 考试2
+        paper_type: this.$route.query.paper_mode || 2, // 练习1 考试2
         question_content: {
           knob_id: this.$route.query.knob_id || 0,
           know_id: this.$route.query.know_id || 0,

@@ -105,6 +105,7 @@ export default {
     tabClk (v, index) {
       this.selIdxOrder = index
       window.sessionStorage.setItem('selIdxOrder', index)
+      this.initRes()
     },
     getMyOrder () {
       myOrder({

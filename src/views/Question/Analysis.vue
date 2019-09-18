@@ -1,6 +1,6 @@
 <template>
   <div class="do-potic-mian">
-    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length">
+    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length && haveTopics">
       <div class="dptic-wrap-l fl">
         <div ref="fixedTit">
           <Row class="dptic-title">
@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-    <div class="no-data" v-else>
+    <div class="no-data" v-if="!haveTopics">
       暂无数据
     </div>
     <Modal
@@ -84,6 +84,7 @@ export default {
       diffRes: parseInt(window.sessionStorage.getItem('diffRes')), // 请求不同的接口
       diffTxt: parseInt(window.sessionStorage.getItem('diffTxt')), // 请求不同的接口
       topics: [],
+      haveTopics: true,
       title: '',
       getQuestion: {
         jiexi: 1,
@@ -309,7 +310,9 @@ export default {
     },
     // 答题卡状态，问题列表状态（解析，用户答案）
     answerSts (topics) {
+      this.haveTopics = false
       if (topics && topics.length) {
+        this.haveTopics = true
         topics.map((val, index) => {
           val.flag = false // 解析展开收起交互
           if (this.$route.query.plate_id === 3) { // 论述题解析不需要下面的逻辑
