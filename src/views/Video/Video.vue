@@ -3,7 +3,7 @@
     <div class="video-header">
       <div>
         <router-link :to="{ path: '/class-detail', query: { package_id: this.$route.query.package_id }}">></router-link>
-        <span>{{videoCredentials.Title}}</span>
+        <span>{{videoCredentials.Title.replace('.mp4', '')}}</span>
       </div>
       <HeadName :showName="false"></HeadName>
     </div>
@@ -123,7 +123,10 @@ export default {
     ...mapState({
       avatorImgPath: state => state.user.avatorImgPath,
       user_id: state => state.user.user_id
-    })
+    }),
+    ss (a) {
+      return a.replace('.mp4', '')
+    }
   },
   mounted () {
     this.getCourseCatalog() // 课程大纲（目录）

@@ -3,7 +3,7 @@
     <div class="video-header">
       <div>
         <router-link :to="{ path: '/learning-center-detail', query: { package_id: playCourseInfo.package_id }}">></router-link>
-        <span>{{videoCredentials.Title}}</span>
+        <span>{{videoCredentials.Title.replace('.mp4', '')}}</span>
       </div>
       <HeadName :showName="false"></HeadName>
     </div>
