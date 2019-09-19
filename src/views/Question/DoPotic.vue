@@ -188,16 +188,14 @@ export default {
   methods: {
     scrollToTop () {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      if (scrollTop > 100) {
+      if (scrollTop > 50) {
         this.$refs.fixedTit.style.position = 'fixed'
         this.$refs.fixedTit.style.top = 70 + 'px'
         this.$refs.fixedTit.style.width = 895 + 'px'
       } else {
-        if (scrollTop > 0) {
-          this.$refs.fixedTit.style.position = ''
-          this.$refs.fixedTit.style.top = ''
-          this.$refs.fixedTit.style.width = ''
-        }
+        this.$refs.fixedTit.style.position = ''
+        this.$refs.fixedTit.style.top = ''
+        this.$refs.fixedTit.style.width = ''
       }
     },
     goAnchor (selector) {

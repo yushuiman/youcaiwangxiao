@@ -59,7 +59,6 @@ export default {
       curIndex: '',
       videoListFlag: true,
       playIdx: 0
-      // openMenu: window.sessionStorage.getItem('openMenu')
     }
   },
   computed: {

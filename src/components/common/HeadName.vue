@@ -64,7 +64,6 @@ export default {
       user_id: state => state.user.user_id,
       avatorImgPath: state => state.user.avatorImgPath,
       userName: state => state.user.userName,
-      isLogin: state => state.nav.isLogin,
       is_news: state => state.news.is_news
     }),
     metaTitle () {
@@ -75,22 +74,6 @@ export default {
     if (this.token) { // 刷新页面vuex状态重新储存
       this.getUserInfo().then(() => {
         this.getIndexMessage() // 系统消息
-      })
-      var _this = this
-      var socket = io('http://ycapi.youcaiwx.com:2120')
-      socket.on('connect', function () {
-        // socket.emit('login', 555)
-        socket.emit('login', this.user_id)
-      })
-
-      // 后端推送来消息时
-      socket.on('new_msg', function (msg) {
-        let json = JSON.parse(msg)
-        _this.$Notice.info({
-          title: '您有一条新消息',
-          desc: json.value
-        })
-        _this.getIndexMessage()
       })
     }
   },

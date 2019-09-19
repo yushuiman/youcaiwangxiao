@@ -24,16 +24,8 @@ Vue.use(VueAwesomeSwiper)
 new Vue({
   router,
   store,
-  render: h => h(App),
-  scrollBehavior (to, from, savedPosition) {
-    return {
-      x: 0,
-      y: 0
-    }
-  }
+  render: h => h(App)
 }).$mount('#app')
 Vue.prototype.$Message = ElementUI.Message
 Vue.prototype.$Notice = Iview.Notice
 Vue.config.productionTip = false
-
-// ElementUI.Message.success('json.value')

@@ -58,13 +58,14 @@ export default {
         outLogin().then(() => {
           // removeToken() // cookie token
           window.sessionStorage.removeItem('ycwxToken')
+          window.sessionStorage.removeItem('course_id')
           commit('setToken', '')
           commit('setAvator', '')
           commit('setUserId', '')
           commit('setUserName', '')
-          resolve()
-          this.$route.push('/')
+          this.$router.push('/')
           window.location.reload()
+          resolve()
         }).catch(err => {
           reject(err)
         })

@@ -38,8 +38,8 @@
           <div class="com-btn" @click="goQq(2)">CMA群</div>
         </div>
       </li>
-      <li class="go-top-item" @click="backTop">
-        <i class="r-icon"></i>
+      <li class="go-top-item">
+        <BackTop :height="0" style="position: static;width:100%;bottom: 0;right:0;"><i class="r-icon"></i></BackTop>
       </li>
     </ul>
   </div>

@@ -62,7 +62,9 @@ export default {
   },
   computed: {
     ...mapState({
-      token: state => state.user.token
+      token: state => state.user.token,
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     }),
     metaTitle () {
       return this.$route.meta.title
@@ -72,6 +74,43 @@ export default {
     HeadName
   },
   mounted () {
+    if (this.isLoadHttpRequest) {
+      var _this = this
+      var socket = io('http://ycapi.youcaiwx.com:2120')
+      socket.on('connect', function () {
+        socket.emit('login', _this.user_id)
+        console.log('1打印user_id:' + _this.user_id)
+      })
+      console.log(socket)
+      // 后端推送来消息时
+      socket.on('new_msg', function (msg) {
+        let json = JSON.parse(msg)
+        _this.$Notice.info({
+          title: '您有一条新消息',
+          desc: json.value
+        })
+        _this.getIndexMessage()
+      })
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        var _this = this
+        var socket = io('http://ycapi.youcaiwx.com:2120')
+        socket.on('connect', function () {
+          socket.emit('login', _this.user_id)
+          console.log('2打印user_id:' + _this.user_id)
+        })
+        console.log(socket)
+        // 后端推送来消息时
+        socket.on('new_msg', function (msg) {
+          let json = JSON.parse(msg)
+          _this.$Notice.info({
+            title: '您有一条新消息',
+            desc: json.value
+          })
+          _this.getIndexMessage()
+        })
+      })
+    }
   },
   methods: {
     goIndex () {

@@ -277,7 +277,13 @@ const router = new Router({
         showRightSlider: false
       }
     }
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    return {
+      x: 0,
+      y: 0
+    }
+  }
 })
 // router.beforeEach((to, from, next) => {
 //   let token = store.state.user.token
@@ -289,5 +295,9 @@ const router = new Router({
 //   } else {
 //     next()
 //   }
+// })
+// router.afterEach((to, from, next) => {
+//   window.scrollTo(0, 0)
+//   next()
 // })
 export default router
