@@ -19,7 +19,7 @@
           </div>
           <div class="tel">
             <img :src="password" alt="">
-            <input type="password" v-model.trim="form.password" placeholder="请输入密码" maxlength="16">
+            <input type="password" v-model.trim="form.password" placeholder="请输入密码" maxlength="16" @keyup.enter="accountLogin">
           </div>
           <div class="forget" @click="forgetPasw('forget')">忘记密码 ?</div>
           <i-button type="primary" class="log" @click="accountLogin">登录</i-button>
@@ -68,7 +68,7 @@
           </div>
           <div class="tel">
             <img :src="password" alt="">
-            <input type="password" v-model="form2.confirm_pwd" placeholder="请确认密码" maxlength="16">
+            <input type="password" v-model="form2.confirm_pwd" placeholder="请确认密码" maxlength="16" @keyup.enter="webReg">
           </div>
           <div class="read">
             <Checkbox v-model="single">我已同意并阅读</Checkbox>
@@ -171,8 +171,8 @@
           </div>
           <div class="tel">
             <img :src="code" alt="">
-            <input type="text" v-model="form4.code" placeholder="请输入手机验证码" maxlength="6">
-            <button type="primary" class="getCode" v-show="show3"  @click="getCode3">获取验证码</button>
+            <input type="text" v-model="form4.code" placeholder="请输入手机验证码" maxlength="6" @keyup.enter="quickLogin">
+            <button type="primary" class="getCode" v-show="show3" @click="getCode3">获取验证码</button>
             <button type="primary" class="count" v-show="!show3">{{count3}} s</button>
           </div>
           <div class="voice2" v-show="Sms_no == true">

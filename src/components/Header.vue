@@ -28,7 +28,7 @@
 </template>
 <script>
 import HeadName from '../components/common/HeadName'
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -75,6 +75,7 @@ export default {
   },
   mounted () {
     if (this.isLoadHttpRequest) {
+      this.getIndexMessage() // 系统消息
       var _this = this
       var socket = io('http://ycapi.youcaiwx.com:2120')
       socket.on('connect', function () {
@@ -87,12 +88,17 @@ export default {
         let json = JSON.parse(msg)
         _this.$Notice.info({
           title: '您有一条新消息',
-          desc: json.value
+          desc: json.title
         })
+        // if (json.type === 'freezeMessage') {
+        //   _this.handleLogOut()
+        //   return
+        // }
         _this.getIndexMessage()
       })
     } else {
       this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getIndexMessage() // 系统消息
         var _this = this
         var socket = io('http://ycapi.youcaiwx.com:2120')
         socket.on('connect', function () {
@@ -105,14 +111,22 @@ export default {
           let json = JSON.parse(msg)
           _this.$Notice.info({
             title: '您有一条新消息',
-            desc: json.value
+            desc: json.title
           })
+          // if (json.type === 'freezeMessage') {
+          //   _this.handleLogOut()
+          //   return
+          // }
           _this.getIndexMessage()
         })
       })
     }
   },
   methods: {
+    ...mapActions([
+      'handleLogOut',
+      'getIndexMessage'
+    ]),
     goIndex () {
       this.$router.push('/')
     },

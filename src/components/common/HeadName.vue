@@ -72,9 +72,7 @@ export default {
   },
   mounted () {
     if (this.token) { // 刷新页面vuex状态重新储存
-      this.getUserInfo().then(() => {
-        this.getIndexMessage() // 系统消息
-      })
+      this.getUserInfo()
     }
   },
   created () {
@@ -91,8 +89,8 @@ export default {
       }
     },
     ouLogin () {
-      this.$router.push('/')
       this.handleLogOut()
+      this.$router.push('/')
     },
     // 个人中心
     goPersonalPage (sign) {
