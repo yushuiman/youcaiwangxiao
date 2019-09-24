@@ -1,4 +1,7 @@
 import { accountLogin, outLogin, getUserInfo } from '@/api/login'
+import {
+  watchRecords
+} from '@/api/personal'
 
 import { Message } from 'element-ui'
 let token = window.sessionStorage.getItem('ycwxToken')
@@ -9,7 +12,8 @@ export default {
     avatorImgPath: '',
     token: token || '',
     isLogin: token && token !== '',
-    isLoadHttpRequest: false
+    isLoadHttpRequest: false,
+    watchRecordsList: {} // 观看记录
   },
   mutations: {
     setAvator (state, avatorPath) {
@@ -26,6 +30,9 @@ export default {
     },
     isLoad (state, flag) {
       state.isLoadHttpRequest = flag
+    },
+    setWatchRecord (state, val) {
+      state.watchRecordsList = val
     }
   },
   actions: {
@@ -83,6 +90,26 @@ export default {
             commit('setUserName', data.data.username)
             commit('setUserId', data.data.id)
             commit('isLoad', true)
+          } else {
+            Message.error(data.msg)
+          }
+          resolve(data.data)
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+    // 观看记录
+    getWatchRecords ({ commit }, { userId }) {
+      return new Promise((resolve, reject) => {
+        watchRecords({
+          user_id: userId
+        }).then(res => {
+          const data = res.data
+          if (data.code === 200) {
+            if (res.data) {
+              commit('setWatchRecord', res.data.data[0].list[0])
+            }
           } else {
             Message.error(data.msg)
           }

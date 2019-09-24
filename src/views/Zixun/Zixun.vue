@@ -1,14 +1,20 @@
 <template>
   <div class="zixun-wrap">
-    <!-- <img src="../../assets/images/index/banner.png" alt="" width="100%" height="100"> -->
+    <img src="../../assets/images/zixun/banner.jpg" alt="" width="100%" height="100">
     <div class="zx-main w-wrap">
+      <keep-alive>
       <div class="zxm-left">
         <ul class="zx-list">
-          <li class="zx-item" v-for="(item, index) in zixunList" :key="index">
-            <img :src="item.image" alt="">
-            {{item.title}}
-            {{item.content}}
-            {{item.source}}{{item.create_time}}
+          <li class="zx-item" v-for="(item, index) in zixunList" :key="index" @click="getNewsDetails(item.news_id)">
+            <img class="fengmian-img" :src="item.image" alt="">
+            <div class="wenan-info">
+              <h1 class="title">{{item.title}}</h1>
+              <div class="details" v-html="item.content"></div>
+              <p class="source-time">
+                <span>来源：{{item.source}}</span>
+                <span>{{item.create_time}}</span>
+              </p>
+            </div>
           </li>
         </ul>
         <div style="padding: 20px; text-align: center;">
@@ -21,16 +27,21 @@
           />
         </div>
       </div>
+      </keep-alive>
       <div class="zxm-right">
-        右边
+        <!-- 报考指南 -->
+        <baokao-zhinan></baokao-zhinan>
+        <!-- 获取资料 -->
+        <get-ziliao></get-ziliao>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
-import { newsList, newsDetails } from '@/api/zixun'
+import { newsList } from '@/api/zixun'
+import baokaoZhinan from '../../components/zixun/baokaoZhinan'
+import getZiliao from '../../components/zixun/getZiliao'
 export default {
   data () {
     return {
@@ -40,11 +51,15 @@ export default {
       zixunList: []
     }
   },
+  components: {
+    baokaoZhinan,
+    getZiliao
+  },
   mounted () {
-    this.getNewsList()
-    // this.getNewsDetails()
+    this.getNewsList() // 消息列表
   },
   methods: {
+    // 列表
     getNewsList () {
       newsList({
         limit: this.limit,
@@ -61,26 +76,78 @@ export default {
         }
       })
     },
-    getNewsDetails () {
-      newsDetails({
-        limit: 10
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.studentsRankList = res.data
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
     // 分页
     onChange (val) {
       this.page = val
       this.getNewsList()
+    },
+    // 详情
+    getNewsDetails (id) {
+      this.$router.push({ path: '/zixun-detail',
+        query: {
+          news_id: id
+        }
+      })
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" rel="stylesheet/scss">
+  @import "../../assets/scss/app";
+  .zx-main{
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 8px;
+    .zxm-left{
+      width: 903px;
+    }
+    .zxm-right{
+      width: 278px;
+    }
+  }
+  .zx-list{
+    background: #ffffff;
+    padding: 0 20px;
+  }
+  .zx-item{
+    padding: 21px 0;
+    display: flex;
+    .fengmian-img{
+      width: 160px;
+      height: 101px;
+      margin-right: 21px;
+      cursor: pointer;
+    }
+  }
+  .wenan-info{
+    cursor: pointer;
+    flex: 1;
+    h1{
+      font-size: 18px;
+      line-height: 20px;
+      color: $col333;
+    }
+    .details{
+      line-height: 20px;
+      height: 40px;
+      margin-top: 14px;
+      color: $col666;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+    }
+    .details *{
+      width: auto!important;
+    }
+    .source-time{
+      line-height: 20px;
+      margin-top: 4px;
+      color: $col999;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
 </style>

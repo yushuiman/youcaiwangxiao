@@ -134,7 +134,8 @@ export default {
         package_id: 0,
         course_id: 0,
         video_id: 0
-      }
+      },
+      is_purchase: 0 // 是否购买
     }
   },
   computed: {
@@ -239,8 +240,8 @@ export default {
       this.sessionPlayInfo.package_id = val.package_id
       this.sessionPlayInfo.course_id = val.course_id
       this.sessionPlayInfo.section_id = val.section_id
-      // this.sessionPlayInfo.userstatus = val.is_purchase
       window.sessionStorage.setItem('userstatus', val.is_purchase) // 是否购买
+      this.is_purchase = val.is_purchase // 2未购买
       this.visible = true
     },
     // 获取收藏课程章节
@@ -260,6 +261,10 @@ export default {
     },
     // 课程去学习 播放记录去学习
     courseLearnVideo (val) {
+      if (val.is_purchase === 2) {
+        this.$Message.error('请购买课程')
+        return
+      }
       // 如果有看过的记录，继续学习
       if (val.video) {
         let obj = {
@@ -267,11 +272,8 @@ export default {
           course_id: val.video.course_id,
           section_id: val.video.section_id,
           video_id: val.video.video_id
-          // userstatus: 1 // 购买1未购买2
         }
         this.$router.push({ path: '/class-video', query: obj })
-        // window.sessionStorage.setItem('playVideoInfo', JSON.stringify(val)) //
-        // window.sessionStorage.setItem('playtime', val.video.watch_time) // 获取播放时间
         window.sessionStorage.setItem('userstatus', 1) // 是否购买
         return
       }
@@ -282,31 +284,14 @@ export default {
         }
       })
     },
-    // // 播放记录去学习
-    // recordLearnVideo (val) {
-    //   let obj = {
-    //     package_id: val.package_id + '',
-    //     course_id: val.video.course_id,
-    //     section_id: val.video.section_id,
-    //     video_id: val.video.video_id,
-    //     is_zhengke: val.video.is_zhengke, // 是否正课
-    //     userstatus: 1 // 是否购买 播放记录都是已购买的数据
-    //   }
-    //   this.$router.push({ path: '/class-video', query: obj })
-    //   // let openMenu = (val.video.section_id) + '-' + (val.video.video_id)
-    //   // window.sessionStorage.setItem('openMenu', openMenu)
-    //   // window.sessionStorage.setItem('playVideoInfo', JSON.stringify(val))
-    //   window.sessionStorage.setItem('playtime', val.video.watch_time) // 获取播放时间
-    // },
     // 收藏记录去学习
     collectionLearnVideo (item, val) {
-      // let playVideoObj = Object.assign({}, this.sessionPlayInfo, val)
+      if (this.is_purchase === 2) {
+        this.$Message.error('请购买课程')
+        return
+      }
       this.sessionPlayInfo.video_id = val.id
       this.$router.push({ path: '/class-video', query: this.sessionPlayInfo })
-      // let openMenu = (item.section_id) + '-' + (val.video_id)
-      // window.sessionStorage.setItem('openMenu', openMenu)
-      // window.sessionStorage.setItem('playVideoInfo', JSON.stringify(playVideoObj))
-      // window.sessionStorage.setItem('playtime', val.watch_time) // 获取播放时间 待定，接口没有返回
     }
   }
 }

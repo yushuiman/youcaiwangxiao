@@ -24,7 +24,7 @@
   </div>
 </template>
 <script>
-import { watchRecords } from '@/api/personal'
+// import { watchRecords } from '@/api/personal'
 import { mapActions, mapState } from 'vuex'
 
 export default {
@@ -54,8 +54,8 @@ export default {
           type: '个人设置',
           sign: 'set'
         }
-      ],
-      watchRecordsList: {} // 观看记录
+      ]
+      // watchRecordsList: {} // 观看记录
     }
   },
   computed: {
@@ -64,6 +64,7 @@ export default {
       user_id: state => state.user.user_id,
       avatorImgPath: state => state.user.avatorImgPath,
       userName: state => state.user.userName,
+      watchRecordsList: state => state.user.watchRecordsList,
       is_news: state => state.news.is_news
     }),
     metaTitle () {
@@ -81,11 +82,12 @@ export default {
     ...mapActions([
       'handleLogOut',
       'getUserInfo',
-      'getIndexMessage'
+      'getIndexMessage',
+      'getWatchRecords'
     ]),
     dropDownVisible (change) {
       if (change) {
-        this.getWatchRecords() // 观看记录
+        this.getWatchRecords({ userId: this.user_id }) // 观看记录
       }
     },
     ouLogin () {
@@ -114,22 +116,26 @@ export default {
       // })
     },
     // 播放记录
-    getWatchRecords () {
-      watchRecords({
-        user_id: this.user_id
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          if (res.data && res.data[0]) {
-            this.watchRecordsList = res.data[0].list[0]
-          }
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
+    // getWatchRecords () {
+    //   watchRecords({
+    //     user_id: this.user_id
+    //   }).then(data => {
+    //     const res = data.data
+    //     if (res.code === 200) {
+    //       if (res.data && res.data[0]) {
+    //         this.watchRecordsList = res.data[0].list[0]
+    //       }
+    //     } else {
+    //       this.$Message.error(res.msg)
+    //     }
+    //   })
+    // },
     // 继续观看
     goonWatch () {
+      if (this.watchRecordsList.is_purchase === 2) {
+        this.$Message.error('请购买课程')
+        return
+      }
       let obj = {
         package_id: this.watchRecordsList.package_id,
         course_id: this.watchRecordsList.video.course_id,

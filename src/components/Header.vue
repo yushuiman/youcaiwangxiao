@@ -177,25 +177,19 @@ export default {
         padding: 0 21px;
         color: $col333;
         display: inline-block;
-        // border-top: 4px solid transparent;
       }
       &.on_change{
         a {
           color: $blueColor;
-          // border-top: 4px solid $blueColor;
         }
       }
       .tab-item{
         &.router-link-exact-active {
           color: $blueColor;
-          // border-top: 4px solid $blueColor;
         }
-        // a{
-        //   color: $blueColor;
-        //   border-top: 4px solid $blueColor;
-        // }
       }
       &:hover{
+        height: 69px;
         box-shadow:0px 0px 9px 1px rgba(193,193,193,0.54);
         border-top: 1px solid $blueColor;
         border-top-left-radius: 1px;

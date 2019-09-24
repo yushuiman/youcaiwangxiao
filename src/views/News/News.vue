@@ -27,50 +27,6 @@
         <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxNews == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
       </ul>
       <div class="news-main">
-        <!-- 网校公告 -->
-        <!-- <div v-if="selIdxNews == 0">
-          <div v-if="ycwxMessageList.length">
-            <div v-if="newsFlag">
-              <ul class="news-list">
-                <li class="news-item" :class="{'invalid': item.status == 2}" v-for="(item, index) in ycwxMessageList" :key="index" @click="getRead(item)">
-                <img src="" alt="" class="news-l" v-if="item.status == 1">
-                <img src="" alt="" class="news-l" v-if="item.status == 2">
-                <div class="news-center">
-                  <h3><span>{{item.title}}</span><em>{{item.create_time}}</em></h3>
-                  <p>{{item.content}}</p>
-                </div>
-                </li>
-              </ul>
-              <div style="padding: 20px; text-align: center;">
-                <Page
-                :total="total"
-                @on-change="onChange"
-                :current="page"
-                :page-size="limit"
-                size="small"
-                />
-              </div>
-            </div>
-            <div class="news-datail" v-if="!newsFlag">
-              <div class="news-title">
-                <a class="return" @click="returnNewsList">返回</a>
-                <div class="txt">
-                  <h2>{{newsDetail.message.title}}</h2>
-                  <p>{{newsDetail.message.create_time}}</p>
-                </div>
-                <div class="change-item">
-                  <a class="next-item" @click="changeItem(1)">&lt;&lt; 上一条</a>
-                  <a class="prev-item" @click="changeItem(2)">下一条 &gt;&gt;</a>
-                </div>
-              </div>
-              <div class="news-info">
-                {{newsDetail.message.content}}
-              </div>
-            </div>
-          </div>
-          <div class="no-data" v-else>暂无消息</div>
-        </div>
-        </div> -->
         <!-- 网校公告 系统消息 -->
         <div v-if="systeMessageList.length">
           <div v-if="newsFlag">

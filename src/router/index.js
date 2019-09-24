@@ -66,6 +66,17 @@ const router = new Router({
       }
     },
     {
+      path: '/canvas',
+      name: 'canvas',
+      component: () => import('@/views/Question/canvas.vue'),
+      meta: {
+        title: '题库',
+        showHeader: true,
+        showFooter: true,
+        showRightSlider: true
+      }
+    },
+    {
       path: '/dopotic',
       name: 'dopotic',
       component: () => import('@/views/Question/DoPotic.vue'),
@@ -179,6 +190,17 @@ const router = new Router({
       path: '/zixun',
       name: 'zixun',
       component: () => import('@/views/Zixun/Zixun.vue'),
+      meta: {
+        title: '资讯',
+        showHeader: true,
+        showFooter: true,
+        showRightSlider: true
+      }
+    },
+    {
+      path: '/zixun-detail',
+      name: 'zixun-detail',
+      component: () => import('@/views/Zixun/ZixunDetail.vue'),
       meta: {
         title: '资讯',
         showHeader: true,

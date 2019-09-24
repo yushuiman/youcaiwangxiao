@@ -142,9 +142,6 @@ export default {
       window.sessionStorage.setItem('type', type)
     },
     setBaseInfo () {
-      if (this.clkTit === 'news') {
-        return
-      }
       this.clkTit = 'set'
       window.sessionStorage.setItem('type', 'set')
     },

@@ -198,7 +198,6 @@ export default {
             instance.seek(this.tryQatchNum)
           } else {
             this.playtime = playtime
-            instance.play()
           }
         }, 1000)
       }
