@@ -145,7 +145,7 @@ export default {
       }
       window.sessionStorage.setItem('userstatus', 1) // 是否购买
       window.sessionStorage.setItem('playtime', this.watchRecordsList.video.watch_time) // 获取当前播放时间
-      this.$router.push({ path: '/class-video', query: obj })
+      this.$router.push({ path: '/course-video', query: obj })
     }
   }
 }

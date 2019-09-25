@@ -184,7 +184,7 @@ export default {
     },
     goSeeVideo () {
       window.sessionStorage.setItem('userstatus', this.isntroduction.userstatus) // 是否购买
-      this.$router.push({ path: '/class-video',
+      this.$router.push({ path: '/course-video',
         query: {
           package_id: this.package_id
           // userstatus: this.isntroduction.userstatus // 1购买 2未购买

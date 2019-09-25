@@ -110,6 +110,7 @@ export default {
   .zx-list{
     background: #ffffff;
     padding: 0 20px;
+    min-height: 1000px;
   }
   .zx-item{
     padding: 21px 0;

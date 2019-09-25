@@ -513,7 +513,7 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.$emit('getPersonalInfo')
+          this.$emit('getPersonalInfo', 1)
         } else {
           this.$Message.error(res.msg)
         }

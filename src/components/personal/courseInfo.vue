@@ -273,12 +273,12 @@ export default {
           section_id: val.video.section_id,
           video_id: val.video.video_id
         }
-        this.$router.push({ path: '/class-video', query: obj })
+        this.$router.push({ path: '/course-video', query: obj })
         window.sessionStorage.setItem('userstatus', 1) // 是否购买
         return
       }
       // 否则去课程列表页面
-      this.$router.push({ path: '/class-detail',
+      this.$router.push({ path: '/course-detail',
         query: {
           package_id: val.package_id
         }
@@ -291,7 +291,7 @@ export default {
         return
       }
       this.sessionPlayInfo.video_id = val.id
-      this.$router.push({ path: '/class-video', query: this.sessionPlayInfo })
+      this.$router.push({ path: '/course-video', query: this.sessionPlayInfo })
     }
   }
 }

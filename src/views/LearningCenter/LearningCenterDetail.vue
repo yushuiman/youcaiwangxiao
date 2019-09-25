@@ -514,7 +514,7 @@ export default {
     },
     // 未完成计划去学习/当前正在学习.继续
     goClassDetailLearn () {
-      this.$router.push({ path: '/class-detail',
+      this.$router.push({ path: '/course-detail',
         query: {
           package_id: this.package_id
         }

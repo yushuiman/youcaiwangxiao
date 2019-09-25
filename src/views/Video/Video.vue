@@ -2,7 +2,7 @@
   <div class="video-wrap">
     <div class="video-header">
       <div>
-        <router-link :to="{ path: '/class-detail', query: { package_id: this.$route.query.package_id }}">></router-link>
+        <router-link :to="{ path: '/course-detail', query: { package_id: this.$route.query.package_id }}">></router-link>
         <span>{{videoCredentials.Title}}</span>
       </div>
       <HeadName :showName="false"></HeadName>
@@ -204,7 +204,7 @@ export default {
     },
     // 去购买
     goBuy () {
-      this.$router.push({ path: '/class-detail',
+      this.$router.push({ path: '/course-detail',
         query: {
           package_id: this.playCourseInfo.package_id
         }
@@ -292,7 +292,7 @@ export default {
       this.flagJy = false
       this.wImportant = 382
       this.playCourseInfo.is_zhengke = item.is_zhengke
-      this.$router.replace({ path: 'class-video',
+      this.$router.replace({ path: 'course-video',
         query: {
           ...this.$route.query,
           course_id: item.course_id

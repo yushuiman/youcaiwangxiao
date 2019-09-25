@@ -655,7 +655,7 @@ export default {
     },
     // 开始学习
     startLearn () {
-      this.$router.push('/class')
+      this.$router.push('/course')
     },
     // 完善资料
     writUserInfo () {

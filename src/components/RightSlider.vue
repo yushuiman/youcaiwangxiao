@@ -123,7 +123,7 @@ export default {
         })
         return
       }
-      this.$router.push('/class')
+      this.$router.push('/course')
     }
   }
 }

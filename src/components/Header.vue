@@ -38,7 +38,7 @@ export default {
           name: '首页'
         },
         {
-          path: 'class',
+          path: 'course',
           name: '课程'
         },
         {

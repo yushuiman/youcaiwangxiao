@@ -126,7 +126,7 @@ export default {
     // getSecvCatalog (item, idx) {
     //   this.videoListFlag = true
     //   this.$emit('closeModel')
-    //   this.$router.replace({ path: 'class-video',
+    //   this.$router.replace({ path: 'course-video',
     //     query: {
     //       ...this.$route.query,
     //       course_id: item.course_id
@@ -166,7 +166,7 @@ export default {
       // this.$emit('getVideoPlayback', v.video_id)
       // let openMenu = (key + 1) + '-' + (index + 1)
       // window.sessionStorage.setItem('openMenu', .openMenu)
-      this.$router.replace({ path: 'class-video',
+      this.$router.replace({ path: 'course-video',
         query: {
           ...this.$route.query,
           section_id: val.section_id,
