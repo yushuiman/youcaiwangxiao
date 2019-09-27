@@ -153,9 +153,7 @@ export default {
             sex: this.personalInfo.sex
           }
           window.sessionStorage.setItem('personalInfo', JSON.stringify(obj))
-          if (type === 1) {
-            this.getUserInfo()
-          }
+          this.getUserInfo()
         } else {
           this.$Message.error(res.msg)
         }

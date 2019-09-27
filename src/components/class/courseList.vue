@@ -1,33 +1,35 @@
 <template>
-  <el-row class="tac">
-    <el-col :span="24">
-      <el-menu
-        :unique-opened="true"
-        default-active="2"
-        class="el-menu-vertical-demo">
-        <el-submenu :index="'' + index+1" v-for="(item, index) in courseCatalogInfo" :key="index">
-          <template slot="title" >
-            <div @click="getSecvCatalog(item, index)">
-              <i class="elt-icon elt-icon-01"></i>
-              {{item.name}}
-            </div>
-          </template>
-          <el-submenu :index="'1-'+ key+1" v-for="(val, key) in courseSections" :key="key">
-            <template slot="title">
-              <i class="elt-icon elt-icon-02"></i>
-              <span>{{val.section_name}}</span>
+  <div>
+    <el-row class="tac">
+      <el-col :span="24">
+        <el-menu
+          :unique-opened="true"
+          default-active="2"
+          class="el-menu-vertical-demo">
+          <el-submenu :index="'' + index+1" v-for="(item, index) in courseCatalogInfo" :key="index">
+            <template slot="title" >
+              <div @click="getSecvCatalog(item, index)">
+                <i class="elt-icon elt-icon-01"></i>
+                {{item.name}}
+              </div>
             </template>
-            <el-menu-item :index="'1-1'+ index+1" v-for="(v, index) in val.videos" :key="index"
-            @click="playVideo(item, val, v, key, index)">
-              <i class="elt-icon elt-icon-stop"></i>
-              <span>{{v.video_name}}</span>
-              <em v-if="userstatus == 2" class="free-pay">免费试听</em>
-            </el-menu-item>
+            <el-submenu :index="'1-'+ key+1" v-for="(val, key) in courseSections" :key="key">
+              <template slot="title">
+                <i class="elt-icon elt-icon-02"></i>
+                <span>{{val.section_name}}</span>
+              </template>
+              <el-menu-item :index="'1-1'+ index+1" v-for="(v, index) in val.videos" :key="index"
+              @click="playVideo(item, val, v, key, index)">
+                <i class="elt-icon elt-icon-stop"></i>
+                <span>{{v.video_name}}</span>
+                <em v-if="userstatus == 2" class="free-pay">免费试听</em>
+              </el-menu-item>
+            </el-submenu>
           </el-submenu>
-        </el-submenu>
-      </el-menu>
-    </el-col>
-  </el-row>
+        </el-menu>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 <script>
 import { courseCatalog, secvCatalog } from '@/api/class'

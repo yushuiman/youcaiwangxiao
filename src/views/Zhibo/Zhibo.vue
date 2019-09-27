@@ -1,14 +1,27 @@
 <template>
-    <div style="padding: 200px 0;text-align:center;">
-      开发中<br>这是直播页面
-    </div>
+  <div style="height: 600px;">
+    这是直播页面
+    <br>
+    开发中...
+  </div>
 </template>
 
 <script>
 export default {
+  data () {
+    return {
+    }
+  },
+
+  components: {},
+
+  computed: {},
+
+  mounted () {},
+
+  methods: {}
 }
+
 </script>
-
-<style scoped>
-
+<style lang='scss' scoped>
 </style>

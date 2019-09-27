@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "dll": "webpack -p --progress --config webpack.dll.conf.js"
   },
   "dependencies": {
     "animate.css": "^3.7.2",
@@ -27,7 +28,9 @@
     "vue-fullpage": "^2.0.5",
     "vue-pdf": "^4.0.7",
     "vue-router": "^3.0.3",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "clean-webpack-plugin": "^1.0.1",
+    "compression-webpack-plugin": "^3.0.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",

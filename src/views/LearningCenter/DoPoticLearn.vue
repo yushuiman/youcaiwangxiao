@@ -145,7 +145,6 @@ export default {
     countUp,
     errorCorrection
   },
-
   mounted () {
     if (this.isLoadHttpRequest) {
       this.getTopicList()

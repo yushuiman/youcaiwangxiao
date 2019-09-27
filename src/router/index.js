@@ -11,7 +11,6 @@ const Course = r => require.ensure([], () => r(require('@/views/Course/Course'))
 const courseDetail = r => require.ensure([], () => r(require('@/views/Course/CourseDetail')), 'courseDetail')
 const courseVideo = r => require.ensure([], () => r(require('@/views/Video/Video')), 'courseVideo')
 const Question = r => require.ensure([], () => r(require('@/views/Question/Question')), 'Question')
-const canvas = r => require.ensure([], () => r(require('@/views/Question/canvas')), 'canvas')
 const DoPotic = r => require.ensure([], () => r(require('@/views/Question/DoPotic')), 'DoPotic')
 const DoPoticExperience = r => require.ensure([], () => r(require('@/views/Question/DoPoticExperience')), 'DoPoticExperience')
 const DoPoticContinue = r => require.ensure([], () => r(require('@/views/Personal/DoPoticContinue')), 'DoPoticContinue')
@@ -83,17 +82,6 @@ const router = new Router({
       path: '/question',
       name: 'question',
       component: Question,
-      meta: {
-        title: '题库',
-        showHeader: true,
-        showFooter: true,
-        showRightSlider: true
-      }
-    },
-    {
-      path: '/canvas',
-      name: 'canvas',
-      component: canvas,
       meta: {
         title: '题库',
         showHeader: true,
