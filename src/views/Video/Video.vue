@@ -54,7 +54,7 @@
         <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
         <!-- <div v-if="playCourseInfo.status == 1">
         </div> -->
-        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel"></answer>
+        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer>
         <div class="jiangyi" v-if="flagJy">
           <div class="close-box" @click="closeModel">
             <i class="close-icon"></i>
@@ -201,6 +201,11 @@ export default {
           }
         }, 1000)
       }
+    },
+    // 提问的时候停止播放
+    stopVideo () {
+      this.$refs.aliPlayers.pause()
+      window.sessionStorage.setItem('pauseWatchTime', parseInt(this.$refs.aliPlayers.getCurrentTime()))
     },
     // 去购买
     goBuy () {

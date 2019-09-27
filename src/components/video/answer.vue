@@ -101,7 +101,6 @@
 
 <script>
 import { answerList, answerSub, answerDetails } from '@/api/class'
-import { EventBus } from '@/event-bus.js'
 export default {
   props: {
     playCourseInfo: {
@@ -134,7 +133,7 @@ export default {
   },
   methods: {
     send () {
-      EventBus.$emit('stopPlay')
+      this.$emit('stopVideo')
     },
     handleView (url) {
       this.imgUrl = url
