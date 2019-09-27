@@ -27,7 +27,7 @@
         <div class="com-show r-weixin">
           <img class="ewm" :src="consultInfo.wx_code" alt="">
           <p>关注优财网校</p>
-          <p>获得MAC最新咨询</p>
+          <p>获得CMA最新咨询</p>
         </div>
       </li>
       <li class="qq-item">
