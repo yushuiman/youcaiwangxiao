@@ -16,10 +16,10 @@
         <div class="loginSign-wrap">
           <p class="yc-tiyan">CMA网络课程体验：</p>
           <div class="inp-box">
-            <input type="text" placeholder="请输入您的手机号码" v-model="mobile" maxlength="11" class="mobile">
+            <input type="text" placeholder="请输入您的手机号码" v-model="mobile" maxlength="11" class="mobile" @keyup.enter="signLogin(isSign)">
           </div>
           <div class="inp-box" v-if="isSign == 1">
-            <input type="password" placeholder="请输入密码" v-model="password" maxlength="16" class="pasw">
+            <input type="password" placeholder="请输入密码" v-model="password" maxlength="16" class="pasw" @keyup.enter="signLogin(isSign)">
             <button class="forget-pawd" @click="forgetPawd">忘记密码</button>
           </div>
           <div class="inp-box" v-if="isSign == 2">
@@ -31,7 +31,7 @@
             <button class="get-code" @click="forgetPawYzm" v-bind:disabled="disabled">{{codeTxt}}</button>
           </div>
           <div class="inp-box" v-if="isSign == 3">
-            <input type="password" placeholder="请输入新密码" v-model="password" maxlength="16" class="pasw">
+            <input type="password" placeholder="请输入新密码" v-model="password" maxlength="16" class="pasw" @keyup.enter="signLogin(isSign)">
           </div>
           <div class="info-bottom">
             <button class="btn-com experience-btn" @click="signLogin(isSign)">立即体验</button>
@@ -220,13 +220,11 @@ export default {
           this.downCount() // 倒计时
         } else if (res.code === 405) {
           this.errorTxt = '短信发送失败，请检查手机信息功能'
-          // this.$Message.error('短信发送失败，请检查手机信息功能')
         } else if (res.code === 407) {
           this.errorTxt = '您已注册，请直接登录'
           this.$set(this.$data, 'isSign', 1)
         } else {
           this.errorTxt = res.msg
-          // this.$Message.error(res.msg)
         }
       })
     },

@@ -142,7 +142,7 @@ export default {
         section_id: this.$route.query.section_id || 0,
         knob_id: this.$route.query.knob_id || 0,
         know_id: this.$route.query.know_id || 0,
-        paper_id: this.$route.query.paper_id, // 阶段测试,论述题
+        paper_id: this.$route.query.paper_id || 0, // 阶段测试,论述题
         mock_id: this.$route.query.mock_id || 0,
         plate_id: this.$route.query.plate_id, // 板块
         used_time: 0,
@@ -151,7 +151,7 @@ export default {
           knob_id: this.$route.query.knob_id || 0,
           know_id: this.$route.query.know_id || 0,
           mock_id: this.$route.query.mock_id || 0,
-          paper_id: this.$route.query.paper_id, // 阶段测试,论述题
+          paper_id: this.$route.query.paper_id || 0, // 阶段测试,论述题
           question: []
         }
       },

@@ -1,9 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import store from '@/store/'
-// import { getToken } from '@/libs/utils'
-import {
-} from '@/api/login'
 
 Vue.use(Router)
 const Home = r => require.ensure([], () => r(require('@/views/Home')), 'Home')

@@ -155,7 +155,7 @@ export default {
           knob_id: this.$route.query.knob_id || 0,
           know_id: this.$route.query.know_id || 0,
           mock_id: this.$route.query.mock_id || 0,
-          paper_id: this.$route.query.paper_id,
+          paper_id: this.$route.query.paper_id || 0,
           question: []
         }
       },

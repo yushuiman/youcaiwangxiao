@@ -222,7 +222,7 @@
         </div>
         <div class="tel">
           <img :src="password" alt="">
-          <input type="password" v-model="form3.new_pwd" placeholder="新密码" maxlength="16">
+          <input type="password" v-model="form3.new_pwd" placeholder="新密码" maxlength="16" @keyup.enter="resetPaw">
         </div>
         <i-button type="primary" class="confirm" @click="resetPaw">确认</i-button>
         <div class="yc-bot2">优财智业（北京）科技发展有限公司</div>
