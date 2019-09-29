@@ -7,7 +7,7 @@
       </div>
       <h1 class="vc-title">提问题</h1>
       <textarea autofocus v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"
-        v-on:focus="send()"></textarea>
+        v-on:focus="send"></textarea>
       <div class="submitAnswer clearfix">
         <div class="course_img fl">
           <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
@@ -101,7 +101,6 @@
 
 <script>
 import { answerList, answerSub, answerDetails } from '@/api/class'
-import { EventBus } from '@/event-bus.js'
 export default {
   props: {
     playCourseInfo: {
@@ -134,7 +133,7 @@ export default {
   },
   methods: {
     send () {
-      EventBus.$emit('stopPlay')
+      this.$emit('stopVideo')
     },
     handleView (url) {
       this.imgUrl = url
@@ -194,7 +193,7 @@ export default {
         this.errorTs = '不能全为空格'
         return
       }
-      if (this.quiz > 200) {
+      if (this.quiz.length > 200) {
         this.errorTs = '最多输入200字'
         return
       }

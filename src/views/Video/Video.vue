@@ -2,7 +2,7 @@
   <div class="video-wrap">
     <div class="video-header">
       <div>
-        <router-link :to="{ path: '/class-detail', query: { package_id: this.$route.query.package_id }}">></router-link>
+        <router-link :to="{ path: '/course-detail', query: { package_id: this.$route.query.package_id }}">></router-link>
         <span>{{videoCredentials.Title}}</span>
       </div>
       <HeadName :showName="false"></HeadName>
@@ -54,7 +54,7 @@
         <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
         <!-- <div v-if="playCourseInfo.status == 1">
         </div> -->
-        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel"></answer>
+        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer>
         <div class="jiangyi" v-if="flagJy">
           <div class="close-box" @click="closeModel">
             <i class="close-icon"></i>
@@ -185,7 +185,6 @@ export default {
         }
         // 已购买并且视频播放时间大于0 socket
         if (this.playCourseInfo.userstatus === 1 && this.playtime > 0) {
-          // console.log(JSON.stringify(message))
           initWS(JSON.stringify(message))
         }
       }, 30000)
@@ -199,14 +198,18 @@ export default {
             instance.seek(this.tryQatchNum)
           } else {
             this.playtime = playtime
-            instance.play()
           }
         }, 1000)
       }
     },
+    // 提问的时候停止播放
+    stopVideo () {
+      this.$refs.aliPlayers.pause()
+      window.sessionStorage.setItem('pauseWatchTime', parseInt(this.$refs.aliPlayers.getCurrentTime()))
+    },
     // 去购买
     goBuy () {
-      this.$router.push({ path: '/class-detail',
+      this.$router.push({ path: '/course-detail',
         query: {
           package_id: this.playCourseInfo.package_id
         }
@@ -294,7 +297,7 @@ export default {
       this.flagJy = false
       this.wImportant = 382
       this.playCourseInfo.is_zhengke = item.is_zhengke
-      this.$router.replace({ path: 'class-video',
+      this.$router.replace({ path: 'course-video',
         query: {
           ...this.$route.query,
           course_id: item.course_id

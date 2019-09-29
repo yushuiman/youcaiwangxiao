@@ -241,12 +241,19 @@ export default {
   computed: {
     ...mapState({
       token: state => state.user.token,
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   mounted () {
     if (this.token) {
-      this.projectList() // 已登录，获取课程列表
+      if (this.isLoadHttpRequest) {
+        this.projectList() // 已登录，获取课程列表
+      } else {
+        this.$watch('isLoadHttpRequest', function (val, oldVal) {
+          this.projectList() // 已登录，获取课程列表
+        })
+      }
       return
     }
     this.getStudentsRanking() // 学员排名

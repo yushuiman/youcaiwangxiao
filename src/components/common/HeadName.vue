@@ -24,7 +24,7 @@
   </div>
 </template>
 <script>
-import { watchRecords } from '@/api/personal'
+// import { watchRecords } from '@/api/personal'
 import { mapActions, mapState } from 'vuex'
 
 export default {
@@ -54,8 +54,8 @@ export default {
           type: '个人设置',
           sign: 'set'
         }
-      ],
-      watchRecordsList: {} // 观看记录
+      ]
+      // watchRecordsList: {} // 观看记录
     }
   },
   computed: {
@@ -64,7 +64,7 @@ export default {
       user_id: state => state.user.user_id,
       avatorImgPath: state => state.user.avatorImgPath,
       userName: state => state.user.userName,
-      isLogin: state => state.nav.isLogin,
+      watchRecordsList: state => state.user.watchRecordsList,
       is_news: state => state.news.is_news
     }),
     metaTitle () {
@@ -73,24 +73,7 @@ export default {
   },
   mounted () {
     if (this.token) { // 刷新页面vuex状态重新储存
-      this.getUserInfo().then(() => {
-        this.getIndexMessage()// 系统消息
-      })
-      var _this = this
-      var socket = io('http://ycapi.youcaiwx.com:2120')
-      socket.on('connect', function () {
-        socket.emit('login', 555)
-      })
-
-      // 后端推送来消息时
-      socket.on('new_msg', function (msg) {
-        let json = JSON.parse(msg)
-        _this.$Notice.info({
-          title: '您有一条新消息',
-          desc: json.value
-        })
-        _this.getIndexMessage()
-      })
+      this.getUserInfo()
     }
   },
   created () {
@@ -99,16 +82,17 @@ export default {
     ...mapActions([
       'handleLogOut',
       'getUserInfo',
-      'getIndexMessage'
+      'getIndexMessage',
+      'getWatchRecords'
     ]),
     dropDownVisible (change) {
       if (change) {
-        this.getWatchRecords() // 观看记录
+        this.getWatchRecords({ userId: this.user_id }) // 观看记录
       }
     },
     ouLogin () {
-      this.$router.push('/')
       this.handleLogOut()
+      this.$router.push('/')
     },
     // 个人中心
     goPersonalPage (sign) {
@@ -132,22 +116,26 @@ export default {
       // })
     },
     // 播放记录
-    getWatchRecords () {
-      watchRecords({
-        user_id: this.user_id
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          if (res.data && res.data[0]) {
-            this.watchRecordsList = res.data[0].list[0]
-          }
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
+    // getWatchRecords () {
+    //   watchRecords({
+    //     user_id: this.user_id
+    //   }).then(data => {
+    //     const res = data.data
+    //     if (res.code === 200) {
+    //       if (res.data && res.data[0]) {
+    //         this.watchRecordsList = res.data[0].list[0]
+    //       }
+    //     } else {
+    //       this.$Message.error(res.msg)
+    //     }
+    //   })
+    // },
     // 继续观看
     goonWatch () {
+      if (this.watchRecordsList.is_purchase === 2) {
+        this.$Message.error('请购买课程')
+        return
+      }
       let obj = {
         package_id: this.watchRecordsList.package_id,
         course_id: this.watchRecordsList.video.course_id,
@@ -157,7 +145,7 @@ export default {
       }
       window.sessionStorage.setItem('userstatus', 1) // 是否购买
       window.sessionStorage.setItem('playtime', this.watchRecordsList.video.watch_time) // 获取当前播放时间
-      this.$router.push({ path: '/class-video', query: obj })
+      this.$router.push({ path: '/course-video', query: obj })
     }
   }
 }

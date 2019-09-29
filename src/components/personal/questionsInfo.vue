@@ -28,13 +28,8 @@ import questionsMenuItem from '../../components/personal/questions/questionsMenu
 import errorMenuItem from '../../components/personal/questions/errorMenuItem'
 import collectionMenuItem from '../../components/personal/questions/collectionMenuItem'
 import { getProject } from '@/api/personal'
-// import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 export default {
-  props: {
-    user_id: {
-      type: Number
-    }
-  },
   data () {
     return {
       // txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
@@ -49,14 +44,21 @@ export default {
     errorMenuItem,
     collectionMenuItem
   },
-  // computed: {
-  //   ...mapState({
-  //     token: state => state.user.token,
-  //     user_id: state => state.user.user_id
-  //   })
-  // },
+  computed: {
+    ...mapState({
+      token: state => state.user.token,
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
+    })
+  },
   mounted () {
-    this.getProjectList()
+    if (this.isLoadHttpRequest) {
+      this.getProjectList()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getProjectList()
+      })
+    }
   },
   methods: {
     // tab

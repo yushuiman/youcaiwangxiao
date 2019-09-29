@@ -71,13 +71,9 @@
 
 <script>
 import { myOrder, alreadyOrderlist, cancelOrder } from '@/api/personal'
-// import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 export default {
-  props: {
-    user_id: {
-      type: Number
-    }
-  },
+  props: ['user_id'],
   data () {
     return {
       visible: false,
@@ -91,14 +87,19 @@ export default {
       orderAddress: {} // 订单详情地址
     }
   },
-  // computed: {
-  //   ...mapState({
-  //     user_id: state => state.user.user_id
-  //   })
-  // },
+  computed: {
+    ...mapState({
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
+    })
+  },
   mounted () {
-    this.getMyOrder()
-    // this.seeDetails()
+    if (this.isLoadHttpRequest) {
+      this.getMyOrder()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getMyOrder()
+      })
+    }
   },
   methods: {
     tabClk (v, index) {

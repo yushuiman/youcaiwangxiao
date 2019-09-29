@@ -28,7 +28,7 @@
 </template>
 <script>
 import HeadName from '../components/common/HeadName'
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -38,7 +38,7 @@ export default {
           name: '首页'
         },
         {
-          path: 'class',
+          path: 'course',
           name: '课程'
         },
         {
@@ -62,7 +62,9 @@ export default {
   },
   computed: {
     ...mapState({
-      token: state => state.user.token
+      token: state => state.user.token,
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     }),
     metaTitle () {
       return this.$route.meta.title
@@ -72,8 +74,59 @@ export default {
     HeadName
   },
   mounted () {
+    if (this.isLoadHttpRequest) {
+      this.getIndexMessage() // 系统消息
+      var _this = this
+      var socket = io('http://ycapi.youcaiwx.com:2120')
+      socket.on('connect', function () {
+        socket.emit('login', _this.user_id)
+        console.log('1打印user_id:' + _this.user_id)
+      })
+      console.log(socket)
+      // 后端推送来消息时
+      socket.on('new_msg', function (msg) {
+        let json = JSON.parse(msg)
+        _this.$Notice.info({
+          title: '您有一条新消息',
+          desc: json.title
+        })
+        // if (json.type === 'freezeMessage') {
+        //   _this.handleLogOut()
+        //   return
+        // }
+        _this.getIndexMessage()
+      })
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getIndexMessage() // 系统消息
+        var _this = this
+        var socket = io('http://ycapi.youcaiwx.com:2120')
+        socket.on('connect', function () {
+          socket.emit('login', _this.user_id)
+          console.log('2打印user_id:' + _this.user_id)
+        })
+        console.log(socket)
+        // 后端推送来消息时
+        socket.on('new_msg', function (msg) {
+          let json = JSON.parse(msg)
+          _this.$Notice.info({
+            title: '您有一条新消息',
+            desc: json.title
+          })
+          // if (json.type === 'freezeMessage') {
+          //   _this.handleLogOut()
+          //   return
+          // }
+          _this.getIndexMessage()
+        })
+      })
+    }
   },
   methods: {
+    ...mapActions([
+      'handleLogOut',
+      'getIndexMessage'
+    ]),
     goIndex () {
       this.$router.push('/')
     },
@@ -124,25 +177,19 @@ export default {
         padding: 0 21px;
         color: $col333;
         display: inline-block;
-        // border-top: 4px solid transparent;
       }
       &.on_change{
         a {
           color: $blueColor;
-          // border-top: 4px solid $blueColor;
         }
       }
       .tab-item{
         &.router-link-exact-active {
           color: $blueColor;
-          // border-top: 4px solid $blueColor;
         }
-        // a{
-        //   color: $blueColor;
-        //   border-top: 4px solid $blueColor;
-        // }
       }
       &:hover{
+        height: 69px;
         box-shadow:0px 0px 9px 1px rgba(193,193,193,0.54);
         border-top: 1px solid $blueColor;
         border-top-left-radius: 1px;

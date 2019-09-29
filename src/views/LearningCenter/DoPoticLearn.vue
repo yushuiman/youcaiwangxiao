@@ -136,7 +136,8 @@ export default {
   },
   computed: {
     ...mapState({
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   components: {
@@ -144,9 +145,14 @@ export default {
     countUp,
     errorCorrection
   },
-
   mounted () {
-    this.getTopicList()
+    if (this.isLoadHttpRequest) {
+      this.getTopicList()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getTopicList()
+      })
+    }
     window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {

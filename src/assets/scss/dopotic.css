@@ -4,6 +4,7 @@
   padding: 20px 0;
   font-size: 18px;
   color: #666666;
+  min-height: 1000px;
 }
 
 .do-potic-wrap .dptic-wrap-l {
@@ -141,6 +142,7 @@
 .anscard-list {
   padding-top: 10px;
   height: 288px;
+  overflow: auto;
 }
 
 .anscard-list li {

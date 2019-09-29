@@ -3,6 +3,7 @@
     padding: 20px 0;
     font-size: 18px;
     color: $col666;
+    min-height: 1000px;
     .dptic-wrap-l{
       width: 895px;
     }
@@ -107,6 +108,7 @@
   .anscard-list{
     padding-top: 10px;
     height: 288px;
+    overflow: auto;
     li{
       float: left;
       width: 28px;

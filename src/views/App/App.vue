@@ -1,7 +1,7 @@
 <template>
   <div class="app-down-wrap">
     <!-- :style="{height: h + 'px'}" -->
-    <div class="page page-1" id="item-1">
+    <div class="page page-1" id="page-1">
       <div class="app-down-cont w-wrap">
         <div class="adc-left">
           <p class="p1">— 新 版 —</p>
@@ -26,7 +26,7 @@
         <img class="adc-right" src="../../assets/images/app/page-iphone-1.png" alt="">
       </div>
     </div>
-    <div class="page page-2" id="item-2">
+    <div class="page page-2" id="page-2">
       <div class="course-cont">
         <h2>课程板块</h2>
         <div class="str-txt">
@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-    <div class="page page-3" id="item-3">
+    <div class="page page-3" id="page-3">
       <div class="course-cont">
         <h2>题库板块</h2>
         <div class="str-txt">
@@ -59,7 +59,7 @@
         </div>
       </div>
     </div>
-    <div class="page page-4" id="item-4">
+    <div class="page page-4" id="page-4">
       <div class="course-cont">
         <h2>学习计划板块</h2>
         <div class="str-txt">
@@ -74,7 +74,7 @@
         </div>
       </div>
     </div>
-    <div class="page page-5" id="item-5">
+    <div class="page page-5" id="page-5">
       <div class="down-cont-foot">
         <div class="adc-left">
           <p class="p1">— 新 版 —</p>

@@ -1,6 +1,6 @@
 <template>
   <div class="do-potic-mian">
-    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length">
+    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length && haveTopics">
       <div class="dptic-wrap-l fl">
         <div ref="fixedTit">
           <Row class="dptic-title">
@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-    <div class="no-data" v-else>
+    <div class="no-data" v-if="!haveTopics">
       暂无数据
     </div>
     <Modal
@@ -84,6 +84,7 @@ export default {
       diffRes: parseInt(window.sessionStorage.getItem('diffRes')), // 请求不同的接口
       diffTxt: parseInt(window.sessionStorage.getItem('diffTxt')), // 请求不同的接口
       topics: [],
+      haveTopics: true,
       title: '',
       getQuestion: {
         jiexi: 1,
@@ -104,42 +105,80 @@ export default {
   },
   computed: {
     ...mapState({
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   mounted () {
-    // 0元体验解析 之前没有考虑这么周全，需求一点点增加，不想改变已有的逻辑了
-    if (this.getQuestion.plate_id === 8 && this.diffRes !== 3) {
-      this.getExperienceParsing()
-      return
+    if (this.isLoadHttpRequest) {
+      // 0元体验解析 之前没有考虑这么周全，需求一点点增加，不想改变已有的逻辑了
+      if (this.getQuestion.plate_id === 8 && this.diffRes !== 3) {
+        this.getExperienceParsing()
+        return
+      }
+      // 答题记录做题集(论述题)解析
+      if (this.diffRes === 0) {
+        this.getCheckItem()
+        return
+      }
+      // 个人中心错题集解析，全部
+      if (this.diffRes === 1) {
+        this.getErrorParsing()
+        return
+      }
+      // 答题记录错题集解析，全部和错题
+      if (this.diffRes === 11) {
+        this.getErrorParsing2()
+        return
+      }
+      // 收藏夹查看解析
+      if (this.diffRes === 2) {
+        this.getMyCollcsee()
+        return
+      }
+      // 学习中心查看解析-全部
+      if (this.diffRes === 3) {
+        this.getQuestionParsingLearn()
+        return
+      }
+      // 6大板块解析
+      this.getQuestionParsing()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        // 0元体验解析 之前没有考虑这么周全，需求一点点增加，不想改变已有的逻辑了
+        if (this.getQuestion.plate_id === 8 && this.diffRes !== 3) {
+          this.getExperienceParsing()
+          return
+        }
+        // 答题记录做题集(论述题)解析
+        if (this.diffRes === 0) {
+          this.getCheckItem()
+          return
+        }
+        // 个人中心错题集解析，全部
+        if (this.diffRes === 1) {
+          this.getErrorParsing()
+          return
+        }
+        // 答题记录错题集解析，全部和错题
+        if (this.diffRes === 11) {
+          this.getErrorParsing2()
+          return
+        }
+        // 收藏夹查看解析
+        if (this.diffRes === 2) {
+          this.getMyCollcsee()
+          return
+        }
+        // 学习中心查看解析-全部
+        if (this.diffRes === 3) {
+          this.getQuestionParsingLearn()
+          return
+        }
+        // 6大板块解析
+        this.getQuestionParsing()
+      })
     }
-    // 答题记录做题集(论述题)解析
-    if (this.diffRes === 0) {
-      this.getCheckItem()
-      return
-    }
-    // 个人中心错题集解析，全部
-    if (this.diffRes === 1) {
-      this.getErrorParsing()
-      return
-    }
-    // 答题记录错题集解析，全部和错题
-    if (this.diffRes === 11) {
-      this.getErrorParsing2()
-      return
-    }
-    // 收藏夹查看解析
-    if (this.diffRes === 2) {
-      this.getMyCollcsee()
-      return
-    }
-    // 学习中心查看解析-全部
-    if (this.diffRes === 3) {
-      this.getQuestionParsingLearn()
-      return
-    }
-    // 6大板块解析
-    this.getQuestionParsing()
   },
   methods: {
     // 6大板块解析
@@ -155,7 +194,6 @@ export default {
           this.title = res.data.title
           this.answerSts(this.topics)
         } else if (res.code === 405) {
-          console.log('暂无数据')
         } else {
           this.$Message.error(res.msg)
         }
@@ -272,7 +310,9 @@ export default {
     },
     // 答题卡状态，问题列表状态（解析，用户答案）
     answerSts (topics) {
+      this.haveTopics = false
       if (topics && topics.length) {
+        this.haveTopics = true
         topics.map((val, index) => {
           val.flag = false // 解析展开收起交互
           if (this.$route.query.plate_id === 3) { // 论述题解析不需要下面的逻辑

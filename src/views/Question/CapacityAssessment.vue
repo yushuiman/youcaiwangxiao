@@ -65,15 +65,21 @@ export default {
   },
   computed: {
     ...mapState({
+      token: state => state.user.token,
       user_id: state => state.user.user_id,
-      token: state => state.user.token
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   mounted () {
-    if (this.token) {
+    if (this.isLoadHttpRequest) {
       this.getAbiAssess()
+      this.initCharts()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getAbiAssess()
+        this.initCharts()
+      })
     }
-    this.initCharts()
   },
   methods: {
     initCharts () {
@@ -93,8 +99,8 @@ export default {
           {
             indicator: [
               { text: '答题时间', max: 86400 },
-              { text: '错题数', max: 400 },
-              { text: '做题数', max: 400 },
+              { text: '错题数', max: 500 },
+              { text: '做题数', max: 500 },
               { text: '学员排名', max: this.nlpgInfo.user },
               { text: '平均分', max: 100 },
               { text: '正确率', max: 100 }

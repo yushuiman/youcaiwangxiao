@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import { EventBus } from '@/event-bus.js'
 export default {
   name: 'Aliplayer',
   props: {
@@ -244,10 +243,6 @@ export default {
       // 如果全局对象不存在，说明编辑器代码还没有加载完成，需要加载编辑器代码
       this.insertScriptTag()
     }
-    EventBus.$on('stopPlay', target => {
-      this.pause()
-      window.sessionStorage.setItem('pauseWatchTime', parseInt(this.getCurrentTime()))
-    })
   },
   created () {
     if (window.Aliplayer !== undefined) {
@@ -260,10 +255,6 @@ export default {
       // 如果全局对象不存在，说明编辑器代码还没有加载完成，需要加载编辑器代码
       this.insertScriptTag()
     }
-    EventBus.$on('stopPlay', target => {
-      this.pause()
-      window.sessionStorage.setItem('pauseWatchTime', parseInt(this.getCurrentTime()))
-    })
   },
   methods: {
     insertScriptTag () {

@@ -1,12 +1,32 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/views/Home.vue'
-// import store from '@/store/'
-// import { getToken } from '@/libs/utils'
-import {
-} from '@/api/login'
 
 Vue.use(Router)
+const Home = r => require.ensure([], () => r(require('@/views/Home')), 'Home')
+const Course = r => require.ensure([], () => r(require('@/views/Course/Course')), 'Course')
+const courseDetail = r => require.ensure([], () => r(require('@/views/Course/CourseDetail')), 'courseDetail')
+const courseVideo = r => require.ensure([], () => r(require('@/views/Video/Video')), 'courseVideo')
+const Question = r => require.ensure([], () => r(require('@/views/Question/Question')), 'Question')
+const DoPotic = r => require.ensure([], () => r(require('@/views/Question/DoPotic')), 'DoPotic')
+const DoPoticExperience = r => require.ensure([], () => r(require('@/views/Question/DoPoticExperience')), 'DoPoticExperience')
+const DoPoticContinue = r => require.ensure([], () => r(require('@/views/Personal/DoPoticContinue')), 'DoPoticContinue')
+const DoPoticError = r => require.ensure([], () => r(require('@/views/Personal/DoPoticError')), 'DoPoticError')
+const ResultReport = r => require.ensure([], () => r(require('@/views/Question/ResultReport')), 'ResultReport')
+const Analysis = r => require.ensure([], () => r(require('@/views/Question/Analysis')), 'Analysis')
+const CapacityAssessment = r => require.ensure([], () => r(require('@/views/Question/CapacityAssessment')), 'CapacityAssessment')
+const CapacityAssessmentApp = r => require.ensure([], () => r(require('@/views/Question/CapacityAssessmentApp')), 'CapacityAssessmentApp')
+const Answer = r => require.ensure([], () => r(require('@/views/Answer/Answer')), 'Answer')
+const Zhibo = r => require.ensure([], () => r(require('@/views/Zhibo/Zhibo')), 'Zhibo')
+const Zixun = r => require.ensure([], () => r(require('@/views/Zixun/Zixun')), 'Zixun')
+const ZixunDetail = r => require.ensure([], () => r(require('@/views/Zixun/ZixunDetail')), 'ZixunDetail')
+const App = r => require.ensure([], () => r(require('@/views/App/App')), 'App')
+const Login = r => require.ensure([], () => r(require('@/views/Login/Login')), 'Login')
+const Personal = r => require.ensure([], () => r(require('@/views/Personal/Personal')), 'Personal')
+const News = r => require.ensure([], () => r(require('@/views/News/News')), 'News')
+const LearningCenter = r => require.ensure([], () => r(require('@/views/LearningCenter/LearningCenter')), 'LearningCenter')
+const LearningCenterDetail = r => require.ensure([], () => r(require('@/views/LearningCenter/LearningCenterDetail')), 'LearningCenterDetail')
+const DoPoticLearn = r => require.ensure([], () => r(require('@/views/LearningCenter/DoPoticLearn')), 'DoPoticLearn')
+const LearnCenterVideo = r => require.ensure([], () => r(require('@/views/LearningCenter/LearnCenterVideo')), 'LearnCenterVideo')
 
 const router = new Router({
   routes: [
@@ -22,9 +42,9 @@ const router = new Router({
       }
     },
     {
-      path: '/class',
-      name: 'class',
-      component: () => import(/* webpackChunkName: "about" */ '@/views/Class/Class.vue'),
+      path: '/course',
+      name: 'course',
+      component: Course,
       meta: {
         title: '课程',
         showHeader: true,
@@ -33,9 +53,9 @@ const router = new Router({
       }
     },
     {
-      path: '/class-detail',
-      name: 'class-detail',
-      component: () => import(/* webpackChunkName: "about" */ '@/views/Class/ClassDetail.vue'),
+      path: '/course-detail',
+      name: 'course-detail',
+      component: courseDetail,
       meta: {
         title: '课程',
         showHeader: true,
@@ -44,9 +64,9 @@ const router = new Router({
       }
     },
     {
-      path: '/class-video',
-      name: 'class-video',
-      component: () => import('@/views/Video/Video.vue'),
+      path: '/course-video',
+      name: 'course-video',
+      component: courseVideo,
       meta: {
         title: '课程',
         showHeader: false,
@@ -57,7 +77,7 @@ const router = new Router({
     {
       path: '/question',
       name: 'question',
-      component: () => import('@/views/Question/Question.vue'),
+      component: Question,
       meta: {
         title: '题库',
         showHeader: true,
@@ -68,7 +88,7 @@ const router = new Router({
     {
       path: '/dopotic',
       name: 'dopotic',
-      component: () => import('@/views/Question/DoPotic.vue'),
+      component: DoPotic,
       meta: {
         title: '题库',
         showHeader: true,
@@ -79,7 +99,7 @@ const router = new Router({
     {
       path: '/dopotic-experience',
       name: 'dopotic-experience',
-      component: () => import('@/views/Question/DoPoticExperience.vue'),
+      component: DoPoticExperience,
       meta: {
         title: '题库',
         showHeader: true,
@@ -90,7 +110,7 @@ const router = new Router({
     {
       path: '/dopotic-continue',
       name: 'dopotic-continue',
-      component: () => import('@/views/Personal/DoPoticContinue.vue'),
+      component: DoPoticContinue,
       meta: {
         title: '题库',
         showHeader: true,
@@ -101,7 +121,7 @@ const router = new Router({
     {
       path: '/dopotic-error',
       name: 'dopotic-error',
-      component: () => import('@/views/Personal/DoPoticError.vue'),
+      component: DoPoticError,
       meta: {
         title: '题库',
         showHeader: true,
@@ -112,7 +132,7 @@ const router = new Router({
     {
       path: '/result-report',
       name: 'result-report',
-      component: () => import('@/views/Question/ResultReport.vue'),
+      component: ResultReport,
       meta: {
         title: '题库',
         showHeader: true,
@@ -123,7 +143,7 @@ const router = new Router({
     {
       path: '/analysis',
       name: 'analysis',
-      component: () => import('@/views/Question/Analysis.vue'),
+      component: Analysis,
       meta: {
         title: '题库',
         showHeader: true,
@@ -134,7 +154,7 @@ const router = new Router({
     {
       path: '/capacity-assessment',
       name: 'capacity-assessment',
-      component: () => import('@/views/Question/CapacityAssessment.vue'),
+      component: CapacityAssessment,
       meta: {
         title: '题库',
         showHeader: true,
@@ -145,7 +165,7 @@ const router = new Router({
     {
       path: '/capacity-assessment-app',
       name: 'capacity-assessment-app',
-      component: () => import('@/views/Question/CapacityAssessmentApp.vue'),
+      component: CapacityAssessmentApp,
       meta: {
         title: '题库',
         showHeader: false,
@@ -156,7 +176,7 @@ const router = new Router({
     {
       path: '/answer',
       name: 'answer',
-      component: () => import('@/views/Answer/Answer.vue'),
+      component: Answer,
       meta: {
         title: '答疑',
         showHeader: true,
@@ -167,7 +187,7 @@ const router = new Router({
     {
       path: '/zhibo',
       name: 'zhibo',
-      component: () => import('@/views/Zhibo/Zhibo.vue'),
+      component: Zhibo,
       meta: {
         title: '直播',
         showHeader: true,
@@ -178,7 +198,18 @@ const router = new Router({
     {
       path: '/zixun',
       name: 'zixun',
-      component: () => import('@/views/Zixun/Zixun.vue'),
+      component: Zixun,
+      meta: {
+        title: '资讯',
+        showHeader: true,
+        showFooter: true,
+        showRightSlider: true
+      }
+    },
+    {
+      path: '/zixun-detail',
+      name: 'zixun-detail',
+      component: ZixunDetail,
       meta: {
         title: '资讯',
         showHeader: true,
@@ -189,7 +220,7 @@ const router = new Router({
     {
       path: '/app',
       name: 'app',
-      component: () => import('@/views/App/App.vue'),
+      component: App,
       meta: {
         title: 'App',
         showHeader: true,
@@ -200,7 +231,7 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/Login/Login.vue'),
+      component: Login,
       meta: {
         title: '登录',
         showHeader: true,
@@ -212,7 +243,7 @@ const router = new Router({
     {
       path: '/personal',
       name: 'personal',
-      component: () => import('@/views/Personal/Personal.vue'),
+      component: Personal,
       meta: {
         title: '个人中心',
         showHeader: true,
@@ -224,7 +255,7 @@ const router = new Router({
     {
       path: '/news',
       name: 'news',
-      component: () => import('@/views/News/News.vue'),
+      component: News,
       meta: {
         title: '消息',
         showHeader: true,
@@ -236,7 +267,7 @@ const router = new Router({
     {
       path: '/learning-center',
       name: 'learning-center',
-      component: () => import('@/views/LearningCenter/LearningCenter.vue'),
+      component: LearningCenter,
       meta: {
         title: '学习中心',
         showHeader: true,
@@ -247,7 +278,7 @@ const router = new Router({
     {
       path: '/learning-center-detail',
       name: 'learning-center-detail',
-      component: () => import('@/views/LearningCenter/LearningCenterDetail.vue'),
+      component: LearningCenterDetail,
       meta: {
         title: '学习中心',
         showHeader: true,
@@ -258,7 +289,7 @@ const router = new Router({
     {
       path: '/dopotic-learn',
       name: 'dopotic-learn',
-      component: () => import('@/views/LearningCenter/DoPoticLearn.vue'),
+      component: DoPoticLearn,
       meta: {
         title: '题库',
         showHeader: true,
@@ -269,7 +300,7 @@ const router = new Router({
     {
       path: '/learn-center-video',
       name: 'learn-center-video',
-      component: () => import('@/views/LearningCenter/LearnCenterVideo.vue'),
+      component: LearnCenterVideo,
       meta: {
         title: '课程',
         showHeader: false,
@@ -277,7 +308,13 @@ const router = new Router({
         showRightSlider: false
       }
     }
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    return {
+      x: 0,
+      y: 0
+    }
+  }
 })
 // router.beforeEach((to, from, next) => {
 //   let token = store.state.user.token
@@ -289,5 +326,9 @@ const router = new Router({
 //   } else {
 //     next()
 //   }
+// })
+// router.afterEach((to, from, next) => {
+//   window.scrollTo(0, 0)
+//   next()
 // })
 export default router

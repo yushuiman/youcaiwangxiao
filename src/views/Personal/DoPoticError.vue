@@ -118,7 +118,7 @@ export default {
       percentNum: 0, // 已做题数
       getQuestion: { // 拿题
         course_id: this.$route.query.course_id,
-        paper_id: this.$route.query.paper_id,
+        paper_id: this.$route.query.paper_id || 0,
         section_id: this.$route.query.section_id,
         knob_id: this.$route.query.knob_id,
         know_id: this.$route.query.know_id,
@@ -142,7 +142,7 @@ export default {
           knob_id: this.$route.query.knob_id || 0,
           know_id: this.$route.query.know_id || 0,
           mock_id: this.$route.query.mock_id || 0,
-          paper_id: this.$route.query.paper_id,
+          paper_id: this.$route.query.paper_id || 0,
           question: []
         }
       },
@@ -151,7 +151,8 @@ export default {
   },
   computed: {
     ...mapState({
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   components: {
@@ -160,7 +161,13 @@ export default {
     errorCorrection
   },
   mounted () {
-    this.getTopicList()
+    if (this.isLoadHttpRequest) {
+      this.getTopicList()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getTopicList()
+      })
+    }
     window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {

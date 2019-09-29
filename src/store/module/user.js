@@ -1,4 +1,7 @@
 import { accountLogin, outLogin, getUserInfo } from '@/api/login'
+import {
+  watchRecords
+} from '@/api/personal'
 
 import { Message } from 'element-ui'
 let token = window.sessionStorage.getItem('ycwxToken')
@@ -8,7 +11,9 @@ export default {
     user_id: '',
     avatorImgPath: '',
     token: token || '',
-    isLogin: token && token !== ''
+    isLogin: token && token !== '',
+    isLoadHttpRequest: false,
+    watchRecordsList: {} // 观看记录
   },
   mutations: {
     setAvator (state, avatorPath) {
@@ -22,6 +27,12 @@ export default {
     },
     setToken (state, token) {
       state.token = token
+    },
+    isLoad (state, flag) {
+      state.isLoadHttpRequest = flag
+    },
+    setWatchRecord (state, val) {
+      state.watchRecordsList = val
     }
   },
   actions: {
@@ -54,13 +65,13 @@ export default {
         outLogin().then(() => {
           // removeToken() // cookie token
           window.sessionStorage.removeItem('ycwxToken')
+          window.sessionStorage.removeItem('course_id')
           commit('setToken', '')
           commit('setAvator', '')
           commit('setUserId', '')
           commit('setUserName', '')
+          // window.location.reload()
           resolve()
-          this.$route.push('/')
-          window.location.reload()
         }).catch(err => {
           reject(err)
         })
@@ -78,6 +89,27 @@ export default {
             commit('setAvator', data.data.head)
             commit('setUserName', data.data.username)
             commit('setUserId', data.data.id)
+            commit('isLoad', true)
+          } else {
+            Message.error(data.msg)
+          }
+          resolve(data.data)
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+    // 观看记录
+    getWatchRecords ({ commit }, { userId }) {
+      return new Promise((resolve, reject) => {
+        watchRecords({
+          user_id: userId
+        }).then(res => {
+          const data = res.data
+          if (data.code === 200) {
+            if (res.data) {
+              commit('setWatchRecord', res.data.data[0].list[0])
+            }
           } else {
             Message.error(data.msg)
           }

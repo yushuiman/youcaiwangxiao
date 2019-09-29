@@ -9,8 +9,8 @@
             <div class="selmoni-course">
               <!-- <div class="sel-course-name" @click="selCourseList">
                 <em>{{selCourseName}}</em>
-                <span class="arow" v-if="!selCourseFlag"><Icon type="md-arrow-dropdown" style="font-size: 30px;margin-top: -4px;color: #666666;"/></span>
-                <span class="arow" v-if="selCourseFlag"><Icon type="md-arrow-dropup" style="font-size: 30px;margin-top: -4px;color: #666666;"/></span>
+                <span class="arow" v-if="!selCourseFlag"><Icon type="md-arrow-dropdown" style="font-size: 28px;margin-top: -3px;color: #666666;"/></span>
+                <span class="arow" v-if="selCourseFlag"><Icon type="md-arrow-dropup" style="font-size: 28px;margin-top: -3px;color: #666666;"/></span>
               </div>
               <transition name="fade">
                 <ul class="sel-course-list" ref="selCourseRef" v-if="selCourseFlag">
@@ -21,8 +21,8 @@
               <Dropdown trigger="click" placement="top-start" :transfer="true" @on-visible-change="dropDownVisible">
                 <div class="sel-course-name">
                   <em>{{selCourseName}}</em>
-                  <span class="arow" v-if="!selCourseFlag"><Icon type="md-arrow-dropdown" style="font-size: 30px;margin-top: -4px;color: #666666;"/></span>
-                  <span class="arow" v-if="selCourseFlag"><Icon type="md-arrow-dropup" style="font-size: 30px;margin-top: -4px;color: #666666;"/></span>
+                  <span class="arow" v-if="!selCourseFlag"><Icon type="md-arrow-dropdown" style="font-size: 28px;margin-top: -3px;color: #666666;"/></span>
+                  <span class="arow" v-if="selCourseFlag"><Icon type="md-arrow-dropup" style="font-size: 28px;margin-top: -3px;color: #666666;"/></span>
                 </div>
                 <DropdownMenu slot="list" class='drop-list sel-course-list'>
                   <li class="sel-course-item" v-for="(v, index) in learnList" :key="index" @click="selCourse(v)">{{v.plan_name}}</li>
@@ -34,7 +34,7 @@
               <i class="ewm-icon"></i>
             </div>
             <span class="learn-status" :class="{'gray': sameday == 2}">{{ sameday == 1 ? '学习中' : '已结束' }}</span>
-            <span class="surplus-day"><i></i>离考试还有{{currenLearnInfo.number}}天</span>
+            <span class="surplus-day"><i></i>离考试还有{{currenLearnInfo.number}}<em>天</em></span>
           </div>
           <div class="outplan" @click="outLearnPlan"><i></i>退出计划</div>
         </div>
@@ -221,7 +221,7 @@
           <select class="com-sel" v-model="package_id" @change="getPackageIdSel($event)">
             <option class="com-opt" :value="v.package_id" v-for="(v, index) in noFinishPlanList" :key="index">{{v.plan_name}}</option>
           </select>
-          <span class="arow"><Icon type="md-arrow-dropdown" style="font-size: 30px;margin-top: -4px;color: #666666;"/></span>
+          <span class="arow"><Icon type="md-arrow-dropdown" style="font-size: 28px;margin-top: -4px;color: #666666;"/></span>
         </div>
         <div class="com-bg">
           <span>您以下课程未学习，请自行补全学习进度</span>
@@ -349,7 +349,8 @@ export default {
   computed: {
     ...mapState({
       token: state => state.user.token,
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   components: {
@@ -359,14 +360,13 @@ export default {
     answerInfo
   },
   mounted () {
-    // window.addEventListener('mouseover', (e) => {
-    //   if (this.selCourseFlag) {
-    //     if (e.target.parentNode !== this.$refs.selCourseRef) {
-    //       this.selCourseFlag = false
-    //     }
-    //   }
-    // })
-    this.getLearnIndex()
+    if (this.isLoadHttpRequest) {
+      this.getLearnIndex()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getLearnIndex()
+      })
+    }
   },
   methods: {
     // 制定学习计划
@@ -514,7 +514,7 @@ export default {
     },
     // 未完成计划去学习/当前正在学习.继续
     goClassDetailLearn () {
-      this.$router.push({ path: '/class-detail',
+      this.$router.push({ path: '/course-detail',
         query: {
           package_id: this.package_id
         }
@@ -948,7 +948,7 @@ export default {
   }
   .selmoni-course{
     position: relative;
-    width: 470px;
+    width: 440px;
     .ivu-dropdown{
       width: 100%;
     }
@@ -958,11 +958,11 @@ export default {
     justify-content: space-between;
     position: relative;
     padding-left: 10px;
-    height: 46px;
-    line-height: 46px;
+    height: 36px;
+    line-height: 36px;
     background:rgba(255,255,255,1);
     border-radius: 6px;
-    font-size: 28px;
+    font-size: 22px;
     border: 1px solid rgba(102,102,102,1);
     box-sizing: border-box;
     cursor: pointer;
@@ -975,7 +975,7 @@ export default {
     }
   }
   .sel-course-list{
-    width: 470px;
+    width:440px;
     // position: absolute;
     // z-index: 1000;
     // top: 46px;
@@ -984,9 +984,9 @@ export default {
     background: #ffffff;
     li{
       padding: 0 10px;
-      height: 70px;
-      line-height: 70px;
-      font-size: 28px;
+      height: 60px;
+      line-height: 60px;
+      font-size: 22px;
       border-bottom: 1px solid #E6E6E6;
       overflow: hidden;
       cursor: pointer;
@@ -994,7 +994,7 @@ export default {
         border: 0;
       }
       &.add-course{
-        font-size: 36px;
+        font-size: 24px;
         color: $col999;
       }
     }
@@ -1042,9 +1042,9 @@ export default {
   }
   .learn-status{
     width: 100px;
-    height: 32px;
-    line-height: 32px;
-    font-size: 18px;
+    height: 26px;
+    line-height: 26px;
+    font-size: 16px;
     color: $colfff;
     @include bg-linear-gradient($btnGredientOrange, to left);
     border-radius: 20px;
@@ -1058,24 +1058,27 @@ export default {
     margin: 0 22px;
     .ewm-icon{
       vertical-align: middle;
-      @include bg-img(40, 40, '../../assets/images/learncenter/ewm.png');
+      @include bg-img(28, 28, '../../assets/images/learncenter/ewm.png');
     }
   }
   .surplus-day{
-    padding-left: 6px;
-    padding-right: 10px;
-    margin-left: 24px;
+    padding: 0 12px;
+    margin-left: 14px;
     height: 30px;
     line-height: 30px;
     background:rgba(232,67,66,.1);
     border-radius: 15px;
-    font-size: 18px;
-    color: #E84342;
+    font-size: 16px;
+    color: $col666;
     i{
       display: inline-block;
-      margin-right: 3px;
+      margin-right: 4px;
       vertical-align: middle;
       @include bg-img(20, 20, '../../assets/images/learncenter/time-icon.png');
+    }
+    em{
+      color: #E84342;
+      margin-left: 5px;
     }
   }
   .outplan{

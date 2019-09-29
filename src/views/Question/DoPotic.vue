@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length">
+    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length && haveTopics">
       <div class="dptic-wrap-l fl">
         <div ref="fixedTit">
           <Row class="dptic-title">
@@ -99,7 +99,7 @@
         <error-correction v-if="visibleError" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
       </Modal>
     </div>
-    <div class="no-data" v-else>
+    <div class="no-data" v-if="!haveTopics">
       暂无数据
     </div>
   </div>
@@ -120,6 +120,7 @@ export default {
       visibleError: false, // 纠错show
       txtShow: '',
       topics: [], // 题列表
+      haveTopics: true,
       answer_time: 0,
       timers: null,
       user_s: 0, // 用时秒数
@@ -149,12 +150,12 @@ export default {
         paper_id: this.$route.query.paper_id || 0,
         mock_id: this.$route.query.mock_id || 0,
         plate_id: this.$route.query.plate_id,
-        paper_type: this.$route.query.paper_mode || 2, // 练习1 考试2
+        paper_type: this.$route.query.paper_mode || 2, // 交卷 练习1 考试2
         question_content: {
           knob_id: this.$route.query.knob_id || 0,
           know_id: this.$route.query.know_id || 0,
           mock_id: this.$route.query.mock_id || 0,
-          paper_id: this.$route.query.paper_id,
+          paper_id: this.$route.query.paper_id || 0,
           question: []
         }
       },
@@ -163,7 +164,8 @@ export default {
   },
   computed: {
     ...mapState({
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   components: {
@@ -174,22 +176,26 @@ export default {
   },
 
   mounted () {
-    this.getTopicList()
+    if (this.isLoadHttpRequest) {
+      this.getTopicList()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getTopicList()
+      })
+    }
     window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
     scrollToTop () {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      if (scrollTop > 100) {
+      if (scrollTop > 50) {
         this.$refs.fixedTit.style.position = 'fixed'
         this.$refs.fixedTit.style.top = 70 + 'px'
         this.$refs.fixedTit.style.width = 895 + 'px'
       } else {
-        if (scrollTop > 0) {
-          this.$refs.fixedTit.style.position = ''
-          this.$refs.fixedTit.style.top = ''
-          this.$refs.fixedTit.style.width = ''
-        }
+        this.$refs.fixedTit.style.position = ''
+        this.$refs.fixedTit.style.top = ''
+        this.$refs.fixedTit.style.width = ''
       }
     },
     goAnchor (selector) {
@@ -220,7 +226,9 @@ export default {
           this.total = parseInt(total)
           this.title = title
           this.answer_time = parseInt(res.data.answer_time) * 1000
+          this.haveTopics = false
           if (topics && topics.length) {
+            this.haveTopics = true
             this.topics.map((val, index) => {
               val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
               val.flag = false // 解析展开收起交互(练习模式)
@@ -347,6 +355,5 @@ export default {
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-  // @import "../../assets/scss/app";
   @import "../../assets/scss/dopotic";
 </style>
