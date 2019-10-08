@@ -316,19 +316,4 @@ const router = new Router({
     }
   }
 })
-// router.beforeEach((to, from, next) => {
-//   let token = store.state.user.token
-//   if (token) {
-//     store.dispatch('getUserInfo').then(() => {
-//       store.dispatch('getIndexMessage')
-//     })
-//     next()
-//   } else {
-//     next()
-//   }
-// })
-// router.afterEach((to, from, next) => {
-//   window.scrollTo(0, 0)
-//   next()
-// })
 export default router

@@ -45,7 +45,7 @@
           <span v-if="isntroduction.vip_bank == 1">VIP题库</span>
           <span>有效期：{{isntroduction.study_days}}天</span>
         </div>
-        <p class="cdi-buy-people">{{isntroduction.join_num}}人购买<span>9993次播放</span></p>
+        <p class="cdi-buy-people">{{isntroduction.join_num}}人购买<span>{{isntroduction.play_num}}次播放</span></p>
         <p class="cdi-price"><em>¥</em>{{isntroduction.price}}</p>
         <div class="cdi-buy-consult">
           <button type="button" name="button" class="buy-btn" v-if="isntroduction.userstatus == 1" @click="goSeeVideo">立即观看</button>
@@ -187,7 +187,6 @@ export default {
       this.$router.push({ path: '/course-video',
         query: {
           package_id: this.package_id
-          // userstatus: this.isntroduction.userstatus // 1购买 2未购买
         }
       })
     },

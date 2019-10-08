@@ -24,6 +24,7 @@
 
 <script>
 import { learnClock } from '@/api/personal'
+import { mapActions, mapState } from 'vuex'
 export default {
   props: {
     personalInfo: {
@@ -38,10 +39,20 @@ export default {
       learnClockInfo: {} // 签到打卡
     }
   },
+  computed: {
+    ...mapState({
+      token: state => state.user.token,
+      user_id: state => state.user.user_id,
+      watchRecordsList: state => state.user.watchRecordsList
+    })
+  },
   mounted () {
 
   },
   methods: {
+    ...mapActions([
+      'getWatchRecords'
+    ]),
     // 签到打卡
     getLearnClock () {
       if (this.personalInfo.is_card === 1) {
@@ -63,7 +74,26 @@ export default {
     },
     // 继续学习
     goStudy () {
-      this.$router.push('/course')
+      this.getWatchRecords({ userId: this.user_id }).then(() => {
+        this.goonWatch()
+      }) // 观看记录
+    },
+    goonWatch () {
+      // 未购买
+      if (this.watchRecordsList.is_purchase === 2) {
+        this.$Message.error('请购买课程')
+        return
+      }
+      // 购买
+      let obj = {
+        package_id: this.watchRecordsList.package_id,
+        course_id: this.watchRecordsList.video.course_id,
+        section_id: this.watchRecordsList.video.section_id,
+        video_id: this.watchRecordsList.video.video_id
+      }
+      window.sessionStorage.setItem('userstatus', this.watchRecordsList.is_purchase) // 是否购买
+      window.sessionStorage.setItem('playtime', this.watchRecordsList.video.watch_time) // 获取当前播放时间
+      this.$router.push({ path: '/course-video', query: obj })
     },
     // 继续做题
     goDotopic () {

@@ -4,14 +4,6 @@
       <li class="tab-item active">预约直播</li>
     </ul>
     <div class="zhibo-main">
-      <!-- <div class="uc-item" v-for="(val, key) in zhiboList" :key="key">
-        <img :src="val.pc_img" alt="" class="uci-img">
-        <div class="uci-detail">
-          <h2 class="ucid-name">阿米巴经营的人事评价制度</h2>
-          <p class="ucid-des">讲师：代坤</p>
-          <p class="ucid-time">时间：2019.09.28 19:00-20:30</p>
-        </div>
-      </div> -->
       <div class="uc-item">
         <img src="../../assets/images/questions/practice-icon03.png" alt="" class="uci-img">
         <div class="uci-detail">
@@ -27,19 +19,12 @@
 </template>
 
 <script>
-// import { errorCorrection } from '@/api/questions'
-// import { mapState } from 'vuex'
 export default {
   data () {
     return {
       zhiboList: []
     }
   },
-  // computed: {
-  //   ...mapState({
-  //     user_id: state => state.user.user_id
-  //   })
-  // },
   mounted () {
   },
   methods: {

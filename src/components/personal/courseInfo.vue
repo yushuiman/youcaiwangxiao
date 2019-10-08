@@ -274,7 +274,7 @@ export default {
           video_id: val.video.video_id
         }
         this.$router.push({ path: '/course-video', query: obj })
-        window.sessionStorage.setItem('userstatus', 1) // 是否购买
+        window.sessionStorage.setItem('userstatus', val.is_purchase) // 是否购买
         return
       }
       // 否则去课程列表页面

@@ -672,11 +672,6 @@ export default {
         return
       }
       let obj = {
-        //     this.playCourseInfo.VideoId = v.VideoId
-      //     this.playCourseInfo.package_id = v.package_id
-      //     this.playCourseInfo.course_id = v.course_id
-      //     this.playCourseInfo.section_id = v.section_id
-      //     this.playCourseInfo.is_zhengke = v.is_zhengke
         package_id: val.package_id,
         course_id: val.course_id,
         section_id: val.section_id,

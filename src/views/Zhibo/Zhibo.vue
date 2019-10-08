@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 600px;">
+  <div style="height: 600px;text-align:center;padding:200px 0;">
     这是直播页面
     <br>
     开发中...

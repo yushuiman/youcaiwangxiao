@@ -66,10 +66,7 @@ export default {
       userName: state => state.user.userName,
       watchRecordsList: state => state.user.watchRecordsList,
       is_news: state => state.news.is_news
-    }),
-    metaTitle () {
-      return this.$route.meta.title
-    }
+    })
   },
   mounted () {
     if (this.token) { // 刷新页面vuex状态重新储存
@@ -141,9 +138,8 @@ export default {
         course_id: this.watchRecordsList.video.course_id,
         section_id: this.watchRecordsList.video.section_id,
         video_id: this.watchRecordsList.video.video_id
-        // userstatus: 1 // 是否购买 未购买是没有记录的 所以是1
       }
-      window.sessionStorage.setItem('userstatus', 1) // 是否购买
+      window.sessionStorage.setItem('userstatus', this.watchRecordsList.is_purchase) // 是否购买
       window.sessionStorage.setItem('playtime', this.watchRecordsList.video.watch_time) // 获取当前播放时间
       this.$router.push({ path: '/course-video', query: obj })
     }
