@@ -193,9 +193,9 @@ export default {
         this.$refs.fixedTit.style.top = 70 + 'px'
         this.$refs.fixedTit.style.width = 895 + 'px'
       } else {
-        this.$refs.fixedTit.style.position = ''
-        this.$refs.fixedTit.style.top = ''
-        this.$refs.fixedTit.style.width = ''
+        if (scrollTop > 0) {
+          this.$refs.fixedTit.style = ''
+        }
       }
     },
     goAnchor (selector) {

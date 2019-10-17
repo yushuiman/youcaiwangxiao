@@ -56,6 +56,10 @@ export default {
         {
           path: 'app',
           name: 'App'
+        },
+        {
+          path: 'books',
+          name: '优财书架'
         }
       ]
     }
@@ -77,7 +81,7 @@ export default {
     if (this.isLoadHttpRequest) {
       this.getIndexMessage() // 系统消息
       var _this = this
-      var socket = io('http://ycapi.youcaiwx.com:2120')
+      var socket = io('https://ycapi.youcaiwx.com:2120')
       socket.on('connect', function () {
         socket.emit('login', _this.user_id)
         console.log('1打印user_id:' + _this.user_id)
@@ -100,7 +104,7 @@ export default {
       this.$watch('isLoadHttpRequest', function (val, oldVal) {
         this.getIndexMessage() // 系统消息
         var _this = this
-        var socket = io('http://ycapi.youcaiwx.com:2120')
+        var socket = io('https://ycapi.youcaiwx.com:2120')
         socket.on('connect', function () {
           socket.emit('login', _this.user_id)
           console.log('2打印user_id:' + _this.user_id)

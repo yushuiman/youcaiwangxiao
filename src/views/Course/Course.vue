@@ -223,10 +223,6 @@ export default {
       this.form.page = val
       this.getCourseList()
     },
-    // onPageSizeChange (val) {
-    //   this.form.limit = val
-    //   this.getCourseList()
-    // },
     // 获取数据
     getCourseList () {
       courseList(this.form).then(data => {
@@ -290,7 +286,6 @@ export default {
     padding: 6px 0;
     line-height: 39px;
     @include display_flex(flex);
-    // @extend %alignitem_center;
     border-bottom: 1px solid $borderColor;
     box-sizing: border-box;
     .class-bx &, .class-zh &, .cl-aleary-tj &{

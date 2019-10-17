@@ -42,13 +42,13 @@
           <img :src="orderDetail.pc_img" alt="" class="opi-img">
           <div class="opi-detail">
             <h2 class="opi-name">{{orderDetail.name}}</h2>
-            <p class="opi-teacher"><i class="teacher-icon"></i>{{orderDetail.teacher_name}}</p>
-            <p class="opi-effective">购买后{{orderDetail.study_days}}天有效</p>
+            <p v-if="orderDetail.is_live!=3" class="opi-teacher"><i class="teacher-icon"></i>{{orderDetail.teacher_name}}</p>
+            <p v-if="orderDetail.is_live!=3" class="opi-effective">购买后{{orderDetail.study_days}}天有效</p>
           </div>
         </div>
         <div class="order-detail-address">
           <h3>订单信息</h3>
-          <p>地址：{{orderAddress.address}}</p>
+          <p v-if="orderAddress && orderAddress.address">地址：<span>{{orderAddress.consignee}}</span><span>{{orderAddress.telephone}}</span><span>{{orderAddress.address}}</span></p>
           <p>订单编号：{{orderDetail.order_num}}</p>
           <p>下单时间：{{orderDetail.add_time}}</p>
         </div>
@@ -59,7 +59,7 @@
         </div>
         <div class="order-detail-btn">
           <button class="ccs-btn" @click="serviceLink">联系客服</button>
-          <button class="cancle-pay" v-if="orderDetail.pay_status == 2">取消订单</button>
+          <button class="cancle-pay" v-if="orderDetail.pay_status == 2" @click="payCancelOrder">取消订单</button>
           <button class="go-pay" v-if="orderDetail.pay_status == 2">去支付</button>
           <button v-if="orderDetail.pay_status == 1">申请发票</button>
           <button class="succ-pay" v-if="orderDetail.pay_status == 1">交易成功</button>
@@ -140,7 +140,6 @@ export default {
     // 查看详情
     seeDetails (item) {
       this.visible = true
-      this.orderDetail.pay_status = item.pay_status
       alreadyOrderlist({
         user_id: this.user_id,
         order_num: item.order_num
@@ -165,10 +164,14 @@ export default {
     payCancelOrder (item) {
       cancelOrder({
         user_id: this.user_id,
-        order_num: item.order_num
+        order_num: this.orderDetail.order_num
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
+          if (res.data.state === 1) {
+            this.visible = false
+            this.getMyOrder()
+          }
         } else {
           this.$Message.error(res.msg)
         }
@@ -287,6 +290,9 @@ export default {
     p{
       color: $col999;
       font-size: 16px;
+      span{
+        margin-right: 6px;
+      }
     }
   }
   .order-detail-price{

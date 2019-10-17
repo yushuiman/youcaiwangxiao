@@ -13,14 +13,12 @@ import router from './router/'
 import store from './store/'
 import Iview from 'iview'
 import ElementUI from 'element-ui'
-import VueAwesomeSwiper from 'vue-awesome-swiper' // swiper
 // import 'fullpage.js/vendors/scrolloverflow'
 // import VueFullPage from 'vue-fullpage'
 
 // Vue.use(VueFullPage)
 Vue.use(Iview)
 Vue.use(ElementUI)
-Vue.use(VueAwesomeSwiper)
 new Vue({
   router,
   store,

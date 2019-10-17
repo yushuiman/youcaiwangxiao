@@ -5,12 +5,12 @@
       <textarea autofocus v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"></textarea>
       <div class="submitAnswer clearfix">
         <div class="course_img fl">
-          <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
+          <div class="demo-upload-list" v-for="(item, index) in quiz_image" :key="index">
             <template>
-              <img :src="item.url">
+              <img :src="item">
               <div class="demo-upload-list-cover">
-                <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                <Icon type="ios-trash-outline" @click.native="handleRemove3(item)"></Icon>
+                <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
+                <Icon type="ios-trash-outline" @click.native="handleRemove(index)"></Icon>
               </div>
             </template>
           </div>
@@ -23,7 +23,7 @@
               :format="['jpg','jpeg','png']"
               :max-size="2048"
               type="drag"
-              action="/upload/Index/uploadImage"
+              :action="apiPath"
               name="image"
               class="uploadSty">
               <div class="icon-upload"></div>
@@ -101,6 +101,7 @@
 <script>
 import { questionSub, questionDetails, questionallAnswer } from '@/api/questions'
 import { mapState } from 'vuex'
+import config from '@/config'
 export default {
   props: {
     getQuestion: {
@@ -113,14 +114,12 @@ export default {
       quiz: '', // 提问文案
       quiz_image: [], // 提问图片 以,号分割
       isopen: false,
-      uploadImgList: [],
-      fileList: [],
       visible: false,
       imgUrl: '',
-      uploadList: [],
       errorTs: '',
       questionallAnswerInfo: [], // 全部答疑
-      replyList: {} // 老师回复内容
+      replyList: {}, // 老师回复内容
+      apiPath: '/upload/Index/uploadImage'
     }
   },
   computed: {
@@ -129,6 +128,9 @@ export default {
     })
   },
   mounted () {
+    if (window.location.href.indexOf('www.youcaiwx.cn') > -1) {
+      this.apiPath = config.baseUrl.pro + '/upload/Index/uploadImage'
+    }
     this.questionallAnswerList()
   },
   methods: {
@@ -137,7 +139,7 @@ export default {
       this.visible = true
     },
     handleBeforeUpload () {
-      const check = this.uploadList.length < 3
+      const check = this.quiz_image.length < 3
       if (!check) {
         this.$Notice.warning({
           title: '最多上传3张图片！'
@@ -145,9 +147,8 @@ export default {
       }
       return check
     },
-    handleRemove3 (file) {
-      let fileList = this.uploadList
-      this.uploadList.splice(fileList.indexOf(file), 1)
+    handleRemove (index) {
+      this.quiz_image.splice(index, 1)
     },
     handleSuccess (res, file) {
       if (res.code === 200) {
@@ -155,7 +156,6 @@ export default {
           name: file.name,
           url: res.data.image_url
         }
-        this.uploadList.push(obj)
         this.quiz_image.push(obj.url)
       }
     },
@@ -170,12 +170,6 @@ export default {
         title: '文件大小验证',
         desc: '文件 “' + file.name + '” 太大, 不要超过 2m'
       })
-    },
-    handleRemove (file, fileList) {
-      // console.log(file, fileList)
-    },
-    handlePreview (file) {
-      // console.log(file)
     },
     closeModel () {
       this.$emit('closeModel')
@@ -206,7 +200,6 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.quiz = ''
-          this.uploadList = []
           this.quiz_image = []
           this.questionallAnswerList()
         } else {

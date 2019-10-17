@@ -1,32 +1,34 @@
 <template>
+  <keep-alive>
   <div class="rightCourseList">
     <div class="close-box" @click="closeModel()">
       <i class="close-icon"></i>
     </div>
     <h1 class="vc-title">章节目录</h1>
-    <el-row class="tac">
-      <el-col :span="24">
-        <el-menu
-          :default-active="openMenu"
-          class="el-menu-vertical-demo"
-          background-color="#1D1F21"
-          text-color="#E6E6E6"
-          active-text-color="#F99111">
-          <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key">
-            <template slot="title">
-              <span>{{val.section_name}}</span>
-            </template>
-            <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
-            @click="playVideo(val, v, key, index)">
-              <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
-              <span class="sl">{{v.video_name}}</span>
-              <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1)}"></i>
-            </el-menu-item>
-          </el-submenu>
-        </el-menu>
-      </el-col>
-    </el-row>
+      <el-row class="tac">
+        <el-col :span="24">
+          <el-menu
+            :default-active="openMenu"
+            class="el-menu-vertical-demo"
+            background-color="#1D1F21"
+            text-color="#E6E6E6"
+            active-text-color="#F99111">
+            <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key">
+              <template slot="title">
+                <span>{{val.section_name}}</span>
+              </template>
+              <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
+              @click="playVideo(val, v, key, index)">
+                <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
+                <span class="sl">{{v.video_name}}</span>
+                <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1)}"></i>
+              </el-menu-item>
+            </el-submenu>
+          </el-menu>
+        </el-col>
+      </el-row>
   </div>
+  </keep-alive>
 </template>
 <script>
 // import { secvCatalog } from '@/api/class'
@@ -68,104 +70,17 @@ export default {
     })
   },
   mounted () {
-    // setInterval(() => {
-    //   this.watch_time = this.watch_time + 2
-    //   var message = {
-    //     from: 1,
-    //     user_id: this.user_id,
-    //     package_id: this.$route.query.package_id,
-    //     course_id: this.$route.query.course_id,
-    //     section_id: this.$route.query.section_id,
-    //     video_id: this.$route.query.video_id,
-    //     watch_time: this.watch_time,
-    //     video_type: 1, // 视频类型 1视频2直播
-    //     status: 1 // 播放类型 1课程视频播放
-    //   }
-    //   initWS(JSON.stringify(message))
-    //   // var message = {
-    //   //   from: 1,
-    //   //   user_id: 20,
-    //   //   package_id: 1,
-    //   //   course_id: 1,
-    //   //   section_id: 1,
-    //   //   video_id: 6,
-    //   //   watch_time: 17,
-    //   //   video_type: 1, // 视频类型 1视频2直播
-    //   //   status: 1 // 播放类型 1课程视频播放
-    //   // }
-    //   // let ws
-    //   // ws = new WebSocket('ws://ycapi.youcaiwx.com:2346')
-    //   // ws.onopen = function () {
-    //   //   console.log('连接成功')
-    //   //   ws.send(JSON.stringify(message))
-    //   //   console.log(JSON.stringify(message))
-    //   //   console.log('给服务端发送一个字符串：My')
-    //   // }
-    //   // ws.onmessage = function (e) {
-    //   //   console.log('收到服务端的消息：' + e.data)
-    //   // }
-    // }, 30000)
-    // this.getCourseCatalog() // 课程大纲（目录）
-    // this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
   },
   methods: {
     closeModel () {
       this.videoListFlag = false
       this.$emit('closeModel', 'kc')
     },
-    // // 课程大纲（目录）
-    // getCourseCatalog () {
-    //   courseCatalog({
-    //     package_id: this.package_id
-    //   }).then(data => {
-    //     const res = data.data
-    //     this.packageList = res.data
-    //   })
-    // },
-    // 课程大纲(章节 video)
-    // getSecvCatalog (item, idx) {
-    //   this.videoListFlag = true
-    //   this.$emit('closeModel')
-    //   this.$router.replace({ path: 'course-video',
-    //     query: {
-    //       ...this.$route.query,
-    //       course_id: item.course_id
-    //     }
-    //   })
-    //   for (var i = 0; i < this.secvCatalogArr.length; i++) {
-    //     if (item.name === this.secvCatalogArr[i].type) {
-    //       this.courseSections = this.secvCatalogArr[i].courseSections
-    //       return
-    //     }
-    //   }
-    //   secvCatalog({
-    //     course_id: item.course_id
-    //   }).then(data => {
-    //     const res = data.data
-    //     this.courseSections = res.data
-    //     this.secvCatalogArr.push({
-    //       type: item.name,
-    //       courseSections: res.data
-    //     })
-    //   })
-    // },
-    // // 初始化展示章节
-    // initSecvCatalog () {
-    //   secvCatalog({
-    //     course_id: this.$route.query.course_id
-    //   }).then(data => {
-    //     const res = data.data
-    //     this.courseSections = res.data
-    //   })
-    // },
     // 跳转到播放页面
     playVideo (val, v, key, index) {
       v.flag = true
       this.playIdx = v
       this.$forceUpdate()
-      // this.$emit('getVideoPlayback', v.video_id)
-      // let openMenu = (key + 1) + '-' + (index + 1)
-      // window.sessionStorage.setItem('openMenu', .openMenu)
       this.$router.replace({ path: 'course-video',
         query: {
           ...this.$route.query,
@@ -173,6 +88,7 @@ export default {
           video_id: v.video_id
         }
       })
+      // this.$emit('sss')
       window.location.reload()
     }
   }
@@ -180,38 +96,12 @@ export default {
 </script>
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  // .vid-kcqh{
-  //   position: absolute;
-  //   width: 100%;
-  //   top: 0;
-  //   left: 60px;
-  //   bottom: 19px;
-  //   z-index: 101;
-  //   background: #26292C;
-  //   overflow-y: scroll;
-  // }
-  // .vc-title{
-  //   color: #E6E6E6;
-  //   font-size: 20px;
-  //   padding-left: 30px;
-  //   padding-top: 30px;
-  // }
-  // .rightCourseList{
-  //   .video-info-r{
-  //     position: absolute;
-  //     top: 0;
-  //     right: 0;
-  //     bottom: 0;
-  //     width: 100%;
-  //   }
-  // }
   .rightCourseList{
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     width: 100%;
-    // width: 382px;
     overflow-y: scroll;
   }
   .vc-title{

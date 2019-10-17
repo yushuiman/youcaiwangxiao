@@ -42,7 +42,6 @@ export default {
   computed: {
     ...mapState({
       token: state => state.user.token,
-      user_id: state => state.user.user_id,
       watchRecordsList: state => state.user.watchRecordsList
     })
   },

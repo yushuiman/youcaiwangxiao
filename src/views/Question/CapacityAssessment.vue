@@ -1,16 +1,18 @@
 <template>
   <div class="capacity-assessment-wrap w-wrap">
     <div class="cass-row cass-row-top">
-      <Row>
-        <Col span="24">
-          <div class="cass-title">预测分<span>根据您最近十次答题情况评估</span></div>
-        </Col>
-      </Row>
+      <div class="cass-title">预测分<span>根据您最近十次答题情况评估</span></div>
       <Row class="cass-row-mtb">
         <Col span="12" class="yc-record-rb">
           <div class="yc-record">
-            <p class="yc-record-top"><em>{{ycfen}}</em>分</p>
-            <p class="yc-record-bt">总分100</p>
+             <div class="canvasArea">
+              <canvas width="200" height="200" id="mask" style="z-index:9"></canvas>
+              <canvas width="200" height="200" id="circle" style="z-index:10"></canvas>
+            </div>
+            <div class="yc-num">
+              <p class="yc-record-top"><em>{{ycfen}}</em>分</p>
+              <p class="yc-record-bt">总分100</p>
+            </div>
           </div>
         </Col>
         <Col span="12">
@@ -19,11 +21,7 @@
       </Row>
     </div>
     <div class="cass-row cass-row-bottom">
-      <Row>
-        <Col span="24">
-          <div class="cass-title">本月统计</div>
-        </Col>
-      </Row>
+      <div class="cass-title">本月统计</div>
       <Row class="cass-row-pt">
         <Col span="8">
           <div class="answer-status-item answer-status-item01">
@@ -54,13 +52,29 @@
 <script>
 import { abiAssess } from '@/api/questions'
 import { mapState } from 'vuex'
-import echarts from 'echarts'
+
+let echarts = require('echarts/lib/echarts')
+// 引入饼状图组件
+require('echarts/lib/chart/radar')
+// 引入提示框和title组件
+require('echarts/lib/component/tooltip')
+require('echarts/lib/component/title')
 export default {
   data () {
     return {
       ycfen: 0,
       nlpgInfo: {}, // 能力评估
-      monStatistics: {} // 本月统计
+      monStatistics: {}, // 本月统计
+      chart: null,
+      maskid: '#mask',
+      circleid: '#circle',
+      x: 100,
+      y: 100,
+      radius: 80,
+      perV: 0,
+      load: 0,
+      maskctx: null,
+      circlectx: null
     }
   },
   computed: {
@@ -82,6 +96,44 @@ export default {
     }
   },
   methods: {
+    init () {
+      this.circlectx = document.querySelector(this.circleid).getContext('2d')
+      this.maskctx = document.querySelector(this.maskid).getContext('2d')
+      this.drawMaskLayer()
+    },
+    drawMaskLayer () {
+      var draw = setInterval(() => {
+        if (this.load <= this.perV) {
+          this.drawCircle()
+          this.load += 1
+        } else {
+          clearInterval(draw)
+          draw = null
+        }
+      }, 10)
+    },
+    drawCircle () {
+      var vv = this.load / 100 * (4 / 3) + (5 / 6)
+      if (vv > 2) {
+        vv = vv - 2
+      }
+      var loaded = vv * Math.PI
+      this.maskctx.clearRect(0, 0, 400, 400)
+      this.maskctx.beginPath()
+      this.maskctx.lineWidth = 1
+      this.maskctx.strokeStyle = 'transparent'
+      this.maskctx.arc(this.x, this.y, this.radius, (5 / 6) * Math.PI, loaded, false)
+      this.maskctx.stroke()
+
+      var para = vv * 3.14
+      var px = this.x + this.radius * Math.cos(para - 0.03)
+      var py = this.y + this.radius * Math.sin(para - 0.03)
+      this.circlectx.clearRect(0, 0, 400, 400)
+      this.circlectx.beginPath()
+      this.circlectx.arc(px, py, 6, 0, 360, false)
+      this.circlectx.fillStyle = '#FF9B3A'
+      this.circlectx.fill()
+    },
     initCharts () {
       this.chart = echarts.init(this.$refs.myEchart)
       this.chart.setOption({
@@ -189,8 +241,10 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.ycfen = res.data.ycfen
+          this.perV = res.data.ycfen
           this.nlpgInfo = res.data.data
           this.monStatistics = res.data.monStatistics
+          this.init()
           this.initCharts()
         } else {
           this.$Message.error(res.msg)
@@ -222,7 +276,6 @@ export default {
   }
   .cass-row-mtb{
     padding-top: 40px;
-    // padding-bottom: 30px;
   }
   .cass-row-pt{
     padding-top: 38px;
@@ -242,6 +295,13 @@ export default {
       font-size: 16px;
       color: $col999;
     }
+  }
+  .yc-num{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
   }
   .answer-status-item,.yc-record-rb{
     position: relative;
@@ -294,6 +354,20 @@ export default {
     .answer-status-item03 &{
       background-image: url('../../assets/images/questions/statistics-icon03.png');
       background-size: 50px 55px;
+    }
+  }
+  .canvasArea {
+    height: 200px;
+    width: 200px;
+    position: relative;
+    margin-left: 31px;
+    margin-top: 25px;
+    canvas {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
     }
   }
 </style>

@@ -52,8 +52,6 @@
       </div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
         <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
-        <!-- <div v-if="playCourseInfo.status == 1">
-        </div> -->
         <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer>
         <div class="jiangyi" v-if="flagJy">
           <div class="close-box" @click="closeModel">
@@ -222,7 +220,6 @@ export default {
     },
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
-      // this.selMenu = index
       if (val === '课程<br />切换') {
         this.flagCourse = !this.flagCourse
         this.flagAnswer = false

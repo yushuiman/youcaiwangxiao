@@ -179,9 +179,7 @@ export default {
         this.$refs.fixedTit.style.width = 895 + 'px'
       } else {
         if (scrollTop > 0) {
-          this.$refs.fixedTit.style.position = ''
-          this.$refs.fixedTit.style.top = ''
-          this.$refs.fixedTit.style.width = ''
+          this.$refs.fixedTit.style = ''
         }
       }
     },
@@ -228,29 +226,6 @@ export default {
                 v.selOption = true // 选项蓝色
               }
             })
-            // 练习模式 错题集没有练习模式
-            // if (parseInt(this.getQuestion.paper_mode) === 1) {
-            //   val.options.forEach((v, index) => {
-            //     if (v.userOption !== '') {
-            //       if (v.option.indexOf(v.right) > -1) {
-            //         v.rightGreen = true // 遍历哪个是正确答案 对应添加rightGreen
-            //       }
-            //     }
-            //     if (v.option.indexOf(v.userOption) > -1 && v.userOption !== '') {
-            //       v.errorRed = false // 初始化当前选项答错状态
-            //       if (v.userOption === v.right) { // 判断当前点击的选项是否正确
-            //         v.rightGreen = true // 答对当前选项绿色
-            //         val.currenRightGreen = true // 答对：右边选项卡对应添加绿色已掌握状态
-            //         this.$forceUpdate()
-            //       } else {
-            //         v.errorRed = true // 答错当前选项红色
-            //         val.currenErrorRed = true // 答错：右边选项卡对应添加红色未掌握状态
-            //         val.analysis = true // 答错，解析展示
-            //         this.$forceUpdate()
-            //       }
-            //     }
-            //   })
-            // }
           })
           let num = this.topics.filter((v) => { // 已做题数
             return v.currenOption
@@ -330,6 +305,5 @@ export default {
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-  // @import "../../assets/scss/app";
   @import "../../assets/scss/dopotic";
 </style>

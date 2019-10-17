@@ -206,7 +206,7 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  $btnGredientOrange: #FBAC78,#FC7873;
+  $btnGredientOrange: #FC7873,#FBAC78;
   .consumption-record-list, .card-manager-list{
     box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
     border-radius: 8px;

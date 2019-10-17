@@ -192,7 +192,12 @@ export default {
     },
     // 支付
     goPay () {
-      alert('去支付，待开发')
+      // package_id
+      this.$router.push({ path: '/order-pay',
+        query: {
+          package_id: this.package_id
+        }
+      })
     }
   }
 }

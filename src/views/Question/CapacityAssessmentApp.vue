@@ -4,9 +4,19 @@
       <div class="cass-title">预测分<span>根据您最近十次答题情况评估</span></div>
       <div class="cass-row-mtb">
         <div class="yc-record-rb">
-          <div class="yc-record">
+          <!-- <div class="yc-record">
             <p class="yc-record-top"><em>{{ycfen}}</em>分</p>
             <p class="yc-record-bt">总分100</p>
+          </div> -->
+          <div class="yc-record">
+             <div class="canvasArea">
+              <canvas width="200" height="200" id="mask" style="z-index:9"></canvas>
+              <canvas width="200" height="200" id="circle" style="z-index:10"></canvas>
+            </div>
+            <div class="yc-num">
+              <p class="yc-record-top"><em>{{ycfen}}</em>分</p>
+              <p class="yc-record-bt">总分100</p>
+            </div>
           </div>
         </div>
         <div ref="myEchart" id="myChart" style="width: 100%;height: 220px;"></div>
@@ -44,14 +54,28 @@
 <script>
 import { getQueryString } from '../../libs/utils'
 import { abiAssess } from '@/api/questions'
-import echarts from 'echarts'
+let echarts = require('echarts/lib/echarts')
+// 引入饼状图组件
+require('echarts/lib/chart/radar')
+// 引入提示框和title组件
+require('echarts/lib/component/tooltip')
+require('echarts/lib/component/title')
 export default {
   data () {
     return {
       ycfen: 0,
       nlpgInfo: {}, // 能力评估
       monStatistics: {}, // 本月统计
-      chart: null
+      chart: null,
+      maskid: '#mask',
+      circleid: '#circle',
+      x: 100,
+      y: 100,
+      radius: 60,
+      perV: 0,
+      load: 0,
+      maskctx: null,
+      circlectx: null
     }
   },
   mounted () {
@@ -66,6 +90,44 @@ export default {
     }
   },
   methods: {
+    init () {
+      this.circlectx = document.querySelector(this.circleid).getContext('2d')
+      this.maskctx = document.querySelector(this.maskid).getContext('2d')
+      this.drawMaskLayer()
+    },
+    drawMaskLayer () {
+      var draw = setInterval(() => {
+        if (this.load <= this.perV) {
+          this.drawCircle()
+          this.load += 1
+        } else {
+          clearInterval(draw)
+          draw = null
+        }
+      }, 10)
+    },
+    drawCircle () {
+      var vv = this.load / 100 * (4 / 3) + (5 / 6)
+      if (vv > 2) {
+        vv = vv - 2
+      }
+      var loaded = vv * Math.PI
+      this.maskctx.clearRect(0, 0, 400, 400)
+      this.maskctx.beginPath()
+      this.maskctx.lineWidth = 1
+      this.maskctx.strokeStyle = 'transparent'
+      this.maskctx.arc(this.x, this.y, this.radius, (5 / 6) * Math.PI, loaded, false)
+      this.maskctx.stroke()
+
+      var para = vv * 3.14
+      var px = this.x + this.radius * Math.cos(para - 0.03)
+      var py = this.y + this.radius * Math.sin(para - 0.03)
+      this.circlectx.clearRect(0, 0, 400, 400)
+      this.circlectx.beginPath()
+      this.circlectx.arc(px, py, 6, 0, 360, false)
+      this.circlectx.fillStyle = '#FF9B3A'
+      this.circlectx.fill()
+    },
     initCharts () {
       this.chart = echarts.init(this.$refs.myEchart)
       this.chart.setOption({
@@ -172,8 +234,10 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.ycfen = res.data.ycfen
+          this.perV = res.data.ycfen
           this.nlpgInfo = res.data.data
           this.monStatistics = res.data.monStatistics
+          this.init()
           this.initCharts()
         } else {
           this.$Message.error(res.msg)
@@ -229,6 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
     background: url('../../assets/images/questions/yc-record.png') no-repeat;
     background-size: contain;
     margin: 0 auto;
+    position: relative;
     .yc-record-top{
       padding-top: px2rem(150);
       em{
@@ -242,18 +307,14 @@ document.addEventListener('DOMContentLoaded', () => {
       color: $col999;
     }
   }
+  .yc-num{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+  }
   .answer-status-item,.yc-record-rb{
-    // position: relative;
-    // &:after{
-    //   position: absolute;
-    //   content: "";
-    //   right: 0;
-    //   top: 50%;
-    //   margin-top: -px2rem(35);
-    //   width: px2rem(2);
-    //   height: px2rem(70);
-    //   background: #DCDCDC;
-    // }
     p{
       margin-top: px2rem(10);
       margin-bottom: px2rem(8);
@@ -271,12 +332,6 @@ document.addEventListener('DOMContentLoaded', () => {
       width: 0;
     }
   }
-  // .yc-record-rb{
-  //   &:after{
-  //     height: px2rem(112);
-  //     margin-bottom: -px2rem(56);
-  //   }
-  // }
   .asi-icon{
     width: px2rem(52);
     height: px2rem(55);
@@ -295,14 +350,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   #myChart{
-    // width: px2rem(800);
-    // height: px2rem(480);
-    // @include px2rem(width, 1600);
-    // @include px2rem(height, 1180);
-    // @include px2rem(width, 800);
-    // @include px2rem(height, 480);
     margin: 0 auto;
-    // margin-top: px2rem(100);
     @include px2rem(margin-top, 100);
+  }
+  .canvasArea {
+    position: relative;
+    @include px2rem(width, 920);
+    @include px2rem(height, 920);
+    @include px2rem(margin-left, 16);
+    canvas {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      @include px2rem(top, -14);
+      left: 0;
+    }
   }
 </style>

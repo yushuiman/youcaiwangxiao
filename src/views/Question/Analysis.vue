@@ -42,7 +42,7 @@
               </div>
             </div>
             <ul class="anscard-list clearfix">
-              <li :class="{'red-bg': v.redCurren, 'green-bg': v.rightCurren, 'blue-bg': v.discuss_useranswer}" v-for="(v, index) in topics" :key="index">{{index+1}}</li>
+              <li :class="{'red-bg': v.redCurren, 'green-bg': v.rightCurren, 'blue-bg': v.discuss_useranswer}" v-for="(v, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">{{index+1}}</li>
             </ul>
           </div>
         </div>
@@ -179,8 +179,27 @@ export default {
         this.getQuestionParsing()
       })
     }
+    window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
+    scrollToTop () {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      if (scrollTop > 50) {
+        this.$refs.fixedTit.style.position = 'fixed'
+        this.$refs.fixedTit.style.top = 70 + 'px'
+        this.$refs.fixedTit.style.width = 895 + 'px'
+      } else {
+        if (scrollTop > 0) {
+          this.$refs.fixedTit.style = ''
+        }
+      }
+    },
+    goAnchor (selector) {
+      var anchor = this.$el.querySelector(selector)
+      setTimeout(() => {
+        document.documentElement.scrollTop = anchor.offsetTop - 150
+      }, 300)
+    },
     // 6大板块解析
     getQuestionParsing () {
       questionParsing({
@@ -380,6 +399,9 @@ export default {
       this.typeShow = type
       this.getQuestion.question_id = qId
     }
+  },
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.scrollToTop)
   }
 }
 </script>

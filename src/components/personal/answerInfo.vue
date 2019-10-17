@@ -213,6 +213,7 @@ export default {
     tabClk (v, index) {
       this.selIdxAnswer = index
       window.sessionStorage.setItem('selIdxAnswer', index)
+      this.page = 1
       this.initRes()
     },
     initRes () {

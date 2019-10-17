@@ -40,7 +40,7 @@
                 <button class="btn_default" v-if="v.is_default == 1">默认</button>
               </li>
             </ul>
-            <button v-else class="btn_address" @click="btnChangeinfo('address')">+ 新添加地址</button>
+            <button v-else class="btn_address" @click="btnChangeinfo('address')">+ 添加新地址</button>
           </div>
         </div>
         <!--个人信息修改-->
@@ -58,7 +58,7 @@
               :format="['jpg','jpeg','png']"
               :max-size="2048"
               type="drag"
-              action="/upload/Index/uploadImage"
+              :action="apiPath"
               name="image"
               class="set-head-iview">
           </Upload>
@@ -93,7 +93,7 @@
            <!--添加新地址按钮-->
            <div class="address">
              <span class="address_text">地址</span>
-             <button class="btn_address" @click="addNewAddres">+ 新添加地址</button>
+             <button class="btn_address" @click="addNewAddres">+ 添加新地址</button>
            </div>
            <!--收货人，手机号输入框-->
            <div v-if="addAddresFlag" style="margin-bottom: 40px">
@@ -166,79 +166,13 @@
         </div>
       </div>
     </div>
-    <!--裁剪头像的弹出框-->
-    <Modal style="font-size: 28px" v-model="visible"
-           width='695'
-           title="上传头像">
-      <div class="" style="height:377px">
-        <!--左侧原图和预览-->
-        <div class="content">
-          <!--上传的图片-->
-          <div class="content_left">
-            <div class="cropper vue-cropper">
-              <vueCropper
-                ref="cropper"
-                :img="option.img"
-                :outputSize="option.size"
-                :outputType="option.outputType"
-                :info="option.info"
-                :full="option.full"
-                :canMove="option.canMove"
-                :canMoveBox="option.canMoveBox"
-                :original="option.original"
-                :autoCrop="option.autoCrop"
-                :autoCropWidth="option.autoCropWidth"
-                :autoCropHeight="option.autoCropHeight"
-                :fixedBox="option.fixedBox"
-                @realTime="realTime"
-                @cropMoving='cropMoving'
-                @imgMoving='imgMoving'
-              ></vueCropper>
-            </div>
-          </div>
-          <!--预览图-->
-          <div class="content_right">
-            <div :style="previews.div" class="preview">
-              <img :src="previews.url" :style="previews.img">
-            </div>
-            <div class="content_r_text">头像预览</div>
-          </div>
-        </div>
-        <div class="content_foot">
-          <label class="btn" for="uploads">重新上传</label>
-          <!-- <Upload ref="upload"
-              :show-upload-list="false"
-              :on-success="handleSuccess"
-              :format="['jpg','jpeg','png']"
-              :max-size="2048"
-              type="drag"
-              action="/upload/Index/uploadImage"
-              name="image"
-              class="uploadSty">
-              <div class="icon-upload"></div>
-          </Upload> -->
-          <input type="file" id="uploads" :value="imgFile"
-                 style="position:absolute; clip:rect(0 0 0 0);width: 1px;"
-                 accept="image/png, image/jpeg, image/gif, image/jpg"
-                 @change="uploadImg($event, 1)">
-          <input type="button" class="operation-btn" value="-" title="缩小" @click="changeScale(-1)">
-          <input type="button" class="operation-btn" value="+" title="放大" @click="changeScale(1)">
-          <!--
-                    <input type="button" class="operation-btn" value="↺" title="左旋转" @click="rotateLeft">
-          -->
-          <input type="button" class="operation-btn" value="↻" title="右旋转" @click="rotateRight">
-           <div class="btn" @click="finish('blob')">上传头像</div>
-        </div>
-
-      </div>
-    </Modal>
   </div>
 </template>
 
 <script>
 import { savePersonal, defaultAddress, delAddress, addAddress, editAddress, resetPaw } from '@/api/personal'
 import { mapActions } from 'vuex'
-import { VueCropper } from 'vue-cropper'
+import config from '@/config'
 export default {
   props: {
     personalInfo: {
@@ -257,53 +191,20 @@ export default {
       addAddres: '',
       addMobile: '',
       address_id: '',
+      is_default: 2,
       visibleAddress: false, // 修改地址
       oldpwd: '', // 原密码
       newpwd: '', // 新密码
       confimpwd: '', // 确认密码
-      // 剪切图片上传
-      visible: false, // 模态框默认不显示
-      crap: false,
-      previews: {}, // 实时图片预览对象
-      limit: 1,
-      background: false,
       changeSetFlag: false, // 修改展示div
       addAddresFlag: false, // 添加收货地址
-      moving: true, // moving 是否在移动
-      axis: {
-        x1: 84, x2: 196, y1: 85, y2: 197
-      },
-      // http://youcai2020.oss-cn-beijing.aliyuncs.com/style/images/20190725/fc721f8b05cf6ebd269a6a38bf7d75cf.png?x1=84&x2=196&y1=85&y2=197
-      option: {
-        img: '', // 裁剪图片的地址
-        info: true, // 裁剪框的大小信息
-        outputSize: 1, // 剪切后的图片质量（0.1-1）
-        full: true, // 输出原图比例截图 props名full
-        outputType: 'png', // 裁剪生成额图片的格式
-        canMove: false, // 能否拖动图片
-        original: false, // 上传图片是否显示原始宽高
-        canMoveBox: true, // 能否拖动截图框
-        autoCrop: true, // 是否默认生成截图框
-        autoCropWidth: 112,
-        autoCropHeight: 112,
-        fixedBox: true // 截图框固定大小
-      },
-      fileName: '', // 本机文件地址
-      downImg: '#',
-      imgFile: '',
-      uploadImgRelaPath: '' // 上传后的图片的地址（不带服务器域名）
+      apiPath: '/upload/Index/uploadImage'
     }
   },
-  components: {
-    VueCropper
-  },
-  // computed: {
-  //   ...mapState({
-  //     token: state => state.user.token,
-  //     user_id: state => state.user.user_id
-  //   })
-  // },
   mounted () {
+    if (window.location.href.indexOf('www.youcaiwx.cn') > -1) {
+      this.apiPath = config.baseUrl.pro + '/upload/Index/uploadImage'
+    }
   },
 
   methods: {
@@ -338,7 +239,6 @@ export default {
         this.addAddresFlag = true
       }
       this.userInfo.sex = this.userInfo.sex + ''
-      // this.option.img = this.userInfo.head
     },
     // 添加收货地址div
     addNewAddres () {
@@ -392,21 +292,8 @@ export default {
           consignee: this.addName,
           telephone: this.addMobile,
           address: this.addAddres,
-          is_default: 2
+          is_default: 2 // 新增地址为2 修改地址取已有状态
         }).then(data => {
-          // this.addAddresFlag = false
-          // this.personalInfo.address.push({
-          //   consignee: this.addName,
-          //   telephone: this.addMobile,
-          //   address: this.addAddres
-          // })
-          // this.personalInfo.address.forEach(v => {
-          //   v.flag = false
-          //   v.value = '设置默认地址'
-          //   if (v.is_default === 1) {
-          //     v.value = '取消默认地址'
-          //   }
-          // })
           const res = data.data
           if (res.code === 200) {
             this.addName = ''
@@ -422,6 +309,7 @@ export default {
         this.addName = v.consignee
         this.addAddres = v.address
         this.addMobile = v.telephone
+        this.is_default = v.is_default
       }
     },
     // 修改收货地址
@@ -435,7 +323,7 @@ export default {
         consignee: this.addName,
         telephone: this.addMobile,
         address: this.addAddres,
-        is_default: 2
+        is_default: this.is_default
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
@@ -562,86 +450,6 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-    },
-    /* 点击修改头像时模态框显示 */
-    // 先保留缩放旋转功能 后面优化
-    changeAvatar () {
-      this.visible = true
-    },
-    cropMoving () {
-      this.$refs.cropper.getCropAxis() // 获取截图框基于容器的坐标点
-      console.log(this.$refs.cropper.getCropAxis())
-    },
-    imgMoving () {
-      this.$refs.cropper.getImgAxis()
-      console.log(this.$refs.cropper.getImgAxis())
-    },
-    // 放大/缩小
-    changeScale (num) {
-      num = num || 1
-      this.$refs.cropper.changeScale(num)
-    },
-    // 右旋转
-    rotateRight () {
-      this.$refs.cropper.rotateRight()
-    },
-    // 实时预览函数
-    realTime (data) {
-      this.previews = data
-      this.previews.div = 'width:112px; height:112px;'
-    },
-    // 选择本地图片
-    uploadImg (e, num) {
-      var _this = this
-      // 上传图片
-      var file = e.target.files[0]
-      _this.fileName = file.name
-      if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
-        alert('图片类型只支持.gif,jpeg,jpg,png,bmp')
-        return false
-      }
-      var reader = new FileReader()
-      reader.onload = (e) => {
-        let data
-        if (typeof e.target.result === 'object') {
-          // 把Array Buffer转化为blob 如果是base64不需要
-          data = window.URL.createObjectURL(new Blob([e.target.result]))
-        } else {
-          data = e.target.result
-        }
-        if (num === 1) {
-          _this.option.img = data
-        } else if (num === 2) {
-          _this.example2.img = data
-        }
-      }
-      // 转化为base64
-      // reader.readAsDataURL(file)
-      // 转化为blob
-      reader.readAsArrayBuffer(file)
-    },
-    // 上传图片（点击保存按钮）
-    finish (type) {
-      let formData = new FormData()
-      // 输出
-      if (type === 'blob') {
-        this.$refs.cropper.getCropBlob((data) => {
-          let img = window.URL.createObjectURL(data)
-          this.model = true
-          this.modelSrc = img
-          console.log(data)
-          console.log(img)
-          formData.append('image', data, this.fileName)
-          console.log(formData.get('image'))
-          // uploadImage(formData).then({
-          //   // 后续优化
-          // })
-        })
-      } else {
-        this.$refs.cropper.getCropData((data) => {
-          this.modelSrc = data
-        })
-      }
     }
   }
 }
@@ -679,8 +487,11 @@ export default {
     display: inline-block;
   }
   .info_msg {
-    .info_nickname,.info_phone,.info_address,.info_sex{
+    .info_nickname,.info_phone,.info_sex,.address-list{
       margin-left: 50px;
+    }
+    .address-list{
+      flex: 1;
     }
   }
   .info_msg{

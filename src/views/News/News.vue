@@ -62,7 +62,6 @@
 </template>
 
 <script>
-// import news from '../../components/personal/news'
 import { getPersonal } from '@/api/personal'
 import { systeMessage, read, listMessage } from '@/api/message'
 import userTop from '../../components/personal/userTop'
@@ -161,14 +160,6 @@ export default {
         let { message, num } = res.data
         this.systeMessageList = message
         this.total = num
-        // if (type === 1) {
-        //   this.ycwxMessageList = res.data.message
-        //   this.total = res.num
-        // }
-        // if (type === 2) {
-        //   this.systeMessageList = res.data.message
-        //   this.total = res.num
-        // }
       })
     },
     // 已读

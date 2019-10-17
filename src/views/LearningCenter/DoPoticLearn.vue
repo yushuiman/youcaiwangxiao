@@ -164,9 +164,7 @@ export default {
         this.$refs.fixedTit.style.width = 895 + 'px'
       } else {
         if (scrollTop > 0) {
-          this.$refs.fixedTit.style.position = ''
-          this.$refs.fixedTit.style.top = ''
-          this.$refs.fixedTit.style.width = ''
+          this.$refs.fixedTit.style = ''
         }
       }
     },
