@@ -8,30 +8,33 @@
     <div class="books-main w-wrap">
       <div class="books-lf">
         <ul class="bks-list">
-          <li class="bks-item" v-for="(item, index) in bksList" :key="index">
+          <li class="bks-item" v-for="(item, index) in bksList" :key="index" @click="goBooksDetail(item)">
             <img class="bks-img" :src="item.pc_img" alt="">
             <div class="bks-info">
               <h2 class="bks-name">{{item.name}}<span v-if="item.is_presell == 2">（预售）</span></h2>
-              <p class="bks-teacher">主编：{{item.author}}<span>{{item.introduce}}</span></p>
+              <p class="bks-teacher">主编：{{item.author}}<span>{{item.pub_company}}</span></p>
               <div class="bks-prices">
-                <span class="yc-price">优财价：<em>{{item.pay_price}}元</em></span>
                 <span class="original-price">定价：{{item.price}}元</span>
+                <span class="yc-price">优财价：<em>{{item.pay_price}}元</em></span>
+                <button class="btn-buy-books" @click.stop="buyPay(item)">立即购买</button>
               </div>
             </div>
-            <button class="btn-buy-books">立即购买</button>
           </li>
         </ul>
       </div>
       <div class="books-rt">
-        <!-- 猜你喜欢 -->
-        <like-list></like-list>
+        <!-- 报考指南 -->
+        <baokao-zhinan></baokao-zhinan>
+        <!-- 获取资料 -->
+        <get-ziliao></get-ziliao>
       </div>
     </div>
   </div>
 </template>
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import likeList from '@/components/common/likeList.vue'
+import baokaoZhinan from '../../components/zixun/baokaoZhinan'
+import getZiliao from '../../components/zixun/getZiliao'
 import { booksList, booksBanner } from '@/api/books'
 
 export default {
@@ -49,15 +52,28 @@ export default {
     }
   },
   components: {
-    likeList,
+    baokaoZhinan,
+    getZiliao,
     swiper,
     swiperSlide
   },
   mounted () {
-    this.getBooksList()
     this.getBooksBanner()
+    this.getBooksList()
   },
   methods: {
+    // banner
+    getBooksBanner () {
+      booksBanner().then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.booksBannerList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 书籍list
     getBooksList () {
       booksList().then(data => {
         const res = data.data
@@ -68,17 +84,19 @@ export default {
         }
       })
     },
-    getBooksBanner () {
-      booksBanner().then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.booksBannerList = res.data
-        } else {
-          this.$Message.error(res.msg)
+    // 查看书籍详情
+    goBooksDetail ({ id }) {
+      this.$router.push({ path: '/books-detail', query: { id: id } })
+    },
+    // 订单入库
+    buyPay ({ id }) {
+      this.$router.push({ path: '/order-pay',
+        query: {
+          package_id: id,
+          is_live: 3 // 1直播订单、2课程订单、3图书订单4积分订单
         }
       })
     }
-
   }
 }
 </script>
@@ -91,70 +109,60 @@ export default {
     .books-lf{
       width: 873px;
     }
+    .books-rt{
+      width: 298px;
+    }
   }
   .bks-item{
-    padding: 21px 33px;
+    padding: 12px 46px 14px 21px;
     display: flex;
     align-items: center;
     background: #ffffff;
     border-radius: 6px;
     margin-bottom: 20px;
+    cursor: pointer;
     .bks-img{
-      width: 82px;
-      height: 132px;
+      width: 109px;
+      height: 149px;
     }
   }
   .bks-info{
-    padding-left: 45px;
+    padding-left: 28px;
     flex: 1;
     .bks-name{
       font-size: 16px;
+      line-height: 24px;
+      height: 41px;
     }
     .bks-teacher{
-      margin-top: 13px;
       color: $col999;
+      margin-top: 12px;
       span{
         margin-left: 22px;
       }
     }
     .bks-prices{
-      margin-top: 24px;
+      margin-top: 23px;
+      text-align: right;
       .yc-price{
         font-weight: 400;
+        margin-right: 20px;
       }
       .original-price{
         color: $col999;
-        margin-left: 14px;
+        margin-right: 14px;
         text-decoration: line-through;
       }
       em{
         color: #F99111;
       }
+      .btn-buy-books{
+        width: 90px;
+        height: 30px;
+        background:rgba(249,145,17,1);
+        color: #ffffff;
+        border-radius: 15px;
+      }
     }
   }
-  .btn-buy-books{
-    width: 90px;
-    height: 30px;
-    background:rgba(249,145,17,1);
-    color: #ffffff;
-    border-radius: 15px;
-  }
-  // <div class="bks-prices">
-  //               <span class="yc-price">优财价：<em>44.7元</em></span>
-  //               <span class="original-price">定价：66元</span>
-  //             </div>
-  // <ul class="bks-list">
-  //         <li class="bks-item">
-  //           <img src="../../assets/images/zixun/ziliao.png" alt="">
-  //           <div class="bks-info">
-  //             <h2 class="bks-name">sdsdfsfsdfs都是粉丝地方</h2>
-  //             <p class="bks-teacher">主编：养也<span>经济科学出版社</span></p>
-  //             <div class="bks-prices">
-  //               <span>优财价：<em>44.7元</em></span>
-  //               <span>定价：66元</span>
-  //             </div>
-  //           </div>
-  //           <button class="buy-books">立即购买</button>
-  //         </li>
-  //       </ul>
 </style>

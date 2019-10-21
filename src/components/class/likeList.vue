@@ -57,7 +57,7 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   .course-like-main {
-    width: 298px;
+    width: 278px;
     padding: 0 9px;
     background: $colfff;
     border-radius: 4px;
@@ -74,7 +74,7 @@ export default {
       }
     }
     &.styw{
-      width: 278px;
+      width: 298px;
     }
   }
   .like-list {

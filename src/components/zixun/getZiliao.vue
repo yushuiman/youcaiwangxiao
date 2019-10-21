@@ -80,7 +80,7 @@ export default {
   .get-ziliao{
     height: 239px;
     background: url('../../assets/images/zixun/ziliao.png') no-repeat center top;
-    background-size: contain;
+    background-size: 100% 100%;
     text-align: center;
     p{
       font-size: 12px;

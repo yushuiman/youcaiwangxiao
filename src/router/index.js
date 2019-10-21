@@ -29,6 +29,7 @@ const DoPoticLearn = r => require.ensure([], () => r(require('@/views/LearningCe
 const LearnCenterVideo = r => require.ensure([], () => r(require('@/views/LearningCenter/LearnCenterVideo')), 'LearnCenterVideo')
 const OrderPay = r => require.ensure([], () => r(require('@/views/OrderPay/OrderPay')), 'OrderPay')
 const Books = r => require.ensure([], () => r(require('@/views/Books/Books')), 'Books')
+const BooksDetail = r => require.ensure([], () => r(require('@/views/Books/BooksDetail')), 'BooksDetail')
 
 const router = new Router({
   routes: [
@@ -325,6 +326,17 @@ const router = new Router({
       path: '/books',
       name: 'books',
       component: Books,
+      meta: {
+        title: '优财书架',
+        showHeader: true,
+        showFooter: true,
+        showRightSlider: true
+      }
+    },
+    {
+      path: '/books-detail',
+      name: 'books-detail',
+      component: BooksDetail,
       meta: {
         title: '优财书架',
         showHeader: true,

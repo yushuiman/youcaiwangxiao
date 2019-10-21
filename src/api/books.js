@@ -14,3 +14,10 @@ export const booksBanner = (data) => { // banner
     method: 'post'
   })
 }
+export const booksDetails = (data) => { // banner
+  return axios.request({
+    url: '/web/Books/booksDetails',
+    data,
+    method: 'post'
+  })
+}

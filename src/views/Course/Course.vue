@@ -85,7 +85,7 @@
       </div>
       <!-- 猜你喜欢 右 -->
       <div class="fr">
-        <like-list></like-list>
+        <like-list :isW="true"></like-list>
       </div>
     </div>
     <!-- 活动 -->
@@ -101,7 +101,7 @@
   </div>
 </template>
 <script>
-import likeList from '@/components/common/likeList.vue'
+import likeList from '@/components/class/likeList.vue'
 import { courseList, subjects } from '@/api/class'
 import { thickness } from '@/api/index'
 import { mapState } from 'vuex'

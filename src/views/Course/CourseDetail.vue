@@ -70,81 +70,47 @@
         </div>
       </div>
       <div class="clt-else-info-r fr">
-        <div class="course-main-right">
-          <div class="like-title">
-            <img class="tc-icon" src="@/assets/images/course/teacher-icon.png" alt="">
-            <span>老师姓名</span>
-          </div>
-          <swiper :options="swiperOptionRec">
-            <swiper-slide v-for="(item, index) in teacehr" :key="index">
-              <div class="cl-teacher">
-                <img :src="item.pictrue" alt="">
-                <p>{{item.teacher_name}}</p>
-                <span>{{item.teacher_title}}</span>
-              </div>
-              <div class="cl-t-detail">
-                <p class="cl-t-tit">讲师简介：</p>
-                <p class="cl-t-info">{{item.introduce}}</p>
-              </div>
-            </swiper-slide>
-          </swiper>
-        </div>
-        <div class="course-main-right course-main-student">
-          <div class="like-title">
-            <img class="stu-icon" src="@/assets/images/course/student-icon.png" alt="">
-            <span>学员心声</span>
-          </div>
-          <div class="tudentVoice-list">
-            <div class="tudentvoic-item" v-for="(item, index) in tudentVoiceList" :key="index">
-              <img :src="item.head" alt="">
-              <div class="tudentvoic-info">
-                <p>{{item.student_name}}</p>
-                <p class="str">{{item.title}}</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!-- 教师姓名 -->
+        <teachers :teacehr="teacehr"></teachers>
+        <!-- 学员心声 -->
+        <students-voice></students-voice>
         <!-- 猜你喜欢 -->
-        <like-list :isW="true"></like-list>
+        <like-list></like-list>
       </div>
     </div>
   </div>
 </template>
 <script>
-import 'swiper/dist/css/swiper.css'
-import { courseIntroduction, studentVoice } from '@/api/class'
+import { courseIntroduction } from '@/api/class'
 import courseList from '@/components/class/courseList.vue'
-import likeList from '@/components/common/likeList.vue'
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import teachers from '@/components/class/teachers.vue'
+import studentsVoice from '@/components/class/studentsVoice.vue'
+import likeList from '@/components/class/likeList.vue'
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
       package_id: parseInt(this.$route.query.package_id),
       isChoose: 'kcjj',
-      isntroduction: {}, // 课程简介
       teacehr: [], // 教师信息
-      tudentVoiceList: [], // 学员心声
-      swiperOptionRec: {
-        autoplay: {
-          delay: 3000,
-          disableOnInteraction: false
-        },
-        loop: true
-      },
-      videoflag: false
+      isntroduction: {}, // 课程简介
+      videoflag: false,
+      consultInfo: JSON.parse(window.sessionStorage.getItem('consultInfo')) || {} // 在线咨询
     }
   },
   components: {
+    teachers,
+    studentsVoice,
     likeList,
-    courseList,
-    swiper,
-    swiperSlide
+    courseList
   },
   computed: {
+    ...mapState({
+      token: state => state.user.token
+    })
   },
   mounted () {
     this.getCourseIntroduction() // 课程简介
-    this.getStudentVoice() // 学员心声
   },
   methods: {
     // 课程简介
@@ -161,17 +127,6 @@ export default {
         }
       })
     },
-    // 学员心声
-    getStudentVoice () {
-      studentVoice().then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.tudentVoiceList = res.data.slice(0, 3)
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
     // tab切换 (课程简介 课程大纲)
     tabChoose (type) {
       this.isChoose = type
@@ -180,7 +135,7 @@ export default {
       this.videoflag = true
     },
     consultLink () {
-      window.open('https://awt.zoosnet.net/lr/chatpre.aspx?id=AWT95637580', '_blank')
+      window.open(this.consultInfo.consult_href, '_blank')
     },
     goSeeVideo () {
       window.sessionStorage.setItem('userstatus', this.isntroduction.userstatus) // 是否购买
@@ -190,12 +145,16 @@ export default {
         }
       })
     },
-    // 支付
+    // 订单入库
     goPay () {
-      // package_id
+      if (!this.token) {
+        this.$router.push('login')
+        return
+      }
       this.$router.push({ path: '/order-pay',
         query: {
-          package_id: this.package_id
+          package_id: this.package_id,
+          is_live: 2 // 1直播订单、2课程订单、3图书订单4积分订单
         }
       })
     }
@@ -209,8 +168,7 @@ export default {
     color: $col999;
     @include lh(44, 44);
     i{
-      margin: 0 8px;
-      font-family: Consolas,Menlo,Courier,monospace;
+      margin: 0 10px;
     }
     a{
       color: $col999;
@@ -428,86 +386,5 @@ export default {
   .clt-else-info-r{
     padding-top: 49px;
   }
-  .course-main-right {
-    width: 278px;
-    padding: 0 9px;
-    margin-bottom: 20px;
-    background: $colfff;
-    border-radius: 4px;
-    box-sizing: border-box;
-    .like-title{
-      @include lh(39, 39);
-      margin-bottom: 4px;
-      .tc-icon{
-        @include wh(16, 19);
-      }
-      .stu-icon{
-        @include wh(18, 18);
-      }
-      .stu-icon, .tc-icon{
-        margin-right: 7px;
-        vertical-align: middle;
-        margin-top: -3px;
-      }
-    }
-  }
-  .tudentvoic-item {
-    padding: 11px 0;
-    @include display_flex(flex);
-    @extend %alignitem_center;
-    border-top: 1px solid $borderColor;
-    box-sizing: border-box;
-    img{
-      @include wh(60, 60);
-      border-radius: 50%;
-      margin-right: 7px;
-    }
-    .tudentvoic-info{
-      flex: 1;
-      .str{
-        margin-top: 10px;
-        font-size: 12px;
-        color: $col999;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 1;
-        overflow: hidden;
-      }
-    }
-  }
-  .cl-teacher{
-    text-align: center;
-    padding-top: 16px;
-    padding-bottom: 14px;
-    border-top: 1px solid $borderColor;
-    border-bottom: 1px solid $borderColor;
-    img{
-      @include wh(80, 80);
-      border-radius: 100%;
-    }
-    p{
-      padding-top: 9px;
-      padding-bottom: 7px;
-    }
-    span{
-      color: $col999;
-      font-size: 12px;
-    }
-  }
-  .cl-t-detail{
-    padding: 13px 0;
-    .cl-t-tit{
-      margin-bottom: 8px;
-    }
-    .cl-t-info{
-      line-height: 20px;
-      font-size: 12px;
-      color: $col999;
-    }
-  }
-  // .swiper-button-prev, .swiper-button-next{
-  //   width: 17px;
-  //   height: 28px;
-  //   background-size: contain;
-  // }
+
 </style>

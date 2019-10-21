@@ -107,7 +107,7 @@ export default {
         }).then(res => {
           const data = res.data
           if (data.code === 200) {
-            if (res.data) {
+            if (res.data && res.data.data[0]) {
               commit('setWatchRecord', res.data.data[0].list[0])
             }
           } else {
