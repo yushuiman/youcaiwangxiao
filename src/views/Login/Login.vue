@@ -379,7 +379,7 @@ export default {
     // 注册--获取验证码
     getCode () {
       const TIME_COUNT = 60
-      const re = /^1(3|4|5|7|8)\d{9}$/
+      const re = /^[1]([3-9])[0-9]{9}$/
       if (this.form2.mobile === '') {
         this.$Message.error('请输入手机号')
       } else if (re.test(this.form2.mobile)) {
@@ -430,7 +430,7 @@ export default {
     // 忘记密码--获取验证码
     forgetPaw () {
       const TIME_COUNT2 = 60
-      const re = /^[1][3,4,5,7,8,9][0-9]{9}$/
+      const re = /^[1]([3-9])[0-9]{9}$/
       if (this.form3.mobile === '') {
         this.$Message.error('请输入手机号')
       } else if (!re.test(this.form3.mobile)) {
@@ -467,7 +467,7 @@ export default {
     // 快捷登录--获取验证码
     getCode3 () {
       const TIME_COUNT3 = 60
-      var re = /^[1][3,4,5,7,8,9][0-9]{9}$/
+      var re = /^[1]([3-9])[0-9]{9}$/
       if (this.form4.mobile === '') {
         this.$Message.error('请输入手机号')
       } else if (!re.test(this.form4.mobile)) {
@@ -503,7 +503,7 @@ export default {
     },
     // 登录
     accountLogin () {
-      var re = /^[1][3,4,5,7,8,9][0-9]{9}$/
+      var re = /^[1]([3-9])[0-9]{9}$/
       if (this.form.mobile === '') {
         this.$Message.error('请输入手机号')
       } else if (!re.test(this.form.mobile)) {
@@ -524,7 +524,7 @@ export default {
     },
     // 注册
     webReg () {
-      var re = /^[1][3,4,5,7,8,9][0-9]{9}$/
+      var re = /^[1]([3-9])[0-9]{9}$/
       if (this.form2.mobile === '' || this.form2.text_pwd === '' || this.form2.confirm_pwd === '' || this.form2.code === '') {
         this.$Message.error('手机号 ，验证码 ，密码 ，确认密码均为必填项')
       } else if (!re.test(this.form2.mobile)) {
@@ -605,7 +605,7 @@ export default {
     },
     // 重置密码
     resetPaw () {
-      var re = /^[1][3,4,5,7,8,9][0-9]{9}$/
+      var re = /^[1]([3-9])[0-9]{9}$/
       if (this.form3.mobile === '' || this.form3.new_pwd === '' || this.form3.code === '') {
         this.$Message.error('手机号，验证码，密码均为必填项')
       } else if (!re.test(this.form3.mobile)) {
@@ -633,7 +633,7 @@ export default {
     },
     // 快捷登录
     quickLogin () {
-      var re = /^[1][3,4,5,7,8,9][0-9]{9}$/
+      var re = /^[1]([3-9])[0-9]{9}$/
       if (this.form4.mobile === '' || this.form4.code === '') {
         this.$Message.error('手机号，验证码均为必填项')
       } else if (!re.test(this.form4.mobile)) {

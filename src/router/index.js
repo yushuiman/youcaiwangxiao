@@ -27,7 +27,8 @@ const LearningCenter = r => require.ensure([], () => r(require('@/views/Learning
 const LearningCenterDetail = r => require.ensure([], () => r(require('@/views/LearningCenter/LearningCenterDetail')), 'LearningCenterDetail')
 const DoPoticLearn = r => require.ensure([], () => r(require('@/views/LearningCenter/DoPoticLearn')), 'DoPoticLearn')
 const LearnCenterVideo = r => require.ensure([], () => r(require('@/views/LearningCenter/LearnCenterVideo')), 'LearnCenterVideo')
-const OrderPay = r => require.ensure([], () => r(require('@/views/OrderPay/OrderPay')), 'OrderPay')
+const OrderConfirm = r => require.ensure([], () => r(require('@/views/Orders/OrderConfirm')), 'OrderConfirm')
+const OrderPay = r => require.ensure([], () => r(require('@/views/Orders/OrderPay')), 'OrderPay')
 const Books = r => require.ensure([], () => r(require('@/views/Books/Books')), 'Books')
 const BooksDetail = r => require.ensure([], () => r(require('@/views/Books/BooksDetail')), 'BooksDetail')
 
@@ -312,11 +313,22 @@ const router = new Router({
       }
     },
     {
+      path: '/order-confirm',
+      name: 'order-confirm',
+      component: OrderConfirm,
+      meta: {
+        title: '确认订单',
+        showHeader: true,
+        showFooter: true,
+        showRightSlider: true
+      }
+    },
+    {
       path: '/order-pay',
       name: 'order-pay',
       component: OrderPay,
       meta: {
-        title: '确认订单',
+        title: '订单支付',
         showHeader: true,
         showFooter: true,
         showRightSlider: true

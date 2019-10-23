@@ -268,7 +268,7 @@ export default {
         this.$Message.error('请输入手机号')
         return false
       }
-      const reg = /^((13[0-9])|(17[0-1,6-8])|(15[^4,\\D])|(18[0-9]))\d{8}$/
+      const reg = /^[1]([3-9])[0-9]{9}$/
       if (!(reg.test(this.addMobile))) {
         this.$Message.error('该手机号不符合格式')
         return false

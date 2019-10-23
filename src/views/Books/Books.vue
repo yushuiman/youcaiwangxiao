@@ -90,7 +90,7 @@ export default {
     },
     // 订单入库
     buyPay ({ id }) {
-      this.$router.push({ path: '/order-pay',
+      this.$router.push({ path: '/order-confirm',
         query: {
           package_id: id,
           is_live: 3 // 1直播订单、2课程订单、3图书订单4积分订单

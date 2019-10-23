@@ -22,7 +22,7 @@
     <div class="bks-tab">书籍简介</div>
     <div class="books-main w-wrap">
       <div class="books-lf">
-        <div>{{booksDetail.introduce}}</div>
+        <img :src="booksDetail.introduce" alt="" width="100%">
       </div>
       <div class="books-rt">
         <!-- 学员心声 -->
@@ -37,6 +37,8 @@
 import { booksDetails } from '@/api/books'
 import studentsVoice from '@/components/class/studentsVoice.vue'
 import likeList from '@/components/class/likeList.vue'
+import { mapState } from 'vuex'
+
 export default {
   data () {
     return {
@@ -50,6 +52,9 @@ export default {
     likeList
   },
   computed: {
+    ...mapState({
+      token: state => state.user.token
+    })
   },
   mounted () {
     this.getBooksDetail()
@@ -69,7 +74,11 @@ export default {
     },
     // 订单入库
     buyPay () {
-      this.$router.push({ path: '/order-pay',
+      if (!this.token) {
+        this.$router.push('login')
+        return
+      }
+      this.$router.push({ path: '/order-confirm',
         query: {
           package_id: this.booksDetail.id,
           is_live: 3 // 1直播订单、2课程订单、3图书订单4积分订单

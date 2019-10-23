@@ -23,3 +23,11 @@ export const addOrder = (data) => { // 订单入库
     method: 'post'
   })
 }
+
+export const payOrder = (data) => { // 订单支付
+  return axios.request({
+    url: '/web/Pay/payOrder',
+    data,
+    method: 'post'
+  })
+}

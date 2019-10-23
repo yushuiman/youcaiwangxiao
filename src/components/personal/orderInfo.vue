@@ -189,6 +189,8 @@ export default {
   @import "../../assets/scss/app";
   @import "../../assets/scss/modal";
   .order-list{
+    max-height: 1000px;
+    overflow: auto;
     .order-item{
       border-radius: 8px;
       margin-bottom: 20px;

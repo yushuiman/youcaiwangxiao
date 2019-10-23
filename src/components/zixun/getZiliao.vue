@@ -31,7 +31,7 @@ export default {
   methods: {
     // 获取资料
     subDataAsk () {
-      const regMobile = /^[1][3,4,5,7,8,9][0-9]{9}$/
+      const regMobile = /^[1]([3-9])[0-9]{9}$/
       const regEmail = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/
       if (this.user_name === '' || this.mobile === '' || this.email === '') {
         this.$Message.error('姓名，电话，邮箱不能为空～')

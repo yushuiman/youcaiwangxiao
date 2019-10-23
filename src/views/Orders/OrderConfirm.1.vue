@@ -1,7 +1,7 @@
 <template>
-  <div class="order-pay-wrap w-wrap">
+  <div class="order-confirm-wrap w-wrap">
     <h1 class="order-tit">确认订单</h1>
-    <div class="order-pay-com user-addess">
+    <div class="order-confirm-com user-addess">
       <h2>收获地址</h2>
       <div class="edit-address">
         <ul class="address-list">
@@ -21,7 +21,7 @@
         </ul>
       </div>
     </div>
-    <div class="order-pay-com course-detail" v-if="is_live == 2">
+    <div class="order-confirm-com course-detail" v-if="is_live == 2">
       <h2>商品信息</h2>
       <div class="curse-info">
         <img class="curse-img" :src="packages.pc_img" alt="">
@@ -33,7 +33,7 @@
         <span class="curse-price">{{packages.price}}元</span>
       </div>
     </div>
-    <div class="order-pay-com course-detail" v-if="is_live == 3">
+    <div class="order-confirm-com course-detail" v-if="is_live == 3">
       <h2>商品信息</h2>
       <div class="curse-info">
         <img class="curse-img" :src="packages.pc_img" alt="">
@@ -45,7 +45,7 @@
         <span class="curse-price">{{packages.price}}元</span>
       </div>
     </div>
-    <div class="order-pay-com make-bill">
+    <div class="order-confirm-com make-bill">
       <h2>发票信息<span>开企业抬头发票须填写纳税人识别号，以免影响报销</span></h2>
       <div class="need-bill">
         <RadioGroup v-model="bill" @on-change="onBillChange">
@@ -53,10 +53,10 @@
           <Radio label="需要" class="rai"></Radio>
         </RadioGroup>
       </div>
-      <p v-if="showBillType" class="bill-type-show">{{couponType == 1 ? '增值税普通发票' : '增值税专用发票'}}:{{couponType == 1 ? invoice_title : companyName}}<span @click="changeAgainBill">修改</span></p>
+      <p v-if="showBillType" class="bill-type-show">{{couponType == 1 ? '增值税普通发票' : '增值税专用发票'}}:{{couponType == 1 ? invoiceTitle : companyName}}<span @click="changeAgainBill">修改</span></p>
     </div>
     <!-- 课程有优惠券 书没有 -->
-    <div class="order-pay-com use-coupon" v-if="coupon_num > 0 && is_live == 2">
+    <div class="order-confirm-com use-coupon" v-if="coupon_num > 0 && is_live == 2">
       <h2>优惠券</h2>
       <ul class="coupon-list">
         <li class="coupon-item" :class="{'cur': user_coupon_id == item.coupon_id}" v-for="(item, index) in couponList" :key="index"
@@ -71,7 +71,7 @@
         </li>
       </ul>
     </div>
-    <div class="order-pay-com sub-order">
+    <div class="order-confirm-com sub-order">
       <p><Checkbox v-model="agree" @on-change="agreReadChange"></Checkbox>我已阅读并同意<a href="http://www.youcaiwx.com/html/app/pc_buy.html" target="_blank">《 用户付费协议 》</a></p>
       <div class="total-info">
         <span>共<em>{{buyNum}}</em>件商品</span>
@@ -102,6 +102,8 @@
       title="发票信息"
       v-model="visibleBill"
       footer-hide
+      :mask-closable=false
+      :closable=false
       :width="360"
       class="iview-modal">
       <div class="bill-modal">
@@ -120,11 +122,11 @@
             </div>
             <div class="bill-item">
               <label>发票抬头:</label>
-              <input type="text" placeholder="请填写公司发票抬头" v-model="invoice_title">
+              <input type="text" placeholder="请填写公司发票抬头" ref="invoiceTitle">
             </div>
             <div class="bill-item" v-if="userOrcompany == 2">
               <label>纳税人识别号:</label>
-              <input type="text" placeholder="请填写纳税人识别号" v-model="taxpayerNumberPt" maxlength="18">
+              <input type="text" placeholder="请填写纳税人识别号" ref="taxpayerNumberPt" maxlength="18">
             </div>
             <div class="bill-item">
               <label>发票内容:</label>
@@ -142,27 +144,27 @@
             </div>
             <div class="bill-item">
               <label><i>*</i>单位名称</label>
-              <input type="text" v-model="companyName">
+              <input type="text" ref="companyName">
             </div>
             <div class="bill-item">
               <label><i>*</i>纳税人识别号</label>
-              <input type="text" v-model="taxpayerNumberZy" maxlength="18">
+              <input type="text" ref="taxpayerNumberZy" maxlength="18">
             </div>
             <div class="bill-item">
               <label><i>*</i>注册地址</label>
-              <input type="text" v-model="companAddress">
+              <input type="text" ref="companAddress">
             </div>
             <div class="bill-item">
               <label><i>*</i>注册电话</label>
-              <input type="text" v-model="companTel" maxlength="11">
+              <input type="text" ref="companTel" maxlength="11">
             </div>
             <div class="bill-item">
               <label><i>*</i>开户银行</label>
-              <input type="text" v-model="companOpenBank">
+              <input type="text" ref="companOpenBank">
             </div>
             <div class="bill-item">
               <label><i>*</i>银行账户</label>
-              <input type="text" v-model="companBankNum">
+              <input type="text" ref="companBankNum">
             </div>
           </div>
           <div class="bill-btn">
@@ -178,8 +180,8 @@
 <script>
 import { showOrder, addOrder, availableCoupon } from '@/api/order'
 import { editAddress, addAddress } from '@/api/personal'
-
 import { mapState } from 'vuex'
+
 export default {
   data () {
     return {
@@ -213,7 +215,7 @@ export default {
       haveCoupon: 2, // 是否有发票1有2没有
       couponType: '', // 普通发票增值税发票1普通发票2增值税发票
       userOrcompany: '', // 个人发票单位发票1个人发票2单位发票
-      invoice_title: '', // 发票抬头
+      invoiceTitle: '', // 发票抬头
       companyName: '', // 单位名称
       taxpayerNumber: '', // 发票税号
       taxpayerNumberPt: '', // 发票税号
@@ -221,7 +223,8 @@ export default {
       companAddress: '', // 公司地址
       companTel: '', // 公司电话
       companOpenBank: '', // 公司开户银行
-      companBankNum: '' // 银行账户
+      companBankNum: '', // 银行账户
+      payInfo: {} // 去支付的信息
     }
   },
   computed: {
@@ -253,7 +256,7 @@ export default {
         this.showBillType = false
         this.couponType = ''
         this.userOrcompany = ''
-        this.invoice_title = ''
+        this.invoiceTitle = ''
         this.companyName = ''
         this.taxpayerNumber = ''
         this.taxpayerNumberPt = ''
@@ -262,6 +265,21 @@ export default {
         this.companTel = ''
         this.companOpenBank = ''
         this.companBankNum = ''
+        console.log('user_id:' + this.user_id)
+        console.log('package_id:' + this.package_id)
+        console.log('is_live:' + this.is_live)
+        console.log('user_coupon_id:' + this.user_coupon_id)
+        console.log('address_id:' + this.address_id)
+        console.log('haveCoupon:' + this.haveCoupon)
+        console.log('couponType:' + this.couponType)
+        console.log('userOrcompany:' + this.userOrcompany)
+        console.log('invoice_title:' + this.invoiceTitle)
+        console.log('companyName:' + this.companyName)
+        console.log('taxpayerNumber:' + this.taxpayerNumber)
+        console.log('companAddress:' + this.companAddress)
+        console.log('companTel:' + this.companTel)
+        console.log('companOpenBank:' + this.companOpenBank)
+        console.log('companBankNum:' + this.companBankNum)
       }
       if (val === '个人') {
         this.userOrcompany = 1
@@ -273,6 +291,21 @@ export default {
     // 发票类型 展示普通和专用
     getBillType (type) {
       this.couponType = type
+      console.log('user_id:' + this.user_id)
+      console.log('package_id:' + this.package_id)
+      console.log('is_live:' + this.is_live)
+      console.log('user_coupon_id:' + this.user_coupon_id)
+      console.log('address_id:' + this.address_id)
+      console.log('haveCoupon:' + this.haveCoupon)
+      console.log('couponType:' + this.couponType)
+      console.log('userOrcompany:' + this.userOrcompany)
+      console.log('invoice_title:' + this.invoiceTitle)
+      console.log('companyName:' + this.companyName)
+      console.log('taxpayerNumber:' + this.taxpayerNumber)
+      console.log('companAddress:' + this.companAddress)
+      console.log('companTel:' + this.companTel)
+      console.log('companOpenBank:' + this.companOpenBank)
+      console.log('companBankNum:' + this.companBankNum)
     },
     agreReadChange (val) {
       this.agree = val
@@ -321,7 +354,7 @@ export default {
         this.$Message.error('请输入手机号')
         return false
       }
-      const reg = /^((13[0-9])|(17[0-1,6-8])|(15[^4,\\D])|(18[0-9]))\d{8}$/
+      const reg = /^[1]([3-9])[0-9]{9}$/
       if (!(reg.test(this.curAddressInfo.telephone))) {
         this.$Message.error('该手机号不符合格式')
         return false
@@ -407,6 +440,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.couponList = res.data
+          this.useCoupon(this.couponList[0])
         } else {
           this.$Message.error(res.msg)
         }
@@ -427,7 +461,8 @@ export default {
     saveBillInfo () {
       // 普通
       if (this.couponType === 1) {
-        if (this.invoice_title === '') {
+        this.invoiceTitle = this.$refs.invoiceTitle.value
+        if (this.invoiceTitle === '') {
           this.$Message.error('请输入发票抬头')
           return
         }
@@ -437,7 +472,8 @@ export default {
         }
         // 单位(发票类型，抬头，纳税号)
         if (this.userOrcompany === 2) {
-          if (this.invoice_title === '') {
+          this.taxpayerNumberPt = this.$refs.taxpayerNumberPt.value
+          if (this.invoiceTitle === '') {
             this.$Message.error('请输入发票抬头')
             return
           }
@@ -456,14 +492,20 @@ export default {
           }
           this.taxpayerNumber = this.taxpayerNumberPt
         }
-        this.companyName = '' // 单位名称
-        this.companAddress = '' // 公司地址
-        this.companTel = '' // 公司电话
-        this.companOpenBank = '' // 公司开户银行
-        this.companBankNum = '' // 银行账户
+        this.companyName = ''
+        this.companAddress = ''
+        this.companTel = ''
+        this.companOpenBank = ''
+        this.companBankNum = ''
       }
       // 专用
       if (this.couponType === 2) {
+        this.companyName = this.$refs.companyName.value
+        this.taxpayerNumberZy = this.$refs.taxpayerNumberZy.value
+        this.companAddress = this.$refs.companAddress.value
+        this.companTel = this.$refs.companTel.value
+        this.companOpenBank = this.$refs.companOpenBank.value
+        this.companBankNum = this.$refs.companBankNum.value
         if (this.companyName === '' || this.taxpayerNumberZy === '' || this.companAddress === '' || this.companTel === '' || this.companOpenBank === '' || this.companBankNum === '') {
           this.$Message.error('有必填信息未填写')
           return
@@ -477,7 +519,7 @@ export default {
           this.$Message.error('纳税人识别号错误')
           return
         }
-        let ph = /^(0|86|17951)?1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/
+        let ph = /^(0|86|17951)?[1]([3-9])[0-9]{9}$/
         let mb = /^(0[0-9]{2,3}\-)([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$/
         if (!ph.test(this.companTel) && !mb.test(this.companTel)) {
           this.$Message.error('注册电话错误')
@@ -489,12 +531,27 @@ export default {
           this.$Message.error('银行账户错误')
           return
         }
-        this.invoice_title = ''
+        this.invoiceTitle = ''
         this.userOrcompany = ''
         this.taxpayerNumber = this.taxpayerNumberZy
       }
       this.visibleBill = false
       this.showBillType = true
+      console.log('user_id:' + this.user_id)
+      console.log('package_id:' + this.package_id)
+      console.log('is_live:' + this.is_live)
+      console.log('user_coupon_id:' + this.user_coupon_id)
+      console.log('address_id:' + this.address_id)
+      console.log('haveCoupon:' + this.haveCoupon)
+      console.log('couponType:' + this.couponType)
+      console.log('userOrcompany:' + this.userOrcompany)
+      console.log('invoice_title:' + this.invoiceTitle)
+      console.log('companyName:' + this.companyName)
+      console.log('taxpayerNumber:' + this.taxpayerNumber)
+      console.log('companAddress:' + this.companAddress)
+      console.log('companTel:' + this.companTel)
+      console.log('companOpenBank:' + this.companOpenBank)
+      console.log('companBankNum:' + this.companBankNum)
     },
     // 取消发票信息
     cancelBillInfo () {
@@ -530,13 +587,26 @@ export default {
         haveCoupon: this.haveCoupon, // 是否有发票1有2没有
         couponType: this.couponType, // 普通发票增值税发票1普通发票2增值税发票
         userOrcompany: this.userOrcompany, // 个人发票单位发票1个人发票2单位发票
-        invoice_title: this.invoice_title, // 发票抬头
+        invoice_title: this.invoiceTitle, // 发票抬头
         companyName: this.companyName, // 单位名称
         taxpayerNumber: this.taxpayerNumber, // 发票税号
         companAddress: this.companAddress, // 公司地址
         companTel: this.companTel, // 公司电话
         companOpenBank: this.companOpenBank, // 公司开户银行
         companBankNum: this.companBankNum // 银行账户
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.payInfo = res.data
+          window.sessionStorage.setItem('payInfo', JSON.stringify(res.data))
+          // this.$router.push({ path: '/order-pay',
+          //   query: {
+          //     trade_number: res.data.order_num
+          //   }
+          // })
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     }
   }
@@ -546,13 +616,13 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   $btnGredientOrange: #FC7873,#FBAC78;
-  .order-pay-wrap{
+  .order-confirm-wrap{
     .order-tit{
       height: 88px;
       line-height: 88px;
       font-size: 28px;
     }
-    .order-pay-com{
+    .order-confirm-com{
       background: #ffffff;
       border-radius: 4px;
       margin-bottom: 20px;

@@ -75,7 +75,7 @@ export default {
     ]),
     // 是否注册
     signLogin (type) {
-      const re = /^[1][3,4,5,7,8,9][0-9]{9}$/
+      const re = /^[1]([3-9])[0-9]{9}$/
       if (this.mobile === '') {
         this.errorTxt = '请输入您的手机号'
       } else if (!re.test(this.mobile)) {
