@@ -94,10 +94,10 @@ export default {
           title: '您有一条新消息',
           desc: json.title
         })
-        // if (json.type === 'freezeMessage') {
-        //   _this.handleLogOut()
-        //   return
-        // }
+        if (json.type === 'freezeMessage') {
+          _this.handleLogOut()
+          return
+        }
         _this.getIndexMessage()
       })
     } else {
@@ -117,10 +117,10 @@ export default {
             title: '您有一条新消息',
             desc: json.title
           })
-          // if (json.type === 'freezeMessage') {
-          //   _this.handleLogOut()
-          //   return
-          // }
+          if (json.type === 'freezeMessage') {
+            _this.handleLogOut()
+            return
+          }
           _this.getIndexMessage()
         })
       })

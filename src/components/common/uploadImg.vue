@@ -128,7 +128,7 @@ export default {
     })
   },
   mounted () {
-    if (window.location.href.indexOf('www.youcaiwx.cn') > -1) {
+    if (process.env.NODE_ENV === 'production') {
       this.apiPath = config.baseUrl.pro + '/upload/Index/uploadImage'
     }
     this.questionallAnswerList()

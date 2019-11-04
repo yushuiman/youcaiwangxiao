@@ -229,6 +229,7 @@ export default {
       span{
         width: 88px;
         display: inline-block;
+        text-align: center;
       }
     }
   }

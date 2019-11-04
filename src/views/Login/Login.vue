@@ -516,7 +516,8 @@ export default {
         this.handleLogin({ mobile: Encrypt(this.form.mobile), password: this.form.password }).then(data => {
           if (this.token) {
             this.getUserInfo().then(() => {
-              this.$router.push(this.callBack)
+              this.$router.go(-1)
+              // this.$router.push(this.callBack)
             })
           }
         })
@@ -553,7 +554,7 @@ export default {
               this.form2.code = ''
               if (this.token) {
                 this.getUserInfo().then(() => {
-                  this.$router.push(this.callBack)
+                  // this.$router.push(this.callBack)
                 })
               }
             })
@@ -621,7 +622,8 @@ export default {
             this.handleLogin({ mobile: Encrypt(this.form3.mobile), password: this.form3.new_pwd }).then(data => {
               if (this.token) {
                 this.getUserInfo().then(() => {
-                  this.$router.push(this.callBack)
+                  this.$router.go(-1)
+                  // this.$router.push(this.callBack)
                 })
               }
             })
@@ -645,7 +647,8 @@ export default {
             this.$store.commit('setToken', res.data.data.token)
             window.sessionStorage.setItem('ycwxToken', res.data.data.token)
             this.getUserInfo().then(() => {
-              this.$router.push(this.callBack)
+              this.$router.go(-1)
+              // this.$router.push(this.callBack)
             })
           } else {
             this.$Message.error(res.data.msg)

@@ -26,7 +26,7 @@
           暂无数据
         </div>
       </div>
-      <div v-if="selIdxAccount == 1">
+      <div v-if="selIdxAccount == 2">
         <!-- 激活 -->
         <div class="card-activation">
           <div class="cactive-left">
@@ -63,7 +63,7 @@
           </li>
         </ul>
       </div>
-      <div v-if="selIdxAccount == 2">
+      <div v-if="selIdxAccount == 1">
         <div class="coupon-com">
           <p class="coupon-tit">您有<i>{{num}}</i>张可用优惠券</p>
           <ul class="coupon-list">
@@ -105,7 +105,7 @@ export default {
   props: ['user_id'],
   data () {
     return {
-      txtArr: ['消费记录', '课程卡管理', '优惠券'],
+      txtArr: ['消费记录', '优惠券'],
       selIdxAccount: window.sessionStorage.getItem('selIdxAccount') || 0,
       consumptionRecordList: [],
       paySts: {
@@ -151,9 +151,6 @@ export default {
         this.getConsumptionRecord()
       }
       if (parseInt(this.selIdxAccount) === 1) {
-        // this.getCoupons()
-      }
-      if (parseInt(this.selIdxAccount) === 2) {
         this.getCoupons()
       }
     },

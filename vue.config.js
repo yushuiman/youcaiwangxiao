@@ -155,6 +155,7 @@ module.exports = {
     port: 8080,
     https: false,
     hotOnly: false,
-    proxy: 'http://ycapi.youcaiwx.com'
+    // proxy: 'http://ycapi.youcaiwx.com'
+    proxy: 'https://api.youcaiwx.cn'
   }
 }

@@ -15,6 +15,7 @@
 import { bkznList } from '@/api/zixun'
 
 export default {
+  inject: ['reload'],
   data () {
     return {
       bkznList: []
@@ -46,7 +47,8 @@ export default {
         }
       })
       if (this.$route.name === 'zixun-detail') {
-        window.location.reload()
+        this.reload()
+        // window.location.reload()
       }
     }
   }

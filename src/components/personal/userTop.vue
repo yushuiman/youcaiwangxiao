@@ -78,6 +78,10 @@ export default {
       }) // 观看记录
     },
     goonWatch () {
+      if (!(this.watchRecordsList && this.watchRecordsList.video)) {
+        this.$router.push('/course')
+        return
+      }
       // 未购买
       if (this.watchRecordsList.is_purchase === 2) {
         this.$Message.error('请购买课程')

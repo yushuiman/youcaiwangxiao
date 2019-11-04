@@ -4,7 +4,7 @@
       <img class="tc-icon" src="@/assets/images/course/teacher-icon.png" alt="">
       <span>老师姓名</span>
     </div>
-    <swiper :options="swiperOptionRec">
+    <swiper :options="swiperOptionRec" v-if="teacehr.length>0">
       <swiper-slide v-for="(item, index) in teacehr" :key="index">
         <div class="cl-teacher">
           <img :src="item.pictrue" alt="">
@@ -22,7 +22,6 @@
 
 <script>
 import 'swiper/dist/css/swiper.css'
-import { studentVoice } from '@/api/class'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
   props: {
@@ -33,33 +32,24 @@ export default {
   data () {
     return {
       swiperOptionRec: {
+        loop: true,
         autoplay: {
           delay: 3000,
-          disableOnInteraction: false
-        },
-        loop: true
+          stopOnLastSlide: false
+        }
       }
     }
   },
-  computed: {
+  components: {
     swiper,
     swiperSlide
   },
   mounted () {
-    this.getStudentVoice()
+    this.$nextTick(() => {
+
+    })
   },
   methods: {
-    // 学员心声
-    getStudentVoice () {
-      studentVoice().then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.tudentVoiceList = res.data.slice(0, 3)
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    }
   }
 }
 </script>

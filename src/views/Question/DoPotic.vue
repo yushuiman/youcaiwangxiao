@@ -111,7 +111,7 @@ import poticList from '../../components/poticList/poticList'
 import countDown from '../../components/count'
 import countUp from '../../components/common/countUp'
 import errorCorrection from '../../components/common/errorCorrection'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -186,6 +186,9 @@ export default {
     window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
+    ...mapActions([
+      'getUserInfo'
+    ]),
     scrollToTop () {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       if (scrollTop > 50) {
@@ -283,7 +286,8 @@ export default {
       this.jiaojuan('sub')
     },
     // 交卷
-    jiaojuan (type) {
+    async jiaojuan (type) {
+      await this.getUserInfo()
       for (var i = 0; i < this.topics.length; i++) {
         this.subTopics.question_content.question.push({
           question_id: this.topics[i].ID,

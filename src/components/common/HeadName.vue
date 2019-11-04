@@ -112,21 +112,6 @@ export default {
       //   }
       // })
     },
-    // 播放记录
-    // getWatchRecords () {
-    //   watchRecords({
-    //     user_id: this.user_id
-    //   }).then(data => {
-    //     const res = data.data
-    //     if (res.code === 200) {
-    //       if (res.data && res.data[0]) {
-    //         this.watchRecordsList = res.data[0].list[0]
-    //       }
-    //     } else {
-    //       this.$Message.error(res.msg)
-    //     }
-    //   })
-    // },
     // 继续观看
     goonWatch () {
       if (this.watchRecordsList.is_purchase === 2) {

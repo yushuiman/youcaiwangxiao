@@ -177,7 +177,7 @@ import discussSelf from '../../components/questions/discussSelf'
 import errorSection from '../../components/questions/errorSection'
 import lianxiSelf from '../../components/questions/lianxiSelf'
 import groupLianxi from '../../components/questions/groupLianxi'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -259,6 +259,9 @@ export default {
     this.getStudentsRanking() // 学员排名
   },
   methods: {
+    ...mapActions([
+      'getUserInfo'
+    ]),
     // 展示课程
     projectList () {
       getProject({
@@ -309,7 +312,8 @@ export default {
       })
     },
     // 去做题 展示对应模块题库
-    doQuestions ({ id, title }) {
+    async doQuestions ({ id, title }) {
+      await this.getUserInfo()
       this.plateTitle = title
       this.showPlateModal = id
       this.visible = true

@@ -1,9 +1,5 @@
 <template>
   <div class="order-confirm-wrap w-wrap">
-    <div style="padding-bottom: 50px;">
-      <div style="float:left;">{{originBillInfo}}</div>
-      <div style="float:left;">{{currBillInfo}}</div>
-    </div>
     <h1 class="order-tit">确认订单</h1>
     <div class="order-confirm-com user-addess">
       <h2>收获地址</h2>
@@ -184,7 +180,7 @@
 <script>
 import { showOrder, addOrder, availableCoupon } from '@/api/order'
 import { editAddress, addAddress } from '@/api/personal'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   data () {
@@ -251,6 +247,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'getUserInfo'
+    ]),
     onBillChange (val) {
       if (val === '需要') {
         this.originBillInfo.haveCoupon = 1
@@ -545,35 +544,38 @@ export default {
         this.$Message.error('请选择收货地址')
         return
       }
-      addOrder({
-        user_id: this.user_id,
-        package_id: this.package_id, // 课程套餐id或者直播id
-        is_live: this.is_live, // 1直播订单、2课程订单、3图书订单4积分订单
-        user_coupon_id: this.originBillInfo.user_coupon_id, // 优惠卷id
-        address_id: this.originBillInfo.address_id, // 地址id
-        haveCoupon: this.originBillInfo.haveCoupon, // 是否有发票1有2没有
-        couponType: this.originBillInfo.couponType, // 普通发票增值税发票1普通发票2增值税发票
-        userOrcompany: this.originBillInfo.userOrcompany, // 个人发票单位发票1个人发票2单位发票
-        invoice_title: this.originBillInfo.invoice_title, // 发票抬头
-        companyName: this.originBillInfo.companyName, // 单位名称
-        taxpayerNumber: this.originBillInfo.taxpayerNumber, // 发票税号
-        companAddress: this.originBillInfo.companAddress, // 公司地址
-        companTel: this.originBillInfo.companTel, // 公司电话
-        companOpenBank: this.originBillInfo.companOpenBank, // 公司开户银行
-        companBankNum: this.originBillInfo.companBankNum // 银行账户
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.payInfo = res.data
-          window.sessionStorage.setItem('payInfo', JSON.stringify(res.data))
-          // this.$router.push({ path: '/order-pay',
-          //   query: {
-          //     trade_number: res.data.order_num
-          //   }
-          // })
-        } else {
-          this.$Message.error(res.msg)
-        }
+      this.getUserInfo().then(() => {
+        addOrder({
+          user_id: this.user_id,
+          package_id: this.package_id, // 课程套餐id或者直播id
+          is_live: this.is_live, // 1直播订单、2课程订单、3图书订单4积分订单
+          user_coupon_id: this.originBillInfo.user_coupon_id, // 优惠卷id
+          address_id: this.originBillInfo.address_id, // 地址id
+          haveCoupon: this.originBillInfo.haveCoupon, // 是否有发票1有2没有
+          couponType: this.originBillInfo.couponType, // 普通发票增值税发票1普通发票2增值税发票
+          userOrcompany: this.originBillInfo.userOrcompany, // 个人发票单位发票1个人发票2单位发票
+          invoice_title: this.originBillInfo.invoice_title, // 发票抬头
+          companyName: this.originBillInfo.companyName, // 单位名称
+          taxpayerNumber: this.originBillInfo.taxpayerNumber, // 发票税号
+          companAddress: this.originBillInfo.companAddress, // 公司地址
+          companTel: this.originBillInfo.companTel, // 公司电话
+          companOpenBank: this.originBillInfo.companOpenBank, // 公司开户银行
+          companBankNum: this.originBillInfo.companBankNum // 银行账户
+        }).then(data => {
+          const res = data.data
+          if (res.code === 200) {
+            this.payInfo = res.data
+            window.sessionStorage.setItem('payInfo', JSON.stringify(res.data))
+            this.$router.push({ path: '/order-pay',
+              query: {
+                trade_number: res.data.order_num,
+                is_live: this.is_live
+              }
+            })
+          } else {
+            this.$Message.error(res.msg)
+          }
+        })
       })
     }
   }

@@ -79,7 +79,7 @@
       </div>
       <!-- 学习日期 ，答疑 ，公告，动态... bottom-->
       <div class="month-answer-wrap">
-        <div class="plan-learn-tab">
+        <div class="plan-learn-tabg">
           <span :class="{ 'curren': tabIdx == 0 }" @click="planChangeTab(0)">学习路径</span>
           <span :class="{ 'curren': tabIdx == 1 }" @click="planChangeTab(1)">我的答疑</span>
         </div>
@@ -91,7 +91,7 @@
                   <template slot="title">
                     <div class="month-title" @click="getEveryday(v)">
                       <Icon type="ios-list" class="menu-list-icon"/>
-                      <span>{{parseInt(v)}}月计划</span>
+                      <span>{{v}}月计划</span>
                     </div>
                   </template>
                   <ul class="days-list">
@@ -302,7 +302,7 @@ import learnNotice from '../../components/learning/learnNotice'
 import learnStudent from '../../components/learning/learnStudent'
 import studentDynamic from '../../components/learning/studentDynamic'
 import answerInfo from '../../components/personal/answerInfo'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -369,6 +369,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'getUserInfo'
+    ]),
     // 制定学习计划
     planLearn () {
       this.visible = true
@@ -684,8 +687,10 @@ export default {
         val.userstatus = 2 // 当0元体验的时候 2是未购买
       }
       window.sessionStorage.setItem('userstatus', val.userstatus || 1) // 1购买2未购买
-      this.$router.push({ path: '/learn-center-video',
-        query: obj
+      this.getUserInfo().then(() => {
+        this.$router.push({ path: '/learn-center-video',
+          query: obj
+        })
       })
     },
     // 学习视频 讲义
@@ -693,7 +698,9 @@ export default {
       if (val.beforeDate === 1 || val.afterDate === 1) {
         return
       }
-      window.open(val.handouts, '_blank')
+      this.getUserInfo().then(() => {
+        window.open(val.handouts, '_blank')
+      })
     },
     // 学习视频 去做题
     goDopicPage (val) {
@@ -715,10 +722,9 @@ export default {
         obj.plate_id = 8 // 学习计划的0元体验
       }
       window.sessionStorage.setItem('getQuestion', JSON.stringify(obj))
-      this.$router.push('/dopotic-learn')
-      // this.$router.push({ path: '/dopotic-learn',
-      //   query: obj
-      // })
+      this.getUserInfo().then(() => {
+        this.$router.push('/dopotic-learn')
+      })
     },
     // 退出学习计划modal
     outLearnPlan () {

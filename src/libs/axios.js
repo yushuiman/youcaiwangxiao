@@ -55,6 +55,15 @@ class HttpRequest {
         store.commit('isLoad', false)
         router.push('/login')
       }
+      if (res.data.code === 403) {
+        window.sessionStorage.removeItem('ycwxToken')
+        store.commit('setToken', '')
+        store.commit('setAvator', '')
+        store.commit('setUserId', '')
+        store.commit('setUserName', '')
+        store.commit('isLoad', false)
+        router.push('/')
+      }
       return {
         data,
         code

@@ -288,6 +288,7 @@ export default {
     onChange (val) {
       this.page = val
       this.initRes()
+      window.scrollTo(0, 0)
     }
   }
 }

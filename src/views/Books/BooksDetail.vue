@@ -37,7 +37,7 @@
 import { booksDetails } from '@/api/books'
 import studentsVoice from '@/components/class/studentsVoice.vue'
 import likeList from '@/components/class/likeList.vue'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   data () {
@@ -60,6 +60,9 @@ export default {
     this.getBooksDetail()
   },
   methods: {
+    ...mapActions([
+      'getUserInfo'
+    ]),
     getBooksDetail () {
       booksDetails({
         id: this.books_id
@@ -75,14 +78,20 @@ export default {
     // 订单入库
     buyPay () {
       if (!this.token) {
-        this.$router.push('login')
+        this.$router.push({ path: '/login',
+          query: {
+            call_back: 'books'
+          }
+        })
         return
       }
-      this.$router.push({ path: '/order-confirm',
-        query: {
-          package_id: this.booksDetail.id,
-          is_live: 3 // 1直播订单、2课程订单、3图书订单4积分订单
-        }
+      this.getUserInfo().then(() => {
+        this.$router.push({ path: '/order-confirm',
+          query: {
+            package_id: this.booksDetail.id,
+            is_live: 3 // 1直播订单、2课程订单、3图书订单4积分订单
+          }
+        })
       })
     },
     consultLink () {
@@ -120,8 +129,8 @@ export default {
     margin-bottom: 20px;
     cursor: pointer;
     .bks-img{
-      width: 137px;
-      height: 220px;
+      width: 174px;
+      height: 210px;
     }
   }
   .bks-info{

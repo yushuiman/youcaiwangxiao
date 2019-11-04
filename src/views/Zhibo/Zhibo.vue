@@ -1,8 +1,7 @@
 <template>
-  <div style="height: 600px;text-align:center;padding:200px 0;">
-    这是直播页面
-    <br>
-    开发中...
+  <div style="text-align:center;padding:100px 0;">
+    <img src="../../assets/images/zhibo/waiting.png" alt="">
+    <p style="padding-top: 20px;color:#999999;">程序员哥哥努力开发中…</p>
   </div>
 </template>
 

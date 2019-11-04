@@ -57,7 +57,7 @@
 import { resultsStati } from '@/api/questions'
 import { errorStati } from '@/api/personal'
 import wave from '../../components/common/wave'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -107,6 +107,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'getUserInfo'
+    ]),
     // 正常做题成绩统计
     getResultsStati () {
       resultsStati({
@@ -164,7 +167,8 @@ export default {
       })
     },
     // 查看解析
-    viewAnalysis (type) {
+    async viewAnalysis (type) {
+      await this.getUserInfo()
       this.$router.push({ path: '/analysis',
         query: {
           paper_id: this.$route.query.paper_id,

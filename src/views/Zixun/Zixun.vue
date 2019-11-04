@@ -80,6 +80,7 @@ export default {
     onChange (val) {
       this.page = val
       this.getNewsList()
+      window.scrollTo(0, 0)
     },
     // 详情
     getNewsDetails (id) {

@@ -86,7 +86,7 @@ import courseList from '@/components/class/courseList.vue'
 import teachers from '@/components/class/teachers.vue'
 import studentsVoice from '@/components/class/studentsVoice.vue'
 import likeList from '@/components/class/likeList.vue'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -113,6 +113,9 @@ export default {
     this.getCourseIntroduction() // 课程简介
   },
   methods: {
+    ...mapActions([
+      'getUserInfo'
+    ]),
     // 课程简介
     getCourseIntroduction () {
       courseIntroduction({
@@ -148,14 +151,20 @@ export default {
     // 订单入库
     goPay () {
       if (!this.token) {
-        this.$router.push('login')
+        this.$router.push({ path: '/login',
+          query: {
+            call_back: 'course'
+          }
+        })
         return
       }
-      this.$router.push({ path: '/order-confirm',
-        query: {
-          package_id: this.package_id,
-          is_live: 2 // 1直播订单、2课程订单、3图书订单4积分订单
-        }
+      this.getUserInfo().then(() => {
+        this.$router.push({ path: '/order-confirm',
+          query: {
+            package_id: this.package_id,
+            is_live: 2 // 1直播订单、2课程订单、3图书订单4积分订单
+          }
+        })
       })
     }
   }

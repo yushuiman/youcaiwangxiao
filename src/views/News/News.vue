@@ -227,14 +227,14 @@ export default {
       }
       if (type === 1) {
         obj.message_id = this.newsDetail.lastPage
-        if (this.newsDetail.lastPage === '') {
+        if (!this.newsDetail.lastPage) {
           this.$Message.error('已是第一条')
           return
         }
       }
       if (type === 2) {
         obj.message_id = this.newsDetail.nextPage
-        if (this.newsDetail.nextPage === '') {
+        if (!this.newsDetail.nextPage) {
           this.$Message.error('已是最后一条')
           return
         }
@@ -249,6 +249,7 @@ export default {
     onChange (val) {
       this.page = val
       this.getSysteMessage()
+      window.scrollTo(0, 0)
     }
   }
 }

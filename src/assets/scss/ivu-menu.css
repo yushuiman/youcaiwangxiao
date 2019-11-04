@@ -267,3 +267,6 @@
 .ivu-checkbox{
     margin-top: -2px;
 }
+.el-menu{
+    border-right: 0;
+}

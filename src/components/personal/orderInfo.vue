@@ -71,7 +71,7 @@
 
 <script>
 import { myOrder, alreadyOrderlist, cancelOrder } from '@/api/personal'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   props: ['user_id'],
   data () {
@@ -89,6 +89,7 @@ export default {
   },
   computed: {
     ...mapState({
+      token: state => state.user.token,
       isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
@@ -102,6 +103,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'getUserInfo'
+    ]),
     tabClk (v, index) {
       this.selIdxOrder = index
       window.sessionStorage.setItem('selIdxOrder', index)
@@ -158,7 +162,22 @@ export default {
     },
     // 去支付
     goPay (item) {
-      console.log('支付。。。')
+      if (!this.token) {
+        this.$router.push({ path: '/login',
+          query: {
+            call_back: 'personal'
+          }
+        })
+        return
+      }
+      this.getUserInfo().then(() => {
+        this.$router.push({ path: '/order-confirm',
+          query: {
+            package_id: item.package_id,
+            is_live: item.is_live // 1直播订单、2课程订单、3图书订单4积分订单
+          }
+        })
+      })
     },
     // 取消订单
     payCancelOrder (item) {

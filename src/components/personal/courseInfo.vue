@@ -111,7 +111,7 @@
 <script>
 // import collMenuItem from '../../components/personal/course/collMenuItem'
 import { myCourse, watchRecords, myCollpackage, myCollcourse, myCollvideo } from '@/api/personal'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -158,6 +158,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'getUserInfo'
+    ]),
     tabClk (v, index) {
       if (!this.user_id) {
 
@@ -260,7 +263,8 @@ export default {
       })
     },
     // 课程去学习 播放记录去学习
-    courseLearnVideo (val) {
+    async courseLearnVideo (val) {
+      await this.getUserInfo()
       if (val.is_purchase === 2) {
         this.$Message.error('请购买课程')
         return
@@ -285,7 +289,8 @@ export default {
       })
     },
     // 收藏记录去学习
-    collectionLearnVideo (item, val) {
+    async collectionLearnVideo (item, val) {
+      await this.getUserInfo()
       if (this.is_purchase === 2) {
         this.$Message.error('请购买课程')
         return

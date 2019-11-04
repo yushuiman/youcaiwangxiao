@@ -1,5 +1,6 @@
 <template>
   <div class="order-pay-wrap w-wrap">
+    <img :src="ewmPayImg" alt="">
     <div class="orpay-info">
       <div class="orpay-top">
         <p class="p1"><span>订单提交成功，请尽快支付～</span><em>订单金额：¥{{orderInfo.pay_price}}</em></p>
@@ -31,18 +32,32 @@
         <button @click="subPayOrder">立即支付</button>
       </div>
     </div>
+    <Modal v-model="visible"
+        :width="447"
+        :mask-closable=false
+        :closable=false
+        footer-hide
+        class="dopic-modal">
+        <div class="ewm-pay">
+          <img :src="ewmPayImg" alt="">
+        </div>
+      </Modal>
   </div>
 </template>
 
 <script>
-import { payOrder } from '@/api/order'
-import { mapState } from 'vuex'
+import { payOrder, setCode } from '@/api/order'
+import { mapState, mapActions } from 'vuex'
+import config from '@/config'
 
 export default {
   data () {
     return {
+      ewmPayImg: '', // 二维码支付
+      visible: false,
       orderInfo: JSON.parse(window.sessionStorage.getItem('payInfo')),
-      pay_type: 4 // 1银联2微信3余额4支付宝5后台6积分越换
+      pay_type: 4, // 1银联2微信3余额4支付宝5后台6积分越换
+      is_live: this.$route.query.is_live // 1直播订单、2课程订单、3图书订单4积分订单
     }
   },
   computed: {
@@ -54,19 +69,41 @@ export default {
   mounted () {
   },
   methods: {
+    ...mapActions([
+      'getUserInfo'
+    ]),
     // 支付订单
     subPayOrder () {
-      payOrder({
+      this.getUserInfo().then(() => {
+        payOrder({
+          order_num: this.orderInfo.order_num,
+          pay_type: this.pay_type
+        }).then(data => {
+          const res = data.data
+          if (res.code === 200) {
+            // 支付宝
+            if (this.pay_type === 4) {
+            }
+            // 微信
+            if (this.pay_type === 2) {
+              this.visible = true
+              this.ewmPayImg = config.baseUrl.pro + '/web/Pay/setCode?is_live=' + this.is_live + '&user_id=' + this.user_id + '&order_num=' + this.orderInfo.order_num + '&pbook_id=' + this.orderInfo.package_id + '&price=' + this.orderInfo.pay_price
+            }
+          } else {
+            this.$Message.error(res.msg)
+          }
+        })
+      })
+    },
+    subSetCode () {
+      setCode({
+        user_id: this.user_id,
+        is_live: this.is_live,
         order_num: this.orderInfo.order_num,
-        pay_type: this.pay_type
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.payInfo = res.data
-          window.sessionStorage.setItem('payInfo', JSON.stringify(res.data))
-        } else {
-          this.$Message.error(res.msg)
-        }
+        pbook_id: this.orderInfo.package_id,
+        price: this.orderInfo.pay_price
+      }).then(() => {
+
       })
     },
     // 选择支付方式

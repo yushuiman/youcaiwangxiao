@@ -31,3 +31,11 @@ export const payOrder = (data) => { // 订单支付
     method: 'post'
   })
 }
+
+export const setCode = (data) => { // 订单支付微信二维码
+  return axios.request({
+    url: '/web/Pay/setCode',
+    data,
+    method: 'post'
+  })
+}

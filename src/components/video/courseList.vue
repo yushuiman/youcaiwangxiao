@@ -35,6 +35,7 @@
 import { mapState } from 'vuex'
 
 export default {
+  inject: ['reload'],
   props: {
     showBox: {
       type: String,
@@ -88,8 +89,7 @@ export default {
           video_id: v.video_id
         }
       })
-      // this.$emit('sss')
-      window.location.reload()
+      this.reload()
     }
   }
 }

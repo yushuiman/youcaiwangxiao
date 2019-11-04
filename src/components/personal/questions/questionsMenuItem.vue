@@ -109,6 +109,7 @@ export default {
     onChange (val) {
       this.page = val
       this.getQuestionRecord()
+      window.scrollTo(0, 0)
     },
     goPage (item) {
       if (item.state === 1) { // 成绩统计

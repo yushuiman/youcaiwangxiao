@@ -222,6 +222,7 @@ export default {
     onChange (val) {
       this.form.page = val
       this.getCourseList()
+      window.scrollTo(0, 0)
     },
     // 获取数据
     getCourseList () {

@@ -70,7 +70,6 @@ export default {
           commit('setAvator', '')
           commit('setUserId', '')
           commit('setUserName', '')
-          // window.location.reload()
           resolve()
         }).catch(err => {
           reject(err)

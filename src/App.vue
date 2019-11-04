@@ -2,7 +2,7 @@
   <div id="app">
     <Header/>
     <RightSlider/>
-    <router-view/>
+    <router-view v-if="isRouterAlive" />
     <Footer/>
   </div>
 </template>
@@ -13,12 +13,14 @@ import RightSlider from '@/components/RightSlider'
 
 export default {
   name: 'home',
-  data () {
-    return {
-    }
-  },
   provide () {
     return {
+      reload: this.reload
+    }
+  },
+  data () {
+    return {
+      isRouterAlive: true
     }
   },
   components: {
@@ -31,6 +33,12 @@ export default {
   created () {
   },
   methods: {
+    reload () {
+      this.isRouterAlive = false
+      this.$nextTick(function () {
+        this.isRouterAlive = true
+      })
+    }
   }
 }
 </script>

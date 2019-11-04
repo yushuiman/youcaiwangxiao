@@ -29,9 +29,6 @@ export default {
   },
   mounted () {
     this.getUserDynamic()
-    this.scrollTimer = setInterval(() => {
-      this.scroll()
-    }, 1500)
   },
   methods: {
     scroll () {
@@ -47,6 +44,11 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.userDynamicList = res.data
+          if (this.userDynamicList.length > 5) {
+            this.scrollTimer = setInterval(() => {
+              this.scroll()
+            }, 1500)
+          }
         } else {
           this.$Message.error(res.msg)
         }

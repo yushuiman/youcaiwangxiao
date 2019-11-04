@@ -12,7 +12,7 @@
             <img class="bks-img" :src="item.pc_img" alt="">
             <div class="bks-info">
               <h2 class="bks-name">{{item.name}}<span v-if="item.is_presell == 2">（预售）</span></h2>
-              <p class="bks-teacher">主编：{{item.author}}<span>{{item.pub_company}}</span></p>
+              <p class="bks-teacher">主编：{{item.x}}<span>{{item.pub_company}}</span></p>
               <div class="bks-prices">
                 <span class="original-price">定价：{{item.price}}元</span>
                 <span class="yc-price">优财价：<em>{{item.pay_price}}元</em></span>
@@ -36,6 +36,7 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import baokaoZhinan from '../../components/zixun/baokaoZhinan'
 import getZiliao from '../../components/zixun/getZiliao'
 import { booksList, booksBanner } from '@/api/books'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   data () {
@@ -43,11 +44,11 @@ export default {
       bksList: [],
       booksBannerList: [],
       swiperOptionRec: {
+        loop: true,
         autoplay: {
           delay: 3000,
           disableOnInteraction: false
-        },
-        loop: true
+        }
       }
     }
   },
@@ -57,11 +58,19 @@ export default {
     swiper,
     swiperSlide
   },
+  computed: {
+    ...mapState({
+      token: state => state.user.token
+    })
+  },
   mounted () {
     this.getBooksBanner()
     this.getBooksList()
   },
   methods: {
+    ...mapActions([
+      'getUserInfo'
+    ]),
     // banner
     getBooksBanner () {
       booksBanner().then(data => {
@@ -90,11 +99,21 @@ export default {
     },
     // 订单入库
     buyPay ({ id }) {
-      this.$router.push({ path: '/order-confirm',
-        query: {
-          package_id: id,
-          is_live: 3 // 1直播订单、2课程订单、3图书订单4积分订单
-        }
+      if (!this.token) {
+        this.$router.push({ path: '/login',
+          query: {
+            call_back: 'books'
+          }
+        })
+        return
+      }
+      this.getUserInfo().then(() => {
+        this.$router.push({ path: '/order-confirm',
+          query: {
+            package_id: id,
+            is_live: 3 // 1直播订单、2课程订单、3图书订单4积分订单
+          }
+        })
       })
     }
   }
@@ -122,8 +141,8 @@ export default {
     margin-bottom: 20px;
     cursor: pointer;
     .bks-img{
-      width: 109px;
-      height: 149px;
+      width: 122px;
+      height: 148px;
     }
   }
   .bks-info{
