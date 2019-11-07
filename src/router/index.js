@@ -29,6 +29,7 @@ const DoPoticLearn = r => require.ensure([], () => r(require('@/views/LearningCe
 const LearnCenterVideo = r => require.ensure([], () => r(require('@/views/LearningCenter/LearnCenterVideo')), 'LearnCenterVideo')
 const OrderConfirm = r => require.ensure([], () => r(require('@/views/Orders/OrderConfirm')), 'OrderConfirm')
 const OrderPay = r => require.ensure([], () => r(require('@/views/Orders/OrderPay')), 'OrderPay')
+const WechatPay = r => require.ensure([], () => r(require('@/views/Orders/WechatPay')), 'WechatPay')
 const Books = r => require.ensure([], () => r(require('@/views/Books/Books')), 'Books')
 const BooksDetail = r => require.ensure([], () => r(require('@/views/Books/BooksDetail')), 'BooksDetail')
 
@@ -331,6 +332,17 @@ const router = new Router({
         title: '订单支付',
         showHeader: true,
         showFooter: true,
+        showRightSlider: true
+      }
+    },
+    {
+      path: '/wechat-pay',
+      name: 'wechat-pay',
+      component: WechatPay,
+      meta: {
+        title: '订单支付',
+        showHeader: true,
+        showFooter: false,
         showRightSlider: true
       }
     },

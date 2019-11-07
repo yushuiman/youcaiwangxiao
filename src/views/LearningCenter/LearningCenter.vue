@@ -49,7 +49,7 @@
 import { isRegister, kRegister } from '@/api/learncenter'
 import { getSmsCode, quickLogin, accountLogin, forgetPaw, resetPaw } from '@/api/login'
 import { Encrypt } from '@/libs/crypto'
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
@@ -65,9 +65,19 @@ export default {
       timer: null
     }
   },
+  computed: {
+    ...mapState({
+      user_id: state => state.user.user_id,
+      token: state => state.user.token,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
+    })
+  },
   components: {
   },
   mounted () {
+    if (this.token) {
+      this.$router.push('learning-center-detail')
+    }
   },
   methods: {
     ...mapActions([

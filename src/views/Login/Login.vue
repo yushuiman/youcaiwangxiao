@@ -324,9 +324,6 @@ export default {
     ...mapState({
       token: state => state.user.token
     }),
-    isChange () {
-      return this.is_change
-    },
     isLogin () {
       return this.$route.query.type || 'login'
     },

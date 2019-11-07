@@ -64,7 +64,7 @@ export default {
           tit: '账号'
         }
       ],
-      clkTit: window.sessionStorage.getItem('type') || 'course',
+      clkTit: this.$route.query.type || window.sessionStorage.getItem('type') || 'course',
       personalInfo: {} // 个人信息
     }
   },
@@ -86,6 +86,7 @@ export default {
     userTop
   },
   mounted () {
+    this.getUserInfo()
     if (this.isLoadHttpRequest) {
       this.getPersonalInfo()
     } else {
@@ -93,7 +94,7 @@ export default {
         this.getPersonalInfo()
       })
     }
-    // window.addEventListener('scroll', this.scrollToTop)
+    window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
     ...mapActions([

@@ -103,6 +103,7 @@ export default {
     studentsVoice,
     likeList,
     courseList
+    // payModal
   },
   computed: {
     ...mapState({
@@ -159,7 +160,8 @@ export default {
         return
       }
       this.getUserInfo().then(() => {
-        this.$router.push({ path: '/order-confirm',
+        this.$router.push({
+          path: '/order-confirm',
           query: {
             package_id: this.package_id,
             is_live: 2 // 1直播订单、2课程订单、3图书订单4积分订单
@@ -395,5 +397,4 @@ export default {
   .clt-else-info-r{
     padding-top: 49px;
   }
-
 </style>

@@ -174,10 +174,13 @@
         </div>
       </div>
     </Modal>
+    <!-- 是否完成支付 -->
+    <pay-modal :visible.sync="visible"></pay-modal>
   </div>
 </template>
 
 <script>
+import payModal from '@/components/orders/payModal.vue'
 import { showOrder, addOrder, availableCoupon } from '@/api/order'
 import { editAddress, addAddress } from '@/api/personal'
 import { mapState, mapActions } from 'vuex'
@@ -227,7 +230,9 @@ export default {
         companBankNum: '' // 银行账户
       },
       currBillInfo: {},
-      payInfo: {} // 去支付的信息
+      payInfo: {}, // 去支付的信息
+      consultInfo: JSON.parse(window.sessionStorage.getItem('consultInfo')) || {}, // 在线咨询
+      visible: false // 是否完成支付
     }
   },
   computed: {
@@ -236,6 +241,9 @@ export default {
       token: state => state.user.token,
       isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
+  },
+  components: {
+    payModal
   },
   mounted () {
     if (this.isLoadHttpRequest) {
@@ -259,8 +267,8 @@ export default {
         this.currBillInfo = JSON.parse(JSON.stringify(this.originBillInfo))
       }
       if (val === '不需要') {
+        this.showBillType = false
         this.originBillInfo.haveCoupon = 2
-        this.originBillInfo.showBillType = false
         this.originBillInfo.couponType = ''
         this.originBillInfo.userOrcompany = ''
         this.originBillInfo.invoice_title = ''
@@ -426,14 +434,14 @@ export default {
       })
     },
     // 使用优惠券
-    useCoupon (item, index) {
+    useCoupon (item) {
       this.originBillInfo.user_coupon_id = item.coupon_id
       // 1满减2打折
       if (item.is_type === 1) {
-        this.totalPrice = this.packages.price - item.coupon_price
+        this.totalPrice = (this.packages.price - item.coupon_price).toFixed(2)
       }
       if (item.is_type === 2) {
-        this.totalPrice = this.packages.price * (item.coupon_price / 10)
+        this.totalPrice = (this.packages.price * (item.coupon_price / 10)).toFixed(2)
       }
     },
     // 保存发票信息
@@ -510,7 +518,6 @@ export default {
       this.visibleBill = false
       this.showBillType = true
     },
-    // 4367420010898989378
     // 取消发票信息
     cancelBillInfo () {
       this.visibleBill = false
@@ -524,6 +531,9 @@ export default {
         return
       }
       this.bill = '不需要'
+      this.originBillInfo.haveCoupon = 2
+      this.originBillInfo.couponType = ''
+      this.originBillInfo.userOrcompany = ''
     },
     // 修改发票信息
     changeAgainBill (type) {
@@ -531,7 +541,8 @@ export default {
       this.visibleBill = true
     },
     // 提交订单
-    subAddOrder () {
+    async subAddOrder () {
+      await this.getUserInfo()
       if (!this.token) {
         this.$router.push('login')
         return
@@ -542,41 +553,44 @@ export default {
       }
       if (this.originBillInfo.address_id === '') {
         this.$Message.error('请选择收货地址')
-        return
       }
-      this.getUserInfo().then(() => {
-        addOrder({
-          user_id: this.user_id,
-          package_id: this.package_id, // 课程套餐id或者直播id
-          is_live: this.is_live, // 1直播订单、2课程订单、3图书订单4积分订单
-          user_coupon_id: this.originBillInfo.user_coupon_id, // 优惠卷id
-          address_id: this.originBillInfo.address_id, // 地址id
-          haveCoupon: this.originBillInfo.haveCoupon, // 是否有发票1有2没有
-          couponType: this.originBillInfo.couponType, // 普通发票增值税发票1普通发票2增值税发票
-          userOrcompany: this.originBillInfo.userOrcompany, // 个人发票单位发票1个人发票2单位发票
-          invoice_title: this.originBillInfo.invoice_title, // 发票抬头
-          companyName: this.originBillInfo.companyName, // 单位名称
-          taxpayerNumber: this.originBillInfo.taxpayerNumber, // 发票税号
-          companAddress: this.originBillInfo.companAddress, // 公司地址
-          companTel: this.originBillInfo.companTel, // 公司电话
-          companOpenBank: this.originBillInfo.companOpenBank, // 公司开户银行
-          companBankNum: this.originBillInfo.companBankNum // 银行账户
-        }).then(data => {
-          const res = data.data
-          if (res.code === 200) {
-            this.payInfo = res.data
-            window.sessionStorage.setItem('payInfo', JSON.stringify(res.data))
-            this.$router.push({ path: '/order-pay',
-              query: {
-                trade_number: res.data.order_num,
-                is_live: this.is_live
-              }
-            })
-          } else {
-            this.$Message.error(res.msg)
-          }
-        })
+      addOrder({
+        user_id: this.user_id,
+        package_id: this.package_id, // 课程套餐id或者直播id
+        is_live: this.is_live, // 1直播订单、2课程订单、3图书订单4积分订单
+        user_coupon_id: this.originBillInfo.user_coupon_id, // 优惠卷id
+        address_id: this.originBillInfo.address_id, // 地址id
+        haveCoupon: this.originBillInfo.haveCoupon, // 是否有发票1有2没有
+        couponType: this.originBillInfo.couponType, // 普通发票增值税发票1普通发票2增值税发票
+        userOrcompany: this.originBillInfo.userOrcompany, // 个人发票单位发票1个人发票2单位发票
+        invoice_title: this.originBillInfo.invoice_title, // 发票抬头
+        companyName: this.originBillInfo.companyName, // 单位名称
+        taxpayerNumber: this.originBillInfo.taxpayerNumber, // 发票税号
+        companAddress: this.originBillInfo.companAddress, // 公司地址
+        companTel: this.originBillInfo.companTel, // 公司电话
+        companOpenBank: this.originBillInfo.companOpenBank, // 公司开户银行
+        companBankNum: this.originBillInfo.companBankNum // 银行账户
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.payInfo = res.data
+          window.sessionStorage.setItem('payInfo', JSON.stringify(res.data))
+          let routeUrl = this.$router.resolve({
+            path: '/order-pay',
+            query: {
+              trade_number: this.payInfo.order_num,
+              is_live: this.is_live
+            }
+          })
+          window.open(routeUrl.href, '_blank')
+          this.visible = true
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
+    },
+    consultLink () {
+      window.open(this.consultInfo.consult_href, '_blank')
     }
   }
 }

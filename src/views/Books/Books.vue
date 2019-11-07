@@ -95,7 +95,7 @@ export default {
     },
     // 查看书籍详情
     goBooksDetail ({ id }) {
-      this.$router.push({ path: '/books-detail', query: { id: id } })
+      this.$router.push({ path: '/books-detail', query: { books_id: id } })
     },
     // 订单入库
     buyPay ({ id }) {
@@ -108,7 +108,8 @@ export default {
         return
       }
       this.getUserInfo().then(() => {
-        this.$router.push({ path: '/order-confirm',
+        this.$router.push({
+          path: '/order-confirm',
           query: {
             package_id: id,
             is_live: 3 // 1直播订单、2课程订单、3图书订单4积分订单

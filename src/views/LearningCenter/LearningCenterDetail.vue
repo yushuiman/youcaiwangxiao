@@ -79,7 +79,7 @@
       </div>
       <!-- 学习日期 ，答疑 ，公告，动态... bottom-->
       <div class="month-answer-wrap">
-        <div class="plan-learn-tabg">
+        <div class="plan-learn-tab">
           <span :class="{ 'curren': tabIdx == 0 }" @click="planChangeTab(0)">学习路径</span>
           <span :class="{ 'curren': tabIdx == 1 }" @click="planChangeTab(1)">我的答疑</span>
         </div>
@@ -485,9 +485,10 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.addLearnIdx = 2
+          if (res.data.state === 1) {
+            this.addLearnIdx = 2
+          }
         } else if (res.code === 405) { // 您已参加过
-          this.addLearnIdx = 2
           this.$Message.error(res.msg)
         } else {
           this.visible = false

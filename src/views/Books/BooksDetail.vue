@@ -42,7 +42,7 @@ import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
-      books_id: this.$route.query.id,
+      books_id: this.$route.query.books_id,
       booksDetail: {},
       consultInfo: JSON.parse(window.sessionStorage.getItem('consultInfo')) || {} // 在线咨询
     }
@@ -86,7 +86,8 @@ export default {
         return
       }
       this.getUserInfo().then(() => {
-        this.$router.push({ path: '/order-confirm',
+        this.$router.push({
+          path: '/order-confirm',
           query: {
             package_id: this.booksDetail.id,
             is_live: 3 // 1直播订单、2课程订单、3图书订单4积分订单

@@ -56,6 +56,7 @@
       v-model="visible"
       footer-hide
       :width="795"
+      @on-visible-change="modalQueVisible"
       class="iview-modal">
       <upload-img v-if="typeShow == 'dy'" :getQuestion="getQuestion"></upload-img>
       <error-correction v-if="typeShow == 'jc'" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
@@ -398,6 +399,11 @@ export default {
       this.visible = flag
       this.typeShow = type
       this.getQuestion.question_id = qId
+    },
+    modalQueVisible (val) {
+      if (!val) {
+        this.typeShow = false
+      }
     }
   },
   beforeDestroy () {

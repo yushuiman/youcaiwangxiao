@@ -39,3 +39,11 @@ export const setCode = (data) => { // 订单支付微信二维码
     method: 'post'
   })
 }
+
+export const getGoods = (data) => { // 微信支付回调
+  return axios.request({
+    url: '/web/Pay/getGoods',
+    data,
+    method: 'post'
+  })
+}
