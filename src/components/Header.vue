@@ -29,6 +29,7 @@
 <script>
 import HeadName from '../components/common/HeadName'
 import { mapActions, mapState } from 'vuex'
+// import config from '@/config'
 export default {
   data () {
     return {
@@ -79,14 +80,28 @@ export default {
   },
   mounted () {
     if (this.isLoadHttpRequest) {
+      this.init()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.init()
+      })
+    }
+  },
+  methods: {
+    ...mapActions([
+      'handleLogOut',
+      'getIndexMessage'
+    ]),
+    init () {
       this.getIndexMessage() // 系统消息
       var _this = this
-      var socket = io('http://ycapi.youcaiwx.com:2120')
+      // var socket = io('http://ycapi.youcaiwx.com:2120')
+      // var socket = io('http://apisocket.youcaiwx.com:2120')
+      var socket = io('https://youcaiwx.cn:2120')
+      // var socket = io(config.baseUrl.pro + ':2120')
       socket.on('connect', function () {
         socket.emit('login', _this.user_id)
-        console.log('1打印user_id:' + _this.user_id)
       })
-      console.log(socket)
       // 后端推送来消息时
       socket.on('new_msg', function (msg) {
         let json = JSON.parse(msg)
@@ -100,37 +115,7 @@ export default {
         }
         _this.getIndexMessage()
       })
-    } else {
-      this.$watch('isLoadHttpRequest', function (val, oldVal) {
-        this.getIndexMessage() // 系统消息
-        var _this = this
-        var socket = io('http://ycapi.youcaiwx.com:2120')
-        socket.on('connect', function () {
-          socket.emit('login', _this.user_id)
-          console.log('2打印user_id:' + _this.user_id)
-        })
-        console.log(socket)
-        // 后端推送来消息时
-        socket.on('new_msg', function (msg) {
-          let json = JSON.parse(msg)
-          _this.$Notice.info({
-            title: '您有一条新消息',
-            desc: json.title
-          })
-          if (json.type === 'freezeMessage') {
-            _this.handleLogOut()
-            return
-          }
-          _this.getIndexMessage()
-        })
-      })
-    }
-  },
-  methods: {
-    ...mapActions([
-      'handleLogOut',
-      'getIndexMessage'
-    ]),
+    },
     goIndex () {
       this.$router.push('/')
     },

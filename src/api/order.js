@@ -32,6 +32,13 @@ export const payOrder = (data) => { // 订单支付
   })
 }
 
+export const zfbpay = (data) => { // 支付宝
+  return axios.request({
+    url: '/alipay/Pagepay/zfbpay',
+    data,
+    method: 'post'
+  })
+}
 export const setCode = (data) => { // 订单支付微信二维码
   return axios.request({
     url: '/web/Pay/setCode',
@@ -40,7 +47,7 @@ export const setCode = (data) => { // 订单支付微信二维码
   })
 }
 
-export const getGoods = (data) => { // 微信支付回调
+export const getGoods = (data) => { // 支付回调
   return axios.request({
     url: '/web/Pay/getGoods',
     data,

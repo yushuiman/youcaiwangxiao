@@ -67,19 +67,68 @@
           <div class="open-txt" @click="openShow(item, index)">
             {{item.openFlag ? '收起':'展开'}}
           </div>
-          <!-- 老师回复 -->
+          <!-- 老师回复以及追问-->
           <ul class="othq-list-teacher" v-if="replyList[item.id] && item.openFlag">
-            <li class="othq-item">
+            <!-- 1老师回复 -->
+            <li class="othq-item" :class="{'othq-item-over': item.user_self == 1 && item.is_close == 1}" v-if="replyList[item.id][0].reply_quiz && (replyList[item.id][0].reply_quiz != '')">
               <div class="othq-item-t">
-                <img :src="replyList[item.id].head_img" alt="" class="head-logo">
+                <img :src="replyList[item.id][0].head_img" alt="" class="head-logo">
                 <div class="othq-info">
-                  <h3>{{replyList[item.id].reply_user_name}}<span class="teacher-light">老师</span></h3>
-                  <p>{{replyList[item.id].repls_time}}</p>
+                  <h3>{{replyList[item.id][0].reply_user_name}}<span class="teacher-light">老师</span></h3>
+                  <p>{{replyList[item.id][0].repls_time}}</p>
+                </div>
+                <span class="tousu" v-if="item.user_self == 1" @click="tousuAnswer(item)">投诉</span>
+              </div>
+              <p class="othq-txt">{{replyList[item.id][0].reply_quiz}}</p>
+              <div class="quiz-image-list course_img" v-if="replyList[item.id][0].reply_image">
+                <div class="demo-upload-list" v-for="(v, index) in replyList[item.id][0].reply_image" :key="index">
+                  <template>
+                    <img :src="v" alt="">
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleView(v)"></Icon>
+                    </div>
+                  </template>
                 </div>
               </div>
-              <p class="othq-txt">{{replyList[item.id].reply_quiz}}</p>
+              <!-- 是自己的提问并且老师有过第一次回复 -->
+              <button class="zhuiwen" v-if="item.user_self == 1 && item.is_close == 1" @click="zhiwen(item)">追问</button>
+            </li>
+            <!-- 2学员追问 -->
+            <!-- :class="{'othq-item-zhiwen': replyList[item.id][1].z_reply_status == 2}" -->
+            <li class="othq-item" v-if="replyList[item.id][1] && (replyList[item.id][1].z_quiz != '')">
+              <div class="othq-item-t">
+                <img :src="replyList[item.id][1].head" alt="" class="head-logo">
+                <div class="othq-info">
+                  <h3>{{replyList[item.id][1].username}}</h3>
+                  <p>{{replyList[item.id][1].create_time}}</p>
+                </div>
+                <span class="othq-huifu" v-if="replyList[item.id][1].z_reply_status == 1">老师已回复</span>
+              </div>
+              <p class="othq-txt">{{replyList[item.id][1].z_quiz}}</p>
               <div class="quiz-image-list course_img">
-                <div class="demo-upload-list" v-for="(v, index) in replyList[item.id].reply_image" :key="index">
+                <div class="demo-upload-list" v-for="(val, index) in replyList[item.id][1].quiz_image" :key="index">
+                  <template>
+                    <img :src="val">
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleView(val)"></Icon>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </li>
+            <!-- 3追问老师回复 -->
+            <li class="othq-item othq-item-reply" v-if="replyList[item.id][2].z_reply_quiz && (replyList[item.id][2].z_reply_quiz != '')">
+              <div class="othq-item-t">
+                <img :src="replyList[item.id][2].head_img" alt="" class="head-logo">
+                <div class="othq-info">
+                  <h3>{{replyList[item.id][2].reply_user_name}}<span class="teacher-light">老师</span></h3>
+                  <p>{{replyList[item.id][2].z_reply_time}}</p>
+                </div>
+                <span class="tousu" v-if="item.user_self == 1" @click="tousuAnswer(item)">投诉</span>
+              </div>
+              <p class="othq-txt">{{replyList[item.id][2].z_reply_quiz}}</p>
+              <div class="quiz-image-list course_img">
+                <div class="demo-upload-list" v-for="(v, index) in replyList[item.id][2].z_reply_image" :key="index">
                   <template>
                     <img :src="v" alt="">
                     <div class="demo-upload-list-cover">
@@ -96,11 +145,15 @@
     <Modal title="图片预览" v-model="visible" :width="795">
       <img :src="imgUrl" v-if="visible" style="width: 100%;">
     </Modal>
+    <zhuiwen :answerVisible.sync="answerVisible" :zhuiwenInfo="zhuiwenInfo" @updateAnswerList="getAnswerList"></zhuiwen>
+    <tousu :tousuVisible.sync="tousuVisible" :tousuInfo="tousuInfo"></tousu>
   </div>
 </template>
 
 <script>
 import config from '@/config'
+import zhuiwen from '@/components/answer/zhuiwen'
+import tousu from '@/components/answer/tousu'
 import { answerList, answerSub, answerDetails } from '@/api/class'
 export default {
   props: {
@@ -124,8 +177,16 @@ export default {
       imgUrl: '',
       errorTs: '',
       replyList: {}, // 老师回复内容
-      apiPath: '/upload/Index/uploadImage'
+      apiPath: '/upload/Index/uploadImage',
+      answerVisible: false, // 追问modal
+      zhuiwenInfo: {}, // 追问内容
+      tousuVisible: false, // 投诉modal
+      tousuInfo: {} // 投诉内容
     }
+  },
+  components: {
+    zhuiwen,
+    tousu
   },
   mounted () {
     if (process.env.NODE_ENV === 'production') {
@@ -221,7 +282,8 @@ export default {
         video_id: this.playCourseInfo.video_id,
         section_id: this.playCourseInfo.section_id,
         course_id: this.playCourseInfo.course_id,
-        package_id: this.playCourseInfo.package_id
+        package_id: this.playCourseInfo.package_id,
+        user_id: this.user_id
       }).then(data => {
         const res = data.data
         this.answerList = res.data
@@ -250,6 +312,18 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // 追问
+    zhiwen (val) {
+      this.zhuiwenInfo.id = val.id
+      this.zhuiwenInfo.answer_type = 1
+      this.answerVisible = true
+    },
+    // 投诉
+    tousuAnswer (val) {
+      this.tousuInfo.id = val.id
+      this.tousuInfo.answer_type = 1
+      this.tousuVisible = true
     }
   }
 }
@@ -338,11 +412,11 @@ export default {
       position: absolute;
       top: 3px;
       left: 0px;
-      color: $col999;
+      color: #E84342;
     }
   }
   .othq-list-teacher{
-    border-top: 1px solid #E6E6E6;
+    // border-top: 1px solid #E6E6E6;
     margin-top: 15px;
   }
   .othq-item{
@@ -351,9 +425,16 @@ export default {
     background: $colfff;
     box-shadow: 0px 2px 8px -4px rgba(0,0,0,0.2);
     border-radius: 8px;
+    &.othq-item-over{
+      padding-bottom: 30px!important;
+    }
+    &.othq-item-zhiwen, &.othq-item-reply, &.othq-item-else{
+      padding-bottom: 0px!important;
+    }
     .othq-txt{
       line-height: 20px;
       color: #4A4A4A;
+      word-wrap: break-word;
       &.sl{
         display: -webkit-box;
         -webkit-box-orient: vertical;
@@ -373,6 +454,23 @@ export default {
       margin-bottom: 0;
       box-shadow: 0px 0px 0px rgba(0,0,0,0);
       background: none;
+      border-top: 1px solid #E6E6E6;
+      border-radius: 0px;
+      position: relative;
+    }
+    .zhuiwen{
+      position: absolute;
+      right: 0px;
+      bottom: 0px;
+      width: 60px;
+      height: 24px;
+      border-radius: 16px;
+      border: 1px solid $blueColor;
+      color: $blueColor;
+      &:hover{
+        background: $blueColor;
+        color: $colfff;
+      }
     }
   }
   .othq-item-t{
@@ -389,10 +487,14 @@ export default {
       font-size: 12px;
       color: $col999;
     }
-    .othq-huifu{
+    .othq-huifu, .tousu{
       flex: 1;
       text-align: right;
       color: #F99111;
+    }
+    .tousu{
+      color: $col999;
+      cursor: pointer;
     }
   }
   .teacher-light{

@@ -47,6 +47,19 @@
   font-size: 20px;
 }
 
+.go-result-box {
+  text-align: center;
+  padding: 12px 0;
+  margin-bottom: 20px;
+}
+
+.go-result-box .btn-com {
+  width: 141px;
+  height: 37px;
+  border-radius: 19px;
+  font-size: 18px;
+}
+
 .answer-time {
   text-align: right;
 }

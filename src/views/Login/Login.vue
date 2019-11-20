@@ -501,6 +501,7 @@ export default {
     // 登录
     accountLogin () {
       var re = /^[1]([3-9])[0-9]{9}$/
+      var rePaw = /^[a-zA-Z0-9_-]{6,16}$/
       if (this.form.mobile === '') {
         this.$Message.error('请输入手机号')
       } else if (!re.test(this.form.mobile)) {
@@ -509,20 +510,21 @@ export default {
         this.$Message.error('请输入密码')
       } else if (this.form.password.length < 6 || this.form.password.length > 16) {
         this.$Message.error('密码必须为6-16位哦~~')
+      } else if (!rePaw.test(this.form.password)) {
+        this.$Message.error('密码必须为6-16位数字、字母、下划线组合')
       } else {
         this.handleLogin({ mobile: Encrypt(this.form.mobile), password: this.form.password }).then(data => {
-          if (this.token) {
-            this.getUserInfo().then(() => {
-              this.$router.go(-1)
-              // this.$router.push(this.callBack)
-            })
-          }
+          this.getUserInfo().then(() => {
+            this.$router.go(-1)
+            // this.$router.push(this.callBack)
+          })
         })
       }
     },
     // 注册
     webReg () {
       var re = /^[1]([3-9])[0-9]{9}$/
+      var rePaw = /^[a-zA-Z0-9_-]{6,16}$/
       if (this.form2.mobile === '' || this.form2.text_pwd === '' || this.form2.confirm_pwd === '' || this.form2.code === '') {
         this.$Message.error('手机号 ，验证码 ，密码 ，确认密码均为必填项')
       } else if (!re.test(this.form2.mobile)) {
@@ -531,6 +533,8 @@ export default {
         this.$Message.error('两次密码不一致，请重新输入')
       } else if (this.form2.text_pwd.length < 6 || this.form2.text_pwd.length > 16) {
         this.$Message.error('密码必须为6-16位哦~~')
+      } else if (!rePaw.test(this.form2.text_pwd)) {
+        this.$Message.error('密码必须为6-16位数字、字母、下划线组合')
       } else if (this.single === false) {
         this.$Message.error('请仔细阅读用户注册协议')
       } else {
@@ -549,11 +553,9 @@ export default {
               this.form2.confirm_pwd = ''
               this.form2.text_pwd = ''
               this.form2.code = ''
-              if (this.token) {
-                this.getUserInfo().then(() => {
-                  // this.$router.push(this.callBack)
-                })
-              }
+              this.getUserInfo().then(() => {
+                // this.$router.push(this.callBack)
+              })
             })
           } else if (res.data.code === 406) {
             this.$Message.error('账号 or 密码错误')
@@ -604,12 +606,15 @@ export default {
     // 重置密码
     resetPaw () {
       var re = /^[1]([3-9])[0-9]{9}$/
+      var rePaw = /^[a-zA-Z0-9_-]{6,16}$/
       if (this.form3.mobile === '' || this.form3.new_pwd === '' || this.form3.code === '') {
         this.$Message.error('手机号，验证码，密码均为必填项')
       } else if (!re.test(this.form3.mobile)) {
         this.$Message.error('手机号错误')
       } else if (this.form3.new_pwd.length < 6 || this.form3.new_pwd.length > 16) {
         this.$Message.error('密码必须为6-16位哦~~')
+      } else if (!rePaw.test(this.form3.new_pwd)) {
+        this.$Message.error('密码必须为6-16位数字、字母、下划线组合')
       } else {
         resetPaw({ 'mobile': Encrypt(this.form3.mobile), 'password': this.form3.new_pwd, 'verifycode': this.form3.code }).then(res => {
           if (res.data.code === 200) {
@@ -617,12 +622,10 @@ export default {
             this.show2 = true
             this.$Message.success('密码重置成功')
             this.handleLogin({ mobile: Encrypt(this.form3.mobile), password: this.form3.new_pwd }).then(data => {
-              if (this.token) {
-                this.getUserInfo().then(() => {
-                  this.$router.go(-1)
-                  // this.$router.push(this.callBack)
-                })
-              }
+              this.getUserInfo().then(() => {
+                this.$router.go(-1)
+                // this.$router.push(this.callBack)
+              })
             })
           } else {
             this.$Message.error(res.data.msg)
@@ -972,12 +975,12 @@ export default {
     letter-spacing:1px;
   }
   .voice span {
-    color: red;
+    color: #E84342;
     cursor: pointer;
     display: block;
   }
   .voice2 span {
-    color: red;
+    color: #E84342;
     cursor: pointer;
     display: block;
   }

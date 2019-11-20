@@ -553,6 +553,7 @@ export default {
       }
       if (this.originBillInfo.address_id === '') {
         this.$Message.error('请选择收货地址')
+        return
       }
       addOrder({
         user_id: this.user_id,
@@ -574,7 +575,8 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.payInfo = res.data
-          window.sessionStorage.setItem('payInfo', JSON.stringify(res.data))
+          this.payInfo.pay_price = this.totalPrice
+          window.sessionStorage.setItem('payInfo', JSON.stringify(this.payInfo))
           let routeUrl = this.$router.resolve({
             path: '/order-pay',
             query: {
@@ -942,7 +944,7 @@ export default {
       width: 100px;
       display: inline-block;
       i{
-        color: red;
+        color: #E84342;
         vertical-align: top;
         margin-right: 3px;
       }

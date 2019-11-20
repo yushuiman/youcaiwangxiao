@@ -414,58 +414,59 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .do-potic-wrap{
-    padding: 20px 0;
-    font-size: 18px;
-    color: $col666;
-    .dptic-wrap-l{
-      width: 895px;
-    }
-    .dptic-wrap-r{
-      width: 285px;
-      position: fixed;
-      top: 90px;
-      margin-left: 915px;
-    }
-  }
-  // 封装start
-  .right-bottom-wrap{
-    background: $colfff;
-    margin-bottom: 20px;
-    padding: 20px;
-  }
-  .title-com{
-    font-size: 18px;
-    color: $col333;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-   // 封装end
-  .dptic-title{
-    padding: 0 20px;
-    @include lh(60, 60);
-    border-radius: 8px;
-    background: $colfff;
-    margin-bottom: 20px;
-    box-sizing: border-box;
-    .menu-title{
-      color: $col333;
-      font-size: 20px;
-    }
-  }
-  .go-result-box{
-    text-align: center;
-    padding: 12px 0;
-    margin-bottom: 20px;
-    .btn-com{
-      width: 141px;
-      height: 37px;
-      border-radius: 19px;
-      font-size: 18px;
-    }
-  }
- // 右边做题状态
+  @import "../../assets/scss/dopotic";
+//   .do-potic-wrap{
+//     padding: 20px 0;
+//     font-size: 18px;
+//     color: $col666;
+//     .dptic-wrap-l{
+//       width: 895px;
+//     }
+//     .dptic-wrap-r{
+//       width: 285px;
+//       position: fixed;
+//       top: 90px;
+//       margin-left: 915px;
+//     }
+//   }
+//   // 封装start
+//   .right-bottom-wrap{
+//     background: $colfff;
+//     margin-bottom: 20px;
+//     padding: 20px;
+//   }
+//   .title-com{
+//     font-size: 18px;
+//     color: $col333;
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//   }
+//    // 封装end
+//   .dptic-title{
+//     padding: 0 20px;
+//     @include lh(60, 60);
+//     border-radius: 8px;
+//     background: $colfff;
+//     margin-bottom: 20px;
+//     box-sizing: border-box;
+//     .menu-title{
+//       color: $col333;
+//       font-size: 20px;
+//     }
+//   }
+//   .go-result-box{
+//     text-align: center;
+//     padding: 12px 0;
+//     margin-bottom: 20px;
+//     .btn-com{
+//       width: 141px;
+//       height: 37px;
+//       border-radius: 19px;
+//       font-size: 18px;
+//     }
+//   }
+//  // 右边做题状态
   .anscard-sts{
     i{
       width: 10px;
@@ -491,32 +492,33 @@ export default {
       }
     }
   }
-  .anscard-list{
-    padding-top: 10px;
-    height: 288px;
-    li{
-      float: left;
-      width: 28px;
-      height: 28px;
-      line-height: 28px;
-      text-align: center;
-      border: 1px solid $col666;
-      border-radius: 14px;
-      margin: 10px;
-      cursor: pointer;
-      &.blue-bg, &.red-bg, &.green-bg{
-        border: 0;
-        color: $colfff;
-      }
-      &.blue-bg{
-        background: #3485FF;
-      }
-      &.red-bg{
-        background: #ED7171;
-      }
-      &.green-bg{
-        background: #47BF7F;
-      }
-    }
-  }
+//   .anscard-list{
+//     padding-top: 10px;
+//     height: 288px;
+//     overflow: auto;
+//     li{
+//       float: left;
+//       width: 28px;
+//       height: 28px;
+//       line-height: 28px;
+//       text-align: center;
+//       border: 1px solid $col666;
+//       border-radius: 14px;
+//       margin: 10px;
+//       cursor: pointer;
+//       &.blue-bg, &.red-bg, &.green-bg{
+//         border: 0;
+//         color: $colfff;
+//       }
+//       &.blue-bg{
+//         background: #3485FF;
+//       }
+//       &.red-bg{
+//         background: #ED7171;
+//       }
+//       &.green-bg{
+//         background: #47BF7F;
+//       }
+//     }
+//   }
 </style>

@@ -31,7 +31,7 @@
         </div>
         <div class="fr">
           <span class="errorTxt">{{errorTs}}</span>
-          <button class="submit" @click="questionSubmit()">提交</button>
+          <button class="submit" @click="questionSubmit">提交</button>
         </div>
       </div>
     </div>
@@ -62,23 +62,67 @@
           <div class="open-txt" @click="openShow(item, index)">
             {{item.openFlag ? '收起':'展开'}}
           </div>
-          <!-- <div class="teacher-answer" v-if="replyList[item.Id] && item.openFlag">
-            {{replyList[item.Id].reply_user_name}}
-            <img :src="replyList[item.Id].head_img" alt="" class="head-logo">
-            <img :src="v" alt="" v-for="(v, index) in replyList[item.Id].reply_image" :key="index">
-          </div> -->
+          <!-- 老师回复以及追问-->
           <ul class="othq-list-teacher" v-if="replyList[item.Id] && item.openFlag">
-            <li class="othq-item">
+            <!-- 1老师回复 -->
+            <li class="othq-item" :class="{'othq-item-over': item.user_self == 1 && item.is_close == 1}" v-if="replyList[item.Id][0]">
               <div class="othq-item-t">
-                <img :src="replyList[item.Id].head_img" alt="" class="head-logo">
+                <img :src="replyList[item.Id][0].head_image" alt="" class="head-logo">
                 <div class="othq-info">
-                  <h3>{{replyList[item.Id].reply_user_name}}<span class="teacher-light">老师</span></h3>
-                  <p>{{replyList[item.Id].reply_times}}</p>
+                  <h3>{{replyList[item.Id][0].username}}<span class="teacher-light">老师</span></h3>
+                  <p>{{replyList[item.Id][0].creates_time}}</p>
+                </div>
+                <span class="tousu" v-if="item.user_self == 1" @click="tousuAnswer(item)">投诉</span>
+              </div>
+              <p class="othq-txt">{{replyList[item.Id][0].quiz}}</p>
+              <div class="quiz-image-list course_img">
+                <div class="demo-upload-list" v-for="(v, index) in replyList[item.Id][0].quiz_image" :key="index">
+                  <template>
+                    <img :src="v" alt="">
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleView(v)"></Icon>
+                    </div>
+                  </template>
                 </div>
               </div>
-              <p class="othq-txt">{{replyList[item.Id].reply_quiz}}</p>
+              <!-- 是自己的提问并且老师有过第一次回复 -->
+              <button class="zhuiwen" v-if="item.user_self == 1 && item.is_close == 1" @click="zhuiwen(item)">追问</button>
+            </li>
+            <!-- 2学员追问 -->
+            <li class="othq-item" :class="{'othq-item-zhuiwen': replyList[item.Id][1].reply_status == 2}" v-if="replyList[item.Id][1] && replyList[item.Id][1].quiz">
+              <div class="othq-item-t">
+                <img :src="replyList[item.Id][1].head_image" alt="" class="head-logo">
+                <div class="othq-info">
+                  <h3>{{replyList[item.Id][1].username}}</h3>
+                  <p>{{replyList[item.Id][1].creates_time}}</p>
+                </div>
+                <span class="othq-huifu" v-if="replyList[item.Id][1].reply_status == 1">老师已回复</span>
+              </div>
+              <p class="othq-txt">{{replyList[item.Id][1].quiz}}</p>
               <div class="quiz-image-list course_img">
-                <div class="demo-upload-list" v-for="(v, index) in replyList[item.Id].reply_image" :key="index">
+                <div class="demo-upload-list" v-for="(val, index) in replyList[item.Id][1].quiz_image" :key="index">
+                  <template>
+                    <img :src="val">
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleView(val)"></Icon>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </li>
+            <!-- 3追问老师回复 -->
+            <li class="othq-item othq-item-reply" v-if="replyList[item.Id][2] && replyList[item.Id][2].quiz">
+              <div class="othq-item-t">
+                <img :src="replyList[item.Id][2].head_image" alt="" class="head-logo">
+                <div class="othq-info">
+                  <h3>{{replyList[item.Id][2].username}}<span class="teacher-light">老师</span></h3>
+                  <p>{{replyList[item.Id][2].creates_time}}</p>
+                </div>
+                <span class="tousu" v-if="item.user_self == 1" @click="tousuAnswer(item)">投诉</span>
+              </div>
+              <p class="othq-txt">{{replyList[item.Id][2].quiz}}</p>
+              <div class="quiz-image-list course_img">
+                <div class="demo-upload-list" v-for="(v, index) in replyList[item.Id][2].quiz_image" :key="index">
                   <template>
                     <img :src="v" alt="">
                     <div class="demo-upload-list-cover">
@@ -95,10 +139,14 @@
     <Modal title="图片预览" v-model="visible" :width="795">
       <img :src="imgUrl" v-if="visible" style="width: 100%;">
     </Modal>
+    <zhuiwen :answerVisible.sync="answerVisible" :zhuiwenInfo="zhuiwenInfo" @updateAnswerList="questionallAnswerList"></zhuiwen>
+    <tousu :tousuVisible.sync="tousuVisible" :tousuInfo="tousuInfo"></tousu>
   </div>
 </template>
 
 <script>
+import zhuiwen from '@/components/answer/zhuiwen'
+import tousu from '@/components/answer/tousu'
 import { questionSub, questionDetails, questionallAnswer } from '@/api/questions'
 import { mapState } from 'vuex'
 import config from '@/config'
@@ -119,8 +167,16 @@ export default {
       errorTs: '',
       questionallAnswerInfo: [], // 全部答疑
       replyList: {}, // 老师回复内容
-      apiPath: '/upload/Index/uploadImage'
+      apiPath: '/upload/Index/uploadImage',
+      answerVisible: false, // 追问modal
+      zhuiwenInfo: {}, // 追问内容
+      tousuVisible: false, // 投诉modal
+      tousuInfo: {} // 投诉内容
     }
+  },
+  components: {
+    zhuiwen,
+    tousu
   },
   computed: {
     ...mapState({
@@ -232,7 +288,7 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.$set(this.replyList, [id], res.data.reply)
+          this.$set(this.replyList, [id], res.data)
         } else {
           this.$Message.error(res.msg)
         }
@@ -245,6 +301,18 @@ export default {
       if (item.reply_status === 1 && item.openFlag) { // 已回复并且是展开的状态
         this.questionDetailsInfo(item.Id)
       }
+    },
+    // 追问
+    zhuiwen (val) {
+      this.zhuiwenInfo.id = val.Id
+      this.zhuiwenInfo.answer_type = 2
+      this.answerVisible = true
+    },
+    // 投诉
+    tousuAnswer (val) {
+      this.tousuInfo.id = val.Id
+      this.tousuInfo.answer_type = 2
+      this.tousuVisible = true
     }
   }
 }
@@ -297,7 +365,7 @@ export default {
       position: absolute;
       top: 3px;
       left: 0px;
-      color: $col999;
+      color: #E84342;
     }
   }
   .others{
@@ -307,7 +375,7 @@ export default {
     overflow: auto;
   }
   .othq-list-teacher{
-    border-top: 1px solid #E6E6E6;
+    // border-top: 1px solid #E6E6E6;
     margin-top: 15px;
   }
   .othq-item{
@@ -316,9 +384,16 @@ export default {
     background: $colfff;
     box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.1);
     border-radius: 8px;
+    &.othq-item-over{
+      padding-bottom: 30px!important;
+    }
+    &.othq-item-zhuiwen, &.othq-item-reply{
+      padding-bottom: 0px!important;
+    }
     .othq-txt{
       line-height: 20px;
       color: #4A4A4A;
+      word-wrap: break-word;
       &.sl{
         display: -webkit-box;
         -webkit-box-orient: vertical;
@@ -337,6 +412,23 @@ export default {
       margin-bottom: 0;
       box-shadow: 0px 0px 0px rgba(0,0,0,0);
       background: none;
+      border-top: 1px solid #E6E6E6;
+      border-radius: 0px;
+      position: relative;
+    }
+    .zhuiwen{
+      position: absolute;
+      right: 0px;
+      bottom: 0px;
+      width: 60px;
+      height: 24px;
+      border-radius: 16px;
+      border: 1px solid $blueColor;
+      color: $blueColor;
+      &:hover{
+        background: $blueColor;
+        color: $colfff;
+      }
     }
   }
   .othq-item-t{
@@ -353,10 +445,14 @@ export default {
       font-size: 12px;
       color: $col999;
     }
-    .othq-huifu{
+    .othq-huifu, .tousu{
       flex: 1;
       text-align: right;
       color: #F99111;
+    }
+    .tousu{
+      color: $col999;
+      cursor: pointer;
     }
   }
   .teacher-light{

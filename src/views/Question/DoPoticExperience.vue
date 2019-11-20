@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="do-potic-wrap w-wrap clearfix">
+    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length">
       <div class="dptic-wrap-l fl">
         <div ref="fixedTit">
           <Row class="dptic-title">
@@ -71,6 +71,9 @@
           </div>
         </div>
       </Modal>
+    </div>
+    <div class="no-data" v-else>
+      暂无数据
     </div>
   </div>
 </template>
@@ -165,20 +168,22 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          let { topics, total, title } = res.data
-          this.topics = topics
-          this.total = parseInt(total)
-          this.title = title
-          this.answer_time = res.data.answer_time // 0元体验没有用到
-          this.topics.map((val, index) => {
-            val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
-            val.flag = false // 解析展开收起交互(练习模式)
-            val.currenOption = false // 点击当前题，不能重复选择(练习模式)
-            val.userOption = ''
-            val.options.map((v, index) => {
-              v.selOption = false // 选择当前选项变蓝色，其他默认颜色，可以重复选择(除了练习模式，都是这个逻辑)
+          if (res.data && res.data.length) {
+            let { topics, total, title } = res.data
+            this.topics = topics
+            this.total = parseInt(total)
+            this.title = title
+            this.answer_time = res.data.answer_time // 0元体验没有用到
+            this.topics.map((val, index) => {
+              val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
+              val.flag = false // 解析展开收起交互(练习模式)
+              val.currenOption = false // 点击当前题，不能重复选择(练习模式)
+              val.userOption = ''
+              val.options.map((v, index) => {
+                v.selOption = false // 选择当前选项变蓝色，其他默认颜色，可以重复选择(除了练习模式，都是这个逻辑)
+              })
             })
-          })
+          }
         } else {
           this.$Message.error(res.msg)
         }

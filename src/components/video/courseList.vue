@@ -15,7 +15,8 @@
             active-text-color="#F99111">
             <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key">
               <template slot="title">
-                <span>{{val.section_name}}</span>
+                <span class="sec-name">{{val.section_name}}</span>
+                <span class="down-load" @click.stop="jiangyiDown(val.handouts)">讲义</span>
               </template>
               <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
               @click="playVideo(val, v, key, index)">
@@ -90,6 +91,13 @@ export default {
         }
       })
       this.reload()
+    },
+    jiangyiDown (url) {
+      if (!url) {
+        this.$Message.error('请单独下载章节讲义')
+        return
+      }
+      window.open(url, '_blank')
     }
   }
 }
@@ -174,11 +182,17 @@ export default {
       border:2px solid rgba(249,145,17,1);
     }
   }
-  .sl{
+  .sl,.sec-name{
     width: 80%;
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+  .down-load{
+    border: 1px solid rgba(249,145,17,1);
+    color: rgba(249,145,17,1);
+    border-radius: 3px;
+    padding: 0 3px;
   }
 </style>

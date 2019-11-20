@@ -11,9 +11,9 @@ class WS {
   }
 
   connect () {
-    // this.webSocket = new WebSocket(`ws://${this.url}`);
-    this.webSocket = new WebSocket(`ws://ycapi.youcaiwx.com:2346`)
-    // this.webSocket = new WebSocket(`ws://192.168.1.12:7272`);
+    this.webSocket = new WebSocket(`ws://api.youcaiwx.cn:2346`)
+    // this.webSocket = new WebSocket(`ws://ycapi.youcaiwx.com:2346`)
+    // this.webSocket = new WebSocket(`ws://dest.youcaiwx.cn:2346`)
   }
 
   onopen () {

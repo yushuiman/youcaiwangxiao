@@ -174,16 +174,18 @@ export default {
           from: 1,
           user_id: this.user_id,
           package_id: this.$route.query.package_id,
-          course_id: this.$route.query.course_id,
-          section_id: this.$route.query.section_id,
-          video_id: this.$route.query.video_id,
+          course_id: this.playCourseInfo.course_id,
+          section_id: this.playCourseInfo.section_id,
+          video_id: this.playCourseInfo.video_id,
           watch_time: this.playtime,
           video_type: 1, // 视频类型 1视频2直播
           status: 1 // 播放类型 1课程视频播放2学习中心
         }
         // 已购买并且视频播放时间大于0 socket
         if (this.playCourseInfo.userstatus === 1 && this.playtime > 0) {
-          initWS(JSON.stringify(message))
+          if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
+            initWS(JSON.stringify(message))
+          }
         }
       }, 30000)
       // 未购买试看3分钟

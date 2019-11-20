@@ -37,8 +37,13 @@ export default {
         }
       })
     },
-    goJumphref ({ jumphref }) {
-      window.open(jumphref, '_blank')
+    goJumphref ({ id }) {
+      this.$router.push({ path: '/zixun-detail',
+        query: {
+          news_id: id
+        }
+      })
+      // window.open(jumphref, '_blank')
     }
   }
 }

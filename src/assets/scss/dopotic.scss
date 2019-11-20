@@ -1,5 +1,5 @@
 @import "app";
-.do-potic-wrap{
+  .do-potic-wrap{
     padding: 20px 0;
     font-size: 18px;
     color: $col666;
@@ -38,6 +38,17 @@
     .menu-title{
       color: $col333;
       font-size: 20px;
+    }
+  }
+  .go-result-box {
+    text-align: center;
+    padding: 12px 0;
+    margin-bottom: 20px;
+    .btn-com {
+      width: 141px;
+      height: 37px;
+      border-radius: 19px;
+      font-size: 18px;
     }
   }
   .answer-time{

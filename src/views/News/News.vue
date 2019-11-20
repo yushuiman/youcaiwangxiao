@@ -13,7 +13,7 @@
           <div v-if="newsFlag">
             <ul class="news-list">
               <li class="news-item" :class="{'invalid': item.status == 2}" v-for="(item, index) in systeMessageList" :key="index" @click="getRead(item)">
-                <span class="news-left" v-if="item.type != 4" :class="{'bule': (item.type == 1 ||item.type == 2), 'green': item.type == 6, 'orange': item.type == 3, 'red': item.type == 5 }">{{types[item.type]}}</span>
+                <span class="news-left" v-if="item.type != 4" :class="{'blue': (item.type == 1 ||item.type == 2), 'green': item.type == 6, 'orange': item.type == 3, 'red': item.type == 5 }">{{types[item.type]}}</span>
                 <img src="../../assets/images/global/news-logo.png" alt="优财logo" class="news-l" v-if="item.type == 4 && item.status == 1">
                 <img src="../../assets/images/global/new-logo-gray.png" alt="优财logo" class="news-l" v-if="item.type == 4 && item.status == 2">
                 <!-- 1课程 2题库-->

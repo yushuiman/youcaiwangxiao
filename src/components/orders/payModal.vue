@@ -56,7 +56,8 @@ export default {
         const res = data.data
         if (res.code === 200) {
           if (res.data.status === 1) {
-            this.visible = false
+            this.$emit('update:visible', false)
+            document.body.removeAttribute('style')
             this.$Message.success('支付成功')
             if (this.is_live === 2) {
               this.$router.push({ path: 'course' })
@@ -102,7 +103,7 @@ export default {
       color: $col999;
       font-size: 14px;
       &.act{
-        color: red;
+        color: #E84342;
       }
     }
     .finish-pay-btn {
@@ -124,7 +125,7 @@ export default {
       }
     }
     .finish-txt{
-      color: red;
+      color: #E84342;
       margin-top: 12px;
       font-size: 14px;
     }

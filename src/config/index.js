@@ -13,8 +13,9 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    dev: '',
-    // pro: 'https://ycapi.youcaiwx.com'
+    dev: 'https://dest.youcaiwx.cn',
+    // pro: 'http://ycapi.youcaiwx.com'
+    // pro: 'https://dest.youcaiwx.cn'
     pro: 'https://api.youcaiwx.cn'
   }
 }

@@ -25,6 +25,12 @@
             <Icon type="md-checkmark" />
           </div>
         </li>
+        <li class="jd-way" :class="{'cur': pay_type == 8}" @click="changePayWay(8)">
+          <div class="bottomright" v-if="pay_type == 8">
+            <div class="triangle"></div>
+            <Icon type="md-checkmark" />
+          </div>
+        </li>
       </ul>
       <div class="orpay-cashier">
         <p>应付金额：<span>¥{{orderInfo.pay_price}}</span></p>
@@ -35,8 +41,9 @@
 </template>
 
 <script>
+import config from '@/config'
 import { mapState, mapActions } from 'vuex'
-
+let Base64 = require('js-base64').Base64
 export default {
   data () {
     return {
@@ -53,6 +60,7 @@ export default {
     })
   },
   mounted () {
+    console.log(this.token)
   },
   methods: {
     ...mapActions([
@@ -61,6 +69,10 @@ export default {
     // 支付订单
     subPayOrder () {
       this.getUserInfo().then(() => {
+        // 支付宝
+        if (this.pay_type === 4) {
+          window.open(config.baseUrl.pro + '/alipay/Pagepay/zfbpay?order_num=' + this.orderInfo.order_num + '&name=' + '优财' + '&price=' + this.orderInfo.pay_price + '&body=' + '')
+        }
         // 微信
         if (this.pay_type === 2) {
           this.$router.push({
@@ -68,11 +80,51 @@ export default {
             query: { trade_number: this.order_num, is_live: this.is_live }
           })
         }
-        // 支付宝
-        if (this.pay_type === 4) {
-          // 支付宝
+        // 京东
+        if (this.pay_type === 8) {
+          let tradeTime = this.transformTime()
+          let amount = this.orderInfo.pay_price * 100
+          let obj = Base64.encode(JSON.stringify({
+            version: 'V2.0',
+            merchant: '111934986001',
+            device: '111',
+            tradeNum: this.orderInfo.order_num + '',
+            tradeName: this.orderInfo.order_num + '',
+            tradeDesc: '',
+            tradeTime: tradeTime,
+            amount: amount + '', // 价格
+            currency: 'CNY',
+            note: '',
+            callbackUrl: '',
+            notifyUrl: config.baseUrl.pro + '/Jdpay/AsynNotifyAction/execute',
+            ip: '10.45.251.153',
+            userType: '',
+            userId: this.user_id + '',
+            expireTime: '',
+            industryCategoryCode: '',
+            orderType: '1',
+            specCardNo: '',
+            specId: '',
+            specName: '',
+            saveUrl: 'https://wepay.jd.com/jdpay/saveOrder'
+          }))
+          // config.baseUrl.pro
+          window.open('http://ycapi.youcaiwx.com/demo/action/ClientOrder.php?list=' + obj)
         }
       })
+    },
+    transformTime () {
+      var time = new Date()
+      var y = time.getFullYear()
+      var M = time.getMonth() + 1
+      var d = time.getDate()
+      var h = time.getHours()
+      var m = time.getMinutes()
+      var s = time.getSeconds()
+      return y + '' + this.addZero(M) + '' + this.addZero(d) + '' + this.addZero(h) + '' + this.addZero(m) + '' + this.addZero(s)
+    },
+    addZero (m) {
+      return m < 10 ? '0' + m : m
     },
     // 选择支付方式
     changePayWay (type) {
@@ -80,7 +132,7 @@ export default {
     }
   }
 }
-</script>
+</script>n
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
@@ -149,6 +201,10 @@ export default {
         &.wx-way{
           background-image: url('../../assets/images/order/order_wechat.png');
           background-size: 127px 34px;
+        }
+        &.jd-way{
+          background-image: url('../../assets/images/order/order_jd.png');
+          background-size: 120px 37px;
         }
         &.cur{
           border: 2px solid $blueColor;

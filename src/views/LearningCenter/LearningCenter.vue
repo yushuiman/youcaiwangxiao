@@ -120,7 +120,6 @@ export default {
           this.isSign = res.data.status
         } else {
           this.errorTxt = res.msg
-          // this.$Message.error(res.msg)
         }
       })
     },
@@ -141,14 +140,7 @@ export default {
           this.getUserInfo().then(() => {
             this.$router.push('learning-center-detail')
           })
-          // this.errorTxt = ''
-          // this.visible = true
-          // this.isSign = 0
-          // this.mobile = ''
-          // this.password = ''
-          // this.yzmcode = ''
         } else if (res.code === 403) {
-          // this.$Message.error('账号已被冻结，请联系管理员!')
           this.errorTxt = '账号已被冻结，请联系管理员!'
         } else {
           this.errorTxt = res.msg
@@ -186,16 +178,9 @@ export default {
           window.sessionStorage.setItem('ycwxToken', res.data.token)
           this.getUserInfo().then(() => {
             this.$router.push('learning-center-detail')
-            // this.getLearnIndex() // 登录成功 查询学习计划详情
           })
-          // this.visible = true
-          // this.isSign = 0
-          // this.mobile = ''
-          // this.password = ''
-          // this.yzmcode = ''
         } else {
           this.errorTxt = res.msg
-          // this.$Message.error(res.msg)
         }
       })
     },
@@ -209,7 +194,6 @@ export default {
           this.downCount()
         } else {
           this.errorTxt = res.msg
-          // this.$Message.error(res.data.msg)
         }
       })
     },
@@ -238,11 +222,15 @@ export default {
         }
       })
     },
+    // 忘记密码
     resetPawd () {
+      var rePaw = /^[a-zA-Z0-9_-]{6,16}$/
       if (this.yzmcode === '') {
         this.errorTxt = '请输入验证码'
       } else if (this.password.length < 6 || this.password.length > 16) {
         this.errorTxt = '密码必须为6-16位哦~~'
+      } else if (!rePaw.test(this.password)) {
+        this.errorTxt = '密码必须为6-16位数字、字母、下划线组合'
       } else {
         resetPaw({
           'mobile': Encrypt(this.mobile),
@@ -255,7 +243,6 @@ export default {
             this.quickLoginRes() // 快捷短信登录
           } else {
             this.errorTxt = res.msg
-            // this.$Message.error(res.data.msg)
           }
         })
       }

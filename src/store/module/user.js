@@ -1,10 +1,13 @@
+import {
+  getQueryString
+} from '@/libs/utils'
 import { accountLogin, outLogin, getUserInfo } from '@/api/login'
 import {
   watchRecords
 } from '@/api/personal'
 
 import { Message } from 'element-ui'
-let token = window.sessionStorage.getItem('ycwxToken')
+let token = window.sessionStorage.getItem('ycwxToken') || getQueryString('token')
 export default {
   state: {
     userName: '',

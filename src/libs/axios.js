@@ -45,7 +45,7 @@ class HttpRequest {
     instance.interceptors.response.use(res => {
       this.distroy(url)
       const { data, code } = res
-      if (res.data.code === 401) {
+      if (res.data.code === 401 || res.data.code === 403 || res.data.code === 406) {
         // removeToken() // cookie token
         window.sessionStorage.removeItem('ycwxToken')
         store.commit('setToken', '')
@@ -53,16 +53,14 @@ class HttpRequest {
         store.commit('setUserId', '')
         store.commit('setUserName', '')
         store.commit('isLoad', false)
-        router.push('/login')
-      }
-      if (res.data.code === 403) {
-        window.sessionStorage.removeItem('ycwxToken')
-        store.commit('setToken', '')
-        store.commit('setAvator', '')
-        store.commit('setUserId', '')
-        store.commit('setUserName', '')
-        store.commit('isLoad', false)
-        router.push('/')
+        if (res.data.code === 401 || res.data.code === 403) {
+          router.push('/login')
+        }
+        if (res.data.code === 406) {
+          if (!(window.location.href.indexOf('login') > -1)) {
+            router.push('/login')
+          }
+        }
       }
       return {
         data,

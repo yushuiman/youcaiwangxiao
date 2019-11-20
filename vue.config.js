@@ -7,7 +7,7 @@ const CompressionPlugin = require('compression-webpack-plugin')
 
 const resolve = dir => path.resolve(__dirname, dir)
 // const BASE_URL = process.env.NODE_ENV === 'production'
-//   ? '/'
+//   ? '/home/'
 //   : '/'
 const BASE_URL = '/'
 const webpack = require('webpack')
@@ -156,6 +156,7 @@ module.exports = {
     https: false,
     hotOnly: false,
     // proxy: 'http://ycapi.youcaiwx.com'
+    // proxy: 'https://dest.youcaiwx.cn'
     proxy: 'https://api.youcaiwx.cn'
   }
 }
