@@ -97,7 +97,7 @@ export default {
         this.$Message.error('请单独下载章节讲义')
         return
       }
-      window.open(url, '_blank')
+      window.location.href = url
     }
   }
 }

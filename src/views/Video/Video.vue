@@ -403,6 +403,11 @@ export default {
   beforeDestroy () {
     clearInterval(this.socketTimer)
     clearInterval(this.tryWatchTimer)
+  },
+  beforeRouteLeave (to, from, next) {
+    this.$refs.aliPlayers.pause()
+    console.log('remove aliplayer')
+    next()
   }
 }
 </script>

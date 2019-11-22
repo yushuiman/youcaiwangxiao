@@ -34,6 +34,7 @@ const Books = r => require.ensure([], () => r(require('@/views/Books/Books')), '
 const BooksDetail = r => require.ensure([], () => r(require('@/views/Books/BooksDetail')), 'BooksDetail')
 
 const router = new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',

@@ -43,8 +43,8 @@
               </ul>
             </div>
             <div class="jiexi-btn">
-              <button class="btn-com all-btn" @click="viewAnalysis('2')">全部解析</button>
               <button class="btn-com error-btn" @click="viewAnalysis('1')">错题解析</button>
+              <button class="btn-com all-btn" @click="viewAnalysis('2')">全部解析</button>
             </div>
           </div>
         </div>

@@ -108,7 +108,6 @@ export default {
             specName: '',
             saveUrl: 'https://wepay.jd.com/jdpay/saveOrder'
           }))
-          // config.baseUrl.pro
           window.open('http://ycapi.youcaiwx.com/demo/action/ClientOrder.php?list=' + obj)
         }
       })
