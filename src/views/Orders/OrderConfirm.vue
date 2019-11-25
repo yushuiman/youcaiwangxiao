@@ -543,10 +543,12 @@ export default {
     // 提交订单
     async subAddOrder () {
       await this.getUserInfo()
-      if (!this.token) {
-        this.$router.push('login')
-        return
-      }
+      this.$router.push({ path: '/order-confirm',
+        query: {
+          ...this.$route.query,
+          call_back: 'order-confirm'
+        }
+      })
       if (!this.agree) {
         this.$Message.error('请阅读并同意用户付费协议')
         return

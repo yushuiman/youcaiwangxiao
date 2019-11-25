@@ -136,7 +136,7 @@ export default {
       // ],
       subject_type: [], // 筛选科目列表
       visible: true,
-      status: 0,
+      status: 0, // 买正课以后不展示免费领取
       image_url: ''
     }
   },
@@ -146,7 +146,8 @@ export default {
   computed: {
     ...mapState({
       token: state => state.user.token,
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     }),
     classNamea () {
       if (this.form.class_id) {
@@ -165,8 +166,12 @@ export default {
   mounted () {
     this.getCourseList() // 课程列表 默认第一页，6条数据
     this.getSubjects() // 科目
-    if (!this.token) {
+    if (this.isLoadHttpRequest) {
       this.getThickness() // 免费领取活动
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getThickness() // 免费领取活动
+      })
     }
   },
   methods: {
@@ -249,7 +254,9 @@ export default {
     },
     // 免费领取活动
     getThickness () {
-      thickness().then(data => {
+      thickness({
+        user_id: this.user_id
+      }).then(data => {
         const res = data.data
         if (res.code === 200) {
           this.status = res.data.status

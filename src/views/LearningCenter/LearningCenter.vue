@@ -136,7 +136,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.$store.commit('setToken', res.data.token)
-          window.sessionStorage.setItem('ycwxToken', res.data.token)
+          window.localStorage.setItem('YCWXTOKEN', res.data.token)
           this.getUserInfo().then(() => {
             this.$router.push('learning-center-detail')
           })
@@ -175,7 +175,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.$store.commit('setToken', res.data.token)
-          window.sessionStorage.setItem('ycwxToken', res.data.token)
+          window.localStorage.setItem('YCWXTOKEN', res.data.token)
           this.getUserInfo().then(() => {
             this.$router.push('learning-center-detail')
           })
@@ -326,7 +326,7 @@ export default {
       line-height: 22px;
       margin-top: 27px;
       img{
-        width: 94px;
+        width: 75px;
         height: 16px;
         vertical-align: middle;
         margin-top: -4px;

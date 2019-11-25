@@ -98,7 +98,12 @@ export default {
     // 跳转到播放页面
     playVideo (item, val, v, key, index) {
       if (!this.token) {
-        this.$router.push('login')
+        this.$router.push({ path: '/login',
+          query: {
+            ...this.$route.query,
+            call_back: 'course-detail'
+          }
+        })
         return
       }
       window.sessionStorage.setItem('userstatus', this.userstatus) // 是否购买
@@ -108,7 +113,6 @@ export default {
           course_id: item.course_id,
           section_id: val.section_id,
           video_id: v.video_id
-          // userstatus: this.userstatus // 1购买 2未购买
         }
       })
     }

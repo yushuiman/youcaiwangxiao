@@ -80,7 +80,8 @@ export default {
       if (!this.token) {
         this.$router.push({ path: '/login',
           query: {
-            call_back: 'books'
+            books_id: this.books_id,
+            call_back: 'books-detail'
           }
         })
         return

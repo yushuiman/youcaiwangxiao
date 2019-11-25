@@ -168,12 +168,12 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
+          let { topics, total, title } = res.data
+          this.topics = topics
+          this.total = parseInt(total)
+          this.title = title
+          this.answer_time = res.data.answer_time // 0元体验没有用到
           if (res.data && res.data.length) {
-            let { topics, total, title } = res.data
-            this.topics = topics
-            this.total = parseInt(total)
-            this.title = title
-            this.answer_time = res.data.answer_time // 0元体验没有用到
             this.topics.map((val, index) => {
               val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
               val.flag = false // 解析展开收起交互(练习模式)

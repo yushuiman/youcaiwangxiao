@@ -823,7 +823,7 @@ export default {
       line-height: 22px;
       margin-top: 27px;
       img{
-        width: 94px;
+        width: 75px;
         height: 16px;
         vertical-align: middle;
         margin-top: -4px;

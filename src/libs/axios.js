@@ -46,21 +46,18 @@ class HttpRequest {
       this.distroy(url)
       const { data, code } = res
       if (res.data.code === 401 || res.data.code === 403 || res.data.code === 406) {
-        // removeToken() // cookie token
-        window.sessionStorage.removeItem('ycwxToken')
+        window.localStorage.removeItem('YCWXTOKEN')
         store.commit('setToken', '')
         store.commit('setAvator', '')
         store.commit('setUserId', '')
         store.commit('setUserName', '')
         store.commit('isLoad', false)
-        if (res.data.code === 401 || res.data.code === 403) {
-          router.push('/login')
-        }
-        if (res.data.code === 406) {
-          if (!(window.location.href.indexOf('login') > -1)) {
-            router.push('/login')
+        router.replace({
+          path: 'login',
+          query: {
+            ...router.currentRoute.query
           }
-        }
+        })
       }
       return {
         data,

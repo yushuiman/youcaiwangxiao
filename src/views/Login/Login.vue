@@ -317,7 +317,7 @@ export default {
         mobile: '',
         code: ''
       },
-      callBack: this.$route.query.call_back || '/'
+      callBack: this.$route.query.call_back
     }
   },
   computed: {
@@ -515,8 +515,15 @@ export default {
       } else {
         this.handleLogin({ mobile: Encrypt(this.form.mobile), password: this.form.password }).then(data => {
           this.getUserInfo().then(() => {
-            this.$router.go(-1)
-            // this.$router.push(this.callBack)
+            if (this.callBack) {
+              this.$router.replace({ path: this.callBack,
+                query: {
+                  ...this.$route.query
+                }
+              })
+            } else {
+              this.$router.push('/')
+            }
           })
         })
       }
@@ -554,7 +561,15 @@ export default {
               this.form2.text_pwd = ''
               this.form2.code = ''
               this.getUserInfo().then(() => {
-                // this.$router.push(this.callBack)
+                if (this.callBack) {
+                  this.$router.replace({ path: this.callBack,
+                    query: {
+                      ...this.$route.query
+                    }
+                  })
+                } else {
+                  this.$router.push('/')
+                }
               })
             })
           } else if (res.data.code === 406) {
@@ -623,7 +638,16 @@ export default {
             this.$Message.success('密码重置成功')
             this.handleLogin({ mobile: Encrypt(this.form3.mobile), password: this.form3.new_pwd }).then(data => {
               this.getUserInfo().then(() => {
-                this.$router.go(-1)
+                if (this.callBack) {
+                  this.$router.replace({ path: this.callBack,
+                    query: {
+                      ...this.$route.query
+                    }
+                  })
+                } else {
+                  this.$router.push('/')
+                }
+                // this.$router.go(-1)
                 // this.$router.push(this.callBack)
               })
             })
@@ -645,9 +669,18 @@ export default {
           if (res.data.code === 200) {
             this.$Message.success('登录成功')
             this.$store.commit('setToken', res.data.data.token)
-            window.sessionStorage.setItem('ycwxToken', res.data.data.token)
+            window.localStorage.setItem('YCWXTOKEN', res.data.data.token)
             this.getUserInfo().then(() => {
-              this.$router.go(-1)
+              if (this.callBack) {
+                this.$router.replace({ path: this.callBack,
+                  query: {
+                    ...this.$route.query
+                  }
+                })
+              } else {
+                this.$router.push('/')
+              }
+              // this.$router.go(-1)
               // this.$router.push(this.callBack)
             })
           } else {

@@ -104,14 +104,6 @@ export default {
     goNews () {
       this.$router.push('/news')
     },
-    // 登录
-    goLogin (type) {
-      // this.$router.push({ path: '/login',
-      //   query: {
-      //     call_back: 'question'
-      //   }
-      // })
-    },
     // 继续观看
     goonWatch () {
       if (this.watchRecordsList.is_purchase === 2) {

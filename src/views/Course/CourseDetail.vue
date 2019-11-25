@@ -154,7 +154,8 @@ export default {
       if (!this.token) {
         this.$router.push({ path: '/login',
           query: {
-            call_back: 'course'
+            package_id: this.package_id,
+            call_back: 'course-detail'
           }
         })
         return

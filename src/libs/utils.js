@@ -3,8 +3,8 @@ import Cookies from 'js-cookie'
 // import config from '@/config'
 // 设置token
 export const setToken = (token) => {
-  window.sessionStorage.setItem('ycwxToken', token)
-  // Cookies.set('ycwxToken', token, {
+  window.localStorage.setItem('YCWXTOKEN', token)
+  // Cookies.set('YCWXTOKEN', token, {
   //   expires: config.cookieExpires || 1
   // })
   if (!token || token === '') {
@@ -13,14 +13,14 @@ export const setToken = (token) => {
 }
 
 export const getToken = () => {
-  const token = Cookies.get('ycwxToken')
+  const token = Cookies.get('YCWXTOKEN')
   if (token) return token
   else return false
 }
 
 export const removeToken = () => {
-  window.sessionStorage.removeItem('ycwxToken')
-  // return Cookies.remove('ycwxToken')
+  window.localStorage.removeItem('YCWXTOKEN')
+  // return Cookies.remove('YCWXTOKEN')
 }
 
 // 获取验证码 传加密手机号
@@ -41,7 +41,7 @@ export const getQueryString = name => {
 // 清除登录信息， store状态重置
 // export const clearLoginInfo = () => {
 //   removeToken() // cookie token
-//   window.sessionStorage.removeItem('ycwxToken', '')
+//   window.localStorage.removeItem('YCWXTOKEN', '')
 //   store.commit('setToken', '')
 //   store.commit('setAvator', '')
 //   store.commit('setUserId', '')

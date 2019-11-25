@@ -7,7 +7,7 @@ import {
 } from '@/api/personal'
 
 import { Message } from 'element-ui'
-let token = window.sessionStorage.getItem('ycwxToken') || getQueryString('token')
+let token = window.localStorage.getItem('YCWXTOKEN') || getQueryString('token')
 export default {
   state: {
     userName: '',
@@ -49,7 +49,7 @@ export default {
           const data = res.data
           if (data.code === 200) {
             commit('setToken', data.data.token)
-            window.sessionStorage.setItem('ycwxToken', data.data.token)
+            window.localStorage.setItem('YCWXTOKEN', data.data.token)
             Message.success('登录成功!')
             resolve(data.data)
           } else if (data.code === 403) {
@@ -67,7 +67,7 @@ export default {
       return new Promise((resolve, reject) => {
         outLogin().then(() => {
           // removeToken() // cookie token
-          window.sessionStorage.removeItem('ycwxToken')
+          window.localStorage.removeItem('YCWXTOKEN')
           window.sessionStorage.removeItem('course_id')
           commit('setToken', '')
           commit('setAvator', '')

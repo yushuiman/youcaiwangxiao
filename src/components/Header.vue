@@ -14,9 +14,11 @@
           <div class="login-wrap">
             <a class="learen-btn" @click="goLearning">学习中心</a>
             <div class="login-l fl" v-if="!this.token">
-              <router-link :to="{path: 'login', query: {type:'login', is_forget: 'log-reg'}}">登录</router-link>
+              <a @click="goLogin('login')">登录</a>
+              <!-- <router-link :to="{path: 'login', query: {type:'login'}}">登录</router-link> -->
               <a>|</a>
-              <router-link :to="{path: 'login', query: {type:'reg', is_forget: 'log-reg'}}">注册</router-link>
+              <a @click="goLogin('reg')">注册</a>
+              <!-- <router-link :to="{path: 'login', query: {type:'reg'}}">注册</router-link> -->
             </div>
             <HeadName v-if="this.token"></HeadName>
           </div>
@@ -97,7 +99,8 @@ export default {
       var _this = this
       // var socket = io('http://ycapi.youcaiwx.com:2120')
       // var socket = io('http://apisocket.youcaiwx.com:2120')
-      var socket = io('https://youcaiwx.cn:2120')
+      // var socket = io('https://youcaiwx.cn:2120')
+      var socket = io('//47.93.190.198:2120')
       // var socket = io(config.baseUrl.pro + ':2120')
       socket.on('connect', function () {
         socket.emit('login', _this.user_id)
@@ -118,6 +121,15 @@ export default {
     },
     goIndex () {
       this.$router.push('/')
+    },
+    // 登录
+    goLogin (type) {
+      this.$router.replace({ path: '/login',
+        query: {
+          ...this.$route.query,
+          type: type
+        }
+      })
     },
     // 学习中心
     goLearning () {
