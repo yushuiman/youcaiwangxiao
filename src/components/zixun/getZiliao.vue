@@ -32,7 +32,7 @@ export default {
     // 获取资料
     subDataAsk () {
       const regMobile = /^[1]([3-9])[0-9]{9}$/
-      const regEmail = /^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/
+      const regEmail = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/
       if (this.user_name === '' || this.mobile === '' || this.email === '') {
         this.$Message.error('姓名，电话，邮箱不能为空～')
         return
@@ -61,7 +61,7 @@ export default {
           this.email = ''
           this.$Message.success('收集成功')
         } else {
-          this.$Message.error(res.msg)
+          this.$Message.error(res.data)
         }
       })
     }
