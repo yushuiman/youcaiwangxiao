@@ -1,5 +1,5 @@
 <template>
-  <div class='prism-player' :id='playerId' :style='playStyle' @click="playSwitch"></div>
+  <div class='prism-player' :id='playerId' :style='playStyle'></div>
 </template>
 
 <script>
@@ -506,7 +506,7 @@ export default {
     background-size: contain;
   }
   .prism-player .prism-controlbar .prism-controlbar-bg{
-    background:rgba(7,12,18,.15);
+    background:rgba(7,12,18,.3);
   }
   .prism-volume{
     margin-right: 15px!important;
@@ -516,5 +516,11 @@ export default {
   }
   .prism-player .prism-setting-list .prism-setting-cc, .prism-player .prism-setting-list .prism-setting-audio{
     display: none;
+  }
+  .prism-controlbar-bg,.prism-progress,.prism-controlbar{
+    display: none!important;
+  }
+  .prism-player:hover .prism-controlbar-bg, .prism-player:hover .prism-progress, .prism-player:hover .prism-controlbar{
+      display: block!important;
   }
 </style>

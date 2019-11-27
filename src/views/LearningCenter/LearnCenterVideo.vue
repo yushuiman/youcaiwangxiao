@@ -4,6 +4,12 @@
       <div>
         <router-link :to="{ path: '/learning-center-detail', query: { package_id: playCourseInfo.package_id }}">></router-link>
         <span>{{videoCredentials.Title}}</span>
+        <span class="star-collection" @click="courseCollection" v-if="videoCredentials.collect == 2">
+          <Icon type="md-star-outline" style="color: #999999; font-size: 22px; margin-top: -4px;" v-if="videoCredentials.collect == 2"/>收藏
+        </span>
+        <span class="star-collection act" @click="courseCollection" v-if="videoCredentials.collect == 1">
+          <Icon type="md-star" style="color: #F99111; font-size: 22px; margin-top: -4px;" v-if="videoCredentials.collect == 1"/>收藏
+        </span>
       </div>
       <HeadName :showName="false"></HeadName>
     </div>
@@ -37,10 +43,10 @@
       </div>
       <div class="video-info-c" id="left">
         <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="playCourseInfo.VideoId" :playauth="videoCredentials.playAuth"></ali-player>
-        <div class="star-collection" @click="courseCollection(videoCredentials.collect)">
+        <!-- <div class="star-collection" @click="courseCollection(videoCredentials.collect)">
           <Icon type="md-star-outline" style="color: #ffffff;" v-if="videoCredentials.collect == 2"/>
           <Icon type="md-star" style="color: #F99111;" v-if="videoCredentials.collect == 1"/>
-        </div>
+        </div> -->
       </div>
       <div id="resize" class="course-drag" :class="{'course-drag-hide': !flagKc && !flagAnswer && !flagJy}">
         <div class="drag"></div>
@@ -78,7 +84,6 @@ import answer from '@/components/video/answer'
 import HeadName from '@/components/common/HeadName'
 import { videoCredentials, collection, initWS } from '@/api/class'
 import { getVideo } from '@/api/learncenter'
-
 import { mapActions, mapState } from 'vuex'
 
 export default {
@@ -326,9 +331,10 @@ export default {
       this.playtime = v.watch_time
     },
     courseCollection (collectId) { // 1收藏2取消收藏
-      this.videoCredentials.collect = 2
-      if (collectId === 2) {
+      if (this.videoCredentials.collect === 2) {
         this.videoCredentials.collect = 1
+      } else {
+        this.videoCredentials.collect = 2
       }
       collection({
         package_id: this.playCourseInfo.package_id,
@@ -372,6 +378,15 @@ export default {
     span{
       font-size: 16px;
       font-weight:500;
+      &.star-collection{
+        cursor: pointer;
+        font-size: 14px;
+        margin-left: 24px;
+        color: $col999;
+      }
+      &.act{
+        color: #F99111!important;
+      }
     }
     a{
       margin: 0 8px;
@@ -557,14 +572,6 @@ export default {
     .close-icon{
       @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
     }
-  }
-  // 收藏
-  .star-collection{
-    position: absolute;
-    z-index: 10;
-    right: 131px;
-    bottom: 7px;
-    font-size: 30px;
   }
   .course-drag {
     position: relative;

@@ -1,6 +1,10 @@
 <template>
   <div class="zixun-wrap">
-    <img src="../../assets/images/zixun/banner.jpg" alt="" width="100%" height="100">
+    <swiper :options="swiperOptionRec" v-if="zixunBanner.length>0">
+      <swiper-slide class="zixun-slide" v-for="(item, index) in zixunBanner" :key="index">
+        <img :src="item.image_href" alt="">
+      </swiper-slide>
+    </swiper>
     <div class="zx-main w-wrap">
       <keep-alive>
       <div class="zxm-left">
@@ -39,26 +43,47 @@
 </template>
 
 <script>
-import { newsList } from '@/api/zixun'
+import { newsList, zxbanner } from '@/api/zixun'
 import baokaoZhinan from '../../components/zixun/baokaoZhinan'
 import getZiliao from '../../components/zixun/getZiliao'
+import 'swiper/dist/css/swiper.css'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
   data () {
     return {
       limit: 10,
       page: 1,
       total: 10,
-      zixunList: []
+      zixunBanner: [],
+      zixunList: [],
+      swiperOptionRec: {
+        loop: true,
+        autoplay: {
+          delay: 5000,
+          stopOnLastSlide: false
+        }
+      }
     }
   },
   components: {
     baokaoZhinan,
-    getZiliao
+    getZiliao,
+    swiper,
+    swiperSlide
   },
   mounted () {
+    this.getZxbanner() // 资讯banner
     this.getNewsList() // 消息列表
   },
   methods: {
+    getZxbanner () {
+      zxbanner().then((data) => {
+        const res = data.data
+        if (res.code === 200) {
+          this.zixunBanner = res.data
+        }
+      })
+    },
     // 列表
     getNewsList () {
       newsList({
@@ -106,6 +131,11 @@ export default {
     }
     .zxm-right{
       width: 278px;
+    }
+  }
+  .zixun-slide{
+    img{
+      width: 100%;
     }
   }
   .zx-list{

@@ -171,9 +171,10 @@ export default {
         return
       }
       this.getUserInfo().then(() => {
-        this.$router.push({ path: '/order-confirm',
+        window.sessionStorage.setItem('payInfo', JSON.stringify(item))
+        this.$router.push({ path: '/order-pay',
           query: {
-            package_id: item.package_id,
+            trade_number: item.order_num,
             is_live: item.is_live // 1直播订单、2课程订单、3图书订单4积分订单
           }
         })

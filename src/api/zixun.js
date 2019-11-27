@@ -28,3 +28,10 @@ export const dataAsk = (data) => { // 获取资料
     method: 'post'
   })
 }
+export const zxbanner = (data) => { // 资讯banner
+  return axios.request({
+    url: '/web/First/zxbanner',
+    data,
+    method: 'post'
+  })
+}

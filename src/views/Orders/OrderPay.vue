@@ -71,7 +71,8 @@ export default {
       this.getUserInfo().then(() => {
         // 支付宝
         if (this.pay_type === 4) {
-          window.open(config.baseUrl.pro + '/alipay/Pagepay/zfbpay?order_num=' + this.orderInfo.order_num + '&name=' + '优财' + '&price=' + this.orderInfo.pay_price + '&body=' + '')
+          window.location.href = config.baseUrl.pro + '/alipay/Pagepay/zfbpay?order_num=' + this.orderInfo.order_num + '&name=' + '优财' + '&price=' + this.orderInfo.pay_price + '&body='
+          // window.open(config.baseUrl.pro + '/alipay/Pagepay/zfbpay?order_num=' + this.orderInfo.order_num + '&name=' + '优财' + '&price=' + this.orderInfo.pay_price + '&body=' + '')
         }
         // 微信
         if (this.pay_type === 2) {
@@ -84,6 +85,10 @@ export default {
         if (this.pay_type === 8) {
           let tradeTime = this.transformTime()
           let amount = this.orderInfo.pay_price * 100
+          let callback = config.baseUrl.pro + '/personal?order'
+          if (this.is_live === 2) {
+            callback = config.baseUrl.pro + '/personal'
+          }
           let obj = Base64.encode(JSON.stringify({
             version: 'V2.0',
             merchant: '111934986001',
@@ -95,7 +100,7 @@ export default {
             amount: amount + '', // 价格
             currency: 'CNY',
             note: '',
-            callbackUrl: '',
+            callbackUrl: callback,
             notifyUrl: config.baseUrl.pro + '/Jdpay/AsynNotifyAction/execute',
             ip: '10.45.251.153',
             userType: '',
@@ -108,7 +113,8 @@ export default {
             specName: '',
             saveUrl: 'https://wepay.jd.com/jdpay/saveOrder'
           }))
-          window.open('http://ycapi.youcaiwx.com/demo/action/ClientOrder.php?list=' + obj)
+          window.location.href = 'http://ycapi.youcaiwx.com/demo/action/ClientOrder.php?list=' + obj
+          // window.open('http://ycapi.youcaiwx.com/demo/action/ClientOrder.php?list=' + obj)
         }
       })
     },

@@ -1,10 +1,8 @@
 <template>
   <div class="index-wrap">
-    <!-- banner -->
     <div class="banner-wrap">
       <img src="@/assets/images/index/banner.png" alt="">
     </div>
-    <!-- 课程列表 -->
     <ul class="class-wrap w-wrap">
       <li class="class-item class-item01">
         <img class="ci-img" src="@/assets/images/index/undraw_video_call_kxyp.png" alt="">
@@ -50,21 +48,15 @@
         <img class="ci-img" src="@/assets/images/index/undraw_setup_wizard_r6mr.png" alt="">
       </li> -->
     </ul>
-    <!-- cma咨询 -->
+    <img class="cma-title-bg" src="@/assets/images/index/cma-title-bg.png" alt="">
     <div class="cma-consultation">
-      <img src="@/assets/images/index/cma-title-bg.png" alt="">
       <div class="w-wrap clearfix">
         <div class="cma-txt-bg fl">CMA咨询</div>
         <ul class="txt-item fl">
-          <li>了解CMA最新资讯、备考信息、课程信息</li>
-          <li>7月CMA考试费用高吗？考下CMA要多少钱？</li>
-          <li>再续管理会计百年辉煌！美国管理会计师协会新任管理会计总裁发表演讲。</li>
-          <li>火爆异常！70000财务人围观2019中国管理会计实践大会。</li>
-          <li>重要通知：IMA公布6折报考CMA限时优惠活动。</li>
+          <li v-for="(item, index) in newInformationList" :key="index" @click="getNewsDetails(item.news_id)">{{item.title}}</li>
         </ul>
       </div>
     </div>
-    <!-- 合作伙伴 -->
     <div class="partners-wrap">
       <div class="w-wrap">
         <div class="part-tit">
@@ -78,24 +70,20 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { newInformation } from '@/api/index'
 export default {
   data () {
     return {
+      newInformationList: []
     }
   },
-  computed: {
-    ...mapState({
-      token: state => state.user.token,
-      user_id: state => state.user.user_id
-    })
-  },
   mounted () {
+    this.getNewInformation()
   },
   methods: {
     jumpWhere (type) {
       if (type === 1) {
-        window.open('http://ycapi.youcaiwx.com/home/Znten/WK/index.html', '_blank')
+        window.open('http://www.ucfo.com.cn/xczt/', '_blank')
       }
       if (type === 2) {
         window.open('http://ycapi.youcaiwx.com/home/Znten/STK/index.html', '_blank')
@@ -109,6 +97,20 @@ export default {
       if (type === 5) {
 
       }
+    },
+    getNewInformation () {
+      newInformation().then((data) => {
+        const res = data.data
+        this.newInformationList = res.data
+      })
+    },
+    // 详情
+    getNewsDetails (id) {
+      this.$router.push({ path: '/zixun-detail',
+        query: {
+          news_id: id
+        }
+      })
     }
   }
 }
@@ -198,9 +200,13 @@ export default {
     }
   }
   // cma咨询
+  .cma-title-bg{
+    width: 100%;
+    display: block;
+  }
   .cma-consultation{
-    background: #ffffff;
     padding-bottom: 85px;
+    background: $colfff;
     .cma-txt-bg{
       @include whl(272, 210, 192);
       margin-left: 62px;
@@ -215,6 +221,10 @@ export default {
         line-height: 42px;
         color: $col666;
         font-size: $fs16;
+        cursor: pointer;
+        &:hover{
+          color: $col999;
+        }
       }
     }
   }

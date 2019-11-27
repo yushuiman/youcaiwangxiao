@@ -92,7 +92,6 @@
     <div v-if="status == 1">
       <Modal v-model="visible"
         :width="495"
-        :closable=false
         footer-hide
         class="index-active-modal">
         <img :src="image_url" alt="" @click="freeGet">
@@ -102,8 +101,7 @@
 </template>
 <script>
 import likeList from '@/components/class/likeList.vue'
-import { courseList, subjects } from '@/api/class'
-import { thickness } from '@/api/index'
+import { courseList, subjects, thickness } from '@/api/class'
 import { mapState } from 'vuex'
 
 export default {

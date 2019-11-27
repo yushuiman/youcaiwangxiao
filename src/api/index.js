@@ -7,9 +7,9 @@ export const consult = (data) => { // 悬浮窗
     method: 'post'
   })
 }
-export const thickness = (data) => { // 活动弹窗
+export const newInformation = (data) => { // 最新资讯
   return axios.request({
-    url: '/web/Register/thickness',
+    url: '/web/First/newInformation',
     data,
     method: 'post'
   })

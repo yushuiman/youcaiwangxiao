@@ -66,6 +66,7 @@ export default {
           this.learnClockInfo = res.data
           this.personalInfo.is_card = 1
           this.$Message.success('签到' + res.data.num + '次')
+          this.$emit('getPersonalInfo')
         } else {
           this.$Message.error(res.msg)
         }

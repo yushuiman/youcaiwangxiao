@@ -96,3 +96,10 @@ export const collection = (data) => { // 收藏
     method: 'post'
   })
 }
+export const thickness = (data) => { // 活动弹窗
+  return axios.request({
+    url: '/web/Register/thickness',
+    data,
+    method: 'post'
+  })
+}

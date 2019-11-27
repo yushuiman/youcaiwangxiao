@@ -4,6 +4,12 @@
       <div>
         <router-link :to="{ path: '/course-detail', query: { package_id: this.$route.query.package_id }}">></router-link>
         <span>{{videoCredentials.Title}}</span>
+        <span class="star-collection" @click="courseCollection" v-if="videoCredentials.collect == 2">
+          <Icon type="md-star-outline" style="color: #999999; font-size: 22px; margin-top: -4px;" v-if="videoCredentials.collect == 2"/>收藏
+        </span>
+        <span class="star-collection act" @click="courseCollection" v-if="videoCredentials.collect == 1">
+          <Icon type="md-star" style="color: #F99111; font-size: 22px; margin-top: -4px;" v-if="videoCredentials.collect == 1"/>收藏
+        </span>
       </div>
       <HeadName :showName="false"></HeadName>
     </div>
@@ -38,12 +44,10 @@
       <div class="video-info-c" id="left">
         <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
         <div class="try-watch-dialog" v-if="tryWatchFlag">
-          <div @click="goBuy">试看结束去购买</div>
-          <div @click="replay">重新开始</div>
-        </div>
-        <div class="star-collection" @click="courseCollection(videoCredentials.collect)">
-          <Icon type="md-star-outline" style="color: #ffffff;" v-if="videoCredentials.collect == 2"/>
-          <Icon type="md-star" style="color: #F99111;" v-if="videoCredentials.collect == 1"/>
+          <div class="course-tip">
+            <div @click="goBuy">试看结束，请购买</div>
+            <div @click="replay">重新试听</div>
+          </div>
         </div>
       </div>
       <!-- v-if="this.flagKc || this.flagAnswer || this.flagJy" -->
@@ -375,9 +379,11 @@ export default {
       //   this.$Message.error('试听课程，请购买后收藏')
       //   return
       // }
-      this.videoCredentials.collect = 2
-      if (collectId === 2) {
+      // this.videoCredentials.collect = 2
+      if (this.videoCredentials.collect === 2) {
         this.videoCredentials.collect = 1
+      } else {
+        this.videoCredentials.collect = 2
       }
       collection({
         package_id: this.playCourseInfo.package_id,
@@ -427,6 +433,15 @@ export default {
     span{
       font-size: 16px;
       font-weight:500;
+      &.star-collection{
+        cursor: pointer;
+        font-size: 14px;
+        margin-left: 24px;
+        color: $col999;
+      }
+      &.act{
+        color: #F99111!important;
+      }
     }
     a{
       margin: 0 8px;
@@ -614,14 +629,6 @@ export default {
       @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
     }
   }
-  // 收藏
-  .star-collection{
-    position: absolute;
-    z-index: 10;
-    right: 131px;
-    bottom: 7px;
-    font-size: 30px;
-  }
   .try-watch-dialog{
     position: absolute;
     left: 0;
@@ -632,11 +639,15 @@ export default {
     color: #ffffff;
     text-align: center;
     z-index: 333333;
-    div{
-      font-size: 18px;
-      line-height: 30px;
-      &:first-child{
-        margin-top: 15%;
+    display: table;
+    .course-tip{
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      div{
+        font-size: 18px;
+        line-height: 40px;
+        cursor: pointer;
       }
     }
   }

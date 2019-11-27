@@ -32,6 +32,7 @@ const OrderPay = r => require.ensure([], () => r(require('@/views/Orders/OrderPa
 const WechatPay = r => require.ensure([], () => r(require('@/views/Orders/WechatPay')), 'WechatPay')
 const Books = r => require.ensure([], () => r(require('@/views/Books/Books')), 'Books')
 const BooksDetail = r => require.ensure([], () => r(require('@/views/Books/BooksDetail')), 'BooksDetail')
+const bkxy = r => require.ensure([], () => r(require('@/views/Agreement/bkxy')), 'bkxy')
 
 const router = new Router({
   mode: 'history',
@@ -367,6 +368,17 @@ const router = new Router({
         showHeader: true,
         showFooter: true,
         showRightSlider: true
+      }
+    },
+    {
+      path: '/bkxy',
+      name: 'bkxy',
+      component: bkxy,
+      meta: {
+        title: '优财书架',
+        showHeader: false,
+        showFooter: false,
+        showRightSlider: false
       }
     }
   ],

@@ -1,7 +1,7 @@
 <template>
   <div class="user-wrap">
     <!-- 用户信息 -->
-    <user-top :personalInfo="personalInfo" :user_id="user_id" @setBaseInfo="setBaseInfo"></user-top>
+    <user-top :personalInfo="personalInfo" :user_id="user_id" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
     <!-- main -->
     <div class="user-main w-wrap">
       <div class="userm-left" ref="usermLeft">

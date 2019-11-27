@@ -1,7 +1,7 @@
 <template>
   <div class="user-wrap">
     <!-- 用户信息 -->
-    <user-top :user_id="user_id" :personalInfo="personalInfo" @setBaseInfo="setBaseInfo"></user-top>
+    <user-top :user_id="user_id" :personalInfo="personalInfo" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
     <!-- main -->
     <div class="u-news-wrap w-wrap">
       <ul class="tab-list">

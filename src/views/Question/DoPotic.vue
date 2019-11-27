@@ -233,7 +233,7 @@ export default {
           if (topics && topics.length) {
             this.haveTopics = true
             this.topics.map((val, index) => {
-              val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
+              val.showAnalysis = false // 解析默认false，只有做错题的时候true(练习模式)
               val.flag = false // 解析展开收起交互(练习模式)
               val.currenOption = false // 点击当前题，不能重复选择(练习模式)
               val.userOption = ''

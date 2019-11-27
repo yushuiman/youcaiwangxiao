@@ -12,7 +12,7 @@
             <img class="bks-img" :src="item.pc_img" alt="">
             <div class="bks-info">
               <h2 class="bks-name">{{item.name}}<span v-if="item.is_presell == 2">（预售）</span></h2>
-              <p class="bks-teacher">主编：{{item.x}}<span>{{item.pub_company}}</span></p>
+              <p class="bks-teacher">主编：{{item.author}}<span>{{item.pub_company}}</span></p>
               <div class="bks-prices">
                 <span class="original-price">定价：{{item.price}}元</span>
                 <span class="yc-price">优财价：<em>{{item.pay_price}}元</em></span>

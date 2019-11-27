@@ -94,7 +94,7 @@
         </div>
       </div>
       <!-- 练习模式答错才显示解析 -->
-      <div class="resolving" v-if="getQuestion.paper_mode == 1 && item.analysis">
+      <div class="resolving" v-if="getQuestion.paper_mode == 1 && item.showAnalysis">
         <span class="resolve-tit" @click="resolveToggle(item.flag, index)">{{item.flag ? '收起' : '解析'}}<Icon type="ios-arrow-down" :class="{'shouqi': item.flag}"/></span>
         <div class="resolve-detail" v-show="item.flag">
           <p class="right-resolve">
@@ -162,7 +162,7 @@ export default {
         // val.selOption = false // 蓝色状态取消
         val.errorRed = true // 答错当前选项红色
         item.currenErrorRed = true // 答错：右边选项卡对应添加红色未掌握状态
-        item.analysis = true // 答错，解析展示
+        item.showAnalysis = true // 答错，解析展示
         this.$forceUpdate()
       }
       let num = this.topics.filter((v) => { // 已做题数
