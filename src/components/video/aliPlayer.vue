@@ -523,4 +523,7 @@ export default {
   .prism-player:hover .prism-controlbar-bg, .prism-player:hover .prism-progress, .prism-player:hover .prism-controlbar{
       display: block!important;
   }
+  .prism-player .prism-time-display{
+    color: #cccccc;
+  }
 </style>

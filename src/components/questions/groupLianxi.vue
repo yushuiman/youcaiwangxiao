@@ -9,6 +9,13 @@
         <button class="btn-com do-potic-btn">去做题</button>
       </li>
     </ul>
+    <Modal
+        v-model="modal1"
+        title="提示"
+        @on-ok="ok"
+        @on-cancel="cancel">
+        <p class="ts">您已进入模拟考试模式，请随时点击“保存“按钮保存，否则您的做题结果会消失。在完成所有题目后，请点击“交卷”按钮，系统会自动为您评分。谢谢配合！</p>
+    </Modal>
   </div>
 </template>
 
@@ -39,7 +46,9 @@ export default {
         plate_id: this.plate_id,
         num: '', // 默认15道
         paper_type: 1 // 单选1 论述2
-      }
+      },
+      modal1: false,
+      curVal: {}
     }
   },
   mounted () {
@@ -61,9 +70,17 @@ export default {
     },
     // 去做题
     goToPic (v) {
-      this.getPoticData.mock_id = v.mock_id
-      this.getPoticData.paper_type = v.mock_type
+      this.modal1 = true
+      this.curVal = v
+    },
+    ok () {
+      this.modal1 = false
+      this.getPoticData.mock_id = this.curVal.mock_id
+      this.getPoticData.paper_type = this.curVal.mock_type
       this.$router.push({ path: '/dopotic', query: this.getPoticData })
+    },
+    cancel () {
+      this.modal1 = false
     }
   }
 }
@@ -78,5 +95,10 @@ export default {
     align-items: center;
     justify-content: space-between;
     font-size: 18px;
+  }
+  .ts{
+    font-size: 16px;
+    padding: 10px 30px;
+    line-height: 24px;
   }
 </style>

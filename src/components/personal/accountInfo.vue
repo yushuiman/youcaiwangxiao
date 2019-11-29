@@ -232,11 +232,11 @@ export default {
         font-size: 18px;
         line-height: 20px;
         &:nth-child(1){
-          width: 255px;
+          width: 290px;
           padding-right: 10px;
         }
         &:nth-child(2){
-          width: 160px;
+          width: 135px;
         }
         &:nth-child(3){
           width: 158px;

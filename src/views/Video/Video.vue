@@ -187,6 +187,7 @@ export default {
         }
         // 已购买并且视频播放时间大于0 socket
         if (this.playCourseInfo.userstatus === 1 && this.playtime > 0) {
+          console.log(message)
           if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
             initWS(JSON.stringify(message))
           }

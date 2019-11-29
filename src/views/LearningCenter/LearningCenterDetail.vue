@@ -890,13 +890,13 @@ export default {
     &:after{
       position: absolute;
       content: "";
-      bottom: -5px;
+      bottom: -4px;
       left: 2px;
       width: 0;
       height: 0;
       border-left: 6px solid transparent;
       border-right: 6px solid transparent;
-      border-top: 6px solid #FBAC78;
+      border-top: 6px solid #FC7873;
     }
   }
   .dot{

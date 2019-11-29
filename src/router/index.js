@@ -35,7 +35,7 @@ const BooksDetail = r => require.ensure([], () => r(require('@/views/Books/Books
 const bkxy = r => require.ensure([], () => r(require('@/views/Agreement/bkxy')), 'bkxy')
 
 const router = new Router({
-  mode: 'history',
+  // mode: 'history',
   routes: [
     {
       path: '/',
@@ -353,7 +353,7 @@ const router = new Router({
       name: 'books',
       component: Books,
       meta: {
-        title: '优财书架',
+        title: '优财图书馆',
         showHeader: true,
         showFooter: true,
         showRightSlider: true
@@ -364,7 +364,7 @@ const router = new Router({
       name: 'books-detail',
       component: BooksDetail,
       meta: {
-        title: '优财书架',
+        title: '优财图书馆',
         showHeader: true,
         showFooter: true,
         showRightSlider: true

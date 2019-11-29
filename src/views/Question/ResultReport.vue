@@ -289,8 +289,10 @@ export default {
     }
   }
   .rsc-list{
-    padding-top: 20px;
-    margin-left: -10px;
+    padding: 20px 0;
+    margin-left: -8px;
+    height: 410px;
+    overflow: auto;
   }
   .anscard-list{
     li{

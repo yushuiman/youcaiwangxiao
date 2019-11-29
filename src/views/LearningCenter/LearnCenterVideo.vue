@@ -219,8 +219,9 @@ export default {
         }
         // 视频播放时间大于0 socket
         if (this.playtime > 0) {
-          // console.log(JSON.stringify(message))
-          initWS(JSON.stringify(message))
+          if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
+            initWS(JSON.stringify(message))
+          }
         }
       }, 30000)
     },
@@ -359,6 +360,11 @@ export default {
   },
   beforeDestroy () {
     clearInterval(this.socketTimer)
+  },
+  beforeRouteLeave (to, from, next) {
+    this.$refs.aliPlayers.pause()
+    console.log('remove aliplayer')
+    next()
   }
 }
 </script>

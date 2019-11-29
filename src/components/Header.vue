@@ -62,7 +62,7 @@ export default {
         },
         {
           path: 'books',
-          name: '优财书架'
+          name: '优财图书馆'
         }
       ]
     }

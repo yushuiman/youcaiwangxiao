@@ -19,10 +19,14 @@
         </div>
       </div>
     </div>
-    <div class="bks-tab">书籍简介</div>
+    <div class="bks-tab">
+      <span :class="{'cur': tabIdx == 1}" @click="booksTab(1)">书籍简介</span>
+      <span :class="{'cur': tabIdx == 2}" @click="booksTab(2)">书籍目录</span>
+    </div>
     <div class="books-main w-wrap">
       <div class="books-lf">
-        <img :src="booksDetail.introduce" alt="" width="100%">
+        <img v-if="tabIdx == 1" :src="booksDetail.introduce" alt="" width="100%">
+        <img v-if="tabIdx == 2" :src="booksDetail.catalogue" alt="" width="100%">
       </div>
       <div class="books-rt">
         <!-- 学员心声 -->
@@ -44,7 +48,8 @@ export default {
     return {
       books_id: this.$route.query.books_id,
       booksDetail: {},
-      consultInfo: JSON.parse(window.sessionStorage.getItem('consultInfo')) || {} // 在线咨询
+      consultInfo: JSON.parse(window.sessionStorage.getItem('consultInfo')) || {}, // 在线咨询
+      tabIdx: 1
     }
   },
   components: {
@@ -74,6 +79,9 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    booksTab (idx) {
+      this.tabIdx = idx
     },
     // 订单入库
     buyPay () {
@@ -186,8 +194,14 @@ export default {
     }
   }
   .bks-tab{
-    padding: 0 24px;
     font-size: 16px;
+    span{
+      padding: 0 21px;
+      cursor: pointer;
+      &.cur{
+        color: $blueColor;
+      }
+    }
   }
   .books-main{
     display: flex;
