@@ -474,9 +474,6 @@ export default {
   }
   .prism-player .prism-big-play-btn:hover{
   }
-  .outter{
-    /* display: none!important; */
-  }
   .prism-player .prism-big-play-btn .outter{
     border: 0;
     background: none;
