@@ -36,7 +36,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  inject: ['reload'],
+  // inject: ['reload'],
   props: {
     showBox: {
       type: String,
@@ -90,7 +90,8 @@ export default {
           video_id: v.video_id
         }
       })
-      this.reload()
+      window.location.reload()
+      // this.reload()
     },
     jiangyiDown (url) {
       if (!url) {
