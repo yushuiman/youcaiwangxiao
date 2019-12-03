@@ -502,9 +502,6 @@ export default {
     background: url('../../assets/images/video/volumemutehover.png') no-repeat;
     background-size: contain;
   }
-  .prism-player .prism-controlbar .prism-controlbar-bg{
-    /* background:rgba(7,12,18,.3); */
-  }
   .prism-volume{
     margin-right: 15px!important;
   }

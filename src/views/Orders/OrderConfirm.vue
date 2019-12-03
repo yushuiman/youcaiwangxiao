@@ -581,14 +581,16 @@ export default {
           this.payInfo = res.data
           this.payInfo.pay_price = this.totalPrice
           window.sessionStorage.setItem('payInfo', JSON.stringify(this.payInfo))
-          let routeUrl = this.$router.resolve({
+          const tempPage = window.open('', '_blank')
+          const routerdata = this.$router.resolve({
             path: '/order-pay',
             query: {
               trade_number: this.payInfo.order_num,
               is_live: this.is_live
             }
           })
-          window.open(routeUrl.href, '_blank')
+          const newhref = routerdata.href
+          tempPage.location = newhref
           this.visible = true
         } else {
           this.$Message.error(res.msg)
