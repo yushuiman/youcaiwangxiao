@@ -1,6 +1,7 @@
 import axios from 'axios'
 import store from '../store/'
 import router from '../router/'
+
 import {
 // getToken
 // clearLoginInfo
@@ -45,6 +46,9 @@ class HttpRequest {
     instance.interceptors.response.use(res => {
       this.distroy(url)
       const { data, code } = res
+      if (res.data.code === 401) {
+        res.data.msg = '用户信息已过期，请登录~'
+      }
       if (res.data.code === 401 || res.data.code === 403 || res.data.code === 406) {
         window.localStorage.removeItem('YCWXTOKEN')
         store.commit('setToken', '')

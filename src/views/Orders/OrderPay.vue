@@ -60,7 +60,6 @@ export default {
     })
   },
   mounted () {
-    console.log(this.token)
   },
   methods: {
     ...mapActions([

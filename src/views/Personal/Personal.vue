@@ -14,7 +14,7 @@
       <div class="userm-right">
         <course-info v-if="clkTit == 'course'" :user_id="user_id"></course-info>
         <questions-info v-if="clkTit == 'questions'" :user_id="user_id"></questions-info>
-        <zhibo-info v-if="clkTit == 'zhibo'" :user_id="user_id"></zhibo-info>
+        <!-- <zhibo-info v-if="clkTit == 'zhibo'" :user_id="user_id"></zhibo-info> -->
         <answer-info v-if="clkTit == 'answer'" :user_id="user_id"></answer-info>
         <order-info v-if="clkTit == 'order'" :user_id="user_id"></order-info>
         <account-info v-if="clkTit == 'account'" :user_id="user_id"></account-info>
@@ -27,7 +27,7 @@
 <script>
 import courseInfo from '../../components/personal/courseInfo'
 import questionsInfo from '../../components/personal/questionsInfo'
-import zhiboInfo from '../../components/personal/zhiboInfo'
+// import zhiboInfo from '../../components/personal/zhiboInfo'
 import answerInfo from '../../components/personal/answerInfo'
 import orderInfo from '../../components/personal/orderInfo'
 import accountInfo from '../../components/personal/accountInfo'
@@ -78,7 +78,7 @@ export default {
   components: {
     courseInfo,
     questionsInfo,
-    zhiboInfo,
+    // zhiboInfo,
     answerInfo,
     orderInfo,
     accountInfo,

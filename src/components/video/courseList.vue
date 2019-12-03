@@ -16,7 +16,7 @@
             <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key">
               <template slot="title">
                 <span class="sec-name">{{val.section_name}}</span>
-                <!-- <span class="down-load" @click.stop="jiangyiDown(val.handouts)">讲义</span> -->
+                <span class="down-load" @click.stop="jiangyiDown(val.handouts)">讲义</span>
               </template>
               <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
               @click="playVideo(val, v, key, index)">

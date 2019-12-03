@@ -506,7 +506,7 @@ export default {
     background-size: contain;
   }
   .prism-player .prism-controlbar .prism-controlbar-bg{
-    background:rgba(7,12,18,.3);
+    /* background:rgba(7,12,18,.3); */
   }
   .prism-volume{
     margin-right: 15px!important;
