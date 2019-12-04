@@ -73,7 +73,8 @@ import aliPlayer from '@/components/video/aliPlayer'
 import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
 import HeadName from '@/components/common/HeadName'
-import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, collection, initWS } from '@/api/class'
+import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, collection } from '@/api/class'
+import config from '@/config'
 import { mapActions, mapState } from 'vuex'
 
 export default {
@@ -171,25 +172,18 @@ export default {
     ready (instance) {
       // 跳转到上次播放时间
       instance.seek(this.playtime)
+      // 初始化监听一次socket io
+      if (this.playCourseInfo.userstatus === 1) {
+        if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
+          this.socketIo()
+        }
+      }
       // 30秒监听一次socket
       this.socketTimer = setInterval(() => {
-        this.playtime = parseInt(instance.getCurrentTime())
-        var message = {
-          from: 1,
-          user_id: this.user_id,
-          package_id: this.$route.query.package_id,
-          course_id: this.playCourseInfo.course_id,
-          section_id: this.playCourseInfo.section_id,
-          video_id: this.playCourseInfo.video_id,
-          watch_time: this.playtime,
-          video_type: 1, // 视频类型 1视频2直播
-          status: 1 // 播放类型 1课程视频播放2学习中心
-        }
         // 已购买并且视频播放时间大于0 socket
-        if (this.playCourseInfo.userstatus === 1 && this.playtime > 0) {
-          console.log(message)
+        if (this.playCourseInfo.userstatus === 1) {
           if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
-            initWS(JSON.stringify(message))
+            this.socketIo()
           }
         }
       }, 30000)
@@ -206,6 +200,40 @@ export default {
           }
         }, 1000)
       }
+    },
+    socketIo () {
+      this.playtime = parseInt(this.$refs.aliPlayers.getCurrentTime())
+      var message = {
+        user_id: this.user_id,
+        package_id: this.$route.query.package_id,
+        course_id: this.playCourseInfo.course_id,
+        section_id: this.playCourseInfo.section_id,
+        video_id: this.playCourseInfo.video_id,
+        watch_time: this.playtime,
+        video_type: 1, // 视频类型 1视频2直播
+        type: 1 // 播放类型 1课程视频播放2学习中心
+      }
+      console.log(message)
+      var _this = this
+      var socket
+      if (process.env.NODE_ENV === 'production') {
+        socket = io('config.baseUrl.pro')
+      } else {
+        socket = io('https://dest.youcaiwx.cn')
+      }
+      socket.on('connect', function () {
+        socket.emit('success', { username: _this.user_id })
+        console.log('course-video连接成功')
+      })
+      // 公开聊天
+      socket.on('sendMsg', function (msg) {
+        let json = JSON.parse(msg)
+        console.log(json)
+      })
+      socket.emit('sendMsg', {
+        'username': _this.user_id,
+        'msg': message
+      })
     },
     // 提问的时候停止播放
     stopVideo () {

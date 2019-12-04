@@ -46,8 +46,15 @@
           <!-- <p class="right-resolve" v-if="getQuestion.sc == 1">
             <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
           </p> -->
-          <p class="instr-resolve"><span>解析：</span>{{item.analysis}}</p>
-          <img v-if="item.analysisPic" :src="item.analysisPic" alt="">
+          <div class="instr-resolve instr-resolve-tw">
+            <span>解析：</span>
+            <div class="twtw">
+              <p v-if="item.analysis">{{item.analysis}}</p>
+              <img v-if="item.analysisPic" :src="item.analysisPic" alt="">
+              <p v-if="item.analysis_one">{{item.analysis_one}}</p>
+              <img v-if="item.analysis_img_one" :src="item.analysis_img_one" alt="">
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -361,6 +368,17 @@ export default {
           }
         }
       }
+    }
+  }
+  .instr-resolve-tw{
+    font-size: 16px;
+    line-height: 26px;
+    display: flex;
+    .twtw{
+      flex: 1;
+    }
+    img{
+      width: 100%;
     }
   }
   .texta-discuss{

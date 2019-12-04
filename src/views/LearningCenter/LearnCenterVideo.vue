@@ -201,29 +201,58 @@ export default {
     ready (instance) {
       // 跳转到上次播放时间
       instance.seek(this.playtime)
+      // 初始化监听一次socket io
+      if (this.playCourseInfo.userstatus === 1) {
+        if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
+          this.socketIo()
+        }
+      }
       // 30秒监听一次socket
       this.socketTimer = setInterval(() => {
         this.playtime = parseInt(instance.getCurrentTime())
-        var message = {
-          from: 1,
-          user_id: this.user_id,
-          package_id: this.playCourseInfo.package_id,
-          course_id: this.playCourseInfo.course_id,
-          section_id: this.playCourseInfo.section_id,
-          video_id: this.playCourseInfo.video_id,
-          watch_time: this.playtime,
-          video_type: 1, // 视频类型 1视频2直播
-          status: 2, // 播放类型 1课程视频播放2学习中心
-          days: this.playCourseInfo.days,
-          plan_id: this.playCourseInfo.plan_id
-        }
         // 视频播放时间大于0 socket
-        if (this.playtime > 0) {
+        if (this.playCourseInfo.userstatus === 1) {
           if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
-            initWS(JSON.stringify(message))
+            this.socketIo()
           }
         }
       }, 30000)
+    },
+    socketIo () {
+      this.playtime = parseInt(this.$refs.aliPlayers.getCurrentTime())
+      var message = {
+        user_id: this.user_id,
+        package_id: this.$route.query.package_id,
+        course_id: this.playCourseInfo.course_id,
+        section_id: this.playCourseInfo.section_id,
+        video_id: this.playCourseInfo.video_id,
+        watch_time: this.playtime,
+        video_type: 1, // 视频类型 1视频2直播
+        type: 2, // 播放类型 1课程视频播放2学习中心
+        days: this.playCourseInfo.days,
+        plan_id: this.playCourseInfo.plan_id
+      }
+      console.log(message)
+      var _this = this
+      var socket
+      if (process.env.NODE_ENV === 'production') {
+        socket = io('config.baseUrl.pro')
+      } else {
+        socket = io('https://dest.youcaiwx.cn')
+      }
+      socket.on('connect', function () {
+        socket.emit('success', { username: _this.user_id })
+        console.log('learn-video连接成功')
+      })
+      // 公开聊天
+      socket.on('sendMsg', function (msg) {
+        let json = JSON.parse(msg)
+        console.log(json)
+      })
+      socket.emit('sendMsg', {
+        'username': _this.user_id,
+        'msg': message
+      })
     },
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {

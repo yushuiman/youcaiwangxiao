@@ -31,7 +31,6 @@
 <script>
 import HeadName from '../components/common/HeadName'
 import { mapActions, mapState } from 'vuex'
-// import config from '@/config'
 export default {
   data () {
     return {
@@ -97,26 +96,29 @@ export default {
     init () {
       this.getIndexMessage() // 系统消息
       var _this = this
-      // var socket = io('http://ycapi.youcaiwx.com:2120')
-      // var socket = io('http://apisocket.youcaiwx.com:2120')
-      // var socket = io('https://youcaiwx.cn:2120')
-      var socket = io('//47.93.190.198:2120')
-      // var socket = io(config.baseUrl.pro + ':2120')
+      var socket = io('https://dest.youcaiwx.cn')
       socket.on('connect', function () {
-        socket.emit('login', _this.user_id)
+        socket.emit('success', { username: _this.user_id })
+        console.log('connect连接成功')
       })
-      // 后端推送来消息时
-      socket.on('new_msg', function (msg) {
-        let json = JSON.parse(msg)
-        _this.$Notice.info({
-          title: '您有一条新消息',
-          desc: json.title
-        })
-        if (json.type === 'freezeMessage') {
-          _this.handleLogOut()
-          return
+      // 公开聊天
+      socket.on('sendMsg', function (msg) {
+        let data = JSON.parse(msg)
+        if (data.type === 'system') {
+          if (data.msg) {
+            let obj = JSON.parse(data.msg)
+            console.log(obj)
+            _this.$Notice.info({
+              title: '您有一条新消息',
+              desc: obj.value
+            })
+            if (obj.type === 'freezeMessage') {
+              _this.handleLogOut()
+              return
+            }
+            _this.getIndexMessage()
+          }
         }
-        _this.getIndexMessage()
       })
     },
     goIndex () {

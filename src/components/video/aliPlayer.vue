@@ -456,27 +456,38 @@ export default {
     background: url('../../assets/images/video/smallpausehover.png') no-repeat;
     background-size: contain;
   }
-  .prism-player .prism-play-btn,.prism-player .prism-play-btn:hover{
+  /* .prism-player .prism-play-btn,.prism-player .prism-play-btn:hover{
     background: url('../../assets/images/video/play-btn-hover-icon.png') no-repeat;
     background-size: contain;
-  }
+  } */
   .prism-player .prism-big-play-btn{
-    background: url('../../assets/images/video/play-btn-icon.png') no-repeat;
-    background-size: contain;
-    width: 70px;
-    height: 70px;
     top: 50%!important;
     left: 50%!important;
-    margin-top: -35px!important;
-    margin-left: -35px!important;
-    border-radius: 100%;
-    z-index: 112;
+    margin-top: -32px!important;
+    margin-left: -32px!important;
   }
-  .prism-player .prism-big-play-btn:hover{
+  .prism-player .prism-play-btn.playing{
+    background: url('../../assets/images/video/play-stop-m.png') no-repeat;
+    background-size: contain;
+  }
+  .prism-player .prism-setting-btn{
+    background: url('../../assets/images/video/play-set-m.png') no-repeat;
+    background-size: contain;
+  }
+  .prism-player .prism-volume .volume-icon .long-horizontal,.prism-player .prism-volume .volume-icon .short-horizontal{
+    box-shadow: 0 0 1px #000;
+  }
+  .prism-player .prism-fullscreen-btn{
+    background: url('../../assets/images/video/play-screen-m.png') no-repeat;
+    background-size: contain;
   }
   .prism-player .prism-big-play-btn .outter{
     border: 0;
     background: none;
+  }
+  .prism-player .prism-volume .volume-icon{
+    background: url('../../assets/images/video/play-voice-m.png') no-repeat;
+    background-size: contain;
   }
   .prism-player .prism-volume-control{
     background: none;
@@ -512,12 +523,19 @@ export default {
     display: none;
   }
   .prism-controlbar-bg,.prism-progress,.prism-controlbar{
-    display: none!important;
+    /* display: none!important; */
   }
   .prism-player:hover .prism-controlbar-bg, .prism-player:hover .prism-progress, .prism-player:hover .prism-controlbar{
       display: block!important;
   }
-  .prism-player .prism-time-display{
+
+  .prism-player .prism-time-display .current-time, .prism-player .prism-time-display{
     color: #cccccc;
+    text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;
+    -webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;
+    -moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;
+  }
+  .prism-player .prism-time-display .current-time{
+    color: #ffffff;
   }
 </style>
