@@ -30,6 +30,7 @@
 </template>
 <script>
 import HeadName from '../components/common/HeadName'
+import config from '@/config'
 import { mapActions, mapState } from 'vuex'
 export default {
   data () {
@@ -96,7 +97,12 @@ export default {
     init () {
       this.getIndexMessage() // 系统消息
       var _this = this
-      var socket = io('https://dest.youcaiwx.cn')
+      var socket
+      if (process.env.NODE_ENV === 'production') {
+        socket = io(config.baseUrl.pro)
+      } else {
+        socket = io('https://dest.youcaiwx.cn')
+      }
       socket.on('connect', function () {
         socket.emit('success', { username: _this.user_id })
         console.log('connect连接成功')
@@ -107,7 +113,6 @@ export default {
         if (data.type === 'system') {
           if (data.msg) {
             let obj = JSON.parse(data.msg)
-            console.log(obj)
             _this.$Notice.info({
               title: '您有一条新消息',
               desc: obj.value

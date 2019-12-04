@@ -82,8 +82,9 @@ import aliPlayer from '@/components/video/aliPlayer'
 // import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
 import HeadName from '@/components/common/HeadName'
-import { videoCredentials, collection, initWS } from '@/api/class'
+import { videoCredentials, collection } from '@/api/class'
 import { getVideo } from '@/api/learncenter'
+import config from '@/config'
 import { mapActions, mapState } from 'vuex'
 
 export default {
@@ -236,7 +237,7 @@ export default {
       var _this = this
       var socket
       if (process.env.NODE_ENV === 'production') {
-        socket = io('config.baseUrl.pro')
+        socket = io(config.baseUrl.pro)
       } else {
         socket = io('https://dest.youcaiwx.cn')
       }
@@ -391,7 +392,9 @@ export default {
     clearInterval(this.socketTimer)
   },
   beforeRouteLeave (to, from, next) {
-    this.$refs.aliPlayers.pause()
+    if (this.$refs.aliPlayers) {
+      this.$refs.aliPlayers.pause()
+    }
     console.log('remove aliplayer')
     next()
   }
