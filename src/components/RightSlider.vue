@@ -41,7 +41,7 @@
         </div>
       </li>
       <li class="go-top-item">
-        <BackTop :height="0" style="position: static;width:100%;bottom: 0;right:0;"><i class="r-icon"></i></BackTop>
+        <BackTop :height="100" style="padding:12.5px 0;position: static;width:100%;bottom: 0;right:0;"><i class="r-icon"></i></BackTop>
       </li>
     </ul>
   </div>
@@ -154,6 +154,9 @@ export default {
       .r-txt {
         margin-top: 2px;
         line-height: 18px;
+      }
+      &.go-top-item{
+        padding: 0;
       }
     }
   }

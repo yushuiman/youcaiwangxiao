@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length && haveTopics">
+    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length">
       <div class="dptic-wrap-l fl">
         <div ref="fixedTit">
           <Row class="dptic-title">
@@ -99,7 +99,7 @@
         <error-correction v-if="visibleError" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
       </Modal>
     </div>
-    <div class="no-data" v-if="!haveTopics">
+    <div class="no-data" v-if="noDataFlag">
       暂无数据
     </div>
   </div>
@@ -120,7 +120,7 @@ export default {
       visibleError: false, // 纠错show
       txtShow: '',
       topics: [], // 题列表
-      haveTopics: true,
+      noDataFlag: false,
       answer_time: 0,
       timers: null,
       user_s: 0, // 用时秒数
@@ -229,9 +229,9 @@ export default {
           this.total = parseInt(total)
           this.title = title
           this.answer_time = parseInt(res.data.answer_time) * 1000
-          this.haveTopics = false
+          this.noDataFlag = false
           if (topics && topics.length) {
-            this.haveTopics = true
+            this.noDataFlag = true
             this.topics.map((val, index) => {
               val.showAnalysis = false // 解析默认false，只有做错题的时候true(练习模式)
               val.flag = false // 解析展开收起交互(练习模式)
