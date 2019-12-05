@@ -34,8 +34,10 @@
         <i class="r-icon"></i>
         <p class="r-txt">QQ</p>
         <div class="com-show r-qq">
-          <div class="com-btn" @click="goQq(1)">班主任群</div>
-          <div class="com-btn" @click="goQq(2)">CMA群</div>
+          QQ:{{consultInfo.teacher_qq}}
+          <!-- <div class="com-btn"></div> -->
+          <!-- <div class="com-btn" @click="goQq(1)">班主任群</div> -->
+          <!-- <div class="com-btn" @click="goQq(2)">CMA群</div> -->
         </div>
       </li>
       <li class="go-top-item">
@@ -198,7 +200,7 @@ export default {
       top: -22.5px;
     }
     &.r-qq{
-      top: -12px;
+      top: 12px;
     }
     p{
       line-height: 20px;
