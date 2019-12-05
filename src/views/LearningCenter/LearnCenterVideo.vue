@@ -42,7 +42,7 @@
         </ul>
       </div>
       <div class="video-info-c" id="left">
-        <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="playCourseInfo.VideoId" :playauth="videoCredentials.playAuth"></ali-player>
+        <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="playCourseInfo.VideoId" :playauth="videoCredentials.playAuth" :user_id="user_id"></ali-player>
         <!-- <div class="star-collection" @click="courseCollection(videoCredentials.collect)">
           <Icon type="md-star-outline" style="color: #ffffff;" v-if="videoCredentials.collect == 2"/>
           <Icon type="md-star" style="color: #F99111;" v-if="videoCredentials.collect == 1"/>

@@ -1,11 +1,21 @@
 <template>
-  <div class='prism-player' :id='playerId' :style='playStyle'></div>
+  <div class='prism-player' :id='playerId' :style='playStyle'>
+    <div class="shuiyin-wrap">
+      <div class="shuiyin">优财网校{{user_id}}</div>
+      <div class="shuiyin">优财网校{{user_id}}</div>
+      <div class="shuiyin">优财网校{{user_id}}</div>
+      <div class="shuiyin">优财网校{{user_id}}</div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'Aliplayer',
   props: {
+    user_id: {
+      type: Number
+    },
     playStyle: {
       type: String,
       default: ''
@@ -537,5 +547,25 @@ export default {
   }
   .prism-player .prism-time-display .current-time{
     color: #ffffff;
+  }
+  .shuiyin-wrap .shuiyin{
+    position: absolute;
+    left: 10%;
+    top: 25%;
+    transform: rotate(-35deg);
+    color: rgba(200, 200, 200, 0.5);
+    font-weight: bold;
+  }
+  .shuiyin-wrap .shuiyin:nth-child(2){
+    left: 10%;
+    top: 82%;
+  }
+  .shuiyin-wrap .shuiyin:nth-child(3){
+    left: 80%;
+    top: 25%;
+  }
+  .shuiyin-wrap .shuiyin:nth-child(4){
+    left: 82%;
+    top: 82%;
   }
 </style>

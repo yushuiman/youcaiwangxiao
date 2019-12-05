@@ -1,6 +1,6 @@
 <template>
   <div class="do-potic-mian">
-    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length && haveTopics">
+    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length">
       <div class="dptic-wrap-l fl">
         <div ref="fixedTit">
           <Row class="dptic-title">
@@ -29,7 +29,7 @@
               </div>
             </div>
             <ul class="anscard-list clearfix">
-              <li :class="{'blue-bg': v.discuss_useranswer}" v-for="(v, index) in topics" :key="index">{{index+1}}</li>
+              <li :class="{'blue-bg': v.discuss_useranswer}" v-for="(v, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">{{index+1}}</li>
             </ul>
           </div>
           <div class="answer-card" v-else>
@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-    <div class="no-data" v-if="!haveTopics">
+    <div class="no-data" v-if="noDataFlag">
       暂无数据
     </div>
     <Modal
@@ -85,7 +85,7 @@ export default {
       diffRes: parseInt(window.sessionStorage.getItem('diffRes')), // 请求不同的接口
       diffTxt: parseInt(window.sessionStorage.getItem('diffTxt')), // 请求不同的接口
       topics: [],
-      haveTopics: true,
+      noDataFlag: false,
       title: '',
       getQuestion: {
         jiexi: 1,
@@ -112,12 +112,12 @@ export default {
   },
   mounted () {
     if (this.isLoadHttpRequest) {
-      // 0元体验解析 之前没有考虑这么周全，需求一点点增加，不想改变已有的逻辑了
+      // 0元体验解析
       if (this.getQuestion.plate_id === 8 && this.diffRes !== 3) {
         this.getExperienceParsing()
         return
       }
-      // 答题记录做题集(论述题)解析
+      // 个人中心答题记录做题集(论述题)解析
       if (this.diffRes === 0) {
         this.getCheckItem()
         return
@@ -127,7 +127,7 @@ export default {
         this.getErrorParsing()
         return
       }
-      // 答题记录错题集解析，全部和错题
+      // 错题集记录去做题后解析，全部和错题
       if (this.diffRes === 11) {
         this.getErrorParsing2()
         return
@@ -151,7 +151,7 @@ export default {
           this.getExperienceParsing()
           return
         }
-        // 答题记录做题集(论述题)解析
+        // 个人中心答题记录做题集(论述题)解析
         if (this.diffRes === 0) {
           this.getCheckItem()
           return
@@ -161,7 +161,7 @@ export default {
           this.getErrorParsing()
           return
         }
-        // 答题记录错题集解析，全部和错题
+        // 错题集记录去做题后解析，全部和错题
         if (this.diffRes === 11) {
           this.getErrorParsing2()
           return
@@ -214,6 +214,7 @@ export default {
           this.title = res.data.title
           this.answerSts(this.topics)
         } else if (res.code === 405) {
+          this.answerSts(this.topics)
         } else {
           this.$Message.error(res.msg)
         }
@@ -231,6 +232,8 @@ export default {
         if (res.code === 200) {
           this.topics = res.data.topics
           this.title = res.data.title
+          this.answerSts(this.topics)
+        } else if (res.code === 405) {
           this.answerSts(this.topics)
         } else {
           this.$Message.error(res.msg)
@@ -268,6 +271,8 @@ export default {
           this.topics = res.data.topics
           this.title = res.data.title
           this.answerSts(this.topics)
+        } else if (res.code === 405) {
+          this.answerSts(this.topics)
         } else {
           this.$Message.error(res.msg)
         }
@@ -288,8 +293,10 @@ export default {
           this.topics = res.data.topics
           this.title = res.data.title
           this.answerSts(this.topics)
+        } else if (res.code === 405) {
+          this.answerSts(this.topics)
         } else {
-          // this.$Message.error(res.msg)
+          this.$Message.error(res.msg)
         }
       })
     },
@@ -303,6 +310,8 @@ export default {
         if (res.code === 200) {
           this.topics = res.data.topics
           this.title = res.data.title
+          this.answerSts(this.topics)
+        } else if (res.code === 405) {
           this.answerSts(this.topics)
         } else {
           this.$Message.error(res.msg)
@@ -330,9 +339,9 @@ export default {
     },
     // 答题卡状态，问题列表状态（解析，用户答案）
     answerSts (topics) {
-      this.haveTopics = false
+      this.noDataFlag = true
       if (topics && topics.length) {
-        this.haveTopics = true
+        this.noDataFlag = false
         topics.map((val, index) => {
           val.flag = false // 解析展开收起交互
           if (this.$route.query.plate_id === 3) { // 论述题解析不需要下面的逻辑

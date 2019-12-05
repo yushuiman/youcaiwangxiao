@@ -11,7 +11,7 @@
           </li>
         </ul>
       </div>
-      <div class="userm-right">
+      <div class="userm-right" ref="usermRight">
         <course-info v-if="clkTit == 'course'" :user_id="user_id"></course-info>
         <questions-info v-if="clkTit == 'questions'" :user_id="user_id"></questions-info>
         <!-- <zhibo-info v-if="clkTit == 'zhibo'" :user_id="user_id"></zhibo-info> -->
@@ -47,10 +47,10 @@ export default {
           type: 'questions',
           tit: '题库'
         },
-        {
-          type: 'zhibo',
-          tit: '直播'
-        },
+        // {
+        //   type: 'zhibo',
+        //   tit: '直播'
+        // },
         {
           type: 'answer',
           tit: '答疑'
@@ -94,7 +94,7 @@ export default {
         this.getPersonalInfo()
       })
     }
-    window.addEventListener('scroll', this.scrollToTop)
+    // window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
     ...mapActions([
@@ -103,23 +103,19 @@ export default {
     // scrollToTop () {
     //   let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
     //   if (scrollTop > 70) {
-    //     this.$refs.fixedTit.style.position = 'fixed'
-    //     this.$refs.fixedTit.style.top = 50 + 'px'
-    //     this.$refs.fixedTit.style.width = 120 + 'px'
-    //     this.$refs.fixedTit.style.height = 120 + 'px'
-    //     this.$refs.fixedTit.style.marginLeft = 20 + 'px'
     //     this.$refs.usermLeft.style.position = 'fixed'
-    //     this.$refs.usermLeft.style.top = 140 + 'px'
+    //     this.$refs.userTop1.style.position = 'fixed'
+    //     this.$refs.userTop1.style.top = 70 + 'px'
+    //     this.$refs.usermLeft.style.top = 120 + 'px'
+    //     this.$refs.usermLeft.style.width = 120 + 'px'
+    //     this.$refs.usermLeft.style.height = 120 + 'px'
+    //     this.$refs.usermRight.style.marginLeft = 229 + 'px'
+    //     if (this.$refs.usermLeft.style) {
+    //     }
     //   } else {
-    //     if (scrollTop > 0) {
-    //       this.$refs.fixedTit.removeAttribute('style')
-    //       this.$refs.fixedTit.style.position = ''
-    //       this.$refs.fixedTit.style.top = ''
-    //       this.$refs.fixedTit.style.width = 142 + 'px'
-    //       this.$refs.fixedTit.style.height = 142 + 'px'
-    //       this.$refs.fixedTit.style.marginLeft = 0 + 'px'
-    //       this.$refs.usermLeft.style.position = ''
-    //       this.$refs.usermLeft.style.top = 0 + 'px'
+    //     if (this.$refs.usermLeft.style && scrollTop > 0) {
+    //       this.$refs.usermLeft.removeAttribute('style')
+    //       this.$refs.usermRight.removeAttribute('style')
     //     }
     //   }
     // },

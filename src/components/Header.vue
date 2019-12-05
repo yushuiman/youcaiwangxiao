@@ -64,6 +64,10 @@ export default {
           path: 'books',
           name: '优财图书馆'
         }
+        // {
+        //   path: 'followup-ducation',
+        //   name: '后续教育'
+        // }
       ]
     }
   },

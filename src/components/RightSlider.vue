@@ -26,8 +26,8 @@
         <p class="t-weixin r-txt">微信</p>
         <div class="com-show r-weixin">
           <img class="ewm" :src="consultInfo.wx_code" alt="">
-          <p>关注优财网校</p>
-          <p>获得CMA最新咨询</p>
+          <!-- <p>关注优财网校</p>
+          <p>获得CMA最新咨询</p> -->
         </div>
       </li>
       <li class="qq-item">
@@ -195,7 +195,7 @@ export default {
       top: 9.5px;
     }
     &.r-weixin{
-      top: -42.5px;
+      top: -22.5px;
     }
     &.r-qq{
       top: -12px;

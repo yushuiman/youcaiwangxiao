@@ -143,7 +143,7 @@ export default {
       if (item.state === 3) { // 论述题是查看解析
         window.sessionStorage.setItem('diffRes', 0) // 区分不同接口请求
         window.sessionStorage.setItem('diffTxt', 0) // 区分查看报告按钮，返回个人中心
-        this.$router.push({ path: 'analysis',
+        this.$router.push({ path: '/analysis',
           query: {
             paper_id: item.id, // 试卷id(阶段，论述才有)
             plate_id: item.plate_id, // 板块

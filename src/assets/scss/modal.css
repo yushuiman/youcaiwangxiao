@@ -44,3 +44,7 @@
     right: 20px;
     top: 20px;
 }
+.ivu-spin-fix{
+    position: fixed;
+    background: rgba(255,255,255,.6);
+}

@@ -32,7 +32,8 @@ const OrderPay = r => require.ensure([], () => r(require('@/views/Orders/OrderPa
 const WechatPay = r => require.ensure([], () => r(require('@/views/Orders/WechatPay')), 'WechatPay')
 const Books = r => require.ensure([], () => r(require('@/views/Books/Books')), 'Books')
 const BooksDetail = r => require.ensure([], () => r(require('@/views/Books/BooksDetail')), 'BooksDetail')
-const bkxy = r => require.ensure([], () => r(require('@/views/Agreement/bkxy')), 'bkxy')
+const agreementBuy = r => require.ensure([], () => r(require('@/views/Agreement/agreement-buy')), 'agreementBuy')
+const FollowupEducation = r => require.ensure([], () => r(require('@/views/FollowupEducation/index')), 'FollowupEducation')
 
 const router = new Router({
   // mode: 'history',
@@ -371,14 +372,25 @@ const router = new Router({
       }
     },
     {
-      path: '/bkxy',
-      name: 'bkxy',
-      component: bkxy,
+      path: '/agreement-buy',
+      name: 'agreement-buy',
+      component: agreementBuy,
       meta: {
-        title: '优财书架',
+        title: '优财图书馆',
         showHeader: false,
         showFooter: false,
         showRightSlider: false
+      }
+    },
+    {
+      path: '/followup-ducation',
+      name: 'followup-ducation',
+      component: FollowupEducation,
+      meta: {
+        title: '后续教育',
+        showHeader: true,
+        showFooter: true,
+        showRightSlider: true
       }
     }
   ],

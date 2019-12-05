@@ -42,7 +42,7 @@
         </ul>
       </div>
       <div class="video-info-c" id="left">
-        <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
+        <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth" :user_id="user_id"></ali-player>
         <div class="try-watch-dialog" v-if="tryWatchFlag">
           <div class="course-tip">
             <div @click="goBuy">试看结束，请购买</div>
