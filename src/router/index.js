@@ -32,7 +32,6 @@ const OrderPay = r => require.ensure([], () => r(require('@/views/Orders/OrderPa
 const WechatPay = r => require.ensure([], () => r(require('@/views/Orders/WechatPay')), 'WechatPay')
 const Books = r => require.ensure([], () => r(require('@/views/Books/Books')), 'Books')
 const BooksDetail = r => require.ensure([], () => r(require('@/views/Books/BooksDetail')), 'BooksDetail')
-const agreementBuy = r => require.ensure([], () => r(require('@/views/Agreement/agreement-buy')), 'agreementBuy')
 const FollowupEducation = r => require.ensure([], () => r(require('@/views/FollowupEducation/index')), 'FollowupEducation')
 
 const router = new Router({
@@ -369,17 +368,6 @@ const router = new Router({
         showHeader: true,
         showFooter: true,
         showRightSlider: true
-      }
-    },
-    {
-      path: '/agreement-buy',
-      name: 'agreement-buy',
-      component: agreementBuy,
-      meta: {
-        title: '优财图书馆',
-        showHeader: false,
-        showFooter: false,
-        showRightSlider: false
       }
     },
     {

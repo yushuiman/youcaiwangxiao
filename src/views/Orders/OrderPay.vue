@@ -112,8 +112,7 @@ export default {
             specName: '',
             saveUrl: 'https://wepay.jd.com/jdpay/saveOrder'
           }))
-          window.location.href = 'http://ycapi.youcaiwx.com/demo/action/ClientOrder.php?list=' + obj
-          // window.open('http://ycapi.youcaiwx.com/demo/action/ClientOrder.php?list=' + obj)
+          window.location.href = config.baseUrl.pro + '/demo/action/ClientOrder.php?list=' + obj
         }
       })
     },

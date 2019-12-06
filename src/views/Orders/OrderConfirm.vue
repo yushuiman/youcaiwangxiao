@@ -73,7 +73,7 @@
     </div>
     <div class="order-confirm-com sub-order">
       <!-- // 1直播订单、2课程订单、3图书订单4积分订单 -->
-      <p><Checkbox v-model="agree" @on-change="agreReadChange"></Checkbox>我已阅读并同意<router-link to="/agreement-buy" target="_blank" tag="a">《 用户付费协议 》</router-link></p>
+      <p><Checkbox v-model="agree" @on-change="agreReadChange"></Checkbox>我已阅读并同意<a href="https://youcaiwx.cn/Agreement/buy.html" target="_blank">《 用户付费协议 》</a></p>
       <div class="total-info">
         <span>共<em>{{buyNum}}</em>件商品</span>
         <span>应付：<i>{{totalPrice}}元</i></span>

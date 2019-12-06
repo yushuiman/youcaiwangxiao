@@ -86,10 +86,10 @@ export default {
         window.open('http://www.ucfo.com.cn/xczt/', '_blank')
       }
       if (type === 2) {
-        window.open('http://ycapi.youcaiwx.com/home/Znten/STK/index.html', '_blank')
+        window.open('https://youcaiwx.cn/Znten/STK/index.html', '_blank')
       }
       if (type === 3) {
-        window.open('http://ycapi.youcaiwx.com/home/Znten/FZK/fzkt.html', '_blank')
+        window.open('https://youcaiwx.cn/Znten/FZK/fzkt.html', '_blank')
       }
       if (type === 4) {
 
