@@ -533,7 +533,7 @@ export default {
     display: none;
   }
   .prism-controlbar-bg,.prism-progress,.prism-controlbar{
-    /* display: none!important; */
+    display: none!important;
   }
   .prism-player:hover .prism-controlbar-bg, .prism-player:hover .prism-progress, .prism-player:hover .prism-controlbar{
       display: block!important;
