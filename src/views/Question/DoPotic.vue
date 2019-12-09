@@ -229,9 +229,9 @@ export default {
           this.total = parseInt(total)
           this.title = title
           this.answer_time = parseInt(res.data.answer_time) * 1000
-          this.noDataFlag = false
+          this.noDataFlag = true
           if (topics && topics.length) {
-            this.noDataFlag = true
+            this.noDataFlag = false
             this.topics.map((val, index) => {
               val.showAnalysis = false // 解析默认false，只有做错题的时候true(练习模式)
               val.flag = false // 解析展开收起交互(练习模式)
