@@ -1,6 +1,5 @@
 <template>
   <div class="app-down-wrap">
-    <!-- :style="{height: h + 'px'}" -->
     <div class="page page-1" id="page-1">
       <div class="app-down-cont w-wrap">
         <div class="adc-left">
@@ -14,19 +13,13 @@
           </ul>
           <div class="down-info">
             <div class="dw-left">
-              <img src="../../assets/images/global/ios-ewm.png" alt="">
-              <p>iPhone扫码直接下载</p>
               <a href="https://apps.apple.com/cn/app/%E4%BC%98%E8%B4%A2%E7%BD%91%E6%A0%A1cma/id1475878960"><i class="ios"></i><span>App Store</span></a>
+              <a href="https://sj.qq.com/myapp/detail.htm?apkName=com.ucfo.youcaiwx" target="_blank"><i class="android"></i><span>Android</span></a>
             </div>
-            <div class="dw-left">
-              <img src="../../assets/images/global/android-ewm.png" alt="">
-              <p>Android扫码直接下载</p>
-              <a href="http://ycapi.youcaiwx.com/apk/1.0.1.apk"><i class="android"></i><span>Android</span></a>
-            </div>
-            <!-- <div class="dw-right">
+            <div class="dw-right">
               <img src="../../assets/images/global/ewm-icon.png" alt="">
               <p>微信扫描二维码直接下载</p>
-            </div> -->
+            </div>
           </div>
         </div>
         <img class="adc-right" src="../../assets/images/app/page-iphone-1.png" alt="">
@@ -94,30 +87,14 @@
         </div>
         <div class="down-info">
           <div class="dw-left">
-            <img src="../../assets/images/global/ios-ewm.png" alt="">
-            <p>iPhone扫码直接下载</p>
-            <a href="https://apps.apple.com/cn/app/%E4%BC%98%E8%B4%A2%E7%BD%91%E6%A0%A1cma/id1475878960"><i class="ios"></i><span>App Store</span></a>
-          </div>
-          <div class="dw-left">
-            <img src="../../assets/images/global/android-ewm.png" alt="">
-            <p>Android扫码直接下载</p>
-            <a href="http://ycapi.youcaiwx.com/apk/1.0.1.apk"><i class="android"></i><span>Android</span></a>
-          </div>
-          <!-- <div class="dw-right">
-            <img src="../../assets/images/global/ewm-icon.png" alt="">
-            <p>微信扫描二维码直接下载</p>
-          </div> -->
-        </div>
-        <!-- <div class="down-info">
-          <div class="dw-left">
-            <a @click="downIos('ios')"><i class="android"></i><span>App Store</span></a>
-            <a @click="downIos('android')"><i class="ios"></i><span>Android</span></a>
+            <a @click="downIos('ios')"><i class="ios"></i><span>App Store</span></a>
+            <a @click="downIos('android')"><i class="android"></i><span>Android</span></a>
           </div>
           <div class="dw-right">
             <img src="../../assets/images/global/ewm-icon.png" alt="">
             <p>微信扫描二维码直接下载</p>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>
@@ -136,10 +113,10 @@ export default {
   methods: {
     downIos (type) {
       if (type === 'ios') {
-        window.open('https://apps.apple.com/cn/app/id1322877623', '_blank')
+        window.open('https://apps.apple.com/cn/app/%E4%BC%98%E8%B4%A2%E7%BD%91%E6%A0%A1cma/id1475878960', '_blank')
       }
       if (type === 'android') {
-        window.open('https://android.myapp.com/myapp/detail.htm?apkName=com.ucfo.youcai&ADTAG=mobile', '_blank')
+        window.open('https://sj.qq.com/myapp/detail.htm?apkName=com.ucfo.youcaiwx', '_blank')
       }
     }
   }
@@ -226,9 +203,12 @@ export default {
     text-align: center;
     margin-top: 56px;
   }
+  .down-info{
+    display: flex;
+    // align-items: center;
+    margin-top: 76px;
+  }
   .dw-left{
-    margin: 10px;
-    display: inline-block;
     a{
       padding: 0 18px;
       height:40px;
@@ -238,10 +218,7 @@ export default {
       font-size: 18px;
       color: #ffffff;
       display: block;
-      margin-bottom: 22px;
-      &:last-child{
-        margin-bottom: 0;
-      }
+      margin-top: 28px;
       i{
         @include bg-img(18, 22, '../../assets/images/app/android.png');
         vertical-align: middle;
@@ -256,15 +233,6 @@ export default {
         display: inline-block;
         text-align: center;
       }
-    }
-    img{
-      width: 140px;
-      height: 140px;
-    }
-    p{
-      margin-bottom: 10px;
-      color: $col999;
-      font-size: 12px;
     }
   }
   .dw-right{
@@ -329,7 +297,7 @@ export default {
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    // align-items: center;
     .adc-left,.down-info,.str-list{
       padding: 0;
     }
@@ -340,7 +308,7 @@ export default {
       padding-left: 10%;
     }
     .down-info{
-      margin: 0;
+      margin-top: 27px;
     }
   }
 </style>
