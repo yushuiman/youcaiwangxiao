@@ -82,7 +82,7 @@ import aliPlayer from '@/components/video/aliPlayer'
 // import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
 import HeadName from '@/components/common/HeadName'
-import { videoCredentials, collection } from '@/api/class'
+import { videoCredentials, collection, firstSocket } from '@/api/class'
 import { getVideo } from '@/api/learncenter'
 import config from '@/config'
 import { mapActions, mapState } from 'vuex'
@@ -205,7 +205,8 @@ export default {
       // 初始化监听一次socket io
       if (this.playCourseInfo.userstatus === 1) {
         if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
-          this.socketIo()
+          // this.socketIo()
+          this.subFirstSocket()
         }
       }
       // 30秒监听一次socket
@@ -219,6 +220,24 @@ export default {
         }
       }, 30000)
     },
+    // 首次socket
+    subFirstSocket () {
+      firstSocket({
+        user_id: this.user_id,
+        package_id: this.$route.query.package_id,
+        course_id: this.playCourseInfo.course_id,
+        section_id: this.playCourseInfo.section_id,
+        video_id: this.playCourseInfo.video_id,
+        watch_time: this.playtime,
+        video_type: 1, // 视频类型 1视频2直播
+        status: 2, // 播放类型 1课程视频播放2学习中心
+        days: this.playCourseInfo.days,
+        plan_id: this.playCourseInfo.plan_id
+      }).then((data) => {
+        console.log(data)
+      })
+    },
+    // 每30秒一次
     socketIo () {
       this.playtime = parseInt(this.$refs.aliPlayers.getCurrentTime())
       var message = {

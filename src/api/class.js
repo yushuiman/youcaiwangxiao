@@ -103,3 +103,10 @@ export const thickness = (data) => { // 活动弹窗
     method: 'post'
   })
 }
+export const firstSocket = (data) => { // socket首次
+  return axios.request({
+    url: '/apps/Course/firstSocket',
+    data,
+    method: 'post'
+  })
+}
