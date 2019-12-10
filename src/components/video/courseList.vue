@@ -90,7 +90,7 @@ export default {
         }
       })
       window.location.reload()
-      var anchor = this.$el.querySelector('#showBox' + key + '' + index)
+      let anchor = this.$el.querySelector('#showBox' + key + '' + index)
       window.sessionStorage.setItem('ofH', anchor.offsetTop)
     },
     jiangyiDown (url) {

@@ -257,7 +257,9 @@ export default {
     if (window.Aliplayer !== undefined) {
       // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
       this.scriptTagStatus = 2
-      this.initAliplayer()
+      window.onload = function () {
+        this.initAliplayer()
+      }
     } else {
       // 如果全局对象不存在，说明编辑器代码还没有加载完成，需要加载编辑器代码
       this.insertScriptTag()
@@ -341,8 +343,17 @@ export default {
           _this.instance.on('snapshoted', () => {
             this.$emit('snapshoted', _this.instance)
           })
+          _this.instance.on('dispose', () => {
+            this.$emit('dispose', _this.instance)
+          })
         })
       }
+    },
+    /**
+       * 销毁
+       */
+    dispose: function () {
+      this.instance.dispose()
     },
     /**
        * 播放视频
