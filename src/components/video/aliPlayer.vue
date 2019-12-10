@@ -21,7 +21,6 @@ export default {
       default: ''
     },
     aliplayerSdkPath: {
-      // Aliplayer 代码的路径
       type: String,
       default: 'https://g.alicdn.com/de/prismplayer/2.8.2/aliplayer-min.js'
     },
@@ -47,7 +46,7 @@ export default {
     },
     controlBarVisibility: {
       type: String,
-      default: 'always'
+      default: 'hover'
     },
     useH5Prism: {
       type: Boolean,
@@ -258,9 +257,7 @@ export default {
     if (window.Aliplayer !== undefined) {
       // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
       this.scriptTagStatus = 2
-      window.onload = function () {
-        this.initAliplayer()
-      }
+      this.initAliplayer()
     } else {
       // 如果全局对象不存在，说明编辑器代码还没有加载完成，需要加载编辑器代码
       this.insertScriptTag()
@@ -532,13 +529,6 @@ export default {
   .prism-player .prism-setting-list .prism-setting-cc, .prism-player .prism-setting-list .prism-setting-audio{
     display: none;
   }
-  .prism-controlbar-bg,.prism-progress,.prism-controlbar{
-    display: none!important;
-  }
-  .prism-player:hover .prism-controlbar-bg, .prism-player:hover .prism-progress, .prism-player:hover .prism-controlbar{
-      display: block!important;
-  }
-
   .prism-player .prism-time-display .current-time, .prism-player .prism-time-display{
     color: #cccccc;
     text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;

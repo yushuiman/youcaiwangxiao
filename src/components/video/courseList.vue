@@ -1,34 +1,34 @@
 <template>
   <keep-alive>
-  <div class="rightCourseList">
-    <div class="close-box" @click="closeModel()">
-      <i class="close-icon"></i>
+    <div class="rightCourseList" id="rightCourseList">
+      <div class="close-box" @click="closeModel()">
+        <i class="close-icon"></i>
+      </div>
+      <h1 class="vc-title">章节目录</h1>
+        <el-row class="tac" id="tac">
+          <el-col :span="24">
+            <el-menu
+              :default-active="openMenu"
+              class="el-menu-vertical-demo"
+              background-color="#1D1F21"
+              text-color="#E6E6E6"
+              active-text-color="#F99111">
+              <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key" :ref="'a'+ key" :id="'a'+ key">
+                <template slot="title">
+                  <span class="sec-name">{{val.section_name}}</span>
+                  <span class="down-load" @click.stop="jiangyiDown(val.handouts)">讲义</span>
+                </template>
+                <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
+                @click="playVideo(val, v, key, index)" :id="'showBox'+ (key) + (index)">
+                  <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
+                  <span class="sl">{{v.video_name}}</span>
+                  <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1)}"></i>
+                </el-menu-item>
+              </el-submenu>
+            </el-menu>
+          </el-col>
+        </el-row>
     </div>
-    <h1 class="vc-title">章节目录</h1>
-      <el-row class="tac">
-        <el-col :span="24">
-          <el-menu
-            :default-active="openMenu"
-            class="el-menu-vertical-demo"
-            background-color="#1D1F21"
-            text-color="#E6E6E6"
-            active-text-color="#F99111">
-            <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key">
-              <template slot="title">
-                <span class="sec-name">{{val.section_name}}</span>
-                <span class="down-load" @click.stop="jiangyiDown(val.handouts)">讲义</span>
-              </template>
-              <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
-              @click="playVideo(val, v, key, index)">
-                <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
-                <span class="sl">{{v.video_name}}</span>
-                <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1)}"></i>
-              </el-menu-item>
-            </el-submenu>
-          </el-menu>
-        </el-col>
-      </el-row>
-  </div>
   </keep-alive>
 </template>
 <script>
@@ -55,14 +55,13 @@ export default {
   },
   data () {
     return {
-      // value2: false,
       courseCatalogInfo: [], // 课程大纲（目录）
-      // courseSections: [], // 课程大纲（章节 video）
       secvCatalogArr: [],
       packageList: [],
       curIndex: '',
       videoListFlag: true,
-      playIdx: 0
+      playIdx: 0,
+      ofH: window.sessionStorage.getItem('ofH')
     }
   },
   computed: {
@@ -91,7 +90,8 @@ export default {
         }
       })
       window.location.reload()
-      // this.reload()
+      var anchor = this.$el.querySelector('#showBox' + key + '' + index)
+      window.sessionStorage.setItem('ofH', anchor.offsetTop)
     },
     jiangyiDown (url) {
       if (!url) {
@@ -111,7 +111,7 @@ export default {
     right: 0;
     bottom: 0;
     width: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
   .vc-title{
     padding-top: 18px;

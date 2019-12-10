@@ -170,6 +170,8 @@ export default {
     },
     // 播放器
     ready (instance) {
+      let ofH = window.sessionStorage.getItem('ofH')
+      document.getElementById('rightCourseList').scrollTop = ofH
       // 跳转到上次播放时间
       instance.seek(this.playtime)
       // 初始化监听一次socket io
@@ -438,6 +440,7 @@ export default {
   beforeDestroy () {
     clearInterval(this.socketTimer)
     clearInterval(this.tryWatchTimer)
+    window.sessionStorage.removeItem('ofH')
   },
   beforeRouteLeave (to, from, next) {
     if (this.$refs.aliPlayers) {
