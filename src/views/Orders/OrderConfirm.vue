@@ -545,12 +545,6 @@ export default {
     // 提交订单
     async subAddOrder () {
       await this.getUserInfo()
-      this.$router.push({ path: '/order-confirm',
-        query: {
-          ...this.$route.query,
-          call_back: 'order-confirm'
-        }
-      })
       if (!this.agree) {
         this.$Message.error('请阅读并同意用户付费协议')
         return
@@ -559,6 +553,7 @@ export default {
         this.$Message.error('请选择收货地址')
         return
       }
+      const tempPage = window.open('', '_blank')
       addOrder({
         user_id: this.user_id,
         package_id: this.package_id, // 课程套餐id或者直播id
@@ -581,7 +576,6 @@ export default {
           this.payInfo = res.data
           this.payInfo.pay_price = this.totalPrice
           window.sessionStorage.setItem('payInfo', JSON.stringify(this.payInfo))
-          const tempPage = window.open('', '_blank')
           const routerdata = this.$router.resolve({
             path: '/order-pay',
             query: {
