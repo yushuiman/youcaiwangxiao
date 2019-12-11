@@ -205,8 +205,8 @@ export default {
       // 初始化监听一次socket io
       if (this.playCourseInfo.userstatus === 1) {
         if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
-          // this.socketIo()
-          this.subFirstSocket()
+          this.socketIo()
+          // this.subFirstSocket()
         }
       }
       // 30秒监听一次socket

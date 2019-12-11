@@ -45,7 +45,8 @@
         <span class="curse-price">{{packages.price}}元</span>
       </div>
     </div>
-    <div class="order-confirm-com make-bill">
+    <!-- 课程有发票 书没有 -->
+    <div class="order-confirm-com make-bill" v-if="is_live == 2">
       <h2>发票信息<span>开企业抬头发票须填写纳税人识别号，以免影响报销</span></h2>
       <div class="need-bill">
         <RadioGroup v-model="bill" @on-change="onBillChange">
