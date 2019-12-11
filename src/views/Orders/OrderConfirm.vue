@@ -185,6 +185,7 @@
 import payModal from '@/components/orders/payModal.vue'
 import { showOrder, addOrder, availableCoupon } from '@/api/order'
 import { editAddress, addAddress } from '@/api/personal'
+import { Encrypt } from '@/libs/crypto'
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -544,6 +545,7 @@ export default {
     },
     // 提交订单
     async subAddOrder () {
+      const tempPage = window.open('', '_blank')
       await this.getUserInfo()
       if (!this.agree) {
         this.$Message.error('请阅读并同意用户付费协议')
@@ -553,7 +555,6 @@ export default {
         this.$Message.error('请选择收货地址')
         return
       }
-      const tempPage = window.open('', '_blank')
       addOrder({
         user_id: this.user_id,
         package_id: this.package_id, // 课程套餐id或者直播id
@@ -575,12 +576,13 @@ export default {
         if (res.code === 200) {
           this.payInfo = res.data
           this.payInfo.pay_price = this.totalPrice
-          window.sessionStorage.setItem('payInfo', JSON.stringify(this.payInfo))
           const routerdata = this.$router.resolve({
             path: '/order-pay',
             query: {
               trade_number: this.payInfo.order_num,
-              is_live: this.is_live
+              is_live: this.is_live,
+              pay_price: Encrypt(this.totalPrice),
+              name: Encrypt(this.payInfo.name)
             }
           })
           const newhref = routerdata.href

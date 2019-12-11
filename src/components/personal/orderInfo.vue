@@ -71,6 +71,7 @@
 
 <script>
 import { myOrder, alreadyOrderlist, cancelOrder } from '@/api/personal'
+import { Encrypt } from '@/libs/crypto'
 import { mapState, mapActions } from 'vuex'
 export default {
   props: ['user_id'],
@@ -171,11 +172,12 @@ export default {
         return
       }
       this.getUserInfo().then(() => {
-        window.sessionStorage.setItem('payInfo', JSON.stringify(item))
         this.$router.push({ path: '/order-pay',
           query: {
             trade_number: item.order_num,
-            is_live: item.is_live // 1直播订单、2课程订单、3图书订单4积分订单
+            is_live: item.is_live, // 1直播订单、2课程订单、3图书订单4积分订单
+            pay_price: Encrypt(item.pay_price),
+            name: Encrypt(item.name)
           }
         })
       })

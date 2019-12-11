@@ -2,12 +2,12 @@
   <div class="order-pay-wrap w-wrap">
     <div class="orpay-info">
       <div class="orpay-top">
-        <p class="p1"><span>订单提交成功，请尽快支付～</span><em>订单金额：¥{{orderInfo.pay_price}}</em></p>
+        <p class="p1"><span>订单提交成功，请尽快支付～</span><em>订单金额：¥{{pay_price}}</em></p>
         <p class="p2">请在24小时内完成支付，超时后将取消订单</p>
       </div>
       <div class="orpay-bt">
-        <p class="p3"><span>订单编号：</span>{{orderInfo.order_num}}</p>
-        <p class="p4"><span>商品名称：</span>{{orderInfo.name}}</p>
+        <p class="p3"><span>订单编号：</span>{{order_num}}</p>
+        <p class="p4"><span>商品名称：</span>{{name}}</p>
       </div>
     </div>
     <div class="orpay-way-info">
@@ -33,7 +33,7 @@
         </li>
       </ul>
       <div class="orpay-cashier">
-        <p>应付金额：<span>¥{{orderInfo.pay_price}}</span></p>
+        <p>应付金额：<span>¥{{pay_price}}</span></p>
         <button @click="subPayOrder">立即支付</button>
       </div>
     </div>
@@ -43,12 +43,15 @@
 <script>
 import config from '@/config'
 import { mapState, mapActions } from 'vuex'
+import { Decrypt } from '@/libs/crypto'
 let Base64 = require('js-base64').Base64
 export default {
   data () {
     return {
       orderInfo: JSON.parse(window.sessionStorage.getItem('payInfo')),
       pay_type: 4, // 1银联2微信3余额4支付宝5后台6积分越换
+      name: Decrypt(this.$route.query.name), // 订单名称
+      pay_price: Decrypt(this.$route.query.pay_price), // 订单金额
       order_num: this.$route.query.trade_number, // 订单号
       is_live: this.$route.query.is_live // 1直播订单、2课程订单、3图书订单4积分订单
     }
@@ -70,8 +73,8 @@ export default {
       this.getUserInfo().then(() => {
         // 支付宝
         if (this.pay_type === 4) {
-          window.location.href = config.baseUrl.pro + '/alipay/Pagepay/zfbpay?order_num=' + this.orderInfo.order_num + '&name=' + '优财' + '&price=' + this.orderInfo.pay_price + '&body='
-          // window.open(config.baseUrl.pro + '/alipay/Pagepay/zfbpay?order_num=' + this.orderInfo.order_num + '&name=' + '优财' + '&price=' + this.orderInfo.pay_price + '&body=' + '')
+          window.location.href = config.baseUrl.pro + '/alipay/Pagepay/zfbpay?order_num=' + this.order_num + '&name=' + '优财' + '&price=' + this.pay_price + '&body='
+          // window.open(config.baseUrl.pro + '/alipay/Pagepay/zfbpay?order_num=' + this.order_num + '&name=' + '优财' + '&price=' + this.pay_price + '&body=' + '')
         }
         // 微信
         if (this.pay_type === 2) {
@@ -83,7 +86,7 @@ export default {
         // 京东
         if (this.pay_type === 8) {
           let tradeTime = this.transformTime()
-          let amount = this.orderInfo.pay_price * 100
+          let amount = this.pay_price * 100
           let callback = config.baseUrl.pro + '/personal?order'
           if (this.is_live === 2) {
             callback = config.baseUrl.pro + '/personal'
@@ -92,8 +95,8 @@ export default {
             version: 'V2.0',
             merchant: '111934986001',
             device: '111',
-            tradeNum: this.orderInfo.order_num + '',
-            tradeName: this.orderInfo.order_num + '',
+            tradeNum: this.order_num + '',
+            tradeName: this.order_num + '',
             tradeDesc: '',
             tradeTime: tradeTime,
             amount: amount + '', // 价格
@@ -135,7 +138,7 @@ export default {
     }
   }
 }
-</script>n
+</script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
