@@ -575,12 +575,13 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.payInfo = res.data
-          this.payInfo.pay_price = this.totalPrice
+          // this.payInfo.pay_price = this.totalPrice
           const routerdata = this.$router.resolve({
             path: '/order-pay',
             query: {
               trade_number: this.payInfo.order_num,
               is_live: this.is_live,
+              package_id: this.payInfo.package_id,
               pay_price: Encrypt(this.totalPrice),
               name: Encrypt(this.payInfo.name)
             }

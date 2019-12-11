@@ -43,13 +43,14 @@
 <script>
 import config from '@/config'
 import { mapState, mapActions } from 'vuex'
-import { Decrypt } from '@/libs/crypto'
+import { Encrypt, Decrypt } from '@/libs/crypto'
 let Base64 = require('js-base64').Base64
 export default {
   data () {
     return {
       orderInfo: JSON.parse(window.sessionStorage.getItem('payInfo')),
       pay_type: 4, // 1银联2微信3余额4支付宝5后台6积分越换
+      package_id: this.$route.query.package_id,
       name: Decrypt(this.$route.query.name), // 订单名称
       pay_price: Decrypt(this.$route.query.pay_price), // 订单金额
       order_num: this.$route.query.trade_number, // 订单号
@@ -80,7 +81,7 @@ export default {
         if (this.pay_type === 2) {
           this.$router.push({
             path: '/wechat-pay',
-            query: { trade_number: this.order_num, is_live: this.is_live }
+            query: { package_id: this.package_id, trade_number: this.order_num, is_live: this.is_live, pay_price: Encrypt(this.pay_price) }
           })
         }
         // 京东

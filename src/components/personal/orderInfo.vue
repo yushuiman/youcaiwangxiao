@@ -176,6 +176,7 @@ export default {
           query: {
             trade_number: item.order_num,
             is_live: item.is_live, // 1直播订单、2课程订单、3图书订单4积分订单
+            package_id: item.package_id,
             pay_price: Encrypt(item.pay_price),
             name: Encrypt(item.name)
           }
