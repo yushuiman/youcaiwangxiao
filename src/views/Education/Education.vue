@@ -121,14 +121,11 @@ export default {
     },
     // 课程包列表
     packageDetail (val, item) {
-      this.$router.push({ path: '/detail',
+      this.$router.push({ path: '/education-detail',
         query: {
-          type_id: item.type_id,
-          parent_id: item.parent_id
+          type_id: val.type_id
         }
       })
-      console.log(val)
-      console.log(item)
     }
   }
 }

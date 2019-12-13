@@ -7,6 +7,14 @@ export const deuShuffling = (data) => { // 首页banner
     method: 'post'
   })
 }
+export const deuType = (data) => { // 后续教育分类
+  return axios.request({
+    url: '/web/Education/deuType',
+    data,
+    method: 'post'
+  })
+}
+
 export const previewCourse = (data) => { // 首页课程预告
   return axios.request({
     url: '/web/Education/previewCourse',

@@ -545,8 +545,6 @@ export default {
     },
     // 提交订单
     async subAddOrder () {
-      const tempPage = window.open('', '_blank')
-      await this.getUserInfo()
       if (!this.agree) {
         this.$Message.error('请阅读并同意用户付费协议')
         return
@@ -555,6 +553,8 @@ export default {
         this.$Message.error('请选择收货地址')
         return
       }
+      const tempPage = window.open('', '_blank')
+      await this.getUserInfo()
       addOrder({
         user_id: this.user_id,
         package_id: this.package_id, // 课程套餐id或者直播id

@@ -14,7 +14,7 @@ export default [
     }
   },
   {
-    path: 'education-detail',
+    path: '/education-detail',
     name: 'education-detail',
     component: EducationDetail,
     meta: {
@@ -25,7 +25,7 @@ export default [
     }
   },
   {
-    path: 'learnTips',
+    path: '/learnTips',
     name: 'learnTips',
     component: LearnTips,
     meta: {
