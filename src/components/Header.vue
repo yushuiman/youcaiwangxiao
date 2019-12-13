@@ -63,11 +63,11 @@ export default {
         {
           path: 'books',
           name: '优财图书馆'
+        },
+        {
+          path: 'education',
+          name: '后续教育'
         }
-        // {
-        //   path: 'followup-ducation',
-        //   name: '后续教育'
-        // }
       ]
     }
   },
@@ -100,35 +100,35 @@ export default {
     ]),
     init () {
       this.getIndexMessage() // 系统消息
-      var _this = this
-      var socket
-      if (process.env.NODE_ENV === 'production') {
-        socket = io(config.baseUrl.pro)
-      } else {
-        socket = io('https://dest.youcaiwx.cn')
-      }
-      socket.on('connect', function () {
-        socket.emit('success', { username: _this.user_id })
-        console.log('connect连接成功')
-      })
-      // 公开聊天
-      socket.on('sendMsg', function (msg) {
-        let data = JSON.parse(msg)
-        if (data.type === 'system') {
-          if (data.msg) {
-            let obj = JSON.parse(data.msg)
-            _this.$Notice.info({
-              title: '您有一条新消息',
-              desc: obj.value
-            })
-            if (obj.type === 'freezeMessage') {
-              _this.handleLogOut()
-              return
-            }
-            _this.getIndexMessage()
-          }
-        }
-      })
+      // var _this = this
+      // var socket
+      // if (process.env.NODE_ENV === 'production') {
+      //   socket = io(config.baseUrl.pro)
+      // } else {
+      //   socket = io('https://dest.youcaiwx.cn')
+      // }
+      // socket.on('connect', function () {
+      //   socket.emit('success', { username: _this.user_id })
+      //   console.log('connect连接成功')
+      // })
+      // // 公开聊天
+      // socket.on('sendMsg', function (msg) {
+      //   let data = JSON.parse(msg)
+      //   if (data.type === 'system') {
+      //     if (data.msg) {
+      //       let obj = JSON.parse(data.msg)
+      //       _this.$Notice.info({
+      //         title: '您有一条新消息',
+      //         desc: obj.value
+      //       })
+      //       if (obj.type === 'freezeMessage') {
+      //         _this.handleLogOut()
+      //         return
+      //       }
+      //       _this.getIndexMessage()
+      //     }
+      //   }
+      // })
     },
     goIndex () {
       this.$router.push('/')

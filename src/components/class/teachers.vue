@@ -43,13 +43,6 @@ export default {
   components: {
     swiper,
     swiperSlide
-  },
-  mounted () {
-    this.$nextTick(() => {
-
-    })
-  },
-  methods: {
   }
 }
 </script>

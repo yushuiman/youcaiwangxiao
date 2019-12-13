@@ -100,7 +100,7 @@
           <textarea autofocus v-model.trim="item.discuss_useranswer" class="texta-discuss" placeholder="请填写您的答案" v-on:focus="doPoticDiscuss(item, index)"></textarea>
         </div>
       </div>
-      <!-- 练习模式答错才显示解析 -->
+      <!-- 练习模式答错才显示解析 12.11号改为答对答错都展示解析-->
       <div class="resolving" v-if="getQuestion.paper_mode == 1 && item.showAnalysis">
         <span class="resolve-tit" @click="resolveToggle(item.flag, index)">{{item.flag ? '收起' : '解析'}}<Icon type="ios-arrow-down" :class="{'shouqi': item.flag}"/></span>
         <div class="resolve-detail" v-show="item.flag">
@@ -164,6 +164,7 @@ export default {
         // val.selOption = false // 蓝色状态取消
         val.rightGreen = true // 答对当前选项绿色
         item.currenRightGreen = true // 答对：右边选项卡对应添加绿色已掌握状态
+        item.showAnalysis = true // 答对，解析也展示
         this.$forceUpdate()
       } else {
         // val.selOption = false // 蓝色状态取消

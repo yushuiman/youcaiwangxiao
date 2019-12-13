@@ -7,13 +7,6 @@ export const deuShuffling = (data) => { // 首页banner
     method: 'post'
   })
 }
-export const deuType = (data) => { // 分类
-  return axios.request({
-    url: '/web/Education/deuType',
-    data,
-    method: 'post'
-  })
-}
 export const previewCourse = (data) => { // 首页课程预告
   return axios.request({
     url: '/web/Education/previewCourse',
@@ -60,6 +53,27 @@ export const courseCatalog = (data) => { // 课程目录
 export const videoCredentials = (data) => { // 视频凭证
   return axios.request({
     url: '/web/Education/videoCredentials',
+    data,
+    method: 'post'
+  })
+}
+export const newInformation = (data) => { // 最新资讯
+  return axios.request({
+    url: '/web/Education/newInformation',
+    data,
+    method: 'post'
+  })
+}
+export const tipsType = (data) => { // 学习须知类别
+  return axios.request({
+    url: '/web/Education/tipsType',
+    data,
+    method: 'post'
+  })
+}
+export const tipsList = (data) => { // 学习须知列表
+  return axios.request({
+    url: '/web/Education/tipsList',
     data,
     method: 'post'
   })

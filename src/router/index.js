@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import education from '../router/education'
 
 Vue.use(Router)
 const Home = r => require.ensure([], () => r(require('@/views/Home')), 'Home')
@@ -32,7 +33,6 @@ const OrderPay = r => require.ensure([], () => r(require('@/views/Orders/OrderPa
 const WechatPay = r => require.ensure([], () => r(require('@/views/Orders/WechatPay')), 'WechatPay')
 const Books = r => require.ensure([], () => r(require('@/views/Books/Books')), 'Books')
 const BooksDetail = r => require.ensure([], () => r(require('@/views/Books/BooksDetail')), 'BooksDetail')
-const FollowupEducation = r => require.ensure([], () => r(require('@/views/FollowupEducation/index')), 'FollowupEducation')
 
 const router = new Router({
   // mode: 'history',
@@ -370,17 +370,7 @@ const router = new Router({
         showRightSlider: true
       }
     },
-    {
-      path: '/followup-ducation',
-      name: 'followup-ducation',
-      component: FollowupEducation,
-      meta: {
-        title: '后续教育',
-        showHeader: true,
-        showFooter: true,
-        showRightSlider: true
-      }
-    }
+    ...education
   ],
   scrollBehavior (to, from, savedPosition) {
     return {
