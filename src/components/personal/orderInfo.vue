@@ -31,7 +31,7 @@
           </div>
         </li>
       </ul>
-      <div class="no-data" v-else>
+      <div class="no-data" v-if="noDataFlag">
         暂无数据
       </div>
       <Modal v-model="visible"
@@ -80,6 +80,7 @@ export default {
       visible: false,
       txtArr: ['全部订单', '已支付', '未支付'],
       selIdxOrder: window.sessionStorage.getItem('selIdxOrder') || 0,
+      noDataFlag: false,
       orderList: [], // 订单
       orderAllList: [], // 全部订单
       orderAlearyPayList: [], // 已付款
@@ -119,6 +120,8 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.orderAllList = res.data
+          if (res.data && res.data.length) {
+          }
           this.orderAlearyPayList = res.data.filter((v, i, a) => {
             return v.pay_status === 1
           })
@@ -140,6 +143,9 @@ export default {
       }
       if (parseInt(this.selIdxOrder) === 2) {
         this.orderList = this.orderNoPayList
+      }
+      if (this.orderList.length === 0) {
+        this.noDataFlag = true
       }
     },
     // 查看详情

@@ -17,7 +17,7 @@
         </div>
       </div> -->
     </div>
-    <div class="no-data" v-else>
+    <div class="no-data" v-if="noDataFlag">
       暂无数据
     </div>
   </div>
@@ -35,6 +35,7 @@ export default {
       // txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
       txtArr: ['做题记录', '错题集', '收藏夹'],
       selIdxQuestion: window.sessionStorage.getItem('selIdxQuestion') || 0,
+      noDataFlag: false,
       courseList: [], // 课程列表
       course_id: window.sessionStorage.getItem('course_id') || ''
     }
@@ -63,9 +64,6 @@ export default {
   methods: {
     // tab
     tabClk (v, index) {
-      if (!this.user_id) {
-
-      }
       window.sessionStorage.setItem('selIdxQuestion', index)
       this.selIdxQuestion = index
     },
@@ -76,8 +74,9 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.courseList = res.data
-          if (this.courseList.length) {
-            window.sessionStorage.setItem('course_id', this.course_id || this.courseList[0].course_id)
+          window.sessionStorage.setItem('course_id', this.course_id || this.courseList[0].course_id)
+          if (this.courseList.length === 0) {
+            this.noDataFlag = true
           }
         } else {
           this.$Message.error(res.msg)

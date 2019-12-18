@@ -1215,7 +1215,7 @@ export default {
     border-bottom: 1px solid #E6E6E6;
   }
   .days-item{
-    padding: 15px 26px;
+    margin: 15px 26px;
     text-align: center;
     position: relative;
     cursor: pointer;

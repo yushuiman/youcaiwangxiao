@@ -339,38 +339,38 @@ export default {
     },
     // 答题卡状态，问题列表状态（解析，用户答案）
     answerSts (topics) {
-      this.noDataFlag = true
-      if (topics && topics.length) {
-        this.noDataFlag = false
-        topics.map((val, index) => {
-          val.flag = false // 解析展开收起交互
-          if (this.$route.query.plate_id === 3) { // 论述题解析不需要下面的逻辑
-            return
-          }
-          let userOptions = val.options[0].userOption || val.discuss_useranswer // 用户答案
-          let trueOptions = val.options[0].right // 正确答案
-          if (userOptions !== '' && userOptions === trueOptions) {
-            val.rightCurren = true
-          }
-          if (userOptions !== '' && userOptions !== trueOptions) {
-            val.redCurren = true
-          }
-          if (this.getQuestion.plate_id === 3) { // 论述题
-            return
-          }
-          val.options.forEach((v, index) => {
-            if (val.eprone.indexOf(v.option) > -1) {
-              v.eprone = true // 易错答案
-            }
-            if (v.option.indexOf(userOptions) > -1 && userOptions !== '') {
-              v.errorRed = true // 用户答案 答错选项红色
-            }
-            if (v.option === v.right) {
-              v.rightGreen = true // 正确答案 选项添加绿色
-            }
-          })
-        })
+      if (topics.length === 0) {
+        this.noDataFlag = true
+        return
       }
+      topics.map((val, index) => {
+        val.flag = false // 解析展开收起交互
+        if (this.$route.query.plate_id === 3) { // 论述题解析不需要下面的逻辑
+          return
+        }
+        let userOptions = val.options[0].userOption || val.discuss_useranswer // 用户答案
+        let trueOptions = val.options[0].right // 正确答案
+        if (userOptions !== '' && userOptions === trueOptions) {
+          val.rightCurren = true
+        }
+        if (userOptions !== '' && userOptions !== trueOptions) {
+          val.redCurren = true
+        }
+        if (this.getQuestion.plate_id === 3) { // 论述题
+          return
+        }
+        val.options.forEach((v, index) => {
+          if (val.eprone.indexOf(v.option) > -1) {
+            v.eprone = true // 易错答案
+          }
+          if (v.option.indexOf(userOptions) > -1 && userOptions !== '') {
+            v.errorRed = true // 用户答案 答错选项红色
+          }
+          if (v.option === v.right) {
+            v.rightGreen = true // 正确答案 选项添加绿色
+          }
+        })
+      })
     },
     goResult () {
       // 如果是错题中心，查看报告

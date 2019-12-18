@@ -27,7 +27,7 @@
         />
       </div>
     </div>
-    <div class="no-data" v-else>
+    <div class="no-data" v-if="noDataFlag">
       暂无数据
     </div>
   </div>
@@ -100,6 +100,9 @@ export default {
         if (res.code === 200) {
           this.questionRecordList = res.data.question
           this.total = res.data.num
+          if (this.questionRecordList.length === 0) {
+            this.noDataFlag = true
+          }
         } else {
           this.$Message.error(res.msg)
         }

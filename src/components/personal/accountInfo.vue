@@ -22,7 +22,7 @@
             <span>{{item.adds_time}}</span>
           </li>
         </ul>
-        <div class="no-data" v-else>
+        <div class="no-data" v-if="noDataFlag">
           暂无数据
         </div>
       </div>
@@ -108,6 +108,7 @@ export default {
       txtArr: ['消费记录', '优惠券'],
       selIdxAccount: window.sessionStorage.getItem('selIdxAccount') || 0,
       consumptionRecordList: [],
+      noDataFlag: false,
       paySts: {
         1: '银联',
         2: '微信',
@@ -164,6 +165,9 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.consumptionRecordList = res.data
+          if (this.consumptionRecordList.length === 0) {
+            this.noDataFlag = true
+          }
         } else {
           this.$Message.error(res.msg)
         }

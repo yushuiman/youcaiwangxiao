@@ -87,6 +87,7 @@ export default {
       margin: 10px 0;
       width: 50%;
       text-align: center;
+      cursor: pointer;
       img{
         width: 59px;
         height: 59px;

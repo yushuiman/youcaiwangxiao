@@ -8,9 +8,9 @@
           class="el-menu-vertical-demo">
           <el-submenu :index="'' + index+1" v-for="(item, index) in courseCatalogInfo" :key="index">
             <template slot="title" >
-              <div @click="getSecvCatalog(item, index)">
-                <i class="elt-icon elt-icon-01"></i>
-                {{item.name}}
+              <div class="title-cpe" @click="getSecvCatalog(item, index)">
+                <span><i class="elt-icon elt-icon-01"></i>{{item.name}}</span>
+                <span>{{item.cpe_integral}}积分</span>
               </div>
             </template>
             <el-submenu :index="'1-'+ key+1" v-for="(val, key) in courseSections" :key="key">
@@ -18,11 +18,10 @@
                 <i class="elt-icon elt-icon-02"></i>
                 <span>{{val.section_name}}</span>
               </template>
-              <el-menu-item :index="'1-1'+ index+1" v-for="(v, index) in val.videos" :key="index"
+              <el-menu-item :index="'1-1'+ index+1" v-for="(v, index) in val.video" :key="index"
               @click="playVideo(item, val, v, key, index)">
                 <i class="elt-icon elt-icon-stop"></i>
                 <span>{{v.video_name}}</span>
-                <em v-if="userstatus == 2" class="free-pay">免费试听</em>
               </el-menu-item>
             </el-submenu>
           </el-submenu>
@@ -32,7 +31,7 @@
   </div>
 </template>
 <script>
-import { courseCatalog, secvCatalog } from '@/api/class'
+import { courseCatalog, secvCatalog } from '@/api/education'
 import { mapState } from 'vuex'
 export default {
   props: {
@@ -101,13 +100,13 @@ export default {
         this.$router.push({ path: '/login',
           query: {
             ...this.$route.query,
-            call_back: 'course-detail'
+            call_back: 'education-course-detail'
           }
         })
         return
       }
       window.sessionStorage.setItem('userstatus', this.userstatus) // 是否购买
-      this.$router.push({ path: '/course-video',
+      this.$router.push({ path: '/education-video',
         query: {
           package_id: this.package_id,
           course_id: item.course_id,

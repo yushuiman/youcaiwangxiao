@@ -14,10 +14,16 @@ export const deuType = (data) => { // 后续教育分类
     method: 'post'
   })
 }
-
 export const previewCourse = (data) => { // 首页课程预告
   return axios.request({
     url: '/web/Education/previewCourse',
+    data,
+    method: 'post'
+  })
+}
+export const activityUser = (data) => { // 首页课程预告报名
+  return axios.request({
+    url: '/web/Education/activityUser',
     data,
     method: 'post'
   })
@@ -58,6 +64,13 @@ export const courseCatalog = (data) => { // 课程目录
     method: 'post'
   })
 }
+export const secvCatalog = (data) => { // 课程目录 章节
+  return axios.request({
+    url: '/web/Education/secvCatalog',
+    data,
+    method: 'post'
+  })
+}
 export const videoCredentials = (data) => { // 视频凭证
   return axios.request({
     url: '/web/Education/videoCredentials',
@@ -65,9 +78,23 @@ export const videoCredentials = (data) => { // 视频凭证
     method: 'post'
   })
 }
+export const record = (data) => { // 入库观看记录
+  return axios.request({
+    url: '/web/Education/record',
+    data,
+    method: 'post'
+  })
+}
 export const newInformation = (data) => { // 最新资讯
   return axios.request({
     url: '/web/Education/newInformation',
+    data,
+    method: 'post'
+  })
+}
+export const announcement = (data) => { // 学习须知banner
+  return axios.request({
+    url: '/web/Education/announcement',
     data,
     method: 'post'
   })

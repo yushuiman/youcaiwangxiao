@@ -4,12 +4,6 @@
       <div>
         <router-link :to="{ path: '/course-detail', query: { package_id: this.$route.query.package_id }}">></router-link>
         <span>{{videoCredentials.Title}}</span>
-        <span class="star-collection" @click="courseCollection" v-if="videoCredentials.collect == 2">
-          <Icon type="md-star-outline" style="color: #999999; font-size: 22px; margin-top: -4px;" v-if="videoCredentials.collect == 2"/>收藏
-        </span>
-        <span class="star-collection act" @click="courseCollection" v-if="videoCredentials.collect == 1">
-          <Icon type="md-star" style="color: #F99111; font-size: 22px; margin-top: -4px;" v-if="videoCredentials.collect == 1"/>收藏
-        </span>
       </div>
       <HeadName :showName="false"></HeadName>
     </div>
@@ -30,11 +24,6 @@
             <i class="vio-icon vio-icon-01"></i>
             <p class="txt">课程<br />切换</p>
           </li>
-          <!-- 正课且购买 -->
-          <li class="vinfo-item" v-if="playCourseInfo.is_zhengke == 1 && playCourseInfo.userstatus == 1" @click="showModel('答疑')">
-            <i class="vio-icon vio-icon-02"></i>
-            <p class="txt">答疑</p>
-          </li>
           <li class="vinfo-item" @click="showModel('讲义')">
             <i class="vio-icon vio-icon-03"></i>
             <p class="txt">讲义</p>
@@ -42,15 +31,8 @@
         </ul>
       </div>
       <div class="video-info-c" id="left">
-        <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth" :user_id="user_id"></ali-player>
-        <div class="try-watch-dialog" v-if="tryWatchFlag">
-          <div class="course-tip">
-            <div @click="goBuy">试看结束，请购买</div>
-            <div @click="replay">重新试听</div>
-          </div>
-        </div>
+        <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="playCourseInfo.VideoId" :playauth="videoCredentials.playAuth" :user_id="user_id"></ali-player>
       </div>
-      <!-- v-if="this.flagKc || this.flagAnswer || this.flagJy" -->
       <div id="resize" class="course-drag" :class="{'course-drag-hide': !this.flagKc && !this.flagAnswer && !this.flagJy}">
         <div class="drag"></div>
       </div>
@@ -69,35 +51,32 @@
   </div>
 </template>
 <script>
-import aliPlayer from '@/components/video/aliPlayer'
-import courseList from '@/components/video/courseList'
-import answer from '@/components/video/answer'
+import aliPlayer from '@/components/educationVideo/aliPlayer'
+import courseList from '@/components/educationVideo/courseList'
 import HeadName from '@/components/common/HeadName'
-import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, collection, firstSocket } from '@/api/class'
-import config from '@/config'
-import { mapState } from 'vuex'
+import { videoCredentials, courseCatalog, secvCatalog, record } from '@/api/education'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   data () {
     return {
       selMenu: 3,
       showBox: '课程<br />切换',
-      vinfo: ['课程<br />切换', '答疑', '讲义'],
+      vinfo: ['课程<br />切换', '讲义'],
       flagKc: true,
       flagAnswer: false,
       flagCourse: false,
       flagJy: false,
       wImportant: 382,
-      VideoId: '', // 视频VideoId
       videoCredentials: {
         handouts: '', // 讲义
         playAuth: '', // 获取视频凭证
         collect: '', // 收藏
-        watch_time: '', // 观看时间
         Title: '' // name
       },
       playCourseInfo: {
         video_id: this.$route.query.video_id,
+        VideoId: this.$route.query.VideoId,
         section_id: this.$route.query.section_id,
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
@@ -107,19 +86,12 @@ export default {
       packageList: [],
       secvCatalogArr: [],
       courseSections: [],
-      openMenu: '1-1', // 默认播放菜单menu-index
-      playVideoInfo: window.sessionStorage.getItem('playVideoInfo'), // 视频播放信息
-      playtime: 0, // 视频上次播放时间
-      socketTimer: null,
-      tryWatchTimer: null,
-      tryWatchFlag: false,
-      tryQatchNum: 180 // 试看3分钟
+      openMenu: '1-1' // 默认播放菜单menu-index
     }
   },
   components: {
     aliPlayer,
     courseList,
-    answer,
     HeadName
   },
   computed: {
@@ -130,10 +102,6 @@ export default {
   mounted () {
     this.getCourseCatalog() // 课程大纲（目录）
     this.dragControllerDiv()
-    // if (this.flagCourse || this.flagAnswer || this.flagJy) {
-    // }
-    // this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
-    // this.getVideoPlayback(this.$route.query.video_id)
   },
   methods: {
     dragControllerDiv () {
@@ -168,91 +136,26 @@ export default {
     ready (instance) {
       let ofH = window.sessionStorage.getItem('ofH')
       document.getElementById('rightCourseList').scrollTop = ofH
-      // 跳转到上次播放时间
-      instance.seek(this.playtime)
-      // 初始化监听一次socket io
-      if (this.playCourseInfo.userstatus === 1) {
-        if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
-          // this.socketIo()
-          this.subFirstSocket()
-        }
-      }
-      // 30秒监听一次socket
-      this.socketTimer = setInterval(() => {
-        // 已购买并且视频播放时间大于0 socket
-        if (this.playCourseInfo.userstatus === 1) {
-          if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
-            // this.socketIo()
-          }
-        }
-      }, 30000)
-      // 未购买试看3分钟
-      if (this.playCourseInfo.userstatus === 2) {
-        this.tryWatchTimer = setInterval(() => {
-          let playtime = parseInt(instance.getCurrentTime())
-          if (playtime >= this.tryQatchNum) {
-            this.tryWatchFlag = true
-            instance.pause()
-            instance.seek(this.tryQatchNum)
-          } else {
-            this.playtime = playtime
-          }
-        }, 1000)
+      // 入库观看视频
+      if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
+        this.subrecord()
       }
     },
-    // 首次socket
-    subFirstSocket () {
-      firstSocket({
+    // 入库观看视频
+    subrecord () {
+      record({
         user_id: this.user_id,
         package_id: this.$route.query.package_id,
         course_id: this.playCourseInfo.course_id,
         section_id: this.playCourseInfo.section_id,
-        video_id: this.playCourseInfo.video_id,
-        watch_time: this.playtime,
-        video_type: 1, // 视频类型 1视频2直播
-        status: 1 // 播放类型 1课程视频播放2学习中心
+        video_id: this.playCourseInfo.video_id
       }).then((data) => {
-      })
-    },
-    // 每30秒一次
-    socketIo () {
-      this.playtime = parseInt(this.$refs.aliPlayers.getCurrentTime())
-      var message = {
-        user_id: this.user_id,
-        package_id: this.$route.query.package_id,
-        course_id: this.playCourseInfo.course_id,
-        section_id: this.playCourseInfo.section_id,
-        video_id: this.playCourseInfo.video_id,
-        watch_time: this.playtime,
-        video_type: 1, // 视频类型 1视频2直播
-        type: 1 // 播放类型 1课程视频播放2学习中心
-      }
-      console.log(message)
-      var _this = this
-      var socket
-      if (process.env.NODE_ENV === 'production') {
-        socket = io(config.baseUrl.pro)
-      } else {
-        socket = io('https://dest.youcaiwx.cn')
-      }
-      socket.on('connect', function () {
-        socket.emit('success', { username: _this.user_id })
-        console.log('course-video连接成功')
-      })
-      // 公开聊天
-      socket.on('sendMsg', function (msg) {
-        let json = JSON.parse(msg)
-        console.log(json)
-      })
-      socket.emit('sendMsg', {
-        'username': _this.user_id,
-        'msg': message
+        console.log(data)
       })
     },
     // 提问的时候停止播放
     stopVideo () {
       this.$refs.aliPlayers.pause()
-      window.sessionStorage.setItem('pauseWatchTime', parseInt(this.$refs.aliPlayers.getCurrentTime()))
     },
     // 去购买
     goBuy () {
@@ -374,9 +277,9 @@ export default {
           this.courseSections = res.data
           this.courseSections.forEach((v, key) => {
             let sectionId = parseInt(this.$route.query.section_id)
-            let videoId = parseInt(this.$route.query.video_id)
-            v.videos.forEach((val, index) => {
-              if (sectionId === v.section_id && videoId === val.video_id) {
+            let vidId = parseInt(this.$route.query.video_id)
+            v.video.forEach((val, index) => {
+              if (sectionId === v.section_id && vidId === val.video_id) {
                 let openMenu = (key + 1) + '-' + (index + 1)
                 this.openMenu = openMenu
               }
@@ -384,74 +287,27 @@ export default {
           })
           this.playCourseInfo.course_id = this.$route.query.course_id || this.courseSections[0].course_id
           this.playCourseInfo.section_id = this.$route.query.section_id || this.courseSections[0].section_id
-          this.playCourseInfo.video_id = this.$route.query.video_id || this.courseSections[0].videos[0].video_id
-          this.getVideoPlayback(this.playCourseInfo.video_id)
+          this.playCourseInfo.video_id = this.$route.query.video_id || this.courseSections[0].video[0].video_id
+          this.playCourseInfo.VideoId = this.$route.query.VideoId || this.courseSections[0].video[0].VideoId
+          this.getVideoPlayback()
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
     // 获取视频凭证
-    getVideoPlayback (id) {
-      videoPlayback({
-        video_id: id
+    getVideoPlayback () {
+      // 获取视频凭证
+      videoCredentials({
+        VideoId: this.playCourseInfo.VideoId,
+        video_id: this.playCourseInfo.video_id
       }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.VideoId = res.data.VideoId
-          // 获取视频凭证
-          videoCredentials({
-            VideoId: res.data.VideoId,
-            user_id: this.user_id,
-            package_id: this.playCourseInfo.package_id,
-            course_id: this.playCourseInfo.course_id,
-            section_id: this.playCourseInfo.section_id,
-            video_id: this.playCourseInfo.video_id
-          }).then(data => {
-            let res = data.data
-            this.videoCredentials = res.data
-            this.playtime = this.videoCredentials.watch_time
-          })
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
-    courseCollection (collectId) { // 1收藏2取消收藏
-      // if (parseInt(this.$route.query.status) === 2) {
-      //   this.$Message.error('试听课程，请购买后收藏')
-      //   return
-      // }
-      // this.videoCredentials.collect = 2
-      if (this.videoCredentials.collect === 2) {
-        this.videoCredentials.collect = 1
-      } else {
-        this.videoCredentials.collect = 2
-      }
-      collection({
-        package_id: this.playCourseInfo.package_id,
-        course_id: this.playCourseInfo.course_id,
-        section_id: this.playCourseInfo.section_id,
-        video_id: this.playCourseInfo.video_id,
-        user_id: this.user_id,
-        static: this.videoCredentials.collect
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          if (this.videoCredentials.collect === 1) {
-            this.$Message.success('收藏成功')
-          } else {
-            this.$Message.success('取消成功')
-          }
-        } else {
-          this.$Message.error(res.msg)
-        }
+        let res = data.data
+        this.videoCredentials = res.data
       })
     }
   },
   beforeDestroy () {
-    clearInterval(this.socketTimer)
-    clearInterval(this.tryWatchTimer)
     this.$refs.aliPlayers.dispose()
   },
   beforeRouteLeave (to, from, next) {
@@ -477,15 +333,6 @@ export default {
     span{
       font-size: 16px;
       font-weight:500;
-      &.star-collection{
-        cursor: pointer;
-        font-size: 14px;
-        margin-left: 24px;
-        color: $col999;
-      }
-      &.act{
-        color: #F99111!important;
-      }
     }
     a{
       margin: 0 8px;
@@ -671,28 +518,6 @@ export default {
     padding-right: 20px;
     .close-icon{
       @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
-    }
-  }
-  .try-watch-dialog{
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, .8);
-    color: #ffffff;
-    text-align: center;
-    z-index: 333333;
-    display: table;
-    .course-tip{
-      display: table-cell;
-      vertical-align: middle;
-      text-align: center;
-      div{
-        font-size: 18px;
-        line-height: 40px;
-        cursor: pointer;
-      }
     }
   }
   .drag {

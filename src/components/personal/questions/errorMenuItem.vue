@@ -27,7 +27,7 @@
         </Submenu>
       </Menu>
     </div>
-    <div class="no-data" v-else>
+    <div class="no-data" v-if="noDataFlag">
       暂无数据
     </div>
     <!-- 知识点 -->
@@ -67,6 +67,7 @@ export default {
   data () {
     return {
       course_id: window.sessionStorage.getItem('course_id'),
+      noDataFlag: false,
       errorSecList: [], // 知识点章节
       getPoticData: {
         course_id: window.sessionStorage.getItem('course_id'),
@@ -108,6 +109,9 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.errorSecList = res.data
+          if (this.errorSecList.length === 0) {
+            this.noDataFlag = true
+          }
         } else {
           this.$Message.error(res.msg)
         }

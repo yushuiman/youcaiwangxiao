@@ -296,10 +296,9 @@ export default {
     padding: 6px 0;
     line-height: 39px;
     @include display_flex(flex);
-    border-bottom: 1px solid $borderColor;
     box-sizing: border-box;
-    .class-bx &, .class-zh &, .cl-aleary-tj &{
-      border: 0;
+    .class-subject &{
+      border-bottom: 1px solid $borderColor;
     }
     .cl-aleary-tj &{
       padding: 10px 0;

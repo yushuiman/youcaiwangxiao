@@ -55,7 +55,7 @@
             </div>
           </div>
         </div>
-        <div class="no-data" v-else>暂无消息</div>
+        <div class="no-data" v-if="noDataFlag">暂无消息</div>
       </div>
     </div>
   </div>
@@ -74,7 +74,7 @@ export default {
       selIdxNews: 0,
       limit: 10,
       page: 1,
-      ycwxMessageList: [], // 网校公告
+      noDataFlag: false,
       systeMessageList: [], // 系统消息
       types: {
         1: '答疑',
@@ -133,9 +133,6 @@ export default {
       window.sessionStorage.setItem('selIdxSet', 0)
     },
     tabClk (v, index) {
-      if (!this.user_id) {
-
-      }
       this.selIdxNews = index
       this.page = 1
       this.newsFlag = true
@@ -143,22 +140,18 @@ export default {
     },
     // 消息列表
     getSysteMessage () {
-      let type
-      if (this.selIdxNews === 0) {
-        type = 1
-      }
-      if (this.selIdxNews === 1) {
-        type = 2
-      }
       systeMessage({
         user_id: this.user_id,
         limit: this.limit,
         page: this.page,
-        types: type // 1网校公告2系统消息
+        types: this.selIdxNews === 0 ? 1 : 2 // 1网校公告2系统消息
       }).then(data => {
         const res = data.data
         let { message, num } = res.data
         this.systeMessageList = message
+        if (this.systeMessageList.length === 0) {
+          this.noDataFlag = true
+        }
         this.total = num
       })
     },

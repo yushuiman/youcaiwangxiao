@@ -13,6 +13,7 @@
       </div>
       <div class="userm-right" ref="usermRight">
         <course-info v-if="clkTit == 'course'" :user_id="user_id"></course-info>
+        <education-info v-if="clkTit == 'education'" :user_id="user_id"></education-info>
         <questions-info v-if="clkTit == 'questions'" :user_id="user_id"></questions-info>
         <!-- <zhibo-info v-if="clkTit == 'zhibo'" :user_id="user_id"></zhibo-info> -->
         <answer-info v-if="clkTit == 'answer'" :user_id="user_id"></answer-info>
@@ -31,6 +32,7 @@ import questionsInfo from '../../components/personal/questionsInfo'
 import answerInfo from '../../components/personal/answerInfo'
 import orderInfo from '../../components/personal/orderInfo'
 import accountInfo from '../../components/personal/accountInfo'
+import educationInfo from '../../components/personal/educationInfo'
 import setInfo from '../../components/personal/setInfo'
 import userTop from '../../components/personal/userTop'
 import { getPersonal } from '@/api/personal'
@@ -42,6 +44,10 @@ export default {
         {
           type: 'course',
           tit: '课程'
+        },
+        {
+          type: 'education',
+          tit: '后续教育'
         },
         {
           type: 'questions',
@@ -82,6 +88,7 @@ export default {
     answerInfo,
     orderInfo,
     accountInfo,
+    educationInfo,
     setInfo,
     userTop
   },
@@ -179,7 +186,7 @@ export default {
     @include flexJustify;
     padding-top: 38px;
     .userm-left{
-      width: 142px;
+      width: 128px;
       font-size: 18px;
     }
     .userm-right{
@@ -191,9 +198,9 @@ export default {
   }
   .userm-item{
     margin: 15px 0;
+    padding-left: 15px;
     height: 46px;
     line-height: 46px;
-    text-align: center;
     color: $col666;
     cursor: pointer;
     &.curren, &:hover{

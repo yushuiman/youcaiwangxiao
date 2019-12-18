@@ -1,24 +1,12 @@
 <template>
   <div class="edu-detail-wrap">
     <div class="class-choose">
-      <!-- 已选条件 -->
-      <div class="cl-aleary-tj">
-        <!-- <div class="w-wrap class-com al-class-com" v-if="classNamea != '' || form.billing_status != '' || form.ym != ''"> -->
-        <div class="w-wrap class-com al-class-com" v-if="classNamea != '' || form.billing_status != ''">
-          <span class="cl-txt">已选条件</span>
-          <div class="cl-list cla-list">
-            <span v-if="classNamea != ''"><em>{{classNamea}}</em><i class="del-cion" @click="delChoose('课程类别')"></i></span>
-            <span v-if="form.billing_status != ''"><em>{{form.billing_status == 1 ? '免费': '收费'}}</em><i class="del-cion" @click="delChoose('类型')"></i></span>
-          </div>
-        </div>
-        <div class="w-wrap class-com" v-else></div>
-      </div>
       <!-- 课程类别 -->
       <div class="class-subject class-tj-bg">
         <div class="w-wrap class-com">
           <span class="cl-txt">课程类别:</span>
           <div class="cl-list">
-            <span :class="form.class_id == item.id ? 'curren' : ''" @click="screenCourse(form.class_id = item.id)" v-for="(item, index) in deuTypeList" :key="index">
+            <span :class="form.type_id == item.type_id ? 'curren' : ''" @click="screenCourse('课程类别', item)" v-for="(item, index) in deuTypeList" :key="index">
               {{item.type_name}}
             </span>
           </div>
@@ -32,40 +20,34 @@
           <span class="curren">综合</span>
           <span @click="screenCourse('人气')">人气<i :class="[form.popularity == 1 ? 'hot-top-icon' : 'hot-down-icon']"></i></span>
           <span @click="screenCourse('价格')">价格<i class="price-icon" :class="{'price-top-icon': form.pricesort==1, 'price-down-icon': form.pricesort==2}"></i></span>
-          <input type="number" name="" placeholder="¥" v-model.number="priceStart">
+          <input type="number" name="" placeholder="¥" v-model.number="form.price_start">
           <span class="lianjie-icon">-</span>
-          <input type="number" name="" placeholder="¥" v-model.number="priceEnd">
+          <input type="number" name="" placeholder="¥" v-model.number="form.price_end">
           <button type="button" name="button" class="sure-btn" @click="screenCourse('确认价格')">确认</button>
           <button type="button" name="button" class="clear-btn" @click="screenCourse('清空价格')">清空</button>
         </div>
       </div>
     </div>
-    <div class="edu-content">
-      <div class="edu-left">
-        <div class="edu-type-cont">
-          <h1 class="edu-title">课程预告</h1>
-          <ul class="edu-couse-list">
-            <li class="edu-couse-item" v-for="(items, index) in previewCourseList" :key="index" @click="previewCourseJump(items.jump)">
-              <img :src="items.pc_img" alt="" class="edu-couse-item-img">
-              <div class="edu-course-str">
-                <p class="ci-title">时间：{{items.start_time}}</p>
-                <p class="ci-teacher-day"><span class="noml">CPE积分：{{items.cpe}}分</span></p>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div class="edu-typle-cont" v-for="(val, index) in firstPackageList" :key="index">
-          <h1 class="edu-title">{{val.type_name}}</h1>
-          <ul class="edu-couse-list">
-            <li class="edu-couse-item" v-for="(items, key) in val.package" :key="key" @click="packageDetail(val, items)">
-              <img :src="items.pc_img" alt="" class="edu-couse-item-img">
-              <div class="edu-course-str">
-                <p class="ci-title">{{items.name}}</p>
-                <p class="ci-teacher-day">讲师：{{items.teacher_name}}<span>CPE积分：{{items.study_days}}分</span></p>
-                <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? '¥' + items.price : items.billing_status == 3 ? '积分兑换' : '等级进入' }}</span>
-              </div>
-            </li>
-          </ul>
+    <div class="edu-content w-wrap">
+      <div class="edu-typle-cont">
+        <ul class="edu-couse-list">
+          <li class="edu-couse-item" v-for="(items, key) in listPackageArr" :key="key" @click="goPackageDetail(items)">
+            <img :src="items.pc_img" alt="" class="edu-couse-item-img">
+            <div class="edu-course-str">
+              <p class="ci-title">{{items.name}}</p>
+              <p class="ci-teacher-day">讲师：{{items.teacher_name}}<span>CPE积分：{{items.study_days}}分</span></p>
+              <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? '¥' + items.price : items.billing_status == 3 ? '积分兑换' : '等级进入' }}</span>
+            </div>
+          </li>
+        </ul>
+        <div style="padding: 20px; text-align: center;">
+          <Page
+          :total="total"
+          @on-change="onChange"
+          :current="form.page"
+          :page-size="form.limit"
+          size="small"
+          />
         </div>
       </div>
     </div>
@@ -80,20 +62,19 @@ export default {
     return {
       total: 1,
       form: {
-        class_id: '',
-        billing_status: '',
+        // class_id: '',
+        // billing_status: '',
         type_id: this.$route.query.type_id, // 课程类型id
-        multiple: '', // 综合1升序2降序
-        popularity: '', // 人气1升序2降序
-        pricesort: '', // 价格1升序2降序
+        multiple: 1, // 综合1升序2降序
+        popularity: 2, // 人气1升序2降序
+        pricesort: 2, // 价格1升序2降序
         price_start: '', // 起始价格
         price_end: '', // 结束价格
-        limit: 6, // 每页显示数量
+        limit: 8, // 每页显示数量
         page: 1
       }, // 课程列表 默认第一页 显示6个
-      priceStart: '', // 价格筛选
-      priceEnd: '', // 价格筛选
-      deuTypeList: [] // 类别
+      deuTypeList: [], // 类别
+      listPackageArr: [] // 课程包列表
     }
   },
   components: {
@@ -101,8 +82,7 @@ export default {
   computed: {
     ...mapState({
       token: state => state.user.token,
-      user_id: state => state.user.user_id,
-      isLoadHttpRequest: state => state.user.isLoadHttpRequest
+      user_id: state => state.user.user_id
     }),
     classNamea () {
       if (this.form.class_id) {
@@ -119,11 +99,15 @@ export default {
     }
   },
   mounted () {
+    this.getDeuType() // 类别
     this.getListPackage() // 课程包列表
   },
   methods: {
     // 条件筛选
     screenCourse (type, val) {
+      if (type === '课程类别') {
+        this.form.type_id = val.type_id
+      }
       if (type === '人气') {
         if (this.form.popularity === 1) {
           this.form.popularity = ''
@@ -139,12 +123,8 @@ export default {
         }
       }
       if (type === '清空价格') {
-        this.priceStart = ''
-        this.priceEnd = ''
-      }
-      if (type === '确认价格' || type === '清空价格') {
-        this.form.price_start = this.priceStart
-        this.form.price_end = this.priceEnd
+        this.form.price_start = ''
+        this.form.price_end = ''
       }
       this.getListPackage()
     },
@@ -160,10 +140,6 @@ export default {
       }
       this.getListPackage()
     },
-    // 跳转到课程详情页
-    goClassDetails (id) {
-      this.$router.push({ path: '/course-detail', query: { package_id: id } })
-    },
     // 分页
     onChange (val) {
       this.form.page = val
@@ -175,7 +151,7 @@ export default {
       listPackage(this.form).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.courseList = res.data.data
+          this.listPackageArr = res.data.data
           this.total = res.data.total
         } else {
           this.$Message.error(res.msg)
@@ -192,6 +168,15 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // 课程包列表详情
+    goPackageDetail (val, item) {
+      this.$router.push({ path: '/education-course-detail',
+        query: {
+          type_id: this.form.type_id,
+          package_id: val.package_id
+        }
+      })
     }
   }
 }
@@ -201,7 +186,7 @@ export default {
   @import "../../assets/scss/app";
   .class-tj-bg{
     background: $colfff;
-    &.class-zh, &.class-subject-mt{
+    &.class-zh, &.class-subject{
       margin-top: 20px;
     }
   }
@@ -209,7 +194,6 @@ export default {
     padding: 6px 0;
     line-height: 39px;
     @include display_flex(flex);
-    border-bottom: 1px solid $borderColor;
     box-sizing: border-box;
     .class-bx &, .class-zh &, .cl-aleary-tj &{
       border: 0;
@@ -347,5 +331,55 @@ export default {
       }
     }
   }
-
+  .edu-content{
+    padding-top: 20px;
+  }
+  .edu-couse-list{
+    display: flex;
+    // justify-content: center;
+  }
+  .edu-couse-item{
+    width: 280px;
+    margin-right: 17px;
+    margin-bottom: 20px;
+    padding: 7px;
+    border-radius: 6px;
+    &:hover{
+      background: $colfff;
+      cursor: pointer;
+    }
+    .edu-couse-item-img{
+      width: 100%;
+      height: 147px;
+      border-radius: 6px;
+      display: block;
+    }
+  }
+  .edu-course-str{
+    padding: 12px 8px 8px;
+    .ci-title{
+      font-size: 16px;
+      @extend %singleline-ellipsis;
+    }
+    .ci-teacher-day{
+      padding: 8px 0;
+      color: $col999;
+      span{
+        margin-left: 20px;
+        color: $blueColor;
+        &.noml{
+          margin-left: 0;
+        }
+      }
+    }
+    .ci-pay-free{
+      padding: 0 6px;
+      @include lh(23, 23);
+      text-align: center;
+      display: inline-block;
+      background: #FFF1E4;
+      color: #FF8915;
+      border-radius: 4px;
+    }
+  }
 </style>

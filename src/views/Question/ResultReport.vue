@@ -297,13 +297,13 @@ export default {
   .anscard-list{
     li{
       float: left;
-      width: 28px;
-      height: 28px;
-      line-height: 28px;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
       text-align: center;
       border: 1px solid $col666;
-      border-radius: 14px;
-      margin: 10px;
+      border-radius: 100%;
+      margin: 10px 9px;
       cursor: pointer;
       &:nth-child(5){
         margin-right: 60px;

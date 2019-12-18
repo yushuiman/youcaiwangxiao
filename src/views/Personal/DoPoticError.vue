@@ -1,99 +1,94 @@
 <template>
-  <div>
-    <div class="do-potic-wrap w-wrap clearfix" v-if="topics && topics.length">
-      <div class="dptic-wrap-l fl">
-        <div ref="fixedTit">
-          <Row class="dptic-title">
-            <Col span="20">
-              <span class="menu-title">{{title}}</span>
-            </Col>
-            <Col span="4">
-              <count-up ref="addCountTime"></count-up>
-            </Col>
-          </Row>
-        </div>
-        <potic-list ref="poticWrap" :topics="topics" :total="total" :getQuestion="getQuestion" @doPoticInfo="doPoticInfo" @modalShow="modalShow" :ID="ID"></potic-list>
+  <div class="do-potic-wrap w-wrap clearfix">
+    <div class="dptic-wrap-l fl">
+      <div ref="fixedTit">
+        <Row class="dptic-title">
+          <Col span="20">
+            <span class="menu-title">{{title}}</span>
+          </Col>
+          <Col span="4">
+            <count-up ref="addCountTime"></count-up>
+          </Col>
+        </Row>
       </div>
-      <div class="dptic-wrap-r fr">
-        <div class="right-top-wrap">
-          <h2 class="title-com">做题进度</h2>
-          <div class="progress-info">
-            <Progress :percent="percent" :stroke-width="10" stroke-color="#0267FF" hide-info/>
-            <span class="topic-num"><em data-v-680035d5="">{{percentNum}}</em>/{{total}}</span>
+      <potic-list ref="poticWrap" :topics="topics" :total="total" :getQuestion="getQuestion" @doPoticInfo="doPoticInfo" @modalShow="modalShow" :ID="ID"></potic-list>
+    </div>
+    <div class="dptic-wrap-r fr">
+      <div class="right-top-wrap">
+        <h2 class="title-com">做题进度</h2>
+        <div class="progress-info">
+          <Progress :percent="percent" :stroke-width="10" stroke-color="#0267FF" hide-info/>
+          <span class="topic-num"><em data-v-680035d5="">{{percentNum}}</em>/{{total}}</span>
+        </div>
+        <ul class="dopic-status">
+          <li class="dopstu-item" :class="['dopstu-item-0' + (index+1)]" v-for="(v, index) in stsTxtArr" :key="index" @click="submitAnswers(v)">
+            <span><i class="dopstu-icon"></i></span>
+            <p>{{v}}</p>
+          </li>
+        </ul>
+      </div>
+      <div class="right-bottom-wrap">
+        <div class="answer-card">
+          <div class="title-com">
+            <h2>答题卡</h2>
+            <div class="anscard-sts" v-if="getQuestion.paper_mode == 1">
+              <i class="green-bg"></i>已掌握
+              <i class="red-bg"></i>未掌握
+            </div>
           </div>
-          <ul class="dopic-status">
-            <li class="dopstu-item" :class="['dopstu-item-0' + (index+1)]" v-for="(v, index) in stsTxtArr" :key="index" @click="submitAnswers(v)">
-              <span><i class="dopstu-icon"></i></span>
-              <p>{{v}}</p>
+          <ul class="anscard-list clearfix" >
+            <li :class="{'blue-bg': item.currenOption, 'red-bg': item.currenErrorRed, 'green-bg': item.currenRightGreen}" v-for="(item, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">
+              {{index+1}}
             </li>
           </ul>
         </div>
-        <div class="right-bottom-wrap">
-          <div class="answer-card">
-            <div class="title-com">
-              <h2>答题卡</h2>
-              <div class="anscard-sts" v-if="getQuestion.paper_mode == 1">
-                <i class="green-bg"></i>已掌握
-                <i class="red-bg"></i>未掌握
-              </div>
-            </div>
-            <ul class="anscard-list clearfix" >
-              <li :class="{'blue-bg': item.currenOption, 'red-bg': item.currenErrorRed, 'green-bg': item.currenRightGreen}" v-for="(item, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">
-                {{index+1}}
-              </li>
-            </ul>
+      </div>
+    </div>
+    <Modal v-model="visible"
+      :width="447"
+      :mask-closable=false
+      :closable=false
+      footer-hide
+      class="dopic-modal">
+      <div class="stop-box" v-if="txtShow == '暂停'">
+        <p>休息一下，马上回来</p>
+        <div class="btn-box">
+          <button class="btn-com" @click="goOnDopic('time')">继续做题</button>
+        </div>
+      </div>
+      <div class="save-box" v-if="txtShow == '保存'">
+        <p>保存进度，下次继续</p>
+        <div class="btn-box">
+          <button class="btn-com" @click="goOnDopic">继续</button>
+          <button class="btn-com" @click="jiaojuan('save')">保存</button>
+        </div>
+      </div>
+      <div class="jiaojuan-box" :class="{'jiaojuan-finish': percentNum == total}" v-if="txtShow == '交卷'">
+        <div v-if="percentNum != total">
+          <p>您还有试题没完成！</p>
+          <div class="btn-box">
+            <button class="btn-com" @click="goOnDopic">继续</button>
+            <button class="btn-com" @click="jiaojuan('sub')">交卷</button>
+          </div>
+        </div>
+        <div v-else>
+          <p>确认提交试卷？</p>
+          <div class="btn-box">
+            <button class="btn-com" @click="goOnDopic">检查</button>
+            <button class="btn-com" @click="jiaojuan('sub')">交卷</button>
           </div>
         </div>
       </div>
-      <Modal v-model="visible"
-        :width="447"
-        :mask-closable=false
-        :closable=false
-        footer-hide
-        class="dopic-modal">
-        <div class="stop-box" v-if="txtShow == '暂停'">
-          <p>休息一下，马上回来</p>
-          <div class="btn-box">
-            <button class="btn-com" @click="goOnDopic('time')">继续做题</button>
-          </div>
-        </div>
-        <div class="save-box" v-if="txtShow == '保存'">
-          <p>保存进度，下次继续</p>
-          <div class="btn-box">
-            <button class="btn-com" @click="goOnDopic">继续</button>
-            <button class="btn-com" @click="jiaojuan('save')">保存</button>
-          </div>
-        </div>
-        <div class="jiaojuan-box" :class="{'jiaojuan-finish': percentNum == total}" v-if="txtShow == '交卷'">
-          <div v-if="percentNum != total">
-            <p>您还有试题没完成！</p>
-            <div class="btn-box">
-              <button class="btn-com" @click="goOnDopic">继续</button>
-              <button class="btn-com" @click="jiaojuan('sub')">交卷</button>
-            </div>
-          </div>
-          <div v-else>
-            <p>确认提交试卷？</p>
-            <div class="btn-box">
-              <button class="btn-com" @click="goOnDopic">检查</button>
-              <button class="btn-com" @click="jiaojuan('sub')">交卷</button>
-            </div>
-          </div>
-        </div>
-      </Modal>
-      <Modal
-        title="纠错"
-        v-model="visibleError"
-        footer-hide
-        :mask-closable=false
-        :width="795"
-        class="iview-modal">
-        <error-correction v-if="visibleError" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
-      </Modal>
-    </div>
-    <div class="no-data" v-else>
-      暂无数据
-    </div>
+    </Modal>
+    <Modal
+      title="纠错"
+      v-model="visibleError"
+      footer-hide
+      :mask-closable=false
+      :width="795"
+      class="iview-modal">
+      <error-correction v-if="visibleError" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
+    </Modal>
   </div>
 </template>
 

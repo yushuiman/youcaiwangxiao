@@ -85,7 +85,7 @@ import HeadName from '@/components/common/HeadName'
 import { videoCredentials, collection, firstSocket } from '@/api/class'
 import { getVideo } from '@/api/learncenter'
 import config from '@/config'
-import { mapActions, mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   data () {
@@ -148,7 +148,6 @@ export default {
   },
   computed: {
     ...mapState({
-      avatorImgPath: state => state.user.avatorImgPath,
       user_id: state => state.user.user_id,
       isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
@@ -167,9 +166,6 @@ export default {
     // this.getVideoPlayback(this.$route.query.video_id)
   },
   methods: {
-    ...mapActions([
-      'handleLogOut'
-    ]),
     dragControllerDiv () {
       var resize = document.getElementById('resize')
       var left = document.getElementById('left')
@@ -234,7 +230,6 @@ export default {
         days: this.playCourseInfo.days,
         plan_id: this.playCourseInfo.plan_id
       }).then((data) => {
-        console.log(data)
       })
     },
     // 每30秒一次

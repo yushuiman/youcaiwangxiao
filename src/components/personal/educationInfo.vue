@@ -116,7 +116,7 @@ export default {
   data () {
     return {
       visible: false,
-      txtArr: ['课程', '播放记录', '收藏课程'],
+      txtArr: ['课程', '播放记录'],
       selIdxCourse: window.sessionStorage.getItem('selIdxCourse') || 0,
       btnSts: {
         1: '成绩统计',

@@ -124,7 +124,7 @@
             />
           </div>
         </div>
-        <div class="no-data" v-else>
+        <div class="no-data" v-if="noDataFlag">
           暂无答疑
         </div>
       </div>
@@ -244,7 +244,7 @@
             />
           </div>
         </div>
-        <div class="no-data" v-else>
+        <div class="no-data" v-if="noDataFlag">
           暂无答疑
         </div>
       </div>
@@ -286,6 +286,7 @@ export default {
       questionAnswerList: [],
       // questionMyAnswer: {},
       // questionReply: {},
+      noDataFlag: false,
       numNew: parseInt(this.$route.query.num), // 如果从消息页面提醒进来，对应的消息展开
       answerVisible: false, // 追问modal
       zhuiwenInfo: {}, // 追问内容
@@ -348,6 +349,9 @@ export default {
             let { num, list } = res.data
             this.total = num
             this.courseAnswerList = list
+            if (this.courseAnswerList.length === 0) {
+              this.noDataFlag = true
+            }
             this.courseAnswerList.map((val, index) => {
               val.openFlag = false
               if (this.numNew === val[0].id) { // 如果从消息页面提醒进来，对应的消息展开
@@ -373,6 +377,9 @@ export default {
             let { num, list } = res.data
             this.total = num
             this.questionAnswerList = list
+            if (this.questionAnswerList.length === 0) {
+              this.noDataFlag = true
+            }
             this.questionAnswerList.map((val, index) => {
               val.openFlag = false
               if (this.numNew === val[0].Id) { // 如果从消息页面提醒进来，对应的消息展开
