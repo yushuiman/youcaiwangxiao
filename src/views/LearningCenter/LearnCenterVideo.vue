@@ -404,11 +404,11 @@ export default {
   },
   beforeDestroy () {
     clearInterval(this.socketTimer)
+    if (this.$refs.aliPlayers) {
+      this.$refs.aliPlayers.dispose()
+    }
   },
   beforeRouteLeave (to, from, next) {
-    if (this.$refs.aliPlayers) {
-      this.$refs.aliPlayers.pause()
-    }
     console.log('remove aliplayer')
     next()
   }

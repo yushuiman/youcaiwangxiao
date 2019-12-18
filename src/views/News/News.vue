@@ -146,6 +146,7 @@ export default {
         page: this.page,
         types: this.selIdxNews === 0 ? 1 : 2 // 1网校公告2系统消息
       }).then(data => {
+        this.noDataFlag = false
         const res = data.data
         let { message, num } = res.data
         this.systeMessageList = message

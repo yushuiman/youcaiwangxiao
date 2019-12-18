@@ -118,11 +118,6 @@ export default {
       visible: false,
       txtArr: ['课程', '播放记录', '收藏课程'],
       selIdxCourse: window.sessionStorage.getItem('selIdxCourse') || 0,
-      btnSts: {
-        1: '成绩统计',
-        2: '继续做题',
-        3: '查看解析'
-      },
       limit: 10,
       page: 1,
       myCourseList: [], // 我的课程
@@ -163,14 +158,12 @@ export default {
       'getUserInfo'
     ]),
     tabClk (v, index) {
-      if (!this.user_id) {
-
-      }
       this.selIdxCourse = index
       window.sessionStorage.setItem('selIdxCourse', index)
       this.initRes()
     },
     initRes () {
+      this.noDataFlag = false
       if (parseInt(this.selIdxCourse) === 0) {
         this.getMyCourse()
       }

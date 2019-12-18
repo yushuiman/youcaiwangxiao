@@ -2,7 +2,7 @@
   <div class="video-wrap">
     <div class="video-header">
       <div>
-        <router-link :to="{ path: '/course-detail', query: { package_id: this.$route.query.package_id }}">></router-link>
+        <router-link :to="{ path: '/education-course-detail', query: { package_id: this.$route.query.package_id, type_id: this.$route.query.type_id }}">></router-link>
         <span>{{videoCredentials.Title}}</span>
       </div>
       <HeadName :showName="false"></HeadName>
@@ -14,7 +14,7 @@
           <img :src="item.pc_img" alt="">
           <div class="c-info">
             <h2>{{item.name}}</h2>
-            <p>讲师: {{item.teacher_name}}</p>
+            <p>讲师: {{item.teacher_name}}<span>CPE积分：6分</span></p>
           </div>
         </div>
       </div>
@@ -33,12 +33,11 @@
       <div class="video-info-c" id="left">
         <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="playCourseInfo.VideoId" :playauth="videoCredentials.playAuth" :user_id="user_id"></ali-player>
       </div>
-      <div id="resize" class="course-drag" :class="{'course-drag-hide': !this.flagKc && !this.flagAnswer && !this.flagJy}">
+      <div id="resize" class="course-drag" :class="{'course-drag-hide': !this.flagKc && !this.flagJy}">
         <div class="drag"></div>
       </div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
         <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
-        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer>
         <div class="jiangyi" v-if="flagJy">
           <div class="close-box" @click="closeModel">
             <i class="close-icon"></i>
@@ -55,7 +54,7 @@ import aliPlayer from '@/components/educationVideo/aliPlayer'
 import courseList from '@/components/educationVideo/courseList'
 import HeadName from '@/components/common/HeadName'
 import { videoCredentials, courseCatalog, secvCatalog, record } from '@/api/education'
-import { mapActions, mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   data () {
@@ -64,7 +63,6 @@ export default {
       showBox: '课程<br />切换',
       vinfo: ['课程<br />切换', '讲义'],
       flagKc: true,
-      flagAnswer: false,
       flagCourse: false,
       flagJy: false,
       wImportant: 382,
@@ -150,53 +148,20 @@ export default {
         section_id: this.playCourseInfo.section_id,
         video_id: this.playCourseInfo.video_id
       }).then((data) => {
-        console.log(data)
       })
-    },
-    // 提问的时候停止播放
-    stopVideo () {
-      this.$refs.aliPlayers.pause()
-    },
-    // 去购买
-    goBuy () {
-      this.$router.push({ path: '/course-detail',
-        query: {
-          package_id: this.playCourseInfo.package_id
-        }
-      })
-    },
-    // 重新试听
-    replay () {
-      this.tryWatchFlag = false
-      this.$refs.aliPlayers.replay()
     },
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
       if (val === '课程<br />切换') {
         this.flagCourse = !this.flagCourse
-        this.flagAnswer = false
         this.flagJy = false
         this.wImportant = 0
         if (this.flagKc) {
           this.wImportant = 382
         }
       }
-      if (val === '答疑') {
-        this.flagAnswer = !this.flagAnswer
-        this.flagJy = false
-        if (this.flagAnswer) {
-          this.wImportant = 495
-        } else {
-          if (this.flagKc) {
-            this.wImportant = 382
-          } else {
-            this.wImportant = 0
-          }
-        }
-      }
       if (val === '讲义') {
         this.flagJy = !this.flagJy
-        this.flagAnswer = false
         if (this.flagJy) {
           this.wImportant = 495
         } else {
@@ -212,7 +177,6 @@ export default {
       if (msg === 'kc') {
         this.flagKc = false
       }
-      this.flagAnswer = false
       this.flagJy = false
       this.wImportant = 0
       if (this.flagKc) {
@@ -242,7 +206,6 @@ export default {
     // 课程大纲(章节 video)
     getSecvCatalog (item, idx) {
       this.flagKc = true
-      this.flagAnswer = false
       this.flagJy = false
       this.wImportant = 382
       this.playCourseInfo.is_zhengke = item.is_zhengke
@@ -308,7 +271,9 @@ export default {
     }
   },
   beforeDestroy () {
-    this.$refs.aliPlayers.dispose()
+    if (this.$refs.aliPlayers) {
+      this.$refs.aliPlayers.dispose()
+    }
   },
   beforeRouteLeave (to, from, next) {
     window.sessionStorage.removeItem('ofH')
@@ -365,30 +330,6 @@ export default {
     font-size: 20px;
     color: $col333;
   }
-
-  // // 目录 答疑 讲义
-  // .video-course-wrap{
-  //   position: absolute;
-  //   top: 20px;
-  //   background: #26292C;
-  //   z-index: 12;
-  //   padding: 0 20px;
-  //   box-sizing: border-box;
-  //   &.vid-jy, &.vid-dy{
-  //     width: 495px;
-  //     // height: 869px;
-  //     height: 100%;
-  //     top: 0;
-  //     right: 0;
-  //     background: #ffffff;
-  //     box-shadow: 0px 15px 10px -15px rgba(0,0,0,0.2) inset;
-  //   }
-  //   &.vid-dy{
-  //     padding: 0;
-  //     background: #F8FAFC;
-  //   }
-  // }
-
   .video-main{
     position: absolute;
     bottom: 0;
@@ -499,6 +440,11 @@ export default {
         font-size: 12px;
         color: $col999;
         margin-top: 8px;
+        span{
+          font-size: 12px;
+          color: #368DE7;
+          margin-left: 15px;
+        }
       }
     }
   }

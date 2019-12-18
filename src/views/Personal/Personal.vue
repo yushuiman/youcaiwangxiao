@@ -6,7 +6,7 @@
     <div class="user-main w-wrap">
       <div class="userm-left" ref="usermLeft">
         <ul class="userm-list">
-          <li class="userm-item" :class="['userm-item-0' + (index+1), {'curren': clkTit == v.type}]" v-for="(v, index) in userArr" :key="index" @click="switchInfo(v, index)">
+          <li class="userm-item" :class="[v.class_name, {'curren': clkTit == v.type}]" v-for="(v, index) in userArr" :key="index" @click="switchInfo(v, index)">
             <i class="userm-icon"></i>{{v.tit}}
           </li>
         </ul>
@@ -43,31 +43,38 @@ export default {
       userArr: [
         {
           type: 'course',
-          tit: '课程'
+          tit: '课程',
+          class_name: 'userm-item-01'
         },
         {
           type: 'education',
-          tit: '后续教育'
+          tit: '后续教育',
+          class_name: 'userm-item-07'
         },
         {
           type: 'questions',
-          tit: '题库'
+          tit: '题库',
+          class_name: 'userm-item-02'
         },
         // {
         //   type: 'zhibo',
-        //   tit: '直播'
+        //   tit: '直播',
+        // class_name: 'userm-item-03'
         // },
         {
           type: 'answer',
-          tit: '答疑'
+          tit: '答疑',
+          class_name: 'userm-item-04'
         },
         {
           type: 'order',
-          tit: '订单'
+          tit: '订单',
+          class_name: 'userm-item-05'
         },
         {
           type: 'account',
-          tit: '账号'
+          tit: '账号',
+          class_name: 'userm-item-06'
         }
       ],
       clkTit: this.$route.query.type || window.sessionStorage.getItem('type') || 'course',
@@ -166,12 +173,12 @@ export default {
 
   },
   beforeRouteLeave (to, from, next) {
-    window.sessionStorage.removeItem('type')
-    window.sessionStorage.removeItem('selIdxCourse')
-    window.sessionStorage.removeItem('selIdxQuestion')
-    window.sessionStorage.removeItem('selIdxAnswer')
-    window.sessionStorage.removeItem('selIdxOrder')
-    window.sessionStorage.removeItem('selIdxAccount')
+    // window.sessionStorage.removeItem('type')
+    // window.sessionStorage.removeItem('selIdxCourse')
+    // window.sessionStorage.removeItem('selIdxQuestion')
+    // window.sessionStorage.removeItem('selIdxAnswer')
+    // window.sessionStorage.removeItem('selIdxOrder')
+    // window.sessionStorage.removeItem('selIdxAccount')
     document.body.removeAttribute('style')
     this.visible = false
     next()
@@ -264,6 +271,12 @@ export default {
     }
     .userm-item-06.curren &, .userm-item-06:hover &{
       background-image: url('../../assets/images/user/user-active-icon06.png');
+    }
+    .userm-item-07 &{
+      background-image: url('../../assets/images/user/user-icon07.png');
+    }
+    .userm-item-07.curren &, .userm-item-07:hover &{
+      background-image: url('../../assets/images/user/user-active-icon07.png');
     }
   }
 </style>

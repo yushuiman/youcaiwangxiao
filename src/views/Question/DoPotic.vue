@@ -222,6 +222,7 @@ export default {
     getTopicList () {
       this.getQuestion.user_id = this.user_id
       topicList(this.getQuestion).then(data => {
+        this.noDataFlag = true
         const res = data.data
         if (res.code === 200) {
           let { topics, total, title } = res.data
@@ -229,22 +230,21 @@ export default {
           this.total = parseInt(total)
           this.title = title
           this.answer_time = parseInt(res.data.answer_time) * 1000
-          if (topics.length === 0) {
-            this.noDataFlag = true
-            return
-          }
-          this.topics.map((val, index) => {
-            val.showAnalysis = false // 解析默认false，只有做错题的时候true(练习模式)
-            val.flag = false // 解析展开收起交互(练习模式)
-            val.currenOption = false // 点击当前题，不能重复选择(练习模式)
-            val.userOption = ''
-            val.options.map((v, index) => {
-              v.selOption = false // 选择当前选项变蓝色，其他默认颜色，可以重复选择(除了练习模式，都是这个逻辑)
+          if (topics && topics.length) {
+            this.noDataFlag = false
+            this.topics.map((val, index) => {
+              val.showAnalysis = false // 解析默认false，只有做错题的时候true(练习模式)
+              val.flag = false // 解析展开收起交互(练习模式)
+              val.currenOption = false // 点击当前题，不能重复选择(练习模式)
+              val.userOption = ''
+              val.options.map((v, index) => {
+                v.selOption = false // 选择当前选项变蓝色，其他默认颜色，可以重复选择(除了练习模式，都是这个逻辑)
+              })
             })
-          })
-          // 拿到题，开始倒计时
-          if (parseInt(this.getQuestion.plate_id) === 6) {
-            this.timerDown()
+            // 拿到题，开始倒计时
+            if (parseInt(this.getQuestion.plate_id) === 6) {
+              this.timerDown()
+            }
           }
         } else {
           this.$Message.error(res.msg)

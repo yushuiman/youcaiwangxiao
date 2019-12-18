@@ -85,6 +85,20 @@ export const record = (data) => { // 入库观看记录
     method: 'post'
   })
 }
+export const watchRecords = (data) => { // 观看记录
+  return axios.request({
+    url: '/web/Education/watchRecords',
+    data,
+    method: 'post'
+  })
+}
+export const myCPEcourse = (data) => { // 我的后续教育课程
+  return axios.request({
+    url: '/web/Education/myCPEcourse',
+    data,
+    method: 'post'
+  })
+}
 export const newInformation = (data) => { // 最新资讯
   return axios.request({
     url: '/web/Education/newInformation',

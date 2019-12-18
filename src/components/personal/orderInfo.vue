@@ -135,6 +135,7 @@ export default {
       })
     },
     initRes () {
+      this.noDataFlag = false
       if (parseInt(this.selIdxOrder) === 0) {
         this.orderList = this.orderAllList
       }

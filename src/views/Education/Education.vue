@@ -26,7 +26,7 @@
               <img :src="items.pc_img" alt="" class="edu-couse-item-img">
               <div class="edu-course-str">
                 <p class="ci-title">{{items.name}}</p>
-                <p class="ci-teacher-day">讲师：{{items.teacher_name}}<span>CPE积分：{{items.study_days}}分</span></p>
+                <p class="ci-teacher-day">讲师：{{items.teacher_name}}<span>CPE积分：{{items.cpe_integral}}分</span></p>
                 <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? '¥' + items.price : items.billing_status == 3 ? '积分兑换' : '等级进入' }}</span>
               </div>
             </li>
@@ -219,6 +219,9 @@ export default {
     p{
       flex: 1;
       color: $blueColor;
+    }
+    span{
+      cursor: pointer;
     }
   }
   .edu-couse-item{

@@ -320,8 +320,8 @@ export default {
       margin-top: 8px;
       margin-bottom: 12px;
       color: $col999;
-      max-height: 40px;
-      line-height: 20px;
+      height: 34px;
+      line-height: 17px;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;

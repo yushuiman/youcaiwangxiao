@@ -21,19 +21,7 @@
         </ul>
       </div>
     </div>
-    <div class="order-confirm-com course-detail" v-if="is_live == 2">
-      <h2>商品信息</h2>
-      <div class="curse-info">
-        <img class="curse-img" :src="packages.pc_img" alt="">
-        <div class="curse-instr">
-          <h3>{{packages.name}}</h3>
-          <p>讲师：{{packages.teacher_name}}</p>
-          <p>有效期：{{packages.validity}}天</p>
-        </div>
-        <span class="curse-price">{{packages.price}}元</span>
-      </div>
-    </div>
-    <div class="order-confirm-com course-detail" v-if="is_live == 3">
+    <div class="order-confirm-com course-detail">
       <h2>商品信息</h2>
       <div class="curse-info">
         <img class="curse-img" :src="packages.pc_img" alt="">
@@ -46,7 +34,7 @@
       </div>
     </div>
     <!-- 课程有发票 书没有 -->
-    <div class="order-confirm-com make-bill" v-if="is_live == 2">
+    <div class="order-confirm-com make-bill" v-if="is_live != 3">
       <h2>发票信息<span>开企业抬头发票须填写纳税人识别号，以免影响报销</span></h2>
       <div class="need-bill">
         <RadioGroup v-model="bill" @on-change="onBillChange">
@@ -57,7 +45,7 @@
       <p v-if="showBillType" class="bill-type-show">{{originBillInfo.couponType == 1 ? '增值税普通发票' : '增值税专用发票'}}:{{originBillInfo.couponType == 1 ? originBillInfo.invoice_title : originBillInfo.companyName}}<span @click="changeAgainBill">修改</span></p>
     </div>
     <!-- 课程有优惠券 书没有 -->
-    <div class="order-confirm-com use-coupon" v-if="coupon_num > 0 && is_live == 2">
+    <div class="order-confirm-com use-coupon" v-if="coupon_num > 0 && is_live != 3">
       <h2>优惠券</h2>
       <ul class="coupon-list">
         <li class="coupon-item" :class="{'cur': originBillInfo.user_coupon_id == item.coupon_id}" v-for="(item, index) in couponList" :key="index"
@@ -196,7 +184,7 @@ export default {
       billType: '个人',
       agree: true,
       package_id: this.$route.query.package_id,
-      is_live: this.$route.query.is_live, // 1直播订单、2课程订单、3图书订单4积分订单
+      is_live: this.$route.query.is_live, // 1直播2课程3图书4积分5后续教育
       visibleAddress: false,
       visibleBill: false,
       packages: {}, // 商品信息
@@ -425,7 +413,8 @@ export default {
     getCoupon () {
       availableCoupon({
         user_id: this.user_id,
-        package_id: this.package_id
+        package_id: this.package_id,
+        is_live: this.is_live
       }).then(data => {
         const res = data.data
         if (res.code === 200) {

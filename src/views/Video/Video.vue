@@ -452,7 +452,9 @@ export default {
   beforeDestroy () {
     clearInterval(this.socketTimer)
     clearInterval(this.tryWatchTimer)
-    this.$refs.aliPlayers.dispose()
+    if (this.$refs.aliPlayers) {
+      this.$refs.aliPlayers.dispose()
+    }
   },
   beforeRouteLeave (to, from, next) {
     window.sessionStorage.removeItem('ofH')

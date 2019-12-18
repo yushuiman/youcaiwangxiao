@@ -121,28 +121,6 @@ export default {
     font-size: 20px;
     color: #E6E6E6;
   }
-  .vc-list{
-    padding-bottom: 30px;
-    padding-left: 20px;
-    display: flex;
-    align-items: center;
-    img{
-      @include wh(87, 48);
-      margin-right: 20px;
-      border-radius: 4px;
-    }
-    .c-info{
-      h2{
-        font-size: 16px;
-        color: #E6E6E6;
-      }
-      p{
-        font-size: 12px;
-        color: $col999;
-        margin-top: 8px;
-      }
-    }
-  }
   .close-box{
     text-align: right;
     padding-top: 25px;

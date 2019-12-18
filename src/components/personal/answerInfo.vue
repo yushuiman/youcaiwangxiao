@@ -343,14 +343,15 @@ export default {
         limit: this.limit,
         page: this.page
       }).then(data => {
+        this.noDataFlag = true
         const res = data.data
         if (res.code === 200) {
           if (res.data && res.data.list) {
             let { num, list } = res.data
             this.total = num
             this.courseAnswerList = list
-            if (this.courseAnswerList.length === 0) {
-              this.noDataFlag = true
+            if (this.courseAnswerList.length) {
+              this.noDataFlag = false
             }
             this.courseAnswerList.map((val, index) => {
               val.openFlag = false
@@ -371,14 +372,15 @@ export default {
         limit: this.limit,
         page: this.page
       }).then(data => {
+        this.noDataFlag = true
         const res = data.data
         if (res.code === 200) {
           if (res.data && res.data.list) {
             let { num, list } = res.data
             this.total = num
             this.questionAnswerList = list
-            if (this.questionAnswerList.length === 0) {
-              this.noDataFlag = true
+            if (this.questionAnswerList.length) {
+              this.noDataFlag = false
             }
             this.questionAnswerList.map((val, index) => {
               val.openFlag = false

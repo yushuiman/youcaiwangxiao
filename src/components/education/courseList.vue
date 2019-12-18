@@ -7,13 +7,13 @@
           default-active="2"
           class="el-menu-vertical-demo">
           <el-submenu :index="'' + index+1" v-for="(item, index) in courseCatalogInfo" :key="index">
-            <template slot="title" >
+            <template slot="title">
               <div class="title-cpe" @click="getSecvCatalog(item, index)">
                 <span><i class="elt-icon elt-icon-01"></i>{{item.name}}</span>
                 <span>{{item.cpe_integral}}积分</span>
               </div>
             </template>
-            <el-submenu :index="'1-'+ key+1" v-for="(val, key) in courseSections" :key="key">
+            <el-submenu :index="'1-'+ key+1" v-for="(val, key) in secvCatalogList[item.course_id]" :key="key">
               <template slot="title">
                 <i class="elt-icon elt-icon-02"></i>
                 <span>{{val.section_name}}</span>
@@ -35,6 +35,9 @@ import { courseCatalog, secvCatalog } from '@/api/education'
 import { mapState } from 'vuex'
 export default {
   props: {
+    type_id: {
+      type: Number
+    },
     package_id: {
       type: Number
     },
@@ -46,7 +49,7 @@ export default {
     return {
       courseCatalogInfo: [], // 课程大纲（目录）
       courseSections: [], // 课程大纲（章节 video）
-      secvCatalogArr: []
+      secvCatalogList: []
     }
   },
   computed: {
@@ -73,9 +76,9 @@ export default {
     },
     // 课程大纲(章节 video)
     getSecvCatalog (item, index) {
-      for (var i = 0; i < this.secvCatalogArr.length; i++) {
-        if (item.name === this.secvCatalogArr[i].type) {
-          this.courseSections = this.secvCatalogArr[i].courseSections
+      let obj = this.secvCatalogList
+      for (let i in obj) {
+        if (item.course_id === parseInt(i)) {
           return
         }
       }
@@ -84,11 +87,7 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.courseSections = res.data
-          this.secvCatalogArr.push({
-            type: item.name,
-            courseSections: res.data
-          })
+          this.$set(this.secvCatalogList, [item.course_id], res.data)
         } else {
           this.$Message.error(res.msg)
         }
@@ -108,6 +107,7 @@ export default {
       window.sessionStorage.setItem('userstatus', this.userstatus) // 是否购买
       this.$router.push({ path: '/education-video',
         query: {
+          type_id: this.type_id,
           package_id: this.package_id,
           course_id: item.course_id,
           section_id: val.section_id,
@@ -123,13 +123,10 @@ export default {
   .el-col-24:last-child{
     .el-menu{
       border: 0;
+      border-radius: 4px;
     }
   }
-  .el-menu{
-    border-bottom: 1px solid #EFEFEF;
-  }
   .el-menu .el-submenu {
-    border-bottom: 1px solid #EFEFEF;
     &:last-child{
       border: 0;
     }
@@ -137,9 +134,15 @@ export default {
   .el-menu{
     .el-submenu{
       border-bottom: 1px solid $borderColor;
-      // .el-menu-item{
-      //   padding-left: 20px!important;
-      // }
+    }
+  }
+  .title-cpe{
+    display: flex;
+    justify-content: space-between;
+    span:nth-child(2){
+      color: $blueColor;
+      font-size: 16px;
+      padding-right: 20px;
     }
   }
   .elt-icon{

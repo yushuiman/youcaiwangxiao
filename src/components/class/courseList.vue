@@ -13,7 +13,7 @@
                 {{item.name}}
               </div>
             </template>
-            <el-submenu :index="'1-'+ key+1" v-for="(val, key) in courseSections" :key="key">
+            <el-submenu :index="'1-'+ key+1" v-for="(val, key) in secvCatalogList[item.course_id]" :key="key">
               <template slot="title">
                 <i class="elt-icon elt-icon-02"></i>
                 <span>{{val.section_name}}</span>
@@ -47,7 +47,7 @@ export default {
     return {
       courseCatalogInfo: [], // 课程大纲（目录）
       courseSections: [], // 课程大纲（章节 video）
-      secvCatalogArr: []
+      secvCatalogList: []
     }
   },
   computed: {
@@ -74,9 +74,9 @@ export default {
     },
     // 课程大纲(章节 video)
     getSecvCatalog (item, index) {
-      for (var i = 0; i < this.secvCatalogArr.length; i++) {
-        if (item.name === this.secvCatalogArr[i].type) {
-          this.courseSections = this.secvCatalogArr[i].courseSections
+      let obj = this.secvCatalogList
+      for (let i in obj) {
+        if (item.course_id === parseInt(i)) {
           return
         }
       }
@@ -85,11 +85,7 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.courseSections = res.data
-          this.secvCatalogArr.push({
-            type: item.name,
-            courseSections: res.data
-          })
+          this.$set(this.secvCatalogList, [item.course_id], res.data)
         } else {
           this.$Message.error(res.msg)
         }

@@ -2,7 +2,7 @@
   <div class="class-detail-wrap w-wrap">
     <div class="nav-title">
       <router-link to="/">首页</router-link><i>></i>
-      <router-link :to="{path:'/education-course-list', query: {type_id: $route.query.type_id}}">后续教育</router-link><i>></i>
+      <router-link :to="{path:'/education-course-list', query: {type_id: type_id}}">后续教育</router-link><i>></i>
       <span class="curren">{{isntroduction.name}}</span>
     </div>
     <div class="class-detail-info clearfix">
@@ -31,15 +31,13 @@
         <p class="cdi-instr">{{isntroduction.description}}</p>
         <p class="cdi-teacher">讲师：{{isntroduction.teacher_name}}</p>
         <div class="cdi-type">
-          <span v-if="isntroduction.vip_video == 1">VIP视频</span>
-          <span v-if="isntroduction.vip_bank == 1">VIP题库</span>
           <span>CPE积分：{{isntroduction.cpe_integral}}分</span>
         </div>
         <p class="cdi-buy-people">{{isntroduction.buy_num}}人购买<span>{{isntroduction.join_num}}次播放</span></p>
         <p class="cdi-price"><em>¥</em>{{isntroduction.price}}</p>
         <div class="cdi-buy-consult">
-          <button type="button" name="button" class="buy-btn" v-if="isntroduction.userstatus == 2" @click="goSeeVideo">立即观看</button>
-          <button type="button" name="button" class="buy-btn" v-if="isntroduction.userstatus == 1" @click="goPay">立即购买</button>
+          <button type="button" name="button" class="buy-btn" v-if="isntroduction.userstatus == 1" @click="goSeeVideo">立即观看</button>
+          <button type="button" name="button" class="buy-btn" v-if="isntroduction.userstatus == 2" @click="goPay">立即购买</button>
           <button type="button" name="button" class="consult-btn" @click="consultLink">在线咨询</button>
         </div>
       </div>
@@ -57,7 +55,7 @@
             <img :src="isntroduction.brief_img" alt="" width="100%">
           </div>
           <div class="clt-kcdg" v-show="isChoose == 'kjdg'">
-            <course-list :package_id="package_id" :userstatus="isntroduction.userstatus"></course-list>
+            <course-list :package_id="package_id" :type_id="type_id" :userstatus="isntroduction.userstatus"></course-list>
           </div>
           <div class="clt-jianjie" v-show="isChoose == 'kczx'">
             <img :src="isntroduction.consult" alt="" width="100%">
@@ -82,6 +80,7 @@ import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
+      type_id: this.$route.query.type_id,
       package_id: this.$route.query.package_id,
       isChoose: 'kcjj',
       isntroduction: {}, // 课程简介
@@ -142,7 +141,8 @@ export default {
       window.sessionStorage.setItem('userstatus', this.isntroduction.userstatus) // 是否购买
       this.$router.push({ path: '/education-video',
         query: {
-          package_id: this.package_id
+          package_id: this.package_id,
+          type_id: this.type_id
         }
       })
     },
@@ -162,7 +162,7 @@ export default {
           path: '/order-confirm',
           query: {
             package_id: this.package_id,
-            is_live: 2 // 1直播订单、2课程订单、3图书订单4积分订单
+            is_live: 5 // 1直播订单、2课程订单、3图书订单4积分订单5后续教育
           }
         })
       })
@@ -255,8 +255,8 @@ export default {
       margin-top: 8px;
       margin-bottom: 12px;
       color: $col999;
-      max-height: 40px;
-      line-height: 20px;
+      height: 34px;
+      line-height: 17px;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
@@ -295,9 +295,9 @@ export default {
     }
     .cdi-buy-consult{
       button{
-        @include whl(130, 40, 40);
-        border-radius: 20px;
-        font-size: 18px;
+        @include whl(110, 30, 30);
+        border-radius: 15px;
+        font-size: 16px;
         box-sizing: border-box;
         &.buy-btn{
           text-align: center;
@@ -328,7 +328,7 @@ export default {
   }
   .clt-kcdg{
     width: 902px;
-    background: $colfff;
+    // background: $colfff;
   }
   .clt-else-info-r{
     padding-top: 49px;
