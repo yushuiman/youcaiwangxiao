@@ -1,5 +1,5 @@
 <template>
-    <div class="bycourse">
+    <div class="bycourse" style="text-align:center;">
         <div ref="courseInfo" class="courseInfo">
             <img class="courseCover" src="../../assets/images/course/hot-top-icon.png" alt="">
             <div>

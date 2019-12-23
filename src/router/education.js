@@ -2,6 +2,7 @@ const Education = r => require.ensure([], () => r(require('@/views/Education/Edu
 const EducationCourseList = r => require.ensure([], () => r(require('@/views/Education/EducationCourseList')), 'EducationCourseList')
 const EducationCourseDetail = r => require.ensure([], () => r(require('@/views/Education/EducationCourseDetail')), 'EducationCourseDetail')
 const EducationVideo = r => require.ensure([], () => r(require('@/views/Education/EducationVideo')), 'EducationVideo')
+const EducationReport = r => require.ensure([], () => r(require('@/views/Education/EducationReport')), 'EducationReport')
 const LearnTips = r => require.ensure([], () => r(require('@/views/Education/LearnTips')), 'LearnTips')
 export default [
   {
@@ -52,6 +53,17 @@ export default [
     path: '/learn-tips',
     name: 'learn-tips',
     component: LearnTips,
+    meta: {
+      title: '后续教育',
+      showHeader: true,
+      showFooter: false,
+      showRightSlider: true
+    }
+  },
+  {
+    path: '/education-report',
+    name: 'education-report',
+    component: EducationReport,
     meta: {
       title: '后续教育',
       showHeader: true,

@@ -6,19 +6,19 @@
           :unique-opened="true"
           default-active="2"
           class="el-menu-vertical-demo">
-          <el-submenu :index="'' + index+1" v-for="(item, index) in courseCatalogInfo" :key="index">
+          <el-submenu :index="item.index" v-for="item in courseCatalogInfo" :key="item.course_id" style="margin-bottom: 10px;border:0;">
             <template slot="title" >
               <div @click="getSecvCatalog(item, index)">
                 <i class="elt-icon elt-icon-01"></i>
                 {{item.name}}
               </div>
             </template>
-            <el-submenu :index="'1-'+ key+1" v-for="(val, key) in secvCatalogList[item.course_id]" :key="key">
+            <el-submenu :index="item.index+'-'+val.index" v-for="val in secvCatalogList[item.course_id]" :key="val.section_id">
               <template slot="title">
                 <i class="elt-icon elt-icon-02"></i>
                 <span>{{val.section_name}}</span>
               </template>
-              <el-menu-item :index="'1-1'+ index+1" v-for="(v, index) in val.videos" :key="index"
+              <el-menu-item :index="item.index + '-' + val.index + '-' + v.index" v-for="(v) in val.videos" :key="v.video_id"
               @click="playVideo(item, val, v, key, index)">
                 <i class="elt-icon elt-icon-stop"></i>
                 <span>{{v.video_name}}</span>
@@ -67,6 +67,9 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.courseCatalogInfo = res.data
+          this.courseCatalogInfo.forEach((v, index) => {
+            v.index = index + 1
+          })
         } else {
           this.$Message.error(res.msg)
         }
@@ -85,6 +88,14 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
+          res.data.forEach((v, index) => {
+            v.index = index + 1
+            if (v.videos && v.videos.length) {
+              v.videos.forEach((val, index) => {
+                val.index = index + 1
+              })
+            }
+          })
           this.$set(this.secvCatalogList, [item.course_id], res.data)
         } else {
           this.$Message.error(res.msg)
@@ -120,13 +131,10 @@ export default {
   .el-col-24:last-child{
     .el-menu{
       border: 0;
+      border-radius: 4px;
     }
   }
-  .el-menu{
-    border-bottom: 1px solid #EFEFEF;
-  }
   .el-menu .el-submenu {
-    border-bottom: 1px solid #EFEFEF;
     &:last-child{
       border: 0;
     }
@@ -134,9 +142,6 @@ export default {
   .el-menu{
     .el-submenu{
       border-bottom: 1px solid $borderColor;
-      // .el-menu-item{
-      //   padding-left: 20px!important;
-      // }
     }
   }
   .elt-icon{

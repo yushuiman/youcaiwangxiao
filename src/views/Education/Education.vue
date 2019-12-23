@@ -34,6 +34,10 @@
         </div>
       </div>
       <div class="edu-right">
+        <div class="cpe-tab">
+          <span class="cpe-report" @click="aboutCpe(1)">CPE学分报告</span>
+          <span class="cpe-record" @click="aboutCpe(2)">学习记录</span>
+        </div>
         <learn-tips></learn-tips>
         <news></news>
       </div>
@@ -182,6 +186,18 @@ export default {
           package_id: item.package_id
         }
       })
+    },
+    aboutCpe (type) {
+      if (type === 1) {
+        this.$router.push({ path: '/education-report' })
+      }
+      if (type === 2) {
+        this.$router.push({ path: '/personal',
+          query: {
+            type: 'education'
+          }
+        })
+      }
     }
   }
 }
@@ -198,11 +214,10 @@ export default {
     display: flex;
     justify-content: space-between;
     .edu-left{
-      flex: 1;
+      width: 880px;
     }
     .edu-right{
       width: 298px;
-      margin-left: 20px;
     }
   }
   .edu-couse-list{
@@ -285,8 +300,25 @@ export default {
       height: 36px;
       background: #0267FF;
       color: #ffffff;
-      // margin: 0 auto;
       margin: 20px auto;
+    }
+  }
+  .cpe-tab{
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    span{
+      color: #FFFFFF;
+      font-weight: bold;
+      padding-left: 14px;
+      line-height: 32px;
+      box-sizing: border-box;
+      cursor: pointer;
+      @include bg_img(143, 32, '../../assets/images/education/report.png');
+      &:last-child{
+        padding-left: 23px;
+        @include bg_img(143, 32, '../../assets/images/education/record.png');
+      }
     }
   }
 </style>

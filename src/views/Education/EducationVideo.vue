@@ -37,7 +37,7 @@
         <div class="drag"></div>
       </div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
-        <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" :is_zhengke="playCourseInfo.is_zhengke" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
+        <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
         <div class="jiangyi" v-if="flagJy">
           <div class="close-box" @click="closeModel">
             <i class="close-icon"></i>
@@ -47,20 +47,30 @@
         </div>
       </div>
     </div>
+    <div v-if="canSign">
+      <Modal title="签到"
+        v-model="visible"
+        footer-hide
+        :width="795"
+        class="iview-modal">
+        <div class="sign-modal">
+          <span @click="signSub">签到签到</span>
+        </div>
+      </Modal>
+    </div>
   </div>
 </template>
 <script>
 import aliPlayer from '@/components/educationVideo/aliPlayer'
 import courseList from '@/components/educationVideo/courseList'
 import HeadName from '@/components/common/HeadName'
-import { videoCredentials, courseCatalog, secvCatalog, record } from '@/api/education'
+import { videoCredentials, courseCatalog, secvCatalog, record, signQuery, sign } from '@/api/education'
 import { mapState } from 'vuex'
 
 export default {
   data () {
     return {
       selMenu: 3,
-      showBox: '课程<br />切换',
       vinfo: ['课程<br />切换', '讲义'],
       flagKc: true,
       flagCourse: false,
@@ -78,13 +88,14 @@ export default {
         section_id: this.$route.query.section_id,
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
-        is_zhengke: 0,
         userstatus: parseInt(window.sessionStorage.getItem('userstatus')) || 2 // 1购买2未购买
       },
       packageList: [],
       secvCatalogArr: [],
       courseSections: [],
-      openMenu: '1-1' // 默认播放菜单menu-index
+      openMenu: '1-1', // 默认播放菜单menu-index
+      visible: false, // 签到，modal
+      canSign: false // 视频最后10分钟签到
     }
   },
   components: {
@@ -192,11 +203,6 @@ export default {
         if (res.code === 200) {
           this.packageList = res.data
           let id = parseInt(this.$route.query.course_id || this.packageList[0].course_id)
-          this.packageList.forEach(v => {
-            if (id === v.course_id) {
-              this.playCourseInfo.is_zhengke = v.is_zhengke
-            }
-          })
           this.initSecvCatalog(id)
         } else {
           this.$Message.error(res.msg)
@@ -205,35 +211,21 @@ export default {
     },
     // 课程大纲(章节 video)
     getSecvCatalog (item, idx) {
-      this.flagKc = true
-      this.flagJy = false
-      this.wImportant = 382
-      this.playCourseInfo.is_zhengke = item.is_zhengke
-      this.$router.replace({ path: 'course-video',
+      this.$router.replace({ path: 'education-video',
         query: {
-          ...this.$route.query,
+          type_id: this.$route.query.type_id,
+          package_id: this.$route.query.package_id,
           course_id: item.course_id
         }
       })
-      secvCatalog({
-        course_id: item.course_id
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.courseSections = res.data
-          this.secvCatalogArr.push({
-            type: item.name,
-            courseSections: res.data
-          })
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+      window.sessionStorage.removeItem('ofH')
+      window.location.reload()
     },
     // 初始化展示章节
     initSecvCatalog (id) {
       secvCatalog({
-        course_id: id
+        course_id: id,
+        user_id: this.user_id
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
@@ -253,6 +245,7 @@ export default {
           this.playCourseInfo.video_id = this.$route.query.video_id || this.courseSections[0].video[0].video_id
           this.playCourseInfo.VideoId = this.$route.query.VideoId || this.courseSections[0].video[0].VideoId
           this.getVideoPlayback()
+          this.isSignQuery()
         } else {
           this.$Message.error(res.msg)
         }
@@ -267,6 +260,52 @@ export default {
       }).then(data => {
         let res = data.data
         this.videoCredentials = res.data
+      })
+    },
+    downTime () {
+      setInterval(() => {
+        console.log('最后10分钟允许签到')
+      }, 1000)
+    },
+    // 签到查询
+    isSignQuery () {
+      signQuery({
+        user_id: this.user_id,
+        course_id: this.playCourseInfo.course_id,
+        video_id: this.playCourseInfo.video_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          if (res.data.status === 1) {
+            this.visible = false
+          }
+          if (res.data.status === 2) {
+            this.visible = true
+            this.downTime()
+          }
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 签到
+    signSub () {
+      sign({
+        user_id: this.user_id,
+        course_id: this.playCourseInfo.course_id,
+        video_id: this.playCourseInfo.video_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          if (res.data.status === 1) {
+            this.$Message.success('签到成功～')
+          }
+          if (res.data.status === 2) {
+            this.$Message.error('已签到～')
+          }
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     }
   },
@@ -426,6 +465,7 @@ export default {
     padding-left: 30px;
     display: flex;
     align-items: center;
+    cursor: pointer;
     img{
       @include wh(87, 48);
       margin-right: 20px;

@@ -268,5 +268,37 @@
     margin-top: -2px;
 }
 .el-menu{
+    background: transparent;
+}
+.el-submenu{
+    background: #ffffff;
+}
+.el-menu{
     border-right: 0;
+}
+.el-submenu__title{
+    height: 38px;
+    line-height: 38px;
+}
+.clt-kcdg .el-submenu__title {
+    height: 50px;
+    line-height: 50px;
+}
+
+.munu-active .el-menu-item.is-active {
+    color: #F99111!important;
+}
+/* 后续教育 */
+.custom-checkbox{
+    margin-right: 0;
+}
+.custom-checkbox .ivu-checkbox-inner {
+    width: 18px;
+    height: 18px;
+    box-sizing: border-box;
+    margin-right: 21px;
+}
+.custom-checkbox .ivu-checkbox-checked .ivu-checkbox-inner:after {
+    left: 6px;
+    top: 3px;
 }

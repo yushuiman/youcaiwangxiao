@@ -393,7 +393,6 @@ export default {
   }
   .clt-kcdg{
     width: 902px;
-    background: $colfff;
   }
   .clt-else-info-r{
     padding-top: 49px;

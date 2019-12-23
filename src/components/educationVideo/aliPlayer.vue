@@ -52,6 +52,10 @@ export default {
       type: Boolean,
       default: false
     },
+    disableSeek: {
+      type: Boolean,
+      default: true
+    },
     useFlashPrism: {
       type: Boolean,
       default: false
@@ -233,6 +237,25 @@ export default {
           }
         ]
       }
+    ],
+    skinLayout: [
+      { name: 'bigPlayButton', align: 'blabs', x: 130, y: 80 },
+      {
+        name: 'H5Loading', align: 'cc'
+      },
+      {
+        name: 'controlBar',
+        align: 'blabs',
+        x: 0,
+        y: 0,
+        children: [
+          { name: 'progress', align: 'tlabs', x: 0, y: 0 },
+          { name: 'playButton', align: 'tl', x: 15, y: 26 },
+          { name: 'timeDisplay', align: 'tl', x: 10, y: 24 },
+          { name: 'fullScreenButton', align: 'tr', x: 20, y: 25 },
+          { name: 'volume', align: 'tr', x: 20, y: 25 }
+        ]
+      }
     ]
   },
   data () {
@@ -240,6 +263,8 @@ export default {
       playerId: 'aliplayer_' + Math.random() * 100000000000000000,
       scriptTagStatus: 0,
       instance: null,
+      curTime: 0,
+      curTime2: 0,
       playStatus: true // 暂停/开始
     }
   },
@@ -346,8 +371,31 @@ export default {
           _this.instance.on('dispose', () => {
             this.$emit('dispose', _this.instance)
           })
+          _this.instance.on('startSeek', () => {
+            this.curTime = this.getCurrentTime()
+            this.$emit('startSeek', _this.instance)
+            console.log(this.curTime)
+            // _this.instance.pause()
+            // _this.instance.seek(8)
+          })
+          _this.instance.on('completeSeek', () => {
+            this.curTime2 = this.getCurrentTime()
+            this.$emit('completeSeek', _this.instance)
+            console.log(this.curTime2)
+          })
         })
       }
+    },
+    startSeek: function () {
+      console.log(1)
+      this.instance.pause()
+      // this.instance.seek(this.curTime)
+    },
+    completeSeek: function () {
+      console.log(2)
+      // console.log(3223)
+      // this.instance.play()
+      // this.instance.seek(this.curTime)
     },
     /**
        * 销毁

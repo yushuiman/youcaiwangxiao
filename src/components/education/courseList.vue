@@ -6,19 +6,19 @@
           :unique-opened="true"
           default-active="2"
           class="el-menu-vertical-demo">
-          <el-submenu :index="'' + index+1" v-for="(item, index) in courseCatalogInfo" :key="index">
-            <template slot="title">
-              <div class="title-cpe" @click="getSecvCatalog(item, index)">
-                <span><i class="elt-icon elt-icon-01"></i>{{item.name}}</span>
-                <span>{{item.cpe_integral}}积分</span>
+          <el-submenu :index="item.index" v-for="item in courseCatalogInfo" :key="item.course_id" style="margin-bottom: 10px;border:0;">
+            <template slot="title" >
+              <div @click="getSecvCatalog(item, index)">
+                <i class="elt-icon elt-icon-01"></i>
+                {{item.name}}
               </div>
             </template>
-            <el-submenu :index="'1-'+ key+1" v-for="(val, key) in secvCatalogList[item.course_id]" :key="key">
+            <el-submenu :index="item.index+'-'+val.index" v-for="val in secvCatalogList[item.course_id]" :key="val.section_id">
               <template slot="title">
                 <i class="elt-icon elt-icon-02"></i>
                 <span>{{val.section_name}}</span>
               </template>
-              <el-menu-item :index="'1-1'+ index+1" v-for="(v, index) in val.video" :key="index"
+              <el-menu-item :index="item.index + '-' + val.index + '-' + v.index" v-for="(v) in val.video" :key="v.video_id"
               @click="playVideo(item, val, v, key, index)">
                 <i class="elt-icon elt-icon-stop"></i>
                 <span>{{v.video_name}}</span>
@@ -69,6 +69,9 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.courseCatalogInfo = res.data
+          this.courseCatalogInfo.forEach((v, index) => {
+            v.index = index + 1
+          })
         } else {
           this.$Message.error(res.msg)
         }
@@ -87,6 +90,14 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
+          res.data.forEach((v, index) => {
+            v.index = index + 1
+            if (v.video && v.video.length) {
+              v.video.forEach((val, index) => {
+                val.index = index + 1
+              })
+            }
+          })
           this.$set(this.secvCatalogList, [item.course_id], res.data)
         } else {
           this.$Message.error(res.msg)
@@ -104,7 +115,10 @@ export default {
         })
         return
       }
-      window.sessionStorage.setItem('userstatus', this.userstatus) // 是否购买
+      if (this.userstatus === 2) {
+        this.$Message.error('请购买')
+        return
+      }
       this.$router.push({ path: '/education-video',
         query: {
           type_id: this.type_id,

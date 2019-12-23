@@ -5,7 +5,7 @@
         <i class="close-icon"></i>
       </div>
       <h1 class="vc-title">章节目录</h1>
-        <el-row class="tac" id="tac">
+        <el-row class="tac munu-active" id="tac">
           <el-col :span="24">
             <el-menu
               :default-active="openMenu"
@@ -19,7 +19,7 @@
                   <span class="down-load" @click.stop="jiangyiDown(val.handouts)">讲义</span>
                 </template>
                 <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
-                @click="playVideo(val, v, key, index)" :id="'showBox'+ (key) + (index)">
+                @click="playVideo(val, v, key, index)" :id="'showBox'+ (key) + (index)" style="height: 36px;line-height: 36px;color:#999999;">
                   <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
                   <span class="sl">{{v.video_name}}</span>
                   <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1)}"></i>
@@ -170,8 +170,8 @@ export default {
     @include wh(10, 10);
     display: inline-block;
     border-radius: 100%;
-    margin-top: 20px;
-    border:2px solid rgba(102,102,102,1);
+    margin-top: 13px;
+    border: 2px solid rgba(102,102,102,1);
     box-sizing: border-box;
     float: right;
     &.el-dot-see{
@@ -182,6 +182,10 @@ export default {
       border: 0;
       border:2px solid rgba(249,145,17,1);
     }
+  }
+  .sec-name{
+    font-size: 16px;
+    color: #E6E6E6;
   }
   .sl,.sec-name{
     width: 80%;

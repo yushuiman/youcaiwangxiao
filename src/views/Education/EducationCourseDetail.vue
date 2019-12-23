@@ -1,29 +1,14 @@
 <template>
   <div class="class-detail-wrap w-wrap">
     <div class="nav-title">
-      <router-link to="/">首页</router-link><i>></i>
-      <router-link :to="{path:'/education-course-list', query: {type_id: type_id}}">后续教育</router-link><i>></i>
+      <router-link to="/education">后续教育</router-link><i>></i>
+      <router-link :to="{path:'/education-course-list', query: {type_id: type_id}}">课程</router-link><i>></i>
       <span class="curren">{{isntroduction.name}}</span>
     </div>
     <div class="class-detail-info clearfix">
       <div class="cdi-wrap-l fl">
-        <div class="cdi-video" @click="playVideo">
+        <div class="cdi-video">
           <img class="cdi-img" :src="isntroduction.pc_img" alt="">
-          <div class="cdi-opa">
-            <p class="cdi-tit">{{isntroduction.name}}</p>
-            <span class="cdi-play-btn"><i></i>免费试听</span>
-          </div>
-          <div v-if="videoflag" class="video-object">
-            <!-- <video style="position:absolute;left:0;top:0;z-index:999;" autoplay="autoplay" controls="controls" src="https://p.bokecc.com/flash/single/8E7175958932B212_FBBCC178D6FB98CC9C33DC5901307461_false_0CCEB0A89A516E59_1/player.swf" width="650" height="364">
-              <source src="https://p.bokecc.com/flash/single/8E7175958932B212_FBBCC178D6FB98CC9C33DC5901307461_false_0CCEB0A89A516E59_1/player.swf" type="video/ogg" />
-            </video> -->
-            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="650" height="364" id="cc_FBBCC178D6FB98CC9C33DC5901307461">
-              <param name="movie" value="https://p.bokecc.com/flash/single/8E7175958932B212_FBBCC178D6FB98CC9C33DC5901307461_false_0CCEB0A89A516E59_1/player.swf" />
-              <param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" />
-              <param value="transparent" name="wmode" />
-              <embed src="https://p.bokecc.com/flash/single/8E7175958932B212_FBBCC178D6FB98CC9C33DC5901307461_false_0CCEB0A89A516E59_1/player.swf" width="650" height="364" name="cc_FBBCC178D6FB98CC9C33DC5901307461" allowFullScreen="true" wmode="transparent" allowScriptAccess="always" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash"/>
-            </object>
-          </div>
         </div>
       </div>
       <div class="cdi-wrap-r fr">
@@ -84,7 +69,6 @@ export default {
       package_id: this.$route.query.package_id,
       isChoose: 'kcjj',
       isntroduction: {}, // 课程简介
-      videoflag: false,
       consultInfo: JSON.parse(window.sessionStorage.getItem('consultInfo')) || {} // 在线咨询
     }
   },
@@ -101,13 +85,17 @@ export default {
     })
   },
   mounted () {
-    this.getCourseIntroduction() // 课程简介
-    // if (this.isLoadHttpRequest) {
-    // } else {
-    //   this.$watch('isLoadHttpRequest', function (val, oldVal) {
-    //     this.getCourseIntroduction() // 课程简介
-    //   })
-    // }
+    if (!this.token) {
+      this.getCourseIntroduction() // 课程简介
+      return
+    }
+    if (this.isLoadHttpRequest) {
+      this.getCourseIntroduction() // 课程简介
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getCourseIntroduction() // 课程简介
+      })
+    }
   },
   methods: {
     ...mapActions([
@@ -116,7 +104,7 @@ export default {
     // 课程简介
     getCourseIntroduction () {
       courseIntroduction({
-        user_id: this.user_id,
+        user_id: this.user_id || '',
         package_id: this.package_id
       }).then(data => {
         const res = data.data
@@ -130,9 +118,6 @@ export default {
     // tab切换 (课程简介 课程大纲)
     tabChoose (type) {
       this.isChoose = type
-    },
-    playVideo () {
-      this.videoflag = true
     },
     consultLink () {
       window.open(this.consultInfo.consult_href, '_blank')
@@ -152,7 +137,7 @@ export default {
         this.$router.push({ path: '/login',
           query: {
             package_id: this.package_id,
-            call_back: 'course-detail'
+            call_back: 'education-course-detail'
           }
         })
         return
@@ -205,41 +190,6 @@ export default {
         width: 100%;
         height: 100%;
         display: block;
-      }
-    }
-  }
-  .cdi-opa,.video-object{
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    height: 364px;
-    color: $colfff;
-    background:rgba(0,0,0,.5);
-    .cdi-tit{
-      font-size: 20px;
-      padding: 22px 20px;
-    }
-    .cdi-play-btn{
-      @include whl(130, 34, 34);
-      border: 1px solid $colfff;
-      border-radius: 17px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      margin-left: -75px;
-      margin-top: -17px;
-      text-align: center;
-      cursor: pointer;
-      i{
-        @include wh(14, 16);
-        @extend %bg-img;
-        background-image: url('../../assets/images/course/video-icon.png');
-        display: inline-block;
-        vertical-align: middle;
-        margin-right: 10px;
-        margin-top: -3px;
       }
     }
   }
@@ -328,7 +278,6 @@ export default {
   }
   .clt-kcdg{
     width: 902px;
-    // background: $colfff;
   }
   .clt-else-info-r{
     padding-top: 49px;

@@ -14,16 +14,6 @@
       <HeadName :showName="false"></HeadName>
     </div>
     <div class="video-main" id="box">
-      <!-- <div class="vid-kcqh" v-if="flagCourse">
-        <h1 class="vc-title">套餐内课程</h1>
-        <div class="vc-list" v-for="(item, index) in packageList" :key="index" @click="getSecvCatalog(item)">
-          <img :src="item.pc_img" alt="">
-          <div class="c-info">
-            <h2>{{item.name}}</h2>
-            <p>讲师: {{item.teacher_name}}</p>
-          </div>
-        </div>
-      </div> -->
       <div class="video-info-l">
         <ul class="vinfo-ul">
           <li class="vinfo-item" @click="showModel('课程<br />切换')">
@@ -42,11 +32,7 @@
         </ul>
       </div>
       <div class="video-info-c" id="left">
-        <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="playCourseInfo.VideoId" :playauth="videoCredentials.playAuth" :user_id="user_id"></ali-player>
-        <!-- <div class="star-collection" @click="courseCollection(videoCredentials.collect)">
-          <Icon type="md-star-outline" style="color: #ffffff;" v-if="videoCredentials.collect == 2"/>
-          <Icon type="md-star" style="color: #F99111;" v-if="videoCredentials.collect == 1"/>
-        </div> -->
+        <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth" :user_id="user_id"></ali-player>
       </div>
       <div id="resize" class="course-drag" :class="{'course-drag-hide': !flagKc && !flagAnswer && !flagJy}">
         <div class="drag"></div>
@@ -58,7 +44,8 @@
           </div>
           <h1 class="vc-title" style="color: #E6E6E6;">章节目录</h1>
           <ul class="video-list">
-            <li class="video-item" :class="{'curren': playCourseInfo.video_id == v.video_id}" v-for="(v, index) in learnVideoList" :key="index" @click="playVideo(v)">
+            <li class="video-item" :class="{'curren': playCourseInfo.video_id == v.video_id}" v-for="(v, index) in learnVideoList" :key="index" @click="playVideo(v)"
+            style="height: 36px;line-height: 36px;">
               <i class="el-video-icon"></i>
               <span class="sl">{{v.video_name}}</span>
               <i class="el-dot-icon"></i>
@@ -82,7 +69,7 @@ import aliPlayer from '@/components/video/aliPlayer'
 // import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
 import HeadName from '@/components/common/HeadName'
-import { videoCredentials, collection, firstSocket } from '@/api/class'
+import { videoCredentials, videoPlayback, collection, firstSocket } from '@/api/class'
 import { getVideo } from '@/api/learncenter'
 import config from '@/config'
 import { mapState } from 'vuex'
@@ -110,7 +97,6 @@ export default {
         }
       ],
       selMenu: 3,
-      showBox: '课程<br />切换',
       vinfo: ['课程<br />切换', '答疑', '讲义'],
       flagKc: true,
       flagAnswer: false,
@@ -124,8 +110,8 @@ export default {
         watch_time: '', // 观看时间
         Title: '' // name
       },
+      VideoId: '', // 视频VideoId
       playCourseInfo: {
-        VideoId: '',
         package_id: this.$route.query.package_id,
         course_id: this.$route.query.course_id,
         section_id: this.$route.query.section_id,
@@ -337,28 +323,39 @@ export default {
           this.learnVideoList = res.data.video
           this.learnVideoList.forEach(v => {
             if (parseInt(this.playCourseInfo.video_id) === v.video_id) {
-              this.playCourseInfo.VideoId = v.VideoId
               this.playtime = v.watch_time
             }
           })
-          this.getVideoPlayback()
+          this.getVideoPlayback(this.playCourseInfo.video_id)
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
     // 获取视频凭证
-    getVideoPlayback () {
-      videoCredentials({
-        VideoId: this.playCourseInfo.VideoId,
-        user_id: this.user_id,
-        package_id: this.playCourseInfo.package_id,
-        course_id: this.playCourseInfo.course_id,
-        section_id: this.playCourseInfo.section_id,
-        video_id: this.playCourseInfo.video_id
+    getVideoPlayback (id) {
+      videoPlayback({
+        video_id: id
       }).then(data => {
-        let res = data.data
-        this.videoCredentials = res.data
+        const res = data.data
+        if (res.code === 200) {
+          this.VideoId = res.data.VideoId
+          // 获取视频凭证
+          videoCredentials({
+            VideoId: res.data.VideoId,
+            user_id: this.user_id,
+            package_id: this.playCourseInfo.package_id,
+            course_id: this.playCourseInfo.course_id,
+            section_id: this.playCourseInfo.section_id,
+            video_id: this.playCourseInfo.video_id
+          }).then(data => {
+            let res = data.data
+            this.videoCredentials = res.data
+            this.playtime = this.videoCredentials.watch_time
+          })
+        } else {
+          this.$Message.error(res.msg)
+        }
       })
     },
     playVideo (v) {
@@ -471,28 +468,6 @@ export default {
     font-size: 20px;
     color: $col333;
   }
-  // // 目录 答疑 讲义
-  // .video-course-wrap{
-  //   position: absolute;
-  //   top: 20px;
-  //   background: #26292C;
-  //   z-index: 12;
-  //   padding: 0 20px;
-  //   box-sizing: border-box;
-  //   &.vid-jy, &.vid-dy{
-  //     width: 495px;
-  //     // height: 869px;
-  //     height: 100%;
-  //     top: 0;
-  //     right: 0;
-  //     background: #ffffff;
-  //     box-shadow: 0px 15px 10px -15px rgba(0,0,0,0.2) inset;
-  //   }
-  //   &.vid-dy{
-  //     padding: 0;
-  //     background: #F8FAFC;
-  //   }
-  // }
 
   .video-main{
     position: absolute;
@@ -567,44 +542,6 @@ export default {
     }
     &.vio-icon-03{
       @include bg_img(26, 25, '../../assets/images/video/jiangyi-icon.png');
-    }
-  }
-  // 课程包
-  .vid-kcqh{
-    position: absolute;
-    width: 386px;
-    top: 0;
-    left: 60px;
-    bottom: 19px;
-    z-index: 101;
-    background: #26292C;
-    overflow-y: scroll;
-    .vc-title{
-      color: #E6E6E6;
-      padding-left: 30px;
-      padding-top: 30px;
-    }
-  }
-  .vc-list{
-    padding-bottom: 30px;
-    padding-left: 30px;
-    display: flex;
-    align-items: center;
-    img{
-      @include wh(87, 48);
-      margin-right: 20px;
-      border-radius: 4px;
-    }
-    .c-info{
-      h2{
-        font-size: 16px;
-        color: #E6E6E6;
-      }
-      p{
-        font-size: 12px;
-        color: $col999;
-        margin-top: 8px;
-      }
     }
   }
   // 讲义

@@ -148,7 +148,7 @@ export default {
       // 如果有看过的记录，继续学习
       if (val.video) {
         let obj = {
-          // type_id: val.type_id,
+          type_id: val.type_id,
           package_id: val.package_id,
           course_id: val.video.course_id,
           section_id: val.video.section_id,

@@ -92,6 +92,20 @@ export const watchRecords = (data) => { // 观看记录
     method: 'post'
   })
 }
+export const signQuery = (data) => { // 签到查询
+  return axios.request({
+    url: '/web/Education/signQuery',
+    data,
+    method: 'post'
+  })
+}
+export const sign = (data) => { // 签到
+  return axios.request({
+    url: '/web/Education/sign',
+    data,
+    method: 'post'
+  })
+}
 export const myCPEcourse = (data) => { // 我的后续教育课程
   return axios.request({
     url: '/web/Education/myCPEcourse',
@@ -99,6 +113,21 @@ export const myCPEcourse = (data) => { // 我的后续教育课程
     method: 'post'
   })
 }
+export const userIntegral = (data) => { // cpe报告
+  return axios.request({
+    url: '/web/Education/userIntegral',
+    data,
+    method: 'post'
+  })
+}
+export const generateImg = (data) => { // cpe报告生成
+  return axios.request({
+    url: '/upload/Edureport/generateImg',
+    data,
+    method: 'post'
+  })
+}
+
 export const newInformation = (data) => { // 最新资讯
   return axios.request({
     url: '/web/Education/newInformation',

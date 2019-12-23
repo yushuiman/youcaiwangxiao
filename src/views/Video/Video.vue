@@ -16,7 +16,7 @@
     <div class="video-main" id="box">
       <div class="vid-kcqh" v-if="flagCourse">
         <h1 class="vc-title">套餐内课程</h1>
-        <div class="vc-list" v-for="(item, index) in packageList" :key="index" @click="getSecvCatalog(item)">
+        <div class="vc-list" :class="{'cur': item.course_id == playCourseInfo.course_id}" v-for="(item, index) in packageList" :key="index" @click="getSecvCatalog(item)">
           <img :src="item.pc_img" alt="">
           <div class="c-info">
             <h2>{{item.name}}</h2>
@@ -81,7 +81,6 @@ export default {
   data () {
     return {
       selMenu: 3,
-      showBox: '课程<br />切换',
       vinfo: ['课程<br />切换', '答疑', '讲义'],
       flagKc: true,
       flagAnswer: false,
@@ -338,31 +337,14 @@ export default {
     },
     // 课程大纲(章节 video)
     getSecvCatalog (item, idx) {
-      this.flagKc = true
-      this.flagAnswer = false
-      this.flagJy = false
-      this.wImportant = 382
-      this.playCourseInfo.is_zhengke = item.is_zhengke
       this.$router.replace({ path: 'course-video',
         query: {
-          ...this.$route.query,
+          package_id: this.$route.query.package_id,
           course_id: item.course_id
         }
       })
-      secvCatalog({
-        course_id: item.course_id
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.courseSections = res.data
-          this.secvCatalogArr.push({
-            type: item.name,
-            courseSections: res.data
-          })
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+      window.sessionStorage.removeItem('ofH')
+      window.location.reload()
     },
     // 初始化展示章节
     initSecvCatalog (id) {
@@ -512,7 +494,6 @@ export default {
       }
     }
   }
-
   .vc-title{
     padding-top: 18px;
     padding-bottom: 30px;
@@ -520,29 +501,6 @@ export default {
     font-size: 20px;
     color: $col333;
   }
-
-  // // 目录 答疑 讲义
-  // .video-course-wrap{
-  //   position: absolute;
-  //   top: 20px;
-  //   background: #26292C;
-  //   z-index: 12;
-  //   padding: 0 20px;
-  //   box-sizing: border-box;
-  //   &.vid-jy, &.vid-dy{
-  //     width: 495px;
-  //     // height: 869px;
-  //     height: 100%;
-  //     top: 0;
-  //     right: 0;
-  //     background: #ffffff;
-  //     box-shadow: 0px 15px 10px -15px rgba(0,0,0,0.2) inset;
-  //   }
-  //   &.vid-dy{
-  //     padding: 0;
-  //     background: #F8FAFC;
-  //   }
-  // }
 
   .video-main{
     position: absolute;
@@ -633,13 +591,14 @@ export default {
       color: #E6E6E6;
       padding-left: 30px;
       padding-top: 30px;
+      padding-bottom: 13px;
     }
   }
   .vc-list{
-    padding-bottom: 30px;
-    padding-left: 30px;
+    padding: 15px 30px;
     display: flex;
     align-items: center;
+    cursor: pointer;
     img{
       @include wh(87, 48);
       margin-right: 20px;
