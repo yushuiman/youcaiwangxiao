@@ -103,6 +103,7 @@ export default {
       this.getMyCollquestion()
     },
     getMyCollquestion (val) {
+      this.noDataFlag = false
       myCollquestion({
         course_id: this.course_id,
         user_id: this.user_id

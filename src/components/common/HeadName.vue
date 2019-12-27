@@ -24,7 +24,6 @@
   </div>
 </template>
 <script>
-// import { watchRecords } from '@/api/personal'
 import { mapActions, mapState } from 'vuex'
 
 export default {
@@ -55,7 +54,6 @@ export default {
           sign: 'set'
         }
       ]
-      // watchRecordsList: {} // 观看记录
     }
   },
   computed: {
@@ -93,12 +91,12 @@ export default {
     },
     // 个人中心
     goPersonalPage (sign) {
-      window.sessionStorage.setItem('type', sign)
       if (this.$route.name === 'personal') {
+        this.$router.push({ path: '/personal', query: { type: sign } })
         window.location.reload()
         return
       }
-      this.$router.push('/personal')
+      this.$router.push({ path: '/personal', query: { type: sign } })
     },
     // 消息
     goNews () {

@@ -599,6 +599,9 @@ export default {
     display: flex;
     align-items: center;
     cursor: pointer;
+    &.cur, &:hover{
+      background: #1c1f21;
+    }
     img{
       @include wh(87, 48);
       margin-right: 20px;

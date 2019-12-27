@@ -382,10 +382,13 @@ export default {
         this.$Message.error('请购买课程')
         return
       }
-      window.sessionStorage.setItem('type', 'questions')
       window.sessionStorage.setItem('course_id', this.course_id)
-      window.sessionStorage.setItem('selIdxQuestion', index)
-      this.$router.push('/personal')
+      this.$router.push({ path: '/personal',
+        query: {
+          type: 'questions',
+          selIdx: index
+        }
+      })
     }
   },
   beforeRouteLeave (to, from, next) {

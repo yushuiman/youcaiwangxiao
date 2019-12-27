@@ -77,7 +77,7 @@ export default {
           class_name: 'userm-item-06'
         }
       ],
-      clkTit: this.$route.query.type || window.sessionStorage.getItem('type') || 'course',
+      clkTit: this.$route.query.type || 'course',
       personalInfo: {} // 个人信息
     }
   },
@@ -136,12 +136,17 @@ export default {
     // 切换tab课程题库答疑直播订单账号
     switchInfo ({ type }, index) {
       this.clkTit = type
-      window.sessionStorage.setItem('type', type)
+      this.$router.replace({ path: '/personal',
+        query: {
+          ...this.$route.query,
+          type: type,
+          selIdx: 0
+        }
+      })
     },
     // 设置用户信息
     setBaseInfo () {
       this.clkTit = 'set'
-      window.sessionStorage.setItem('type', 'set')
     },
     // 用户信息
     getPersonalInfo (type) {

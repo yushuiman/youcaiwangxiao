@@ -2,13 +2,13 @@
   <div class="u-course-wrap">
     <!-- answerType：personal只为区分样式  -->
     <ul class="tab-list" v-if="answerType == 'personal'">
-      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxAnswer == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
     <ul class="tab-list-learn" v-if="answerType == 'learn'">
-      <li class="tab-item-learn" v-for="(v, index) in txtArr" :class="{'active': selIdxAnswer == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      <li class="tab-item-learn" v-for="(v, index) in txtArr" :class="{'active': selIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
     <div class="all-main">
-      <div v-if="selIdxAnswer == 0">
+      <div v-if="selIdx == 0">
         <div v-if="courseAnswerList && courseAnswerList.length">
           <ul class="u-othq-list">
             <!-- 提问 -->
@@ -128,7 +128,7 @@
           暂无答疑
         </div>
       </div>
-      <div v-if="selIdxAnswer == 1">
+      <div v-if="selIdx == 1">
         <div v-if="questionAnswerList && questionAnswerList.length">
           <ul class="u-othq-list">
             <!-- 提问 -->
@@ -276,7 +276,7 @@ export default {
     return {
       visible: false,
       txtArr: ['课程答疑', '题库答疑'],
-      selIdxAnswer: window.sessionStorage.getItem('selIdxAnswer') || 0,
+      selIdx: this.$route.query.selIdx || 0,
       limit: 5,
       page: 1,
       total: 1,
@@ -319,18 +319,23 @@ export default {
       this.visible = true
     },
     tabClk (v, index) {
-      this.selIdxAnswer = index
-      window.sessionStorage.setItem('selIdxAnswer', index)
+      this.selIdx = index
+      this.$router.replace({ path: '/personal',
+        query: {
+          ...this.$route.query,
+          selIdx: index
+        }
+      })
       this.page = 1
       this.initRes()
     },
     initRes () {
-      if (parseInt(this.selIdxAnswer) === 0) {
+      if (parseInt(this.selIdx) === 0) {
         this.getCourseAnswer()
         this.zhuiwenInfo.answer_type = 1
         this.tousuInfo.answer_type = 1
       }
-      if (parseInt(this.selIdxAnswer) === 1) {
+      if (parseInt(this.selIdx) === 1) {
         this.getQuestionAnswer()
         this.zhuiwenInfo.answer_type = 2
         this.tousuInfo.answer_type = 2

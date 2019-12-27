@@ -107,8 +107,6 @@ export default {
     // 点击头像
     setBaseInfo () {
       this.$emit('setBaseInfo', 'set')
-      // this.clkTit = 'set'
-      // window.sessionStorage.setItem('type', 'set')
     }
   }
 }

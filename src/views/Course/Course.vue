@@ -48,7 +48,7 @@
     <div class="class-zh class-tj-bg">
       <div class="w-wrap class-com">
         <div class="cl-list cl-list-zh">
-          <span class="curren">综合</span>
+          <span @click="screenCourse('综合')" :class="{'curren': form.multiple == 2}">综合</span>
           <span @click="screenCourse('人气')">人气<i :class="[form.popularity == 1 ? 'hot-top-icon' : 'hot-down-icon']"></i></span>
           <span @click="screenCourse('价格')">价格<i class="price-icon" :class="{'price-top-icon': form.pricesort==1, 'price-down-icon': form.pricesort==2}"></i></span>
           <input type="number" name="" placeholder="¥" v-model.number="priceStart">
@@ -113,7 +113,7 @@ export default {
       form: {
         class_id: '',
         billing_status: '',
-        multiple: '',
+        multiple: 2,
         popularity: '',
         pricesort: '',
         limit: 6,
@@ -179,17 +179,26 @@ export default {
   methods: {
     // 条件筛选
     screenCourse (type, val) {
+      if (type === '综合') {
+        this.form.popularity = ''
+        this.form.pricesort = ''
+        this.form.multiple = 2
+      }
       if (type === '人气') {
+        this.form.multiple = ''
         if (this.form.popularity === 1) {
-          this.form.popularity = ''
+          this.form.popularity = 2
         } else {
           this.form.popularity = 1
         }
       }
       if (type === '价格') {
-        if (this.form.pricesort === 1) {
+        this.form.multiple = ''
+        if (this.form.pricesort == '') {
+          this.form.pricesort = 1
+        } else if (this.form.pricesort == 1) {
           this.form.pricesort = 2
-        } else {
+        } else if (this.form.pricesort == 2) {
           this.form.pricesort = 1
         }
       }
@@ -364,6 +373,7 @@ export default {
     span{
       margin-right: 30px;
       box-sizing: border-box;
+      border: 1px solid transparent;
       &.curren, &:hover{
         color: $blueColor;
         cursor: pointer;

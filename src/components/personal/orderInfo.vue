@@ -1,7 +1,7 @@
 <template>
   <div class="u-order-wrap">
     <ul class="tab-list">
-      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxOrder == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
     <div class="order-main">
       <ul class="order-list" v-if="orderList && orderList.length">
@@ -79,7 +79,7 @@ export default {
     return {
       visible: false,
       txtArr: ['全部订单', '已支付', '未支付'],
-      selIdxOrder: window.sessionStorage.getItem('selIdxOrder') || 0,
+      selIdx: this.$route.query.selIdx || 0,
       noDataFlag: false,
       orderList: [], // 订单
       orderAllList: [], // 全部订单
@@ -109,8 +109,13 @@ export default {
       'getUserInfo'
     ]),
     tabClk (v, index) {
-      this.selIdxOrder = index
-      window.sessionStorage.setItem('selIdxOrder', index)
+      this.selIdx = index
+      this.$router.replace({ path: '/personal',
+        query: {
+          ...this.$route.query,
+          selIdx: index
+        }
+      })
       this.initRes()
     },
     getMyOrder () {
@@ -136,13 +141,13 @@ export default {
     },
     initRes () {
       this.noDataFlag = false
-      if (parseInt(this.selIdxOrder) === 0) {
+      if (parseInt(this.selIdx) === 0) {
         this.orderList = this.orderAllList
       }
-      if (parseInt(this.selIdxOrder) === 1) {
+      if (parseInt(this.selIdx) === 1) {
         this.orderList = this.orderAlearyPayList
       }
-      if (parseInt(this.selIdxOrder) === 2) {
+      if (parseInt(this.selIdx) === 2) {
         this.orderList = this.orderNoPayList
       }
       if (this.orderList.length === 0) {

@@ -128,9 +128,7 @@ export default {
       })
     },
     setBaseInfo () {
-      this.$router.push('personal')
-      window.sessionStorage.setItem('type', 'set')
-      window.sessionStorage.setItem('selIdxSet', 0)
+      this.$router.push({ path: '/personal', query: { type: 'set' } })
     },
     tabClk (v, index) {
       this.selIdxNews = index
@@ -181,18 +179,13 @@ export default {
     },
     diffNews (item) {
       if (item.type === 1) { // 课程回复
-        window.sessionStorage.setItem('type', 'answer')
-        window.sessionStorage.setItem('selIdxAnswer', 0)
-        this.$router.push({ path: 'personal', query: { num: item.content_id } })
+        this.$router.push({ path: '/personal', query: { type: 'answer', selIdx: 0, num: item.content_id } })
       }
       if (item.type === 2) { // 题库回复
-        window.sessionStorage.setItem('type', 'answer')
-        window.sessionStorage.setItem('selIdxAnswer', 1)
-        this.$router.push({ path: 'personal', query: { num: item.content_id } })
+        this.$router.push({ path: '/personal', query: { type: 'answer', selIdx: 1, num: item.content_id } })
       }
       if (item.type === 3) { // 订单
-        window.sessionStorage.setItem('type', 'order')
-        this.$router.push('/personal')
+        this.$router.push({ path: '/personal', query: { type: 'order' } })
       }
       if (item.type === 4) { // 普通
         this.getListMessage(item)

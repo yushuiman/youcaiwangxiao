@@ -375,9 +375,12 @@ export default {
     goResult () {
       // 如果是错题中心，查看报告
       if (this.diffTxt === 0 || this.diffTxt === 1 || this.diffTxt === 2) {
-        window.sessionStorage.setItem('type', 'questions')
-        window.sessionStorage.setItem('selIdxQuestion', this.diffTxt)
-        this.$router.push({ path: '/personal' })
+        this.$router.push({ path: '/personal',
+          query: {
+            type: 'questions',
+            selIdx: this.diffTxt
+          }
+        })
         return
       }
       // 如果是学习中心
@@ -396,11 +399,9 @@ export default {
     },
     // 论述题
     goPersonal () {
-      window.sessionStorage.setItem('type', 'questions')
       this.$router.push({ path: '/personal',
         query: {
-          type: 'questions',
-          course_id: this.$route.query.course_id
+          type: 'questions'
         }
       })
     },

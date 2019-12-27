@@ -102,6 +102,7 @@ export default {
       this.getErrorsectionList()
     },
     getErrorsectionList (val) {
+      this.noDataFlag = false
       personalWrongtopic({
         course_id: this.course_id,
         user_id: this.user_id

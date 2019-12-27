@@ -1,10 +1,10 @@
 <template>
   <div class="u-zhibo-wrap">
     <ul class="tab-list">
-      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxAccount == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
     <div class="zhibo-main">
-      <div v-if="selIdxAccount == 0">
+      <div v-if="selIdx == 0">
         <!-- 消费记录 -->
         <ul class="consumption-record-list" v-if="consumptionRecordList.length">
           <li>
@@ -26,7 +26,7 @@
           暂无数据
         </div>
       </div>
-      <div v-if="selIdxAccount == 2">
+      <div v-if="selIdx == 2">
         <!-- 激活 -->
         <div class="card-activation">
           <div class="cactive-left">
@@ -63,7 +63,7 @@
           </li>
         </ul>
       </div>
-      <div v-if="selIdxAccount == 1">
+      <div v-if="selIdx == 1">
         <div class="coupon-com">
           <p class="coupon-tit">您有<i>{{num}}</i>张可用优惠券</p>
           <ul class="coupon-list">
@@ -106,7 +106,7 @@ export default {
   data () {
     return {
       txtArr: ['消费记录', '优惠券'],
-      selIdxAccount: window.sessionStorage.getItem('selIdxAccount') || 0,
+      selIdx: this.$route.query.selIdx || 0,
       consumptionRecordList: [],
       noDataFlag: false,
       paySts: {
@@ -145,15 +145,20 @@ export default {
   },
   methods: {
     tabClk (v, index) {
-      this.selIdxAccount = index
-      window.sessionStorage.setItem('selIdxAccount', index)
+      this.selIdx = index
+      this.$router.replace({ path: '/personal',
+        query: {
+          ...this.$route.query,
+          selIdx: index
+        }
+      })
       this.initRes()
     },
     initRes () {
-      if (parseInt(this.selIdxAccount) === 0) {
+      if (parseInt(this.selIdx) === 0) {
         this.getConsumptionRecord()
       }
-      if (parseInt(this.selIdxAccount) === 1) {
+      if (parseInt(this.selIdx) === 1) {
         this.getCoupons()
       }
     },

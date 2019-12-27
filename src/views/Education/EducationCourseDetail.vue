@@ -268,6 +268,7 @@ export default {
   .clt-tab{
     @include lh(49, 49);
     span{
+      font-size: 16px;
       padding: 0 21px;
       display: inline-block;
       cursor: pointer;

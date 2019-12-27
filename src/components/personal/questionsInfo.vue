@@ -1,17 +1,17 @@
 <template>
   <div class="u-question-wrap">
     <ul class="tab-list">
-      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxQuestion == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
     <div class="all-main" v-if="courseList.length">
       <!-- 做题记录 -->
-      <questions-menuItem v-if="selIdxQuestion == 0" :courseList="courseList" :user_id="user_id"></questions-menuItem>
+      <questions-menuItem v-if="selIdx == 0" :courseList="courseList" :user_id="user_id"></questions-menuItem>
       <!-- 错题集 -->
-      <error-menuItem v-if="selIdxQuestion == 1" :courseList="courseList" :user_id="user_id"></error-menuItem>
+      <error-menuItem v-if="selIdx == 1" :courseList="courseList" :user_id="user_id"></error-menuItem>
       <!-- 收藏夹 -->
-      <collection-menuItem v-if="selIdxQuestion == 2" :courseList="courseList" :user_id="user_id"></collection-menuItem>
+      <collection-menuItem v-if="selIdx == 2" :courseList="courseList" :user_id="user_id"></collection-menuItem>
       <!-- 习题笔记 -->
-      <!-- <div v-if="selIdxQuestion == 3">
+      <!-- <div v-if="selIdx == 3">
         <div class="no-data">
           暂无数据
         </div>
@@ -34,7 +34,7 @@ export default {
     return {
       // txtArr: ['做题记录', '错题集', '收藏夹', '习题笔记'],
       txtArr: ['做题记录', '错题集', '收藏夹'],
-      selIdxQuestion: window.sessionStorage.getItem('selIdxQuestion') || 0,
+      selIdx: this.$route.query.selIdx || 0,
       noDataFlag: false,
       courseList: [], // 课程列表
       course_id: window.sessionStorage.getItem('course_id') || ''
@@ -64,8 +64,13 @@ export default {
   methods: {
     // tab
     tabClk (v, index) {
-      window.sessionStorage.setItem('selIdxQuestion', index)
-      this.selIdxQuestion = index
+      this.selIdx = index
+      this.$router.replace({ path: '/personal',
+        query: {
+          ...this.$route.query,
+          selIdx: index
+        }
+      })
     },
     getProjectList (type) {
       getProject({

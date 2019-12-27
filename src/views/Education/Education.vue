@@ -127,6 +127,11 @@ export default {
     previewCourseClk ({ id }) {
       this.visible = true
       this.previewId = id
+      this.$router.push({ path: '/education-course-sign',
+        query: {
+          preview_id: id
+        }
+      })
     },
     // 报名
     previewSign () {
@@ -188,13 +193,23 @@ export default {
       })
     },
     aboutCpe (type) {
+      if (!this.token) {
+        this.$router.push({ path: '/login',
+          query: {
+            package_id: this.package_id,
+            call_back: 'education'
+          }
+        })
+        return
+      }
       if (type === 1) {
         this.$router.push({ path: '/education-report' })
       }
       if (type === 2) {
         this.$router.push({ path: '/personal',
           query: {
-            type: 'education'
+            type: 'education',
+            selIdx: 1
           }
         })
       }

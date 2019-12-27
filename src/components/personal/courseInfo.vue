@@ -1,11 +1,11 @@
 <template>
   <div class="u-course-wrap">
     <ul class="tab-list">
-      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxCourse == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
     <div class="all-main">
       <!-- 课程 -->
-      <div class="u-course-my" v-if="selIdxCourse == 0">
+      <div class="u-course-my" v-if="selIdx == 0">
         <div v-if="myCourseList.length">
           <div class="uc-item" v-for="(val, key) in myCourseList" :key="key">
             <img :src="val.pc_img" alt="" class="uci-img">
@@ -23,7 +23,7 @@
         </div>
       </div>
       <!-- 播放记录 -->
-      <div v-if="selIdxCourse == 1">
+      <div v-if="selIdx == 1">
         <div class="u-course-record" v-if="watchRecordsList && watchRecordsList.length">
           <div class="ucr-item" v-for="(item, index) in watchRecordsList" :key="index">
             <p class="time"><i class="dot"></i>{{item.time}}</p>
@@ -45,7 +45,7 @@
         </div>
       </div>
       <!-- 收藏课程 -->
-      <div v-if="selIdxCourse == 2">
+      <div v-if="selIdx == 2">
         <div v-if="myCollpackageList.length">
           <Menu accordion width="100%">
             <Submenu :name="index+1" class="myCollpackageMenu" v-for="(val, index) in myCollpackageList" :key="index" style="padding:0px;">
@@ -117,7 +117,7 @@ export default {
     return {
       visible: false,
       txtArr: ['课程', '播放记录', '收藏课程'],
-      selIdxCourse: window.sessionStorage.getItem('selIdxCourse') || 0,
+      selIdx: this.$route.query.selIdx || 0,
       limit: 10,
       page: 1,
       myCourseList: [], // 我的课程
@@ -158,19 +158,24 @@ export default {
       'getUserInfo'
     ]),
     tabClk (v, index) {
-      this.selIdxCourse = index
-      window.sessionStorage.setItem('selIdxCourse', index)
+      this.selIdx = index
+      this.$router.replace({ path: '/personal',
+        query: {
+          ...this.$route.query,
+          selIdx: index
+        }
+      })
       this.initRes()
     },
     initRes () {
       this.noDataFlag = false
-      if (parseInt(this.selIdxCourse) === 0) {
+      if (parseInt(this.selIdx) === 0) {
         this.getMyCourse()
       }
-      if (parseInt(this.selIdxCourse) === 1) {
+      if (parseInt(this.selIdx) === 1) {
         this.getWatchRecords()
       }
-      if (parseInt(this.selIdxCourse) === 2) {
+      if (parseInt(this.selIdx) === 2) {
         this.getMyCollpackage()
       }
     },

@@ -1,6 +1,8 @@
 const Education = r => require.ensure([], () => r(require('@/views/Education/Education')), 'Education')
 const EducationCourseList = r => require.ensure([], () => r(require('@/views/Education/EducationCourseList')), 'EducationCourseList')
 const EducationCourseDetail = r => require.ensure([], () => r(require('@/views/Education/EducationCourseDetail')), 'EducationCourseDetail')
+const EducationCourseSign = r => require.ensure([], () => r(require('@/views/Education/EducationCourseSign')), 'EducationCourseSign')
+const EducationPreviewSign = r => require.ensure([], () => r(require('@/views/IosAndroidH5/EducationPreviewSign')), 'EducationPreviewSign')
 const EducationVideo = r => require.ensure([], () => r(require('@/views/Education/EducationVideo')), 'EducationVideo')
 const EducationReport = r => require.ensure([], () => r(require('@/views/Education/EducationReport')), 'EducationReport')
 const LearnTips = r => require.ensure([], () => r(require('@/views/Education/LearnTips')), 'LearnTips')
@@ -36,6 +38,28 @@ export default [
       showHeader: true,
       showFooter: true,
       showRightSlider: true
+    }
+  },
+  {
+    path: '/education-course-sign',
+    name: 'education-course-sign',
+    component: EducationCourseSign,
+    meta: {
+      title: '后续教育',
+      showHeader: true,
+      showFooter: true,
+      showRightSlider: true
+    }
+  },
+  {
+    path: '/education-preview-sign',
+    name: 'education-preview-sign',
+    component: EducationPreviewSign,
+    meta: {
+      title: '后续教育',
+      showHeader: false,
+      showFooter: false,
+      showRightSlider: false
     }
   },
   {

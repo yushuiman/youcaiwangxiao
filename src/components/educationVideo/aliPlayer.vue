@@ -6,6 +6,14 @@
       <div class="shuiyin">优财网校{{user_id}}</div>
       <div class="shuiyin">优财网校{{user_id}}</div>
     </div>
+    <div class="sign-box" v-if="canSign && visible" style="position:absolute;top:0;left:0;width:100%;z-index:323232">
+      <div class="opa"></div>
+      <div class="sign-cont">
+        <p>签到获得本课程CPE积分</p>
+        <button class="btn-com" @click="signSub">签到</button>
+        <span>{{jianTime}}秒之后关闭～</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -13,6 +21,17 @@
 export default {
   name: 'Aliplayer',
   props: {
+    jianTime: {
+      type: Number
+    },
+    visible: {
+      type: Boolean,
+      default: false
+    },
+    canSign: {
+      type: Boolean,
+      default: false
+    },
     user_id: {
       type: Number
     },
@@ -264,8 +283,7 @@ export default {
       scriptTagStatus: 0,
       instance: null,
       curTime: 0,
-      curTime2: 0,
-      playStatus: true // 暂停/开始
+      curTime2: 0
     }
   },
   mounted () {
@@ -323,6 +341,7 @@ export default {
           _this.instance = window.Aliplayer({
             id: _this.playerId,
             autoplay: _this.autoplay,
+            disableSeek: _this.disableSeek,
             isLive: _this.isLive,
             playsinline: _this.playsinline,
             format: _this.format,
@@ -338,7 +357,8 @@ export default {
             x5_type: _this.x5_type,
             x5_fullscreen: _this.x5_fullscreen,
             x5_orientation: _this.x5_orientation,
-            autoPlayDelay: _this.autoPlayDelay
+            autoPlayDelay: _this.autoPlayDelay,
+            skinLayout: _this.skinLayout
           })
           // 绑定事件，当 AliPlayer 初始化完成后，将编辑器实例通过自定义的 ready 事件交出去
           _this.instance.on('ready', () => {
@@ -396,6 +416,10 @@ export default {
       // console.log(3223)
       // this.instance.play()
       // this.instance.seek(this.curTime)
+    },
+    ended: function () {
+      var _this = this
+      this.instance.replayByVidAndPlayAuth(_this.vid, _this.playauth)
     },
     /**
        * 销毁
@@ -492,6 +516,16 @@ export default {
       // } else {
       //   this.play()
       // }
+    },
+    signVisible (val) {
+      if (!val) {
+        this.$emit('update:visible', false)
+        this.$emit('update:canSign', false)
+      }
+    },
+    // 签到
+    signSub () {
+      this.$emit('signSub', false)
     }
   }
 }
@@ -597,6 +631,7 @@ export default {
   .prism-player .prism-time-display .current-time{
     color: #ffffff;
   }
+  /* 水印 */
   .shuiyin-wrap .shuiyin{
     position: absolute;
     left: 10%;
@@ -616,5 +651,40 @@ export default {
   .shuiyin-wrap .shuiyin:nth-child(4){
     left: 82%;
     top: 82%;
+  }
+  /* 签到 */
+  .sign-box .opa{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.6);
+  }
+  .sign-cont{
+    position: fixed;
+    width: 240px;
+    left: 50%;
+    top: 50%;
+    border-radius: 4px;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    text-align: center;
+    padding: 20px;
+  }
+  .sign-cont p{
+    font-size: 16px;
+  }
+  .sign-cont button{
+    width: 65px;
+    height: 26px;
+    background: #1874FD;
+    color: #ffffff;
+    margin-top: 20px;
+  }
+  .sign-cont span{
+    display: block;
+    margin-top: 5px;
+    color: #999999;
   }
 </style>

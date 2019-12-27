@@ -1,11 +1,11 @@
 <template>
   <div class="u-course-wrap">
     <ul class="tab-list">
-      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxCourse == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
     <div class="all-main">
       <!-- 课程 -->
-      <div class="u-course-my" v-if="selIdxCourse == 0">
+      <div class="u-course-my" v-if="selIdx == 0">
         <div class="u-course-buy" v-if="myCourseList.length">
           <div class="uc-item" v-for="(val, key) in myCourseList" :key="key">
             <img :src="val.pc_img" alt="" class="uci-img">
@@ -23,7 +23,7 @@
         </div>
       </div>
       <!-- 播放记录 -->
-      <div class="u-course-my" v-if="selIdxCourse == 1">
+      <div class="u-course-my" v-if="selIdx == 1">
         <div class="u-course-record" v-if="watchRecordsList && watchRecordsList.length">
           <div class="ucr-item" v-for="(item, index) in watchRecordsList" :key="index">
             <p class="time"><i class="dot"></i>{{item.time}}</p>
@@ -56,7 +56,7 @@ export default {
     return {
       visible: false,
       txtArr: ['课程', '播放记录'],
-      selIdxCourse: window.sessionStorage.getItem('selIdxCourse') || 0,
+      selIdx: this.$route.query.selIdx || 0,
       limit: 10,
       page: 1,
       myCourseList: [], // 我的课程
@@ -93,16 +93,21 @@ export default {
       'getUserInfo'
     ]),
     tabClk (v, index) {
-      this.selIdxCourse = index
-      window.sessionStorage.setItem('selIdxCourse', index)
+      this.selIdx = index
+      this.$router.replace({ path: '/personal',
+        query: {
+          ...this.$route.query,
+          selIdx: index
+        }
+      })
       this.initRes()
     },
     initRes () {
       this.noDataFlag = false
-      if (parseInt(this.selIdxCourse) === 0) {
+      if (parseInt(this.selIdx) === 0) {
         this.getMyCourse()
       }
-      if (parseInt(this.selIdxCourse) === 1) {
+      if (parseInt(this.selIdx) === 1) {
         this.getWatchRecords()
       }
     },

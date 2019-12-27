@@ -1,4 +1,5 @@
 import 'babel-polyfill'
+// import 'swiper/dist/css/swiper.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'iview/dist/styles/iview.css'
 import './assets/scss/ivu-menu.css'
@@ -13,12 +14,14 @@ import router from './router/'
 import store from './store/'
 import Iview from 'iview'
 import ElementUI from 'element-ui'
+// import vueAwesomeSwiper from 'vue-awesome-swiper'
 // import 'fullpage.js/vendors/scrolloverflow'
 // import VueFullPage from 'vue-fullpage'
 
 // Vue.use(VueFullPage)
 Vue.use(Iview)
 Vue.use(ElementUI)
+// Vue.use(vueAwesomeSwiper)
 new Vue({
   router,
   store,

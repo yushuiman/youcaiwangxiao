@@ -1,12 +1,12 @@
 <template>
   <div class="u-user-wrap">
     <ul class="tab-list">
-      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxSet == index}" :key="index"
+      <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdx == index}" :key="index"
           @click="tabClk(v, index)">{{v}}
       </li>
     </ul>
     <div class="all-main">
-      <div v-if="selIdxSet == 0">
+      <div v-if="selIdx == 0">
         <!--个人信息页面展示-->
         <div v-if="!changeSetFlag">
           <!--修改页面头部-->
@@ -143,7 +143,7 @@
        </div>
       </div>
       <!--修改密码页面-->
-      <div v-if="selIdxSet == 1">
+      <div v-if="selIdx == 1">
         <!--修改页面头部-->
         <div class="header">
           <span class="change_pwd">修改密码</span>
@@ -185,7 +185,7 @@ export default {
   data () {
     return {
       txtArr: ['个人信息修改', '密码修改'],
-      selIdxSet: window.sessionStorage.getItem('selIdxSet') || 0,
+      selIdx: this.$route.query.selIdx || 0,
       userInfo: JSON.parse(window.sessionStorage.getItem('personalInfo')), // 用户信息
       addName: '',
       addAddres: '',
@@ -226,11 +226,13 @@ export default {
     },
     // tab
     tabClk (v, index) {
-      if (!this.user_id) {
-
-      }
-      this.selIdxSet = index
-      window.sessionStorage.setItem('selIdxSet', index)
+      this.selIdx = index
+      this.$router.replace({ path: '/personal',
+        query: {
+          ...this.$route.query,
+          selIdx: index
+        }
+      })
     },
     // 修改div展示
     btnChangeinfo (type) {

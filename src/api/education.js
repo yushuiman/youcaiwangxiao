@@ -50,6 +50,20 @@ export const listCourse = (data) => { // 课程列表
     method: 'post'
   })
 }
+export const previewDetails = (data) => { // 课程预告简介
+  return axios.request({
+    url: '/web/Education/previewDetails',
+    data,
+    method: 'post'
+  })
+}
+export const previewDetailsApp = (data) => { // 课程预告简介
+  return axios.request({
+    url: '/apps/Education/previewDetails',
+    data,
+    method: 'post'
+  })
+}
 export const courseIntroduction = (data) => { // 课程列表简介
   return axios.request({
     url: '/web/Education/courseIntroduction',

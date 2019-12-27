@@ -698,8 +698,11 @@ export default {
     },
     // 完善资料
     writUserInfo () {
-      this.$router.push('/personal')
-      window.sessionStorage.setItem('type', 'set')
+      this.$router.push({ path: '/personal',
+        query: {
+          type: 'set'
+        }
+      })
     },
     // 同意协议
     agreeOk () {

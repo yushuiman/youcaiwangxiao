@@ -90,6 +90,7 @@ export default {
     },
     // 做题记录
     getQuestionRecord () {
+      this.noDataFlag = false
       questionRecord({
         user_id: this.user_id,
         course_id: this.course_id,

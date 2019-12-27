@@ -503,6 +503,24 @@ $state-prefix: 'is-';
   white-space: nowrap;
   width: 100% - $substract;
 }
+@mixin border_color($color) {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: $color;
+    -webkit-transform-origin: 0 0;
+    -ms-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(0.5);
+    -ms-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+  }
+}
 
 
 // 移动端

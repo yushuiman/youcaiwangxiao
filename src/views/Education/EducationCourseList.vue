@@ -17,7 +17,7 @@
     <div class="class-zh class-tj-bg">
       <div class="w-wrap class-com">
         <div class="cl-list cl-list-zh">
-          <span class="curren">综合</span>
+          <span @click="screenCourse('综合')" :class="{'curren': form.multiple == 2}">综合</span>
           <span @click="screenCourse('人气')">人气<i :class="[form.popularity == 1 ? 'hot-top-icon' : 'hot-down-icon']"></i></span>
           <span @click="screenCourse('价格')">价格<i class="price-icon" :class="{'price-top-icon': form.pricesort==1, 'price-down-icon': form.pricesort==2}"></i></span>
           <input type="number" name="" placeholder="¥" v-model.number="form.price_start">
@@ -65,9 +65,9 @@ export default {
         // class_id: '',
         // billing_status: '',
         type_id: this.$route.query.type_id, // 课程类型id
-        multiple: 1, // 综合1升序2降序
+        multiple: 2, // 综合1升序2降序
         popularity: 2, // 人气1升序2降序
-        pricesort: 2, // 价格1升序2降序
+        pricesort: '', // 价格1升序2降序
         price_start: '', // 起始价格
         price_end: '', // 结束价格
         limit: 8, // 每页显示数量
@@ -108,17 +108,26 @@ export default {
       if (type === '课程类别') {
         this.form.type_id = val.type_id
       }
+      if (type === '综合') {
+        this.form.popularity = ''
+        this.form.pricesort = ''
+        this.form.multiple = 2
+      }
       if (type === '人气') {
+        this.form.multiple = ''
         if (this.form.popularity === 1) {
-          this.form.popularity = ''
+          this.form.popularity = 2
         } else {
           this.form.popularity = 1
         }
       }
       if (type === '价格') {
-        if (this.form.pricesort === 1) {
+        this.form.multiple = ''
+        if (this.form.pricesort == '') {
+          this.form.pricesort = 1
+        } else if (this.form.pricesort == 1) {
           this.form.pricesort = 2
-        } else {
+        } else if (this.form.pricesort == 2) {
           this.form.pricesort = 1
         }
       }
@@ -262,6 +271,7 @@ export default {
     span{
       margin-right: 30px;
       box-sizing: border-box;
+      border-bottom: 1px solid transparent;
       &.curren, &:hover{
         color: $blueColor;
         cursor: pointer;
@@ -277,7 +287,8 @@ export default {
       }
       &.curren{
         color: $blueColor;
-        border-bottom: 1px solid $blueColor
+        border-bottom: 1px solid $blueColor;
+        box-sizing: border-box;
       }
       &.lianjie-icon{
         margin: 0;
@@ -336,7 +347,7 @@ export default {
   }
   .edu-couse-list{
     display: flex;
-    // justify-content: center;
+    flex-wrap: wrap;
   }
   .edu-couse-item{
     width: 280px;

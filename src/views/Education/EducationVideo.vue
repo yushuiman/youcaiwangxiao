@@ -30,8 +30,10 @@
           </li>
         </ul>
       </div>
+      <p style="position:absolute;top:0;color: #F99111; padding-left: 60px;height: 34px;line-height: 34px;">如何获得本课程学分：每个视频学习过程中均会随机弹出签到提示，全部视频都成功签到后才能获得本课程CPE积分。</p>
       <div class="video-info-c" id="left">
-        <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="playCourseInfo.VideoId" :playauth="videoCredentials.playAuth" :user_id="user_id"></ali-player>
+        <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="playCourseInfo.VideoId" :playauth="videoCredentials.playAuth" :user_id="user_id"
+         :canSign="canSign" :visible="visible" :jianTime="jianTime" @signSub="signSub"></ali-player>
       </div>
       <div id="resize" class="course-drag" :class="{'course-drag-hide': !this.flagKc && !this.flagJy}">
         <div class="drag"></div>
@@ -46,17 +48,6 @@
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%" style="position:absolute;top: 90px;bottom:0;width:100%;height: 88%;"></iframe>
         </div>
       </div>
-    </div>
-    <div v-if="canSign">
-      <Modal title="签到"
-        v-model="visible"
-        footer-hide
-        :width="795"
-        class="iview-modal">
-        <div class="sign-modal">
-          <span @click="signSub">签到签到</span>
-        </div>
-      </Modal>
     </div>
   </div>
 </template>
@@ -95,7 +86,10 @@ export default {
       courseSections: [],
       openMenu: '1-1', // 默认播放菜单menu-index
       visible: false, // 签到，modal
-      canSign: false // 视频最后10分钟签到
+      canSign: false, // 视频最后10分钟签到
+      timer: null,
+      timer2: null,
+      jianTime: 5
     }
   },
   components: {
@@ -147,7 +141,9 @@ export default {
       document.getElementById('rightCourseList').scrollTop = ofH
       // 入库观看视频
       if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
-        this.subrecord()
+        this.subrecord() // 观看记录入库
+        this.isSignQuery() // 查询当前是否签到
+        this.computedCur() // 计算下一个播放视频
       }
     },
     // 入库观看视频
@@ -245,7 +241,6 @@ export default {
           this.playCourseInfo.video_id = this.$route.query.video_id || this.courseSections[0].video[0].video_id
           this.playCourseInfo.VideoId = this.$route.query.VideoId || this.courseSections[0].video[0].VideoId
           this.getVideoPlayback()
-          this.isSignQuery()
         } else {
           this.$Message.error(res.msg)
         }
@@ -263,8 +258,53 @@ export default {
       })
     },
     downTime () {
-      setInterval(() => {
-        console.log('最后10分钟允许签到')
+      // 总时长-600 最后10分钟的比例
+      clearInterval(this.timer)
+      let durationTime = parseInt(this.$refs.aliPlayers.getDuration())
+      let bnum, endTime1, endTime2, endTime3
+      if (durationTime > 600) {
+        bnum = durationTime - 600
+        endTime1 = bnum + Math.round(Math.random() * 10)
+        endTime2 = bnum + Math.round(Math.random() * 10 + 300)
+        endTime3 = bnum + Math.round(Math.random() * 10 + 500)
+      } else {
+        endTime1 = parseInt(durationTime * 0.6) + Math.round(Math.random() * 10)
+        endTime2 = parseInt(durationTime * 0.75) + Math.round(Math.random() * 10)
+        endTime3 = parseInt(durationTime * 0.9) + Math.round(Math.random() * 10)
+        endTime1 = 5
+        endTime2 = 20
+        endTime3 = 30
+      }
+      this.timer = setInterval(() => {
+        let curVideoTime = parseInt(this.$refs.aliPlayers.getCurrentTime())
+        if (curVideoTime === durationTime) {
+          // this.$refs.aliPlayers.ended()
+          // this.isSignQuery()
+          clearInterval(this.timer)
+          return
+        }
+        if (curVideoTime === endTime1) {
+          this.downTime2()
+        }
+        if (curVideoTime === endTime2) {
+          this.downTime2()
+        }
+        if (curVideoTime === endTime3) {
+          this.downTime2()
+        }
+      }, 1000)
+    },
+    downTime2 () {
+      this.canSign = true
+      this.visible = true
+      this.jianTime = 5
+      this.timer2 = setInterval(() => {
+        this.jianTime--
+        if (this.jianTime < 1) {
+          clearInterval(this.timer2)
+          this.canSign = false
+          this.visible = false
+        }
       }, 1000)
     },
     // 签到查询
@@ -278,9 +318,9 @@ export default {
         if (res.code === 200) {
           if (res.data.status === 1) {
             this.visible = false
+            this.canSign = false
           }
           if (res.data.status === 2) {
-            this.visible = true
             this.downTime()
           }
         } else {
@@ -288,28 +328,63 @@ export default {
         }
       })
     },
+    computedCur () {
+      let secArray = this.courseSections
+      for (let i = 0; i < secArray.length; i++) {
+        const secId = secArray[i].section_id
+        const couId = secArray[i].course_id
+        const videosArr = secArray[i].video
+        for (let j = 0; j < videosArr.length; j++) {
+          const vidId = videosArr[j].video_id
+          console.log(vidId)
+        }
+        console.log(secId)
+        console.log(couId)
+        // console.log(array.length)
+        // console.log(elementVid.length)
+      }
+      // this.courseSections.forEach((v, index) => {
+      //   let secLen = this.courseSections.length
+      //   let vidLen = v.video.length
+      //   console.log(secLen)
+      //   console.log(vidLen)
+      //   console.log(v)
+      // })
+    },
     // 签到
     signSub () {
-      sign({
-        user_id: this.user_id,
-        course_id: this.playCourseInfo.course_id,
-        video_id: this.playCourseInfo.video_id
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          if (res.data.status === 1) {
-            this.$Message.success('签到成功～')
-          }
-          if (res.data.status === 2) {
-            this.$Message.error('已签到～')
-          }
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
+      clearInterval(this.timer)
+      clearInterval(this.timer2)
+      this.canSign = false
+      this.visible = false
+      // sign({
+      //   user_id: this.user_id,
+      //   course_id: this.playCourseInfo.course_id,
+      //   video_id: this.playCourseInfo.video_id
+      // }).then(data => {
+      //   const res = data.data
+      //   if (res.code === 200) {
+      //     if (res.data.status === 1) {
+      //       this.$Message.success('签到成功～')
+      //       clearInterval(this.timer)
+      //       clearInterval(this.timer2)
+      //       this.canSign = false
+      //       this.visible = false
+      //     }
+      //     if (res.data.status === 2) {
+      //       this.$Message.error('已签到～')
+      //     }
+      //   } else if (res.code === 402) {
+      //     this.$Message.error('已签到～')
+      //   } else {
+      //     this.$Message.error(res.msg)
+      //   }
+      // })
     }
   },
   beforeDestroy () {
+    clearInterval(this.timer)
+    clearInterval(this.timer2)
     if (this.$refs.aliPlayers) {
       this.$refs.aliPlayers.dispose()
     }
@@ -393,7 +468,7 @@ export default {
     flex: 1;
     background: #000000;
     border-radius: 10px;
-    margin: 20px 0;
+    margin: 34px 0 20px;
     overflow: hidden;
   }
   .video-info-r{
