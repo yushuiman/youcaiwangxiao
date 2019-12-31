@@ -28,6 +28,13 @@ export const activityUser = (data) => { // 首页课程预告报名
     method: 'post'
   })
 }
+export const activityUserApp = (data) => { // 首页课程预告报名
+  return axios.request({
+    url: '/apps/Education/activityUser',
+    data,
+    method: 'post'
+  })
+}
 export const firstPackage = (data) => { // 课程包
   return axios.request({
     url: '/web/Education/firstPackage',

@@ -1,6 +1,7 @@
 <template>
   <div class="books-wrap">
-    <swiper :options="swiperOptionRec">
+    <img :src="booksBannerList[0].image_href" alt="" width="100%" v-if="booksBannerList.length == 1">
+    <swiper :options="swiperOptionRec" v-if="booksBannerList.length > 1">
       <swiper-slide v-for="(v, index) in booksBannerList" :key="index">
         <img :src="v.image_href" alt="" width="100%">
       </swiper-slide>

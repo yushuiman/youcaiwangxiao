@@ -750,7 +750,9 @@ export default {
     color: rgba(255, 255, 255, 1);
     line-height: 22px;
   }
-
+  .pwd{
+    margin-top: 30px;
+  }
   .pwd span {
     height: 22px;
     font-size: 16px;
@@ -760,7 +762,6 @@ export default {
   }
 
   .pwd input {
-    margin-top: 30px;
     width: 207px;
     height: 40px;
     padding-left: 10px;

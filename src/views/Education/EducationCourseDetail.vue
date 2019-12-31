@@ -43,10 +43,10 @@
             <course-list :package_id="package_id" :type_id="type_id" :userstatus="isntroduction.userstatus"></course-list>
           </div>
           <div class="clt-jianjie" v-show="isChoose == 'kczx'">
-            <img :src="isntroduction.consult" alt="" width="100%">
+            <div v-html="isntroduction.consult"></div>
           </div>
           <div class="clt-jianjie" v-show="isChoose == 'qxfw'">
-            <img :src="isntroduction.seven_serve" alt="" width="100%">
+            <div v-html="isntroduction.seven_serve"></div>
           </div>
         </div>
       </div>

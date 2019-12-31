@@ -4,7 +4,18 @@
       <img class="tc-icon" src="@/assets/images/course/teacher-icon.png" alt="">
       <span>老师姓名</span>
     </div>
-    <swiper :options="swiperOptionRec" v-if="teacehr.length>0">
+    <div v-if="teacehr.length == 1">
+      <div class="cl-teacher">
+        <img :src="teacehr[0].pictrue" alt="">
+        <p>{{teacehr[0].teacher_name}}</p>
+        <span>{{teacehr[0].teacher_title}}</span>
+      </div>
+      <div class="cl-t-detail">
+        <p class="cl-t-tit">讲师简介：</p>
+        <p class="cl-t-info">{{teacehr[0].introduce}}</p>
+      </div>
+    </div>
+    <swiper :options="swiperOptionRec" v-if="teacehr.length>1">
       <swiper-slide v-for="(item, index) in teacehr" :key="index">
         <div class="cl-teacher">
           <img :src="item.pictrue" alt="">

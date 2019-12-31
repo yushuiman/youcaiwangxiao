@@ -8,9 +8,9 @@
           class="el-menu-vertical-demo">
           <el-submenu :index="item.index" v-for="item in courseCatalogInfo" :key="item.course_id" style="margin-bottom: 10px;border:0;">
             <template slot="title" >
-              <div @click="getSecvCatalog(item, index)">
-                <i class="elt-icon elt-icon-01"></i>
-                {{item.name}}
+              <div class="title-cpe" @click="getSecvCatalog(item, index)">
+                <span><i class="elt-icon elt-icon-01"></i>{{item.name}}</span>
+                <span>{{item.cpe_integral}}积分</span>
               </div>
             </template>
             <el-submenu :index="item.index+'-'+val.index" v-for="val in secvCatalogList[item.course_id]" :key="val.section_id">
@@ -116,7 +116,7 @@ export default {
         return
       }
       if (this.userstatus === 2) {
-        this.$Message.error('请购买')
+        this.$Message.error('请购买课程')
         return
       }
       this.$router.push({ path: '/education-video',

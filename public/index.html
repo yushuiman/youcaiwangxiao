@@ -66,9 +66,9 @@
         clearTimeout(d), d = setTimeout(c, 300)
         }, !1), a.addEventListener("pageshow", function(a) {
         a.persisted && (clearTimeout(d), d = setTimeout(c, 300))
-        }, !1), "complete" === e.readyState ? e.body.style.fontSize = 12 * i + "px" :
+        }, !1), "complete" === e.readyState ? e.body.style.fontSize = 14 * i + "px" :
         e.addEventListener("DOMContentLoaded", function() {
-        e.body.style.fontSize = 12 * i + "px"
+        e.body.style.fontSize = 14 * i + "px"
         }, !1), c(), k.dpr = a.dpr = i, k.refreshRem = c, k.rem2px = function(a) {
         var b = parseFloat(a) * this.rem;
         return "string" == typeof a && a.match(/rem$/) && (b += "px"), b
@@ -79,8 +79,7 @@
         }(window, window.lib || (window.lib = {}));
       }
     </script>
-    <!-- <script src='https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js'></script>
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script> -->
+    <script src='https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js'></script>
   </head>
   <body>
     <div id="app">

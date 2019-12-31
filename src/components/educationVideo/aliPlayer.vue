@@ -6,7 +6,7 @@
       <div class="shuiyin">优财网校{{user_id}}</div>
       <div class="shuiyin">优财网校{{user_id}}</div>
     </div>
-    <div class="sign-box" v-if="canSign && visible" style="position:absolute;top:0;left:0;width:100%;z-index:323232">
+    <div class="sign-box" v-if="canSign && visible">
       <div class="opa"></div>
       <div class="sign-cont">
         <p>签到获得本课程CPE积分</p>
@@ -14,6 +14,7 @@
         <span>{{jianTime}}秒之后关闭～</span>
       </div>
     </div>
+    <!-- <div class="progress-bar"></div> -->
   </div>
 </template>
 
@@ -256,26 +257,26 @@ export default {
           }
         ]
       }
-    ],
-    skinLayout: [
-      { name: 'bigPlayButton', align: 'blabs', x: 130, y: 80 },
-      {
-        name: 'H5Loading', align: 'cc'
-      },
-      {
-        name: 'controlBar',
-        align: 'blabs',
-        x: 0,
-        y: 0,
-        children: [
-          { name: 'progress', align: 'tlabs', x: 0, y: 0 },
-          { name: 'playButton', align: 'tl', x: 15, y: 26 },
-          { name: 'timeDisplay', align: 'tl', x: 10, y: 24 },
-          { name: 'fullScreenButton', align: 'tr', x: 20, y: 25 },
-          { name: 'volume', align: 'tr', x: 20, y: 25 }
-        ]
-      }
     ]
+    // skinLayout: [
+    //   { name: 'bigPlayButton', align: 'blabs', x: 130, y: 80 },
+    //   {
+    //     name: 'H5Loading', align: 'cc'
+    //   },
+    //   {
+    //     name: 'controlBar',
+    //     align: 'blabs',
+    //     x: 0,
+    //     y: 0,
+    //     children: [
+    //       { name: 'progress', align: 'tlabs', x: 0, y: 0 },
+    //       { name: 'playButton', align: 'tl', x: 15, y: 26 },
+    //       { name: 'timeDisplay', align: 'tl', x: 10, y: 24 },
+    //       { name: 'fullScreenButton', align: 'tr', x: 20, y: 25 },
+    //       { name: 'volume', align: 'tr', x: 20, y: 25 }
+    //     ]
+    //   }
+    // ]
   },
   data () {
     return {
@@ -357,8 +358,8 @@ export default {
             x5_type: _this.x5_type,
             x5_fullscreen: _this.x5_fullscreen,
             x5_orientation: _this.x5_orientation,
-            autoPlayDelay: _this.autoPlayDelay,
-            skinLayout: _this.skinLayout
+            autoPlayDelay: _this.autoPlayDelay
+            // skinLayout: _this.skinLayout
           })
           // 绑定事件，当 AliPlayer 初始化完成后，将编辑器实例通过自定义的 ready 事件交出去
           _this.instance.on('ready', () => {
@@ -392,30 +393,27 @@ export default {
             this.$emit('dispose', _this.instance)
           })
           _this.instance.on('startSeek', () => {
-            this.curTime = this.getCurrentTime()
+            // this.curTime = this.getCurrentTime()
             this.$emit('startSeek', _this.instance)
-            console.log(this.curTime)
+            // console.log(this.curTime)
             // _this.instance.pause()
             // _this.instance.seek(8)
           })
           _this.instance.on('completeSeek', () => {
-            this.curTime2 = this.getCurrentTime()
+            // this.curTime2 = this.getCurrentTime()
             this.$emit('completeSeek', _this.instance)
-            console.log(this.curTime2)
+            // console.log(this.curTime2)
           })
         })
       }
     },
     startSeek: function () {
-      console.log(1)
+      this.curTime = this.getCurrentTime()
       this.instance.pause()
-      // this.instance.seek(this.curTime)
     },
     completeSeek: function () {
-      console.log(2)
-      // console.log(3223)
-      // this.instance.play()
-      // this.instance.seek(this.curTime)
+      this.instance.seek(this.curTime)
+      this.instance.play()
     },
     ended: function () {
       var _this = this
@@ -686,5 +684,14 @@ export default {
     display: block;
     margin-top: 5px;
     color: #999999;
+  }
+  /* 进度条遮挡 */
+  .progress-bar{
+    position: absolute;
+    left: 0;
+    bottom: 39px;
+    width: 100%;
+    height: 12px;
+    z-index: 11;
   }
 </style>

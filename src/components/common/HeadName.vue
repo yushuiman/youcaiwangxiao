@@ -77,7 +77,6 @@ export default {
     ...mapActions([
       'handleLogOut',
       'getUserInfo',
-      'getIndexMessage',
       'getWatchRecords'
     ]),
     dropDownVisible (change) {

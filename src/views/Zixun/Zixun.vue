@@ -1,6 +1,7 @@
 <template>
   <div class="zixun-wrap">
-    <swiper :options="swiperOptionRec" v-if="zixunBanner.length>0">
+    <img :src="zixunBanner[0].image_href" alt="" width="100%" v-if="zixunBanner.length==1">
+    <swiper :options="swiperOptionRec" v-if="zixunBanner.length>1">
       <swiper-slide class="zixun-slide" v-for="(item, index) in zixunBanner" :key="index">
         <img :src="item.image_href" alt="">
       </swiper-slide>

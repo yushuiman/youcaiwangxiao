@@ -29,18 +29,28 @@
       </div>
     </div>
     <div class="edu-sign-box">
-      <span class="sign-btn" v-if="isntroduction.time_type == 1 && isntroduction.user_type == 1">我要报名</span>
+      <span class="sign-btn" v-if="isntroduction.time_type == 1 && isntroduction.user_type == 1" @click="signEduPreview">我要报名</span>
       <span class="sign-btn gray" v-if="isntroduction.time_type == 1 && isntroduction.user_type == 2">您已报名</span>
       <span class="sign-btn gray" v-if="isntroduction.time_type == 2 && isntroduction.user_type == 1">已过期</span>
       <span class="sign-btn gray" v-if="isntroduction.time_type == 2 && isntroduction.user_type == 2">您已报名</span>
     </div>
-    <div>
-      
+    <span class="ts-succ" v-if="tsSucc">报名成功～</span>
+    <div class="edu-sign-popup" v-if="visible">
+      <div class="opa"></div>
+      <div class="preview-sign-modal">
+        <div>
+          <input class="bm-name" type="text" maxlength="10" v-model="signName" @blur="onblur" placeholder="姓名">
+          <input class="bm-phone" type="text" maxlength="11" v-model="signMobile" @blur="onblur" placeholder="电话">
+          <p>{{tsError}}</p>
+          <button class="btn-com" @click="previewSign">确定</button>
+        </div>
+        <span class="close-icon" @click="closeSign">X</span>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import { previewDetailsApp } from '@/api/education'
+import { previewDetailsApp, activityUserApp } from '@/api/education'
 import { mapActions } from 'vuex'
 export default {
   data () {
@@ -50,7 +60,14 @@ export default {
       isntroduction: {
         start_time: '',
         end_time: ''
-      }
+      },
+      signMobile: '', // 课程预告报名手机号
+      signName: '', // 课程预告报名名字
+      previewCourseList: [], // 课程预告
+      visible: false, // 课程预告报名
+      tsError: '',
+      tsSucc: false,
+      timer: null
     }
   },
   computed: {
@@ -68,6 +85,9 @@ export default {
     ...mapActions([
       'getUserInfo'
     ]),
+    onblur () {
+      window.scroll(0, 0)
+    },
     // 课程简介
     getpreviewDetails () {
       previewDetailsApp({
@@ -79,6 +99,59 @@ export default {
           this.isntroduction = res.data
         } else {
           this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 报名
+    signEduPreview () {
+      this.visible = true
+    },
+    closeSign () {
+      this.visible = false
+      this.signName = ''
+      this.signMobile = ''
+      this.tsError = ''
+    },
+    previewSign () {
+      if (this.signName === '' || this.signMobile === '') {
+        this.tsError = '姓名，电话不能为空～'
+        return
+      }
+      if (this.signName.length < 2 || this.signName.length > 10) {
+        this.tsError = '请输入2-10位字符～'
+        return
+      }
+      const reg = /^[1]([3-9])[0-9]{9}$/
+      if (!(reg.test(this.signMobile))) {
+        this.tsError = '该手机号不符合格式'
+        return false
+      }
+      activityUserApp({
+        preview_id: this.preview_id,
+        user_name: this.signName,
+        mobile: this.signMobile,
+        user_id: this.user_id
+      }).then((data) => {
+        const res = data.data
+        if (res.code === 200) {
+          if (res.data.status === 1) {
+            this.getpreviewDetails()
+            this.signName = ''
+            this.signMobile = ''
+            this.tsError = ''
+            this.visible = false
+            this.tsSucc = true
+            let countTime = 3
+            this.timer = setInterval(() => {
+              countTime--
+              if (countTime < 1) {
+                this.tsSucc = false
+                clearInterval(this.timer)
+              }
+            }, 1000)
+          }
+        } else {
+          this.tsError = res.msg
         }
       })
     }
@@ -207,7 +280,6 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 10;
     width: 100%;
     height: 1.2rem;
     line-height: 1.2rem;
@@ -225,5 +297,87 @@ export default {
         background-size: 100% 100%;
       }
     }
+  }
+  // 我要报名
+  .edu-sign-popup .opa{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.6);
+    z-index: 2;
+  }
+  .preview-sign-modal{
+    text-align: center;
+    position: fixed;
+    width: 70%;
+    left: 50%;
+    top: 50%;
+    z-index: 3;
+    border-radius: .106667rem;
+    transform: translate(-50%, -50%);
+    div{
+      background: #ffffff;
+      text-align: center;
+      padding: .266667rem .533333rem;
+      @include font-dpr(28);
+    }
+    input{
+      width: 100%;
+      display: block;
+      margin: .266667rem auto;
+      height: .8rem;
+      text-indent: .08rem;
+      background: rgba(245, 245, 245, 1);
+      border-radius: .053333rem;
+      border: 1px solid rgba(220, 220, 220, 1);
+      outline: none;
+      -webkit-appearance: none;
+      &:nth-child(2){
+        margin-bottom: .066667rem!important;
+      }
+    }
+    button{
+      width: 2.133333rem;
+      height: .8rem;
+      background: #0267FF;
+      color: #ffffff;
+      margin: .266667rem auto;
+      border-radius: .106667rem;
+      @include font-dpr(28);
+    }
+    p{
+      height: .4rem;
+      @include font-dpr(24);
+      text-align: left;
+      color: red;
+    }
+  }
+  .close-icon{
+    width: .8rem;
+    height: .8rem;
+    line-height: .8rem;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 auto;
+    margin-top: 1.333333rem;
+    border: 1px solid #ffffff;
+    text-align: center;
+    color: #ffffff;
+    @include font-dpr(32);
+    border-radius: 50%;
+  }
+  .ts-succ{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    color: #ffffff;
+    @include font-dpr(28);
+    background: rgba(0,0,0,0.6);
+    padding: .133333rem .266667rem;
+    border-radius: .053333rem;
+    z-index: 232;
   }
 </style>

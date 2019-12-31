@@ -98,8 +98,4 @@ export default {
     border-top: 1px solid #E6E6E6;
     line-height: 22px;
   }
-  // <p class="zx-address">您的位置：{{detailInfo.parent_name || '资讯'}} > {{detailInfo.type_name || ''}}</p>
-  //       <h1 class="zx-title">{{detailInfo.title}}</h1>
-  //       <p class="zx-source">{{detailInfo.create_time}}<span>来源：{{detailInfo.source}}</span></p>
-  //       <div class="zx-cont" v-html="detailInfo.content"></div>
 </style>

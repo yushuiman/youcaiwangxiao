@@ -20,7 +20,7 @@
         <p class="cdi-map">{{isntroduction.activity_address}}</p>
         <p class="cdi-sign"><span>已报名{{isntroduction.num}}人</span>/限{{isntroduction.people_num}}人报名</p>
         <div class="cdi-buy-consult">
-          <button type="button" name="button" class="sign-btn" v-if="isntroduction.time_type == 1 && isntroduction.user_type == 1">我要报名</button>
+          <button type="button" name="button" class="sign-btn" v-if="isntroduction.time_type == 1 && isntroduction.user_type == 1" @click="signEduPreview">我要报名</button>
           <button type="button" name="button" class="sign-btn gray" v-if="isntroduction.time_type == 1 && isntroduction.user_type == 2">您已报名</button>
           <button type="button" name="button" class="sign-btn gray" v-if="isntroduction.time_type == 2 && isntroduction.user_type == 1">已过期</button>
           <button type="button" name="button" class="sign-btn gray" v-if="isntroduction.time_type == 2 && isntroduction.user_type == 2">您已报名</button>
@@ -37,10 +37,22 @@
         </div>
       </div>
     </div>
+    <Modal
+      title="课程预告报名"
+      v-model="visible"
+      footer-hide
+      :width="395"
+      class="iview-modal">
+      <div class="preview-sign-modal">
+        <input class="bm-name" type="text" maxlength="10" v-model="signName" placeholder="姓名">
+        <input class="bm-phone" type="text" maxlength="11" v-model="signMobile" placeholder="电话">
+        <button class="btn-com" @click="previewSign">确定</button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
-import { previewDetails } from '@/api/education'
+import { previewDetails, activityUser } from '@/api/education'
 import { mapState, mapActions } from 'vuex'
 export default {
   data () {
@@ -49,7 +61,11 @@ export default {
       isntroduction: {
         start_time: '',
         end_time: ''
-      }
+      },
+      signMobile: '', // 课程预告报名手机号
+      signName: '', // 课程预告报名名字
+      previewCourseList: [], // 课程预告
+      visible: false // 课程预告报名
     }
   },
   computed: {
@@ -66,6 +82,10 @@ export default {
     }
   },
   mounted () {
+    if (!this.token) {
+      this.getpreviewDetails() // 课程简介
+      return
+    }
     if (this.isLoadHttpRequest) {
       this.getpreviewDetails() // 课程简介
     } else {
@@ -87,6 +107,52 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.isntroduction = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 报名
+    signEduPreview () {
+      if (!this.token) {
+        this.$router.push({ path: '/login',
+          query: {
+            call_back: 'education'
+          }
+        })
+        return
+      }
+      this.visible = true
+    },
+    previewSign () {
+      if (this.signName === '' || this.signMobile === '') {
+        this.$Message.error('姓名，电话不能为空～')
+        return
+      }
+      if (this.signName.length < 2 || this.signName.length > 10) {
+        this.$Message.error('请输入2-10位字符～')
+        return
+      }
+      const reg = /^[1]([3-9])[0-9]{9}$/
+      if (!(reg.test(this.signMobile))) {
+        this.$Message.error('该手机号不符合格式')
+        return false
+      }
+      activityUser({
+        preview_id: this.preview_id,
+        user_name: this.signName,
+        mobile: this.signMobile,
+        user_id: this.user_id
+      }).then((data) => {
+        const res = data.data
+        if (res.code === 200) {
+          if (res.data.status === 1) {
+            this.$Message.success('报名成功~')
+            this.getpreviewDetails()
+            this.signName = ''
+            this.signMobile = ''
+            this.visible = false
+          }
         } else {
           this.$Message.error(res.msg)
         }
@@ -216,5 +282,25 @@ export default {
   }
   .clt-kcdg{
     width: 902px;
+  }
+  .preview-sign-modal{
+    text-align: center;
+    input{
+      width: 80%;
+      display: block;
+      margin: 10px auto;
+      height: 40px;
+      padding-left: 14px;
+      background: rgba(245, 245, 245, 1);
+      border-radius: 4px;
+      border: 1px solid rgba(220, 220, 220, 1);
+    }
+    button{
+      width: 122px;
+      height: 36px;
+      background: #0267FF;
+      color: #ffffff;
+      margin: 20px auto;
+    }
   }
 </style>

@@ -147,6 +147,13 @@ export default {
     // 设置用户信息
     setBaseInfo () {
       this.clkTit = 'set'
+      this.$router.replace({ path: '/personal',
+        query: {
+          ...this.$route.query,
+          type: 'set',
+          selIdx: 0
+        }
+      })
     },
     // 用户信息
     getPersonalInfo (type) {

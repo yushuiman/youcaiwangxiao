@@ -1,11 +1,12 @@
 <template>
-  <div class="learntips-wrap w-wrap">
-    <swiper :options="swiperOptionRec" v-if="announcementBaner.length>0">
+  <div class="learntips-wrap">
+    <img :src="announcementBaner[0].image_href" alt="" width="100%" v-if="announcementBaner.length==1">
+    <swiper :options="swiperOptionRec" v-if="announcementBaner.length>1">
       <swiper-slide v-for="(item, index) in announcementBaner" :key="index">
-        <img :src="item.pic" alt="">
+        <img :src="item.image_href" alt="" width="100%">
       </swiper-slide>
     </swiper>
-    <div class="learntips-info">
+    <div class="learntips-info w-wrap">
       <div class="learntips-menu l-fl">
         <ul class="learntips-ul">
           <li class="learntips-item" :class="['learntips-item-' + v.class_name, {'curren': type_id == v.type_id}]" v-for="(v, index) in listTips" :key="index" @click="switchInfo(v, index)">
@@ -28,6 +29,13 @@ export default {
     return {
       announcementBaner: [],
       listTips: [],
+      swiperOptionRec: {
+        loop: true,
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false
+        }
+      },
       type_id: this.$route.query.type_id,
       parent_id: this.$route.query.parent_id,
       listTipsInfo: {}

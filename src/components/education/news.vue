@@ -71,6 +71,10 @@ export default {
       line-height: 26px;
       cursor: pointer;
       color: $col666;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      overflow: hidden;
       &:nth-child(1){
         span{
           color:#D30000;

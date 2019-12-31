@@ -1,11 +1,12 @@
 <template>
-  <div class="edu-wrap">
-    <swiper :options="swiperOptionRec" v-if="eduBannerList.length>0">
+  <div class="education-wrap">
+    <img :src="eduBannerList[0].image_href" alt="" width="100%" v-if="eduBannerList.length == 1">
+    <swiper :options="swiperOptionRec" v-if="eduBannerList.length>1">
       <swiper-slide v-for="(item, index) in eduBannerList" :key="index">
-        <img :src="item.pic" alt="">
+        <img :src="item.image_href" alt="" width="100%">
       </swiper-slide>
     </swiper>
-    <div class="edu-content">
+    <div class="edu-content w-wrap">
       <div class="edu-left">
         <div class="edu-type-cont">
           <h1 class="edu-title"><p>课程预告</p></h1>
@@ -26,8 +27,11 @@
               <img :src="items.pc_img" alt="" class="edu-couse-item-img">
               <div class="edu-course-str">
                 <p class="ci-title">{{items.name}}</p>
-                <p class="ci-teacher-day">讲师：{{items.teacher_name}}<span>CPE积分：{{items.cpe_integral}}分</span></p>
-                <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? '¥' + items.price : items.billing_status == 3 ? '积分兑换' : '等级进入' }}</span>
+                <p class="ci-teacher-day">讲师：{{items.teacher_name}}</p>
+                <div class="ci-cpe">
+                  <span class="cpe-fen">CPE积分：{{items.cpe_integral}}分</span>
+                  <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? '¥' + items.price : items.billing_status == 3 ? '积分兑换' : '等级进入' }}</span>
+                </div>
               </div>
             </li>
           </ul>
@@ -42,18 +46,6 @@
         <news></news>
       </div>
     </div>
-    <Modal
-      title="课程预告报名"
-      v-model="visible"
-      footer-hide
-      :width="495"
-      class="iview-modal">
-      <div class="preview-sign-modal">
-        <input class="bm-name" type="text" maxlength="10" v-model="signName" placeholder="姓名">
-        <input class="bm-phone" type="text" maxlength="11" v-model="signMobile" placeholder="电话">
-        <button class="btn-com" @click="previewSign">确定</button>
-      </div>
-    </Modal>
   </div>
 </template>
 <script>
@@ -61,7 +53,7 @@ import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import learnTips from '@/components/education/learnTips.vue'
 import news from '@/components/education/news.vue'
-import { deuShuffling, previewCourse, firstPackage, activityUser } from '@/api/education'
+import { deuShuffling, previewCourse, firstPackage } from '@/api/education'
 import { mapState } from 'vuex'
 
 export default {
@@ -75,11 +67,6 @@ export default {
           stopOnLastSlide: false
         }
       },
-      signMobile: '', // 课程预告报名手机号
-      signName: '', // 课程预告报名名字
-      previewCourseList: [], // 课程预告
-      visible: false, // 课程预告报名
-      previewId: '', // 课程预告id
       firstPackageList: [] // 课程包
     }
   },
@@ -126,41 +113,9 @@ export default {
     // 报名
     previewCourseClk ({ id }) {
       this.visible = true
-      this.previewId = id
       this.$router.push({ path: '/education-course-sign',
         query: {
           preview_id: id
-        }
-      })
-    },
-    // 报名
-    previewSign () {
-      if (this.signName === '' || this.signMobile === '') {
-        this.$Message.error('姓名，电话不能为空～')
-        return
-      }
-      if (this.signName.length < 2 || this.signName.length > 10) {
-        this.$Message.error('请输入2-10位字符～')
-        return
-      }
-      const reg = /^[1]([3-9])[0-9]{9}$/
-      if (!(reg.test(this.signMobile))) {
-        this.$Message.error('该手机号不符合格式')
-        return false
-      }
-      activityUser({
-        preview_id: this.previewId,
-        user_name: this.signName,
-        mobile: this.signMobile
-      }).then((data) => {
-        const res = data.data
-        if (res.code === 200) {
-          if (res.data.status === 1) {
-            this.$Message.success('报名成功~')
-            this.visible = false
-          }
-        } else {
-          this.$Message.error(res.msg)
         }
       })
     },
@@ -220,9 +175,11 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .edu-wrap{
-    width: 1198px;
-    margin: 0 auto;
+  .education-wrap{
+    .w-wrap{
+      width: 1198px;
+      margin: 0 auto;
+    }
   }
   .edu-content{
     padding-top: 20px;
@@ -288,6 +245,14 @@ export default {
         }
       }
     }
+    .ci-cpe{
+      display: flex;
+      justify-content: space-between;
+      @include lh(23, 23);
+      .cpe-fen{
+        color: $blueColor;
+      }
+    }
     .ci-pay-free{
       padding: 0 6px;
       @include lh(23, 23);
@@ -296,26 +261,6 @@ export default {
       background: #FFF1E4;
       color: #FF8915;
       border-radius: 4px;
-    }
-  }
-  .preview-sign-modal{
-    text-align: center;
-    input{
-      width: 80%;
-      display: block;
-      margin: 10px auto;
-      height: 40px;
-      padding-left: 14px;
-      background: rgba(245, 245, 245, 1);
-      border-radius: 4px;
-      border: 1px solid rgba(220, 220, 220, 1);
-    }
-    button{
-      width: 122px;
-      height: 36px;
-      background: #0267FF;
-      color: #ffffff;
-      margin: 20px auto;
     }
   }
   .cpe-tab{

@@ -1,4 +1,3 @@
-@charset "UTF-8";
 body {
   background: #F3F6FF;
 }
@@ -9,13 +8,13 @@ html {
   font-size: 14px;
   overflow-y: auto;
   -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%
 }
 
 html * {
   outline: none;
   -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
+  -webkit-touch-callout: none
 }
 
 html,
@@ -72,34 +71,32 @@ menu,
 nav,
 section {
   margin: 0;
-  padding: 0;
+  padding: 0
 }
-
 input,
 select,
 textarea {
-  font-size: 100%;
+  font-size: 100%
 }
 
 table {
   border-collapse: collapse;
-  border-spacing: 0;
-  width: 100% !important;
+  border-spacing: 0
 }
 
 fieldset,
 img {
-  border: 0;
+  border: 0
 }
 
 abbr,
 acronym {
   border: 0;
-  font-variant: normal;
+  font-variant: normal
 }
 
 del {
-  text-decoration: line-through;
+  text-decoration: line-through
 }
 
 address,
@@ -134,8 +131,8 @@ h6 {
   font-weight: 500;
 }
 
-q:after,
-q:before {
+q:before,
+q:after {
   content: '';
 }
 
@@ -155,12 +152,11 @@ sub {
   bottom: -0.25em;
 }
 
-a,
-ins {
+ins,
+a {
   text-decoration: none;
 }
 
-/*input*/
 button {
   border: none;
 }
@@ -172,6 +168,7 @@ input[type='submit'] {
   -webkit-appearance: button;
   text-transform: none;
   outline: none;
+  background: none;
 }
 
 input::-webkit-input-placeholder,
@@ -201,8 +198,8 @@ select {
   outline: 0;
 }
 
-input.fixAKeyboard:focus,
-textarea.fixAndroidKeyboard:focus {
+textarea.fixAndroidKeyboard:focus,
+input.fixAKeyboard:focus {
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   -webkit-user-modify: read-write-plaintext-only;
 }
@@ -211,11 +208,11 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px white inset !important;
 }
 
-button,
+input[type=submit],
+input[type=reset],
 input[type=button],
 input[type=checkbox],
-input[type=reset],
-input[type=submit],
+button,
 label {
   cursor: pointer;
   user-select: none;
@@ -243,41 +240,14 @@ input[type='search'] {
   box-sizing: content-box;
   -webkit-appearance: textfield;
 }
-
-/*flex box*/
-.flex {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-}
-
-.justify-between {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.justify-center {
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-}
-
-.clearfix:after,
-.clearfix:before {
+.clearfix:before, .clearfix:after {
   content: " ";
   display: table;
 }
 
 .clearfix:after {
   clear: both;
+  overflow: hidden;
 }
 
 .show {
@@ -295,16 +265,13 @@ input[type='search'] {
 .fr {
   float: right;
 }
-
-.tc {
+.tc{
   text-align: center;
 }
-
 .w-wrap {
   width: 1200px;
   margin: 0 auto;
 }
-
 .btn-com {
   width: 79px;
   height: 32px;
@@ -312,18 +279,16 @@ input[type='search'] {
   font-size: 16px;
   text-align: center;
   background: none;
-  border: 1px solid #0267ff;
+  border: 1px solid rgba(2, 103, 255, 1);
   color: #0267FF;
 }
-
-.do-potic-btn {
+.do-potic-btn{
   width: 69px;
   height: 25px;
 }
-
-.no-data {
+.no-data{
   width: 187px;
-  background: url("../../assets/images/global/icon_empty@3x.png") no-repeat center top;
+  background: url('../../assets/images/global/icon_empty@3x.png') no-repeat center top;
   background-size: 187px 144px;
   padding-top: 144px;
   font-size: 16px;
@@ -332,17 +297,14 @@ input[type='search'] {
   margin: 0 auto;
   margin-top: 6%;
 }
-
-.no-data-course {
-  background: url("../../assets/images/global/icon_nodata@3x.png") no-repeat center top;
+.no-data-course{
+  background: url('../../assets/images/global/icon_nodata@3x.png') no-repeat center top;
 }
-
 /* 做题页 只有一个样式需要覆盖 所有没有新建css */
 .progress-info .ivu-progress-inner {
   background: none;
   border: 1px solid #2d8cf0;
 }
-
 /* 后面封装右边样式  */
 /* .title-com {
   font-size: 18px;
