@@ -207,7 +207,8 @@ export default {
         id: this.selectedProductsId,
         user_name: this.user_name,
         membership: this.membership,
-        identity: this.identity
+        identity: this.identity,
+        source: 1 // pc1app2
       }).then((data) => {
         const res = data.data
         if (res.code === 200) {

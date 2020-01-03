@@ -14,7 +14,7 @@
       <div class="edu-preview-tec edu-com-sty">
         <p class="tit">讲师简介</p>
         <ul class="tc-list">
-          <li class="tec-item" v-for="v in isntroduction.teacehr_list" :key="v.id">
+          <li class="tec-item" v-for="v in isntroduction.teacehr_list" :key="v.id" @click="teacClkInfo(v)">
             <img :src="v.pictrue" alt="" class="tec-head">
             <div class="tec-insr">
               <p>{{v.teacher_name}}</p>
@@ -38,11 +38,23 @@
     <div class="edu-sign-popup" v-if="visible">
       <div class="opa"></div>
       <div class="preview-sign-modal">
-        <div>
+        <div class="sign-info">
           <input class="bm-name" type="text" maxlength="10" v-model="signName" @blur="onblur" placeholder="姓名">
           <input class="bm-phone" type="text" maxlength="11" v-model="signMobile" @blur="onblur" placeholder="电话">
           <p>{{tsError}}</p>
           <button class="btn-com" @click="previewSign">确定</button>
+        </div>
+        <span class="close-icon" @click="closeSign">X</span>
+      </div>
+    </div>
+    <div class="edu-teacher-popup" v-if="tacVisible">
+      <div class="opa"></div>
+      <div class="teac-modal">
+        <div class="teac-info">
+          <img :src="teacInfo.pictrue" alt="" class="tec-head">
+          <p class="t-name">{{teacInfo.teacher_name}}</p>
+          <p class="t-touxie">{{teacInfo.teacher_title}}</p>
+          <p class="t-instr">{{teacInfo.longevity}}</p>
         </div>
         <span class="close-icon" @click="closeSign">X</span>
       </div>
@@ -67,7 +79,9 @@ export default {
       visible: false, // 课程预告报名
       tsError: '',
       tsSucc: false,
-      timer: null
+      timer: null,
+      tacVisible: false,
+      teacInfo: {}
     }
   },
   computed: {
@@ -102,11 +116,16 @@ export default {
         }
       })
     },
+    teacClkInfo (v) {
+      this.tacVisible = true
+      this.teacInfo = v
+    },
     // 报名
     signEduPreview () {
       this.visible = true
     },
     closeSign () {
+      this.tacVisible = false
       this.visible = false
       this.signName = ''
       this.signMobile = ''
@@ -198,7 +217,6 @@ export default {
   .edu-preview-info{
     padding: .2rem .32rem;
     p{
-      height: .533333rem;
       line-height: .533333rem;
       margin: .066667rem 0;
       padding-left: .613333rem;
@@ -236,7 +254,7 @@ export default {
     padding-bottom: .266667rem;
     img{
       display: block;
-      margin-top: .533333rem;
+      margin-top: .133333rem;
     }
   }
   .tec-item{
@@ -299,7 +317,7 @@ export default {
     }
   }
   // 我要报名
-  .edu-sign-popup .opa{
+  .edu-sign-popup .opa, .edu-teacher-popup .opa{
     position: fixed;
     left: 0;
     top: 0;
@@ -308,7 +326,7 @@ export default {
     background: rgba(0,0,0,.6);
     z-index: 2;
   }
-  .preview-sign-modal{
+  .preview-sign-modal,.teac-modal{
     text-align: center;
     position: fixed;
     width: 70%;
@@ -317,12 +335,15 @@ export default {
     z-index: 3;
     border-radius: .106667rem;
     transform: translate(-50%, -50%);
-    div{
+    .sign-info,.teac-info{
       background: #ffffff;
-      text-align: center;
+      border-radius: .106667rem;
       padding: .266667rem .533333rem;
       @include font-dpr(28);
+      text-align: center;
     }
+  }
+  .sign-info{
     input{
       width: 100%;
       display: block;
@@ -352,6 +373,26 @@ export default {
       @include font-dpr(24);
       text-align: left;
       color: red;
+    }
+  }
+  .teac-info{
+    // text-align: left;
+    @include font-dpr(24);
+    line-height: .4rem;
+    color: #999999;
+    img{
+      display: block;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 100%;
+      margin: 0 auto;
+      margin-top: -1.066667rem;
+    }
+    .t-name,.t-touxie{
+      margin: .266667rem 0;
+    }
+    .t-instr{
+      text-align: left;
     }
   }
   .close-icon{

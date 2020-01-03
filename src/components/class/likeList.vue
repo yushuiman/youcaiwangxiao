@@ -9,7 +9,7 @@
       <div class="like-info">
         <p>{{item.name}}</p>
         <p>讲师: {{item.teacher_name}}</p>
-        <p>￥ {{item.price}}</p>
+        <p>￥{{item.price}}</p>
       </div>
     </div>
   </div>

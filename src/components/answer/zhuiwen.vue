@@ -114,7 +114,7 @@ export default {
     handleMaxSize (file) {
       this.$Notice.warning({
         title: '文件大小验证',
-        desc: '文件 “' + file.name + '” 太大, 不要超过 2m'
+        desc: '文件 “' + file.name + '” 太大, 不要超过 5m'
       })
     },
     closeModel () {

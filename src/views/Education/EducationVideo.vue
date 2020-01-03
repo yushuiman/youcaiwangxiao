@@ -101,7 +101,8 @@ export default {
       canSign: false, // 视频最后10分钟签到
       timer: null,
       timer2: null,
-      jianTime: 30
+      jianTime: 30,
+      player: {}
     }
   },
   components: {
@@ -114,11 +115,68 @@ export default {
       user_id: state => state.user.user_id
     })
   },
+  updated () {
+    this.player = this.$refs.aliPlayers
+  },
   mounted () {
     this.getCourseCatalog() // 课程大纲（目录）
     this.dragControllerDiv()
+    var _this = this
+    document.onkeydown = function (e) {
+      let key = window.event.keyCode
+      // alert(key)
+      _this.watchKeydοwn(key)
+    }
   },
   methods: {
+    watchKeydοwn (keyNum) {
+      let player = this.player
+      let playStatus = player.getStatus()
+      console.log(keyNum + playStatus)
+      if (keyNum === 32) { // 空格暂停播放
+        if (playStatus === 'ready') {
+          player.play()
+        }
+        if (playStatus === 'playing') {
+          player.pause()
+        }
+        if (playStatus === 'pause') {
+          player.play()
+        }
+      }
+      if (keyNum === 37) { // 快退
+        let videotimes = player.getDuration()
+        let playnum = player.getCurrentTime()
+        playnum = parseInt(playnum - 10)
+        if (playnum <= (videotimes - 30)) {
+          player.seek(playnum)
+        }
+      }
+      if (keyNum === 39) { // 快进
+        let playnum = player.getCurrentTime()
+        playnum = parseInt(playnum + 10)
+        if (playnum > 15) {
+          player.seek(playnum)
+        } else {
+          player.seek(0)
+        }
+      }
+      if (keyNum === 38) { // 减音量
+        // 音量大小 //获得当前音量
+        let volume = parseInt(player.getVolume() * 100)
+        if (volume < 100) {
+          volume = (volume + 1) / 100
+          player.setVolume(volume)
+        }
+      }
+      if (keyNum === 40) { // 加音量
+        let volume = parseInt(player.getVolume() * 100)
+        if (volume > 0) {
+          volume = (volume - 1) / 100
+          player.setVolume(volume)
+        }
+      }
+    },
     dragControllerDiv () {
       var resize = document.getElementById('resize')
       var left = document.getElementById('left')
@@ -149,6 +207,7 @@ export default {
     },
     // 播放器
     ready (instance) {
+      // instance.play()
       let ofH = window.sessionStorage.getItem('ofH')
       document.getElementById('rightCourseList').scrollTop = ofH
       // 入库观看视频
@@ -216,7 +275,6 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.packageList = res.data
-          // this.course_id = parseInt(this.$route.query.course_id || this.packageList[0].course_id)
           this.playCourseInfo.course_id = this.$route.query.course_id || this.packageList[0].course_id
           this.initSecvCatalog(this.playCourseInfo.course_id)
         } else {
@@ -297,9 +355,6 @@ export default {
       console.log(endTime1 + '/60' + '第一次弹:' + this.formatSeconds(endTime1))
       console.log(endTime2 + '/60' + '第二次弹:' + this.formatSeconds(endTime2))
       console.log(endTime3 + '/60' + '第三次弹:' + this.formatSeconds(endTime3))
-      // endTime1 = 5
-      // endTime2 = 40
-      // endTime3 = 80
       this.timer = setInterval(() => {
         let curVideoTime = parseInt(this.$refs.aliPlayers.getCurrentTime())
         if (curVideoTime === durationTime) {

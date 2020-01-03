@@ -145,8 +145,8 @@ export default {
           {
             indicator: [
               { text: '答题时间', max: 86400 },
-              { text: '错题数', max: 500 },
-              { text: '做题数', max: 500 },
+              { text: '错题数', max: 1000 },
+              { text: '做题数', max: 1000 },
               { text: '学员排名', max: this.nlpgInfo.user },
               { text: '平均分', max: 100 },
               { text: '正确率', max: 100 }

@@ -4,43 +4,38 @@
       <img src="../../assets/images/course/like.png" alt="">
       <span>课程推荐</span>
     </div>
-    <div class="like-list" v-for="(item,index) in likeArr" :key="index" @click="goClassDetails(item.package_id)">
+    <div class="like-list" v-for="(item,index) in curriculumList" :key="index" @click="goClassDetails(item.package_id)">
       <img :src="item.pc_img" alt="">
       <div class="like-info">
         <p>{{item.name}}</p>
         <p>讲师: {{item.teacher_name}}</p>
-        <p>￥ {{item.price}}</p>
+        <p>￥{{item.price}}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { guessLike } from '@/api/class'
+import { newInformation } from '@/api/education'
 export default {
-  props: {
-    isW: {
-      type: Boolean
-    }
-  },
   data () {
     return {
-      likeArr: []
+      curriculumList: []
     }
   },
   computed: {
 
   },
   mounted () {
-    this.getGuessLike()
+    this.getCurriculum()
   },
   methods: {
     // 猜你喜欢
-    getGuessLike () {
-      guessLike().then(data => {
+    getCurriculum () {
+      newInformation().then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.likeArr = res.data.slice(0, 3)
+          this.curriculumList = res.data.curriculum
         } else {
           this.$Message.error(res.msg)
         }

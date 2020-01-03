@@ -137,6 +137,7 @@ export default {
         this.$router.push({ path: '/login',
           query: {
             package_id: this.package_id,
+            type_id: this.type_id,
             call_back: 'education-course-detail'
           }
         })

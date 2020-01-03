@@ -1,5 +1,5 @@
 <template>
-  <div class='prism-player' :id='playerId' :style='playStyle'>
+  <div class='prism-player' :id='playerId'>
     <div class="shuiyin-wrap">
       <div class="shuiyin">优财网校{{user_id}}</div>
       <div class="shuiyin">优财网校{{user_id}}</div>
@@ -283,8 +283,7 @@ export default {
       playerId: 'aliplayer_' + Math.random() * 100000000000000000,
       scriptTagStatus: 0,
       instance: null,
-      curTime: 0,
-      curTime2: 0
+      curTime: 0
     }
   },
   mounted () {
@@ -393,19 +392,16 @@ export default {
             this.$emit('dispose', _this.instance)
           })
           _this.instance.on('startSeek', () => {
-            // this.curTime = this.getCurrentTime()
             this.$emit('startSeek', _this.instance)
-            // console.log(this.curTime)
-            // _this.instance.pause()
-            // _this.instance.seek(8)
           })
           _this.instance.on('completeSeek', () => {
-            // this.curTime2 = this.getCurrentTime()
             this.$emit('completeSeek', _this.instance)
-            // console.log(this.curTime2)
           })
         })
       }
+    },
+    videoCLick: function () {
+
     },
     startSeek: function () {
       this.curTime = this.getCurrentTime()
@@ -430,12 +426,18 @@ export default {
        */
     play: function () {
       this.instance.play()
+      // var _video = document.querySelector('video');
+      // _video.removeEventListener('click', this.play);
+      // _video.addEventListener('click', this.pause);
     },
     /**
        * 暂停视频
        */
     pause: function () {
       this.instance.pause()
+      // var _video = document.querySelector('video');
+      // _video.removeEventListener('click', this.pause);
+      // _video.addEventListener('click', this.play);
     },
     /**
        * 重播视频
@@ -455,6 +457,12 @@ export default {
        */
     getCurrentTime: function () {
       return this.instance.getCurrentTime()
+    },
+    /**
+     * 获取视频状态
+     */
+    getStatus: function () {
+      return this.instance.getStatus()
     },
     /**
        *获取视频总时长，返回的单位为秒

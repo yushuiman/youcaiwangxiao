@@ -31,6 +31,15 @@
           </div>
         </li>
       </ul>
+      <div style="padding: 20px; text-align: center;">
+        <Page
+        :total="total"
+        @on-change="onChange"
+        :current="page"
+        :page-size="limit"
+        size="small"
+        />
+      </div>
       <div class="no-data" v-if="noDataFlag">
         暂无数据
       </div>
@@ -86,7 +95,11 @@ export default {
       orderAlearyPayList: [], // 已付款
       orderNoPayList: [], // 未付款
       orderDetail: {}, // 订单详情课程
-      orderAddress: {} // 订单详情地址
+      orderAddress: {}, // 订单详情地址
+      total: 1,
+      limit: 10,
+      page: 1,
+      pay_status: 3 // 3全部1支付2未支付
     }
   },
   computed: {
@@ -109,6 +122,7 @@ export default {
       'getUserInfo'
     ]),
     tabClk (v, index) {
+      this.page = 1
       this.selIdx = index
       this.$router.replace({ path: '/personal',
         query: {
@@ -116,24 +130,31 @@ export default {
           selIdx: index
         }
       })
-      this.initRes()
+      this.getMyOrder()
+      // this.initRes()
     },
     getMyOrder () {
+      this.pay_status = this.selIdx
+      if (parseInt(this.selIdx) === 0) {
+        this.pay_status = 3
+      }
       myOrder({
-        user_id: this.user_id
+        user_id: this.user_id,
+        limit: this.limit,
+        page: this.page,
+        pay_status: this.pay_status
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.orderAllList = res.data
-          if (res.data && res.data.length) {
-          }
-          this.orderAlearyPayList = res.data.filter((v, i, a) => {
-            return v.pay_status === 1
-          })
-          this.orderNoPayList = res.data.filter((v, i, a) => {
-            return v.pay_status === 2
-          })
-          this.initRes()
+          this.orderList = res.data.data
+          this.total = res.data.total
+          // this.orderAlearyPayList = res.data.data.filter(v => {
+          //   return v.pay_status === 1
+          // })
+          // this.orderNoPayList = res.data.data.filter(v => {
+          //   return v.pay_status === 2
+          // })
+          // this.initRes()
         } else {
           this.$Message.error(res.msg)
         }
@@ -153,6 +174,12 @@ export default {
       if (this.orderList.length === 0) {
         this.noDataFlag = true
       }
+    },
+    // 分页
+    onChange (val) {
+      this.page = val
+      this.getMyOrder()
+      window.scrollTo(0, 0)
     },
     // 查看详情
     seeDetails (item) {
@@ -224,8 +251,8 @@ export default {
   @import "../../assets/scss/app";
   @import "../../assets/scss/modal";
   .order-list{
-    max-height: 1000px;
-    overflow: auto;
+    // max-height: 1000px;
+    // overflow: auto;
     .order-item{
       border-radius: 8px;
       margin-bottom: 20px;

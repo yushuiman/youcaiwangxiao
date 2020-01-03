@@ -604,21 +604,18 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.everydayList = res.data.date
-          this.currMonth = parseInt(res.data.time.split('-')[0])
-          this.currDay = parseInt(res.data.time.split('-')[1])
+          this.currYear = parseInt(res.data.time.split('-')[0])
+          this.currMonth = parseInt(res.data.time.split('-')[1])
+          this.currDay = parseInt(res.data.time.split('-')[2])
           this.everydayList.forEach(v => {
             v.monthNum = parseInt(v.date.split('月')[0]) // 月份
             v.dayNum = parseInt(v.date.split('月')[1]) // 日
             v.beforeDate = 2
             v.afterDate = 2
             v.currDate = 2
-            if (v.monthNum < this.currMonth) {
+            if (v.year < this.currYear) {
               v.beforeDate = 1
-            }
-            if (v.monthNum > this.currMonth) {
-              v.afterDate = 1
-            }
-            if (v.monthNum === this.currMonth) {
+            } else {
               if (v.dayNum === this.currDay) {
                 v.currDate = 1
               }
