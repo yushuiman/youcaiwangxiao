@@ -323,7 +323,6 @@ export default {
         }
       })
       window.sessionStorage.removeItem('ofH')
-      // window.location.reload()
       this.reload()
     },
     // 初始化展示章节
@@ -441,10 +440,6 @@ export default {
     },
     // 签到
     signSub () {
-      // clearInterval(this.timer)
-      // clearInterval(this.timer2)
-      // this.canSign = false
-      // this.visible = false
       sign({
         user_id: this.user_id,
         course_id: this.playCourseInfo.course_id,
@@ -465,6 +460,11 @@ export default {
           }
         } else if (res.code === 402) {
           this.$Message.error('已签到～')
+          this.getCourseCatalog()
+          clearInterval(this.timer)
+          clearInterval(this.timer2)
+          this.canSign = false
+          this.visible = false
         } else {
           this.$Message.error(res.msg)
         }
