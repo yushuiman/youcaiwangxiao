@@ -10,11 +10,11 @@
       </li>
     </ul>
     <Modal
-        v-model="modal1"
-        title="提示"
-        @on-ok="ok"
-        @on-cancel="cancel">
-        <p class="ts">您已进入模拟考试模式，请随时点击“保存“按钮保存，否则您的做题结果会消失。在完成所有题目后，请点击“交卷”按钮，系统会自动为您评分。谢谢配合！</p>
+      v-model="modal1"
+      title="提示"
+      @on-ok="ok"
+      @on-cancel="cancel">
+      <p class="ts">您已进入模拟考试模式，中途离开请退出保存当前进度，恢复请从“答题记录”，点击“继续做题”完成测试。</p>
     </Modal>
   </div>
 </template>
@@ -38,11 +38,11 @@ export default {
       volumeList: [],
       getPoticData: {
         course_id: this.course_id,
-        paper_id: '', // 阶段测试,论述题
-        section_id: '',
-        knob_id: '', // 节id
-        know_id: '', // 知识点id
-        mock_id: '',
+        paper_id: '', // 阶段测试,论述题,冲刺训练营 这个取接口返回的
+        section_id: 0,
+        knob_id: 0, // 节id
+        know_id: 0, // 知识点id
+        mock_id: 0,
         plate_id: this.plate_id,
         num: '', // 默认15道
         paper_type: 1 // 单选1 论述2

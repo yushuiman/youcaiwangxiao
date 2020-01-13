@@ -173,9 +173,7 @@ export default {
         this.$refs.fixedTit.style.top = 70 + 'px'
         this.$refs.fixedTit.style.width = 895 + 'px'
       } else {
-        if (scrollTop > 0) {
-          this.$refs.fixedTit.style = ''
-        }
+        this.$refs.fixedTit.style = ''
       }
     },
     goAnchor (selector) {

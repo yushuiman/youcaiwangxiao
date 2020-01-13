@@ -171,7 +171,7 @@ export default {
         return
       }
       if (this.user_name.length < 2 || this.user_name.length > 10) {
-        this.$Message.error('请输入2-10位字符～')
+        this.$Message.error('请输入2-10位姓名字符～')
         return
       }
       if (this.identity === '') {

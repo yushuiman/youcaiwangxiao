@@ -34,7 +34,6 @@
       <div class="video-info-c" id="left">
         <ali-player
           ref="aliPlayers"
-          @ready="ready"
           v-if="videoCredentials.playAuth"
           :vid="playCourseInfo.VideoId"
           :playauth="videoCredentials.playAuth"
@@ -42,17 +41,22 @@
           :canSign="canSign"
           :visible="visible"
           :jianTime="jianTime"
+          @ready="ready"
           @signSub="signSub"
+          @ended="ended"
         >
-          <!-- @startSeek="startSeek"
-          @completeSeek="completeSeek" -->
         </ali-player>
       </div>
       <div id="resize" class="course-drag" :class="{'course-drag-hide': !this.flagKc && !this.flagJy}">
         <div class="drag"></div>
       </div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
-        <course-list v-if="flagKc" :courseSections="courseSections" :openMenu="openMenu" @closeModel="closeModel" @getVideoPlayback="getVideoPlayback"></course-list>
+        <course-list
+          v-if="flagKc"
+          :courseSections="courseSections"
+          :openMenu="openMenu"
+          @closeModel="closeModel">
+        </course-list>
         <div class="jiangyi" v-if="flagJy">
           <div class="close-box" @click="closeModel">
             <i class="close-icon"></i>
@@ -72,6 +76,7 @@ import { videoCredentials, courseCatalog, secvCatalog, record, signQuery, sign }
 import { mapState } from 'vuex'
 
 export default {
+  inject: ['reload'],
   data () {
     return {
       selMenu: 3,
@@ -94,6 +99,7 @@ export default {
         package_id: this.$route.query.package_id,
         userstatus: parseInt(window.sessionStorage.getItem('userstatus')) || 2 // 1购买2未购买
       },
+      playCourseInfoNext: {},
       packageList: [],
       courseSections: [],
       openMenu: '1-1', // 默认播放菜单menu-index
@@ -102,7 +108,7 @@ export default {
       timer: null,
       timer2: null,
       jianTime: 30,
-      player: {}
+      isPlay: false
     }
   },
   components: {
@@ -115,50 +121,32 @@ export default {
       user_id: state => state.user.user_id
     })
   },
-  updated () {
-    this.player = this.$refs.aliPlayers
-  },
   mounted () {
     this.getCourseCatalog() // 课程大纲（目录）
     this.dragControllerDiv()
-    var _this = this
-    document.onkeydown = function (e) {
-      let key = window.event.keyCode
-      // alert(key)
-      _this.watchKeydοwn(key)
-    }
+    this.$nextTick(() => {
+      var _this = this
+      document.onkeydown = function (e) {
+        let key = window.event.keyCode
+        // alert(key)
+        _this.watchKeydοwn(key)
+      }
+    })
   },
   methods: {
     watchKeydοwn (keyNum) {
-      let player = this.player
+      let player = this.$refs.aliPlayers
       let playStatus = player.getStatus()
-      console.log(keyNum + playStatus)
+      console.log(keyNum + '' + playStatus + '' + this.isPlay)
       if (keyNum === 32) { // 空格暂停播放
-        if (playStatus === 'ready') {
-          player.play()
+        if (player.getCurrentTime() > 0) {
+          this.isPlay = true
         }
-        if (playStatus === 'playing') {
+        if (playStatus === 'playing' || this.isPlay) {
           player.pause()
         }
         if (playStatus === 'pause') {
           player.play()
-        }
-      }
-      if (keyNum === 37) { // 快退
-        let videotimes = player.getDuration()
-        let playnum = player.getCurrentTime()
-        playnum = parseInt(playnum - 10)
-        if (playnum <= (videotimes - 30)) {
-          player.seek(playnum)
-        }
-      }
-      if (keyNum === 39) { // 快进
-        let playnum = player.getCurrentTime()
-        playnum = parseInt(playnum + 10)
-        if (playnum > 15) {
-          player.seek(playnum)
-        } else {
-          player.seek(0)
         }
       }
       if (keyNum === 38) { // 减音量
@@ -205,23 +193,19 @@ export default {
         return false
       }
     },
-    // 播放器
+    ended () {
+      this.computedNextVid() // 计算下一个要播放的视频
+      this.reload()
+      // window.location.reload()
+    },
     ready (instance) {
-      // instance.play()
       let ofH = window.sessionStorage.getItem('ofH')
       document.getElementById('rightCourseList').scrollTop = ofH
       // 入库观看视频
       if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
         this.subrecord() // 观看记录入库
         this.isSignQuery() // 查询当前是否签到
-        this.computedCur() // 计算下一个播放视频
       }
-    },
-    startSeek () {
-      this.$refs.aliPlayers.startSeek()
-    },
-    completeSeek () {
-      this.$refs.aliPlayers.completeSeek()
     },
     // 入库观看视频
     subrecord () {
@@ -232,6 +216,53 @@ export default {
         section_id: this.playCourseInfo.section_id,
         video_id: this.playCourseInfo.video_id
       }).then((data) => {
+      })
+    },
+    computedNextVid () {
+      this.playCourseInfoNext = Object.assign({}, this.playCourseInfo)
+      var profiles = this.courseSections
+      var currentProfile = {
+        section_id: this.playCourseInfo.section_id,
+        course_id: this.playCourseInfo.course_id
+      }
+      var currentProfileIndex = (profiles || []).findIndex((profile) => profile.section_id + '' === currentProfile.section_id + '')
+      var profiles2 = this.courseSections[currentProfileIndex].video
+      var currentProfile2 = {
+        video_id: this.playCourseInfo.video_id,
+        VideoId: this.playCourseInfo.VideoId
+      }
+      var currentProfileIndex2 = (profiles2 || []).findIndex((profile2) => profile2.video_id + '' === currentProfile2.video_id + '')
+      if (currentProfileIndex === profiles.length - 1) {
+        if (currentProfileIndex2 === profiles2.length - 1) {
+          this.playCourseInfoNext.section_id = this.courseSections[0].section_id
+          this.playCourseInfoNext.video_id = this.courseSections[0].video[0].video_id
+          this.playCourseInfoNext.VideoId = this.courseSections[0].video[0].VideoId
+        } else {
+          ++currentProfileIndex2
+          this.playCourseInfoNext.section_id = this.courseSections[currentProfileIndex].section_id
+          this.playCourseInfoNext.video_id = this.courseSections[currentProfileIndex].video[currentProfileIndex2].video_id
+          this.playCourseInfoNext.VideoId = this.courseSections[currentProfileIndex].video[currentProfileIndex2].VideoId
+        }
+      } else {
+        if (currentProfileIndex2 === profiles2.length - 1) {
+          ++currentProfileIndex
+          this.playCourseInfoNext.section_id = this.courseSections[currentProfileIndex].section_id
+          this.playCourseInfoNext.video_id = this.courseSections[currentProfileIndex].video[0].video_id
+          this.playCourseInfoNext.VideoId = this.courseSections[currentProfileIndex].video[0].VideoId
+        } else {
+          ++currentProfileIndex2
+          this.playCourseInfoNext.section_id = this.courseSections[currentProfileIndex].section_id
+          this.playCourseInfoNext.video_id = this.courseSections[currentProfileIndex].video[currentProfileIndex2].video_id
+          this.playCourseInfoNext.VideoId = this.courseSections[currentProfileIndex].video[currentProfileIndex2].VideoId
+        }
+      }
+      this.$router.replace({ path: '/education-video',
+        query: {
+          ...this.$route.query,
+          section_id: this.playCourseInfoNext.section_id,
+          video_id: this.playCourseInfoNext.video_id,
+          VideoId: this.playCourseInfoNext.VideoId
+        }
       })
     },
     // tab 显示关闭课程，答疑，讲义
@@ -275,7 +306,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.packageList = res.data
-          this.playCourseInfo.course_id = this.$route.query.course_id || this.packageList[0].course_id
+          this.playCourseInfo.course_id = parseInt(this.$route.query.course_id || this.packageList[0].course_id)
           this.initSecvCatalog(this.playCourseInfo.course_id)
         } else {
           this.$Message.error(res.msg)
@@ -292,7 +323,8 @@ export default {
         }
       })
       window.sessionStorage.removeItem('ofH')
-      window.location.reload()
+      // window.location.reload()
+      this.reload()
     },
     // 初始化展示章节
     initSecvCatalog (id) {
@@ -313,7 +345,6 @@ export default {
               }
             })
           })
-          this.playCourseInfo.course_id = this.$route.query.course_id || this.courseSections[0].course_id
           this.playCourseInfo.section_id = this.$route.query.section_id || this.courseSections[0].section_id
           this.playCourseInfo.video_id = this.$route.query.video_id || this.courseSections[0].video[0].video_id
           this.playCourseInfo.VideoId = this.$route.query.VideoId || this.courseSections[0].video[0].VideoId
@@ -407,40 +438,6 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-    },
-    computedCur () {
-      var profiles = this.courseSections
-      var currentProfile = {
-        section_id: this.playCourseInfo.section_id,
-        course_id: this.playCourseInfo.course_id
-      }
-      var currentProfileIndex = (profiles || []).findIndex((profile) => profile.section_id + '' === currentProfile.section_id + '')
-      console.log(currentProfileIndex)
-      let secArray = this.courseSections
-      for (let i = 0; i < secArray.length; i++) {
-        if (currentProfileIndex < secArray.length) {
-          ++currentProfileIndex
-        }
-        // const secId = secArray[i].section_id
-        // const couId = secArray[i].course_id
-        const videosArr = secArray[i].video
-        for (let j = 0; j < videosArr.length; j++) {
-          // const vidId = videosArr[j].video_id
-          // console.log(vidId)
-        }
-        // console.log(secId)
-        // console.log(couId)
-        // console.log(array.length)
-        // console.log(elementVid.length)
-      }
-      console.log(currentProfileIndex)
-      // this.courseSections.forEach((v, index) => {
-      //   let secLen = this.courseSections.length
-      //   let vidLen = v.video.length
-      //   console.log(secLen)
-      //   console.log(vidLen)
-      //   console.log(v)
-      // })
     },
     // 签到
     signSub () {

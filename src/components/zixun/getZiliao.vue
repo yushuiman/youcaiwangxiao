@@ -37,10 +37,10 @@ export default {
         this.$Message.error('姓名，电话，邮箱不能为空～')
         return
       }
-      if (this.user_name.length < 2 || this.user_name.length > 10) {
-        this.$Message.error('请输入2-10位字符～')
-        return
-      }
+      // if (this.user_name.length < 2 || this.user_name.length > 10) {
+      //   this.$Message.error('请输入2-10位姓名字符～')
+      //   return
+      // }
       if (!regMobile.test(this.mobile)) {
         this.$Message.error('请输入正确的手机号～')
         return

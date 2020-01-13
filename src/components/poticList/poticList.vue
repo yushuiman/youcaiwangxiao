@@ -78,7 +78,7 @@
           <p v-if="item.topic[4]">{{item.topic[4]}}</p>
         </div>
         <!-- 练习模式：有解析答对答错状态-->
-        <ul class="topic-opition" v-if="getQuestion.paper_mode == 1 && getQuestion.plate_id != 3">
+        <ul class="topic-opition" v-if="getQuestion.paper_mode == 1 && item.topicType == 1">
           <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPoticPractice(item, v, index, key)">
             <div class="opi-abcd">
               <span :class="{'blue-bg': v.selOption, 'red-bg': v.errorRed, 'green-bg': v.rightGreen}">{{v.option}}</span>
@@ -87,7 +87,7 @@
           </li>
         </ul>
         <!-- 真题模式：正常，无解析答对答错状态-->
-        <ul class="topic-opition" v-if="getQuestion.paper_mode != 1 && getQuestion.plate_id != 3">
+        <ul class="topic-opition" v-if="getQuestion.paper_mode != 1 && item.topicType == 1">
           <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPotic(item, v, index, key)">
             <div class="opi-abcd">
               <span :class="{'blue-bg': v.selOption}">{{v.option}}</span>
@@ -96,8 +96,8 @@
           </li>
         </ul>
         <!-- 论述题：没有ABCD样式 -->
-        <div v-if="getQuestion.plate_id == 3">
-          <textarea autofocus v-model.trim="item.discuss_useranswer" class="texta-discuss" placeholder="请填写您的答案" v-on:focus="doPoticDiscuss(item, index)"></textarea>
+        <div v-if="item.topicType == 2">
+          <textarea autofocus v-model.trim="item.discuss_useranswer" class="texta-discuss" placeholder="请填写您的答案" v-on:focus="doPoticDiscuss(item, index)" @blur="doPoticDiscuss(item, index)"></textarea>
         </div>
       </div>
       <!-- 练习模式答错才显示解析 12.11号改为答对答错都展示解析-->
@@ -196,6 +196,11 @@ export default {
     // 论述题
     doPoticDiscuss (item) {
       item.currenOption = true // 点击当前题 右边选项卡对应添加已做蓝色状态
+      // if (item.discuss_useranswer.length > 0) {
+      //   item.currenOption = true // 点击当前题 右边选项卡对应添加已做蓝色状态
+      // } else {
+      //   item.currenOption = false
+      // }
       let num = this.topics.filter((v) => { // 已做题数
         return v.currenOption
       })

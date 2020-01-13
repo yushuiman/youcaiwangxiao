@@ -118,7 +118,7 @@ export default {
     goPage (item) {
       if (item.state === 1) { // 成绩统计
         this.getPoticData.course_id = item.course_id
-        window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
+        window.sessionStorage.setItem('diffTxt', 0) // 区分查看报告按钮，返回个人中心
         window.sessionStorage.setItem('diffRes', '') // 区分不同的接口请求
         this.$router.push({ path: 'result-report',
           query: {
@@ -138,6 +138,7 @@ export default {
         this.getPoticData.know_id = item.know_id
         this.getPoticData.mock_id = item.mock_id
         this.getPoticData.plate_id = item.plate_id
+        this.getPoticData.paper_type = item.paper_status // 1单选 2论述
         this.getPoticData.paper_mode = item.paper_type // 1练习模式 2考试模式
         this.$router.push({ path: 'dopotic-continue',
           query: this.getPoticData
@@ -152,6 +153,7 @@ export default {
             paper_id: item.id, // 试卷id(阶段，论述才有)
             plate_id: item.plate_id, // 板块
             course_id: item.course_id,
+            paper_type: item.paper_status, // 试卷类型
             type: 2 // 所有解析
           }
         })

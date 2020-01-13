@@ -36,15 +36,11 @@
 import { mapState } from 'vuex'
 
 export default {
-  // inject: ['reload'],
+  inject: ['reload'],
   props: {
     showBox: {
       type: String,
       default: ''
-    },
-    flagCourse: {
-      type: Boolean,
-      default: false
     },
     courseSections: {
       type: Array
@@ -58,9 +54,6 @@ export default {
       courseCatalogInfo: [], // 课程大纲（目录）
       secvCatalogArr: [],
       packageList: [],
-      curIndex: '',
-      videoListFlag: true,
-      playIdx: 0,
       ofH: window.sessionStorage.getItem('ofH')
     }
   },
@@ -74,14 +67,10 @@ export default {
   },
   methods: {
     closeModel () {
-      this.videoListFlag = false
       this.$emit('closeModel', 'kc')
     },
     // 跳转到播放页面
     playVideo (val, v, key, index) {
-      v.flag = true
-      this.playIdx = v
-      this.$forceUpdate()
       this.$router.replace({ path: 'course-video',
         query: {
           ...this.$route.query,
@@ -89,7 +78,9 @@ export default {
           video_id: v.video_id
         }
       })
-      window.location.reload()
+      // this.$emit('switchVideo')
+      this.reload()
+      // window.location.reload()
       let anchor = this.$el.querySelector('#showBox' + key + '' + index)
       window.sessionStorage.setItem('ofH', anchor.offsetTop)
     },

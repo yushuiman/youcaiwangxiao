@@ -31,11 +31,11 @@ export default {
       courseList: [],
       getPoticData: {
         course_id: this.course_id,
-        paper_id: 0, // // 阶段测试1,论述题2 这个取接口返回的
-        section_id: '',
-        knob_id: '', // 节id
-        know_id: '', // 知识点id
-        mock_id: '',
+        paper_id: '', // 阶段测试,论述题,冲刺训练营 这个取接口返回的
+        section_id: 0,
+        knob_id: 0, // 节id
+        know_id: 0, // 知识点id
+        mock_id: 0,
         plate_id: this.plate_id,
         num: '', // 默认随机15道
         paper_type: 2 // 单选1 论述2

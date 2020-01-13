@@ -1,4 +1,5 @@
 <template>
+<!--  @click="switchPlay" -->
   <div class='prism-player' :id='playerId' :style='playStyle'>
     <div class="shuiyin-wrap">
       <div class="shuiyin">优财网校{{user_id}}</div>
@@ -237,10 +238,9 @@ export default {
   },
   data () {
     return {
-      playerId: 'aliplayer_' + Math.random() * 100000000000000000,
+      playerId: 'aliplayer_' + Math.floor(Math.random() * 100000000000000000),
       scriptTagStatus: 0,
-      instance: null,
-      playStatus: true // 暂停/开始
+      instance: null
     }
   },
   mounted () {
@@ -350,6 +350,13 @@ export default {
       }
     },
     /**
+       * 视频结束
+       */
+    ended: function () {
+      // var _this = this
+      this.instance.replayByVidAndPlayAuth(this.vid, this.playauth)
+    },
+    /**
        * 销毁
        */
     dispose: function () {
@@ -385,6 +392,12 @@ export default {
        */
     getCurrentTime: function () {
       return this.instance.getCurrentTime()
+    },
+    /**
+     * 获取视频状态
+     */
+    getStatus: function () {
+      return this.instance.getStatus()
     },
     /**
        *获取视频总时长，返回的单位为秒
@@ -436,14 +449,17 @@ export default {
     reloaduserPlayInfoAndVidRequestMts: function (vid, playauth) {
       this.instance.reloaduserPlayInfoAndVidRequestMts(vid, playauth)
     },
-    /* 点击播放屏幕 */
-    playSwitch () {
-      // this.playStatus = !this.playStatus
-      // if (this.playStatus) {
-      //   this.pause()
-      // } else {
-      //   this.play()
-      // }
+    switchPlay () {
+      // var _video = document.querySelector('video')
+      // console.log(_video)
+      // player.on('play', function (e) {
+      //   _video.removeEventListener('click', play)
+      //   _video.addEventListener('click', pause)
+      // })
+      // player.on('pause', function (e) {
+      //   _video.removeEventListener('click', pause)
+      //   _video.addEventListener('click', play)
+      // })
     }
   }
 }

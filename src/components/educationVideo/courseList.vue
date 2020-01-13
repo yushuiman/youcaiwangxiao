@@ -39,7 +39,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  // inject: ['reload'],
+  inject: ['reload'],
   props: {
     showBox: {
       type: String,
@@ -93,7 +93,8 @@ export default {
           VideoId: v.VideoId
         }
       })
-      window.location.reload()
+      // window.location.reload()
+      this.reload()
       let anchor = this.$el.querySelector('#showBox' + key + '' + index)
       window.sessionStorage.setItem('ofH', anchor.offsetTop)
     },

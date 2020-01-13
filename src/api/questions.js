@@ -72,6 +72,13 @@ export const volumeList = (data) => { // 组卷列表
     method: 'post'
   })
 }
+export const sprintCourse = (data) => { // 冲刺训练营
+  return axios.request({
+    url: '/web/Question/sprintCourse',
+    data,
+    method: 'post'
+  })
+}
 export const topicList = (data) => { // 6大板块拿题
   return axios.request({
     url: '/web/Question/topicList',

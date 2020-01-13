@@ -128,7 +128,7 @@
         <error-section v-if="showPlateModal == 4" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></error-section>
         <lianxi-self v-if="showPlateModal == 5" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></lianxi-self>
         <group-lianxi v-if="showPlateModal == 6" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></group-lianxi>
-        <div v-if="showPlateModal == 7" class="no-data" style="padding-bottom: 60px">暂无数据</div>
+        <sprint-xly v-if="showPlateModal == 7" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></sprint-xly>
       </Modal>
     </div>
     <!-- 预测评估 学员排名 -->
@@ -177,6 +177,7 @@ import discussSelf from '../../components/questions/discussSelf'
 import errorSection from '../../components/questions/errorSection'
 import lianxiSelf from '../../components/questions/lianxiSelf'
 import groupLianxi from '../../components/questions/groupLianxi'
+import sprintXly from '../../components/questions/sprintXly'
 import { mapState, mapActions } from 'vuex'
 export default {
   data () {
@@ -188,37 +189,37 @@ export default {
         {
           id: 1,
           title: '知识点练习',
-          describe: '针对章节，详细考点'
+          describe: '小节知识点训练'
         },
         {
           id: 2,
           title: '阶段测试',
-          describe: '以章节纬度阶段测试'
+          describe: '章节重点知识测试'
         },
         {
           id: 3,
           title: '论述题自测',
-          describe: '精准答案对比'
+          describe: '论述题综合训练'
         },
         {
           id: 7,
           title: '冲刺训练营',
-          describe: '集中冲刺'
+          describe: '考前系统冲刺训练'
         },
         {
           id: 4,
-          title: '系统高频错题',
-          describe: '高频历史错题'
+          title: '平台高频错题',
+          describe: '全网高频错题收集'
         },
         {
           id: 5,
           title: '自助练习',
-          describe: '学习知识点自定义'
+          describe: '薄弱知识点练习'
         },
         {
           id: 6,
           title: '组卷模考',
-          describe: '适用于考前冲刺'
+          describe: '经典试卷随机抽取'
         }
       ],
       personalTxtArr: ['答题记录', '我的错题', '收藏夹'],
@@ -236,7 +237,8 @@ export default {
     discussSelf,
     errorSection,
     lianxiSelf,
-    groupLianxi
+    groupLianxi,
+    sprintXly
   },
   computed: {
     ...mapState({

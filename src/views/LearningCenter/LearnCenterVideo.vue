@@ -32,7 +32,15 @@
         </ul>
       </div>
       <div class="video-info-c" id="left">
-        <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth" :user_id="user_id"></ali-player>
+        <ali-player
+          ref="aliPlayers"
+          v-if="videoCredentials.playAuth"
+          :vid="VideoId"
+          :playauth="videoCredentials.playAuth"
+          :user_id="user_id"
+          @ready="ready"
+          @ended="ended">
+        </ali-player>
       </div>
       <div id="resize" class="course-drag" :class="{'course-drag-hide': !flagKc && !flagAnswer && !flagJy}">
         <div class="drag"></div>
@@ -75,6 +83,7 @@ import config from '@/config'
 import { mapState } from 'vuex'
 
 export default {
+  inject: ['reload'],
   data () {
     return {
       watchRecordsList: {}, // 观看记录头像滑过
@@ -121,9 +130,11 @@ export default {
         days: this.$route.query.days,
         plan_id: this.$route.query.plan_id
       },
+      playCourseInfoNext: {},
       playtime: 0, // 视频上次播放时间
       socketTimer: null,
-      learnVideoList: []
+      learnVideoList: [],
+      isPlay: false
     }
   },
   components: {
@@ -148,10 +159,65 @@ export default {
         this.dragControllerDiv()
       })
     }
+    this.$nextTick(() => {
+      var _this = this
+      document.onkeydown = function (e) {
+        let key = window.event.keyCode
+        _this.watchKeydοwn(key)
+      }
+    })
     // this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
     // this.getVideoPlayback(this.$route.query.video_id)
   },
   methods: {
+    watchKeydοwn (keyNum) {
+      let player = this.$refs.aliPlayers
+      let playStatus = player.getStatus()
+      console.log(keyNum + '' + playStatus + '' + this.isPlay)
+      if (keyNum === 32) { // 空格暂停播放
+        if (player.getCurrentTime() > 0) {
+          this.isPlay = true
+        }
+        if (playStatus === 'playing' || this.isPlay) {
+          player.pause()
+        }
+        if (playStatus === 'pause') {
+          player.play()
+        }
+      }
+      if (keyNum === 37) { // 快退
+        let videotimes = player.getDuration()
+        let playnum = player.getCurrentTime()
+        playnum = parseInt(playnum - 5)
+        if (playnum <= (videotimes - 30)) {
+          player.seek(playnum)
+        }
+      }
+      if (keyNum === 39) { // 快进
+        let playnum = player.getCurrentTime()
+        playnum = parseInt(playnum + 5)
+        if (playnum > 15) {
+          player.seek(playnum)
+        } else {
+          player.seek(0)
+        }
+      }
+      if (keyNum === 38) { // 减音量
+        // 音量大小 //获得当前音量
+        let volume = parseInt(player.getVolume() * 100)
+        if (volume < 100) {
+          volume = (volume + 1) / 100
+          player.setVolume(volume)
+        }
+      }
+      if (keyNum === 40) { // 加音量
+        let volume = parseInt(player.getVolume() * 100)
+        if (volume > 0) {
+          volume = (volume - 1) / 100
+          player.setVolume(volume)
+        }
+      }
+    },
     dragControllerDiv () {
       var resize = document.getElementById('resize')
       var left = document.getElementById('left')
@@ -180,10 +246,18 @@ export default {
         return false
       }
     },
+    ended () {
+      this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
+      this.computedNextVid() // 计算下一个要播放的视频
+      this.reload()
+      // window.location.reload()
+      // await this.initSecvCatalog(this.playCourseInfoNext.course_id)
+      // this.$refs.aliPlayers.ended()
+    },
     // 播放器
     ready (instance) {
       // 跳转到上次播放时间
-      instance.seek(this.playtime)
+      instance.seek(this.playtime - 5)
       // 初始化监听一次socket io
       if (this.playCourseInfo.userstatus === 1) {
         if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
@@ -197,7 +271,9 @@ export default {
         // 视频播放时间大于0 socket
         if (this.playCourseInfo.userstatus === 1) {
           if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
-            // this.socketIo()
+            // if (instance.getStatus() === 'playing') {
+            // }
+            this.socketIo()
           }
         }
       }, 30000)
@@ -253,6 +329,26 @@ export default {
       socket.emit('sendMsg', {
         'username': _this.user_id,
         'msg': message
+      })
+    },
+    computedNextVid () {
+      this.playCourseInfoNext = Object.assign({}, this.playCourseInfo)
+      var profiles = this.learnVideoList
+      var currentProfile = {
+        video_id: this.playCourseInfo.video_id
+      }
+      var currentProfileIndex = (profiles || []).findIndex((profile) => profile.video_id + '' === currentProfile.video_id + '')
+      if (currentProfileIndex === profiles.length - 1) {
+        this.playCourseInfoNext.video_id = this.learnVideoList[0].video_id
+      } else {
+        ++currentProfileIndex
+        this.playCourseInfoNext.video_id = this.learnVideoList[currentProfileIndex].video_id
+      }
+      this.$router.replace({ path: '/learn-center-video',
+        query: {
+          ...this.$route.query,
+          video_id: this.playCourseInfoNext.video_id
+        }
       })
     },
     // tab 显示关闭课程，答疑，讲义
@@ -359,7 +455,7 @@ export default {
       })
     },
     playVideo (v) {
-      this.$router.replace({ path: 'learn-center-video',
+      this.$router.replace({ path: '/learn-center-video',
         query: {
           ...this.$route.query,
           package_id: v.package_id,
@@ -369,7 +465,8 @@ export default {
         }
       })
       this.goLearnVideo()
-      window.location.reload()
+      // window.location.reload()
+      this.reload()
       this.playtime = v.watch_time
     },
     courseCollection (collectId) { // 1收藏2取消收藏

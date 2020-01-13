@@ -280,7 +280,7 @@ export default {
   },
   data () {
     return {
-      playerId: 'aliplayer_' + Math.random() * 100000000000000000,
+      playerId: 'aliplayer_' + Math.floor(Math.random() * 100000000000000000),
       scriptTagStatus: 0,
       instance: null,
       curTime: 0

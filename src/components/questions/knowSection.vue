@@ -17,12 +17,13 @@
           <div class="menu-title">
             <div class="menu-section-title">{{item.know_section_name}}</div>
             <div>
+              <span style="font-size: 12px;margin-right: 5px;">已做</span>
               <Progress
-                :percent="Number(item.correct)"
+                :percent="Number(item.have)"
                 :stroke-width="10"
                 stroke-color="#0267FF"
-                hide-info style="width: 142px;"/>
-              <span style="margin-right: 30px; width: 68px; display: inline-block;text-align:right;">{{item.correct}}%</span>
+                hide-info style="width: 142px;font-size:14px;"/>
+              <span style="margin-right: 30px; width: 68px; display: inline-block;text-align:right;">{{item.have}}%</span>
             </div>
           </div>
         </template>
@@ -75,11 +76,11 @@ export default {
       sectionList: [], // 知识点章节
       getPoticData: {
         course_id: this.course_id,
-        paper_id: '', // 阶段测试,论述题
-        section_id: '',
-        knob_id: '', // 节id
-        know_id: '', // 知识点id
-        mock_id: '',
+        paper_id: '', // 阶段测试,论述题,冲刺训练营 这个取接口返回的
+        section_id: 0,
+        knob_id: 0, // 节id
+        know_id: 0, // 知识点id
+        mock_id: 0,
         plate_id: this.plate_id,
         num: 15, // 默认随机15道
         paper_mode: 1, // 练习模式1 考试模式2
@@ -201,6 +202,7 @@ export default {
   .menu-title{
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
   .menu-jie-title{
     display: flex;

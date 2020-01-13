@@ -136,10 +136,10 @@ export default {
         this.tsError = '姓名，电话不能为空～'
         return
       }
-      if (this.signName.length < 2 || this.signName.length > 10) {
-        this.tsError = '请输入2-10位字符～'
-        return
-      }
+      // if (this.signName.length < 2 || this.signName.length > 10) {
+      //   this.tsError = '请输入2-10位姓名字符～'
+      //   return
+      // }
       const reg = /^[1]([3-9])[0-9]{9}$/
       if (!(reg.test(this.signMobile))) {
         this.tsError = '该手机号不符合格式'

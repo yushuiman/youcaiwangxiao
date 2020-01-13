@@ -14,12 +14,12 @@
       <div class="dptic-wrap-r fr">
         <div class="go-result-box">
           <!-- 论述题 -->
-          <button class="btn-com" @click="goPersonal" v-if="getQuestion.plate_id == 3">返回做题记录</button>
+          <button class="btn-com" @click="goPersonal" v-if="getQuestion.paper_type == 2">返回做题记录</button>
           <!-- 其他板块 包含个人中心 1错题集 2做题记录 3收藏夹-->
           <button class="btn-com" @click="goResult" v-else>{{txtSts[diffTxt]}}</button>
         </div>
         <div class="right-bottom-wrap">
-          <div class="answer-card" v-if="getQuestion.plate_id == 3">
+          <div class="answer-card" v-if="getQuestion.paper_type == 2">
             <div class="title-com">
               <h2>答题卡</h2>
               <!-- 论述题 -->
@@ -92,7 +92,8 @@ export default {
         question_id: 0, // 题id
         course_id: parseInt(this.$route.query.course_id),
         plate_id: parseInt(this.$route.query.plate_id),
-        sc: parseInt(this.$route.query.sc)
+        sc: parseInt(this.$route.query.sc),
+        paper_type: parseInt(this.$route.query.paper_type) || 1
       },
       visible: false,
       typeShow: false, // 答疑dy，纠错jc
@@ -111,6 +112,7 @@ export default {
     })
   },
   mounted () {
+    window.addEventListener('scroll', this.scrollToTop)
     if (this.isLoadHttpRequest) {
       // 0元体验解析
       if (this.getQuestion.plate_id === 8 && this.diffRes !== 3) {
@@ -180,7 +182,6 @@ export default {
         this.getQuestionParsing()
       })
     }
-    window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
     scrollToTop () {
@@ -190,9 +191,7 @@ export default {
         this.$refs.fixedTit.style.top = 70 + 'px'
         this.$refs.fixedTit.style.width = 895 + 'px'
       } else {
-        if (scrollTop > 0) {
-          this.$refs.fixedTit.style = ''
-        }
+        this.$refs.fixedTit.style = ''
       }
     },
     goAnchor (selector) {
@@ -345,7 +344,7 @@ export default {
       }
       topics.map((val, index) => {
         val.flag = false // 解析展开收起交互
-        if (this.$route.query.plate_id === 3) { // 论述题解析不需要下面的逻辑
+        if (this.getQuestion.paper_type === 2) { // 论述题解析不需要下面的逻辑
           return
         }
         let userOptions = val.options[0].userOption || val.discuss_useranswer // 用户答案
@@ -355,9 +354,6 @@ export default {
         }
         if (userOptions !== '' && userOptions !== trueOptions) {
           val.redCurren = true
-        }
-        if (this.getQuestion.plate_id === 3) { // 论述题
-          return
         }
         val.options.forEach((v, index) => {
           if (val.eprone.indexOf(v.option) > -1) {

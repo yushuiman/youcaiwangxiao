@@ -196,9 +196,7 @@ export default {
         this.$refs.fixedTit.style.top = 70 + 'px'
         this.$refs.fixedTit.style.width = 895 + 'px'
       } else {
-        if (scrollTop > 0) {
-          this.$refs.fixedTit.style = ''
-        }
+        this.$refs.fixedTit.style = ''
       }
     },
     goAnchor (selector) {
@@ -318,8 +316,8 @@ export default {
             this.$router.push('/question')
             return
           }
-          // 论述题板块 直接跳转到解析页面
-          if (parseInt(this.getQuestion.plate_id) === 3) {
+          // 论述题板块paper_type 直接跳转到解析页面
+          if (parseInt(this.getQuestion.paper_type) === 2) {
             this.$router.push({ path: '/analysis',
               query: {
                 paper_id: res.data.paper_id,
@@ -329,8 +327,8 @@ export default {
               }
             })
           }
-          // 其他板块 跳转到结果页面
-          if (parseInt(this.getQuestion.plate_id) !== 3) {
+          // 其他板块paper_type 跳转到结果页面
+          if (parseInt(this.getQuestion.paper_type) === 1) {
             this.$router.push({ path: '/result-report',
               query: {
                 paper_id: res.data.paper_id,
