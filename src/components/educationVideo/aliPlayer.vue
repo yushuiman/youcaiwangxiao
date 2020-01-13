@@ -14,7 +14,7 @@
         <span>{{jianTime}}秒之后关闭～</span>
       </div>
     </div>
-    <!-- <div class="progress-bar"></div> -->
+    <div class="progress-bar"></div>
   </div>
 </template>
 

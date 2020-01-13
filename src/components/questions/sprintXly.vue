@@ -17,10 +17,17 @@
         <button class="btn-com do-potic-btn">去做题</button>
       </li>
     </ul>
-    <div class="tishi">
+    <div class="tishi" v-if="flagTs1">
       <p>这是一堆提示文字，有多少字呢，也不知道，反正两行应该足够了，这个条的高度就随着行数变，每次 打开都有，反正也不碍事，他嫌碍事就叉掉。</p>
-      <i class="close-icon"></i>
+      <i class="close-icon" @click="tsPopup"></i>
     </div>
+    <Modal
+      v-model="flagTs2"
+      title="提示"
+      @on-ok="ok"
+      @on-cancel="cancel">
+      <p class="ts">这又是一堆提示文字，有多少字呢，也不知道，反正两行应该足够了，这个条的高度就随着行数变，每次 打开都有。</p>
+    </Modal>
   </div>
 </template>
 
@@ -51,13 +58,18 @@ export default {
         plate_id: this.plate_id,
         num: '', // 默认随机15道
         paper_type: 1 // 单选1 论述2
-      }
+      },
+      flagTs1: true,
+      flagTs2: false
     }
   },
   mounted () {
     this.getCourseList()
   },
   methods: {
+    tsPopup (type) {
+      this.flagTs1 = false
+    },
     getCourseList () {
       sprintCourse({
         course_id: this.course_id
@@ -73,9 +85,17 @@ export default {
     },
     // 去做题
     goToPic (v) {
-      this.getPoticData.paper_id = v.paper_id
-      this.getPoticData.paper_type = v.paper_type
+      this.flagTs2 = true
+      this.curVal = v
+    },
+    ok () {
+      this.flagTs2 = false
+      this.getPoticData.paper_id = this.curVal.paper_id
+      this.getPoticData.paper_type = this.curVal.paper_type
       this.$router.push({ path: '/dopotic', query: this.getPoticData })
+    },
+    cancel () {
+      this.flagTs2 = false
     }
   }
 }
@@ -121,9 +141,18 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    p{
+      flex: 1;
+    }
     .close-icon{
       margin-left: 20px;
-      @include bg-img(24, 24, '../../assets/images/questions/close-icon.png');
+      cursor: pointer;
+      @include bg-img(24, 25, '../../assets/images/questions/close-icon.png');
     }
+  }
+  .ts{
+    font-size: 16px;
+    padding: 10px 30px;
+    line-height: 24px;
   }
 </style>

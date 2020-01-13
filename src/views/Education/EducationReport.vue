@@ -1,5 +1,5 @@
 <template>
-  <div class="edu-report-wrap w-wrap">
+  <div class="edu-report-wrap w-wrap" :class="[adClass + '-edu-report-wrap']">
     <div class="no-data" v-if="noDataFlag">
       暂无数据
     </div>
@@ -46,6 +46,12 @@ import { generateImg, userIntegral } from '@/api/education'
 import { mapState } from 'vuex'
 
 export default {
+  props: {
+    adClass: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
       noDataFlag: false,
@@ -151,6 +157,9 @@ export default {
               })
             })
             this.userIntegralList = res.data
+            if (this.userIntegralList.length === 0) {
+              this.noDataFlag = true
+            }
           }
         } else {
           this.$Message.error(res.msg)
@@ -258,6 +267,14 @@ export default {
   @import "../../assets/scss/app";
   .edu-report-wrap{
     color: $col333;
+    &.user-edu-report-wrap{
+      width: 100%;
+      .edure-report-foot{
+        width: 971px;
+        margin-left: auto;
+        left: auto;
+      }
+    }
   }
   .edur-main{
     padding-bottom: 80px;

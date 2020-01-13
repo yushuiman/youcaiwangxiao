@@ -42,7 +42,7 @@
               </div>
             </div>
             <ul class="anscard-list clearfix">
-              <li :class="{'red-bg': v.redCurren, 'green-bg': v.rightCurren, 'blue-bg': v.discuss_useranswer}" v-for="(v, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">{{index+1}}</li>
+              <li :class="{'red-bg': v.redCurren, 'green-bg': v.rightCurren}" v-for="(v, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">{{index+1}}</li>
             </ul>
           </div>
         </div>

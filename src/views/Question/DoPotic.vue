@@ -320,10 +320,11 @@ export default {
           if (parseInt(this.getQuestion.paper_type) === 2) {
             this.$router.push({ path: '/analysis',
               query: {
-                paper_id: res.data.paper_id,
-                type: 2, // 全部解析
                 course_id: this.$route.query.course_id,
-                plate_id: this.$route.query.plate_id
+                paper_id: res.data.paper_id,
+                plate_id: this.$route.query.plate_id,
+                paper_type: this.$route.query.paper_type,
+                type: 2 // 全部解析
               }
             })
           }

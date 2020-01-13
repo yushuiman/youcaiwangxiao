@@ -44,18 +44,22 @@
           暂无课程
         </div>
       </div>
+      <div class="u-course-my" v-if="selIdx == 2">
+        <education-report :adClass="adClass"></education-report>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { myCPEcourse, watchRecords } from '@/api/education'
+import EducationReport from '../../views/Education/EducationReport'
 import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
       visible: false,
-      txtArr: ['课程', '播放记录'],
+      txtArr: ['课程', '播放记录', 'CPE学分报告'],
       selIdx: this.$route.query.selIdx || 0,
       limit: 10,
       page: 1,
@@ -70,7 +74,8 @@ export default {
         course_id: 0,
         video_id: 0
       },
-      is_purchase: 0 // 是否购买
+      is_purchase: 0, // 是否购买
+      adClass: 'user'
     }
   },
   computed: {
@@ -87,6 +92,9 @@ export default {
         this.initRes()
       })
     }
+  },
+  components: {
+    EducationReport
   },
   methods: {
     ...mapActions([
@@ -109,6 +117,9 @@ export default {
       }
       if (parseInt(this.selIdx) === 1) {
         this.getWatchRecords()
+      }
+      if (parseInt(this.selIdx) === 2) {
+        // this.getWatchRecords()
       }
     },
     // 我的课程
@@ -168,9 +179,10 @@ export default {
         return
       }
       // 否则去课程列表页面
-      this.$router.push({ path: '/education',
+      this.$router.push({ path: '/education-video',
         query: {
-          package_id: val.package_id
+          package_id: val.package_id,
+          type_id: val.type_id
         }
       })
     }

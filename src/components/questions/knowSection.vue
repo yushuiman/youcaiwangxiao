@@ -7,7 +7,7 @@
       </div>
       <div class="order-sel">
         <button class="btn-com" :class="{'curren': getPoticData.num == 15}" @click="orderDoNum(15)">随机15道</button>
-        <button class="btn-com" :class="{'curren': getPoticData.num == 30}" @click="orderDoNum(30)">随机30道</button>
+        <button class="btn-com" :class="{'curren': getPoticData.num == 30}" @click="orderDoNum(30)">顺序做题</button>
       </div>
     </div>
     <!-- 知识点章节 -->

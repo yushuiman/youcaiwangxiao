@@ -292,7 +292,7 @@ export default {
         return
       }
       // 否则去课程列表页面
-      this.$router.push({ path: '/course-detail',
+      this.$router.push({ path: '/course-video',
         query: {
           package_id: val.package_id
         }
