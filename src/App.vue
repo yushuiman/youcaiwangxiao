@@ -40,7 +40,7 @@ export default {
   },
   computed: {
     isShowLoadFlag () {
-      return true || this.$store.state.loading.isShowLoadFlag
+      return this.$store.state.loading.isShowLoadFlag
     }
   },
   methods: {
