@@ -406,6 +406,7 @@ export default {
       if (this.playCourseInfo.userstatus === 2) { // 0元体验 userstatus==2未购买
         types = 1
       }
+      this.showLoading(true)
       getVideo({
         user_id: this.user_id,
         course_id: this.playCourseInfo.course_id,
@@ -414,6 +415,7 @@ export default {
         days: this.playCourseInfo.days,
         sameday: 1 // 是今天1不是2
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.learnVideoList = res.data.video

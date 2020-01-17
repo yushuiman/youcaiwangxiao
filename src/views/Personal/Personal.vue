@@ -157,9 +157,11 @@ export default {
     },
     // 用户信息
     getPersonalInfo (type) {
+      this.showLoading(true)
       getPersonal({
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.personalInfo = res.data

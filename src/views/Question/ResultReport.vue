@@ -112,10 +112,12 @@ export default {
     ]),
     // 正常做题成绩统计
     getResultsStati () {
+      this.showLoading(true)
       resultsStati({
         user_id: this.user_id,
         paper_id: this.$route.query.paper_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.resultsInfo = res.data
@@ -150,6 +152,7 @@ export default {
     // 错题集成绩统计
     getErrorStati () {
       let obj = JSON.parse(window.sessionStorage.getItem('subTopics'))
+      this.showLoading(true)
       errorStati({
         used_time: obj.used_time,
         user_id: this.user_id,
@@ -157,6 +160,7 @@ export default {
         section_id: obj.section_id,
         question_content: obj.question_content.question
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.resultsInfo = res.data

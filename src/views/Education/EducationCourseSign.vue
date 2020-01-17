@@ -100,10 +100,12 @@ export default {
     ]),
     // 课程简介
     getpreviewDetails () {
+      this.showLoading(true)
       previewDetails({
         user_id: this.user_id,
         preview_id: this.preview_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.isntroduction = res.data

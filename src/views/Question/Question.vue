@@ -265,11 +265,11 @@ export default {
     ]),
     // 展示课程
     projectList () {
-      // this.showLoading(true)
+      this.showLoading(true)
       getProject({
         user_id: this.user_id
       }).then(data => {
-        // this.showLoading(false)
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           // 非0元体验
@@ -299,10 +299,12 @@ export default {
       }
       this.course_id = id
       window.sessionStorage.setItem('course_id', id)
+      this.showLoading(true)
       questionIndex({
         user_id: this.user_id,
         course_id: id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.questionResult = res.data
@@ -343,12 +345,12 @@ export default {
     // 7大板块拿题
     // 1、5板块
     getSectionList () {
-      // this.showLoading(true)
+      this.showLoading(true)
       getSection({
         user_id: this.user_id,
         course_id: this.course_id
       }).then(data => {
-        // this.showLoading(false)
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.sectionList = res.data
@@ -359,10 +361,12 @@ export default {
     },
     // 2、3板块
     getCourseList () {
+      this.showLoading(true)
       getCourse({
         course_id: this.course_id,
         plate_id: this.plate_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.courseList = res.data
@@ -373,10 +377,12 @@ export default {
     },
     // 4板块
     getErrorsectionList (val) {
+      this.showLoading(true)
       getErrorsection({
         course_id: this.course_id,
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.errorSecList = res.data
@@ -387,10 +393,12 @@ export default {
     },
     // 6板块
     getVolumeList (val) {
+      this.showLoading(true)
       volumeList({
         course_id: this.course_id,
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.volumeList = res.data
@@ -401,9 +409,11 @@ export default {
     },
     // 7板块
     getSprintCourseList () {
+      this.showLoading(true)
       sprintCourse({
         course_id: this.course_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.sprintCourseList = res.data

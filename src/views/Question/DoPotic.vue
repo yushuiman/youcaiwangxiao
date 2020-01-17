@@ -220,10 +220,10 @@ export default {
     },
     // 拿题
     getTopicList () {
-      // this.showLoading(true)
+      this.showLoading(true)
       this.getQuestion.user_id = this.user_id
       topicList(this.getQuestion).then(data => {
-        // this.showLoading(false)
+        this.showLoading(false)
         this.noDataFlag = true
         const res = data.data
         if (res.code === 200) {
@@ -312,7 +312,9 @@ export default {
     subGetPapers (type) {
       window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
       window.sessionStorage.setItem('diffRes', '') // 区分接口请求
+      this.showLoading(true)
       getPapers(this.subTopics).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           // 保存之后跳转到题库页面

@@ -157,7 +157,9 @@ export default {
     },
     // 课程包列表
     getListPackage () {
+      this.showLoading(true)
       listPackage(this.form).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.listPackageArr = res.data.data

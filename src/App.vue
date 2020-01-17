@@ -8,6 +8,11 @@
       <div class="loading-info">
         <img src="../src/assets/images/global/loading-logo.png" alt="">
         <p>正在加载</p>
+        <div class="pulse-container">
+          <span class="pulse-bubble pulse-bubble-1"></span>
+          <span class="pulse-bubble pulse-bubble-2"></span>
+          <span class="pulse-bubble pulse-bubble-3"></span>
+        </div>
       </div>
     </div>
   </div>
@@ -71,7 +76,7 @@ export default {
     transform: translate(-50%, -50%);
     width: 120px;
     height: 120px;
-    padding: 20px 0;
+    padding: 15px 0;
     box-sizing: border-box;
     border-radius: 10px;
     background: rgba(0,0,0,.6);
@@ -82,9 +87,37 @@ export default {
       margin: 0 auto;
     }
     p{
-      margin-top: 10px;
+      margin-top: 6px;
       line-height: 20px;
       color: #ffffff;
+    }
+  }
+  .pulse-bubble {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    margin: 0 5px;
+    border-radius: 50%;
+    background-color: #ffffff;
+  }
+
+  .pulse-bubble-1 {
+      animation: pulse .4s ease 0s infinite alternate;
+  }
+  .pulse-bubble-2 {
+      animation: pulse .4s ease .2s infinite alternate;
+  }
+  .pulse-bubble-3 {
+      animation: pulse .4s ease .4s infinite alternate;
+  }
+  @keyframes pulse {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: .25;
+      transform: scale(.75);
     }
   }
 </style>

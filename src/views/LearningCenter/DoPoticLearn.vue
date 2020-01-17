@@ -187,11 +187,13 @@ export default {
     // 拿题
     getTopicList () {
       this.getQuestion.user_id = this.user_id
+      this.showLoading(true)
       withTopic({
         user_id: this.user_id,
         know_id: this.getQuestion.know_id,
         video_name: this.getQuestion.video_name
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           let { topics, total, title } = res.data
@@ -255,7 +257,9 @@ export default {
     subGetPapers (type) {
       window.sessionStorage.setItem('diffTxt', 3) // 区分查看报告按钮，返回个人中心
       window.sessionStorage.setItem('diffRes', 3) // 区分接口请求
+      this.showLoading(true)
       getPaper(this.subTopics).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           // if (type === 'save') {

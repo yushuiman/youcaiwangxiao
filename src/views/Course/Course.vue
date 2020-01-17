@@ -242,7 +242,9 @@ export default {
     },
     // 获取数据
     getCourseList () {
+      this.showLoading(true)
       courseList(this.form).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.courseList = res.data.data
@@ -254,7 +256,9 @@ export default {
     },
     // 科目
     getSubjects () {
+      this.showLoading(true)
       subjects().then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.subject_type = res.data

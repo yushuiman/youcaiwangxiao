@@ -323,6 +323,7 @@ export default {
       this.$router.replace({ path: '/personal',
         query: {
           ...this.$route.query,
+          type: 'answer',
           selIdx: index
         }
       })
@@ -343,12 +344,14 @@ export default {
     },
     // 课程答疑
     getCourseAnswer () {
+      this.showLoading(true)
       courseAnswer({
         user_id: this.user_id,
         limit: this.limit,
         page: this.page
       }).then(data => {
         this.noDataFlag = true
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           if (res.data && res.data.list) {
@@ -372,12 +375,14 @@ export default {
     },
     // 题库答疑
     getQuestionAnswer () {
+      this.showLoading(true)
       questionAnswer({
         user_id: this.user_id,
         limit: this.limit,
         page: this.page
       }).then(data => {
         this.noDataFlag = true
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           if (res.data && res.data.list) {

@@ -74,7 +74,9 @@ export default {
     ]),
     // banner
     getBooksBanner () {
+      this.showLoading(true)
       booksBanner().then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.booksBannerList = res.data
@@ -85,7 +87,9 @@ export default {
     },
     // 书籍list
     getBooksList () {
+      this.showLoading(true)
       booksList().then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.bksList = res.data

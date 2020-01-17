@@ -103,10 +103,12 @@ export default {
     ]),
     // 课程简介
     getCourseIntroduction () {
+      this.showLoading(true)
       courseIntroduction({
         user_id: this.user_id || '',
         package_id: this.package_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.isntroduction = res.data

@@ -445,9 +445,11 @@ export default {
     },
     // 课程大纲（目录）
     getCourseCatalog () {
+      this.showLoading(true)
       courseCatalog({
         package_id: this.$route.query.package_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.packageList = res.data
@@ -477,9 +479,11 @@ export default {
     },
     // 初始化展示章节
     initSecvCatalog (id) {
+      this.showLoading(true)
       secvCatalog({
         course_id: id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.courseSections = res.data

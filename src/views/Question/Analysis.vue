@@ -204,11 +204,13 @@ export default {
     },
     // 6大板块解析
     getQuestionParsing () {
+      this.showLoading(true)
       questionParsing({
         paper_id: this.$route.query.paper_id,
         user_id: this.user_id,
         type: this.$route.query.type
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.topics = res.data.topics
@@ -224,11 +226,13 @@ export default {
     // 0元体验解析
     getExperienceParsing () {
       let obj = JSON.parse(window.sessionStorage.getItem('experienceStatiInfo'))
+      this.showLoading(true)
       experienceParsing({
         type: this.$route.query.type,
         user_id: this.user_id,
         question_content: obj.question_content
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.topics = res.data.topics
@@ -243,11 +247,13 @@ export default {
     },
     // 答题记录论述题解析
     getCheckItem () {
+      this.showLoading(true)
       checkItem({
         paper_id: this.$route.query.paper_id,
         user_id: this.user_id,
         type: this.$route.query.type
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.topics = res.data.topics
@@ -260,6 +266,7 @@ export default {
     },
     // 错题集查看解析 全部
     getErrorParsing (val) {
+      this.showLoading(true)
       errorParsing({
         section_id: this.dataStorage.section_id,
         course_id: this.dataStorage.course_id,
@@ -267,6 +274,7 @@ export default {
         knob_id: this.dataStorage.knob_id,
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.topics = res.data.topics
@@ -281,6 +289,7 @@ export default {
     },
     // 错题集继续做题,交卷后-报告页面，查看解析,全部-错题
     getErrorParsing2 (val) {
+      this.showLoading(true)
       error2Parsing({
         type: this.$route.query.type,
         section_id: this.dataStorage.section_id,
@@ -289,6 +298,7 @@ export default {
         user_id: this.user_id,
         question_content: this.dataStorage.question_content.question
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.topics = res.data.topics
@@ -303,10 +313,12 @@ export default {
     },
     // 学习计划全部解析
     getQuestionParsingLearn () {
+      this.showLoading(true)
       questionParsingLearn({
         paper_id: this.$route.query.paper_id,
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.topics = res.data.topics
@@ -321,6 +333,7 @@ export default {
     },
     // 收藏夹
     getMyCollcsee (val) {
+      this.showLoading(true)
       myCollcsee({
         user_id: this.user_id,
         course_id: this.dataStorage.course_id,
@@ -328,6 +341,7 @@ export default {
         know_id: this.dataStorage.know_id,
         knob_id: this.dataStorage.knob_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.topics = res.data.topics

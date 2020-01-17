@@ -136,6 +136,7 @@ export default {
       }
       this.errorTs = ''
       let quizImage = this.quiz_image.join(',')
+      this.showLoading(true)
       answerClose({
         answer_id: this.zhuiwenInfo.id,
         z_quiz: this.quiz,
@@ -143,6 +144,7 @@ export default {
         z_quiz_image: quizImage,
         answer_type: this.zhuiwenInfo.answer_type // 追问类型1课程2题库
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.quiz = ''

@@ -402,9 +402,11 @@ export default {
     },
     // 学习计划首页详情
     getLearnIndex () {
+      this.showLoading(true)
       learnIndex({
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           let { addlearn, time, state, user, plan, learnList } = res.data
@@ -432,11 +434,13 @@ export default {
     },
     // 当前课程学习状态
     getStudyStatus () {
+      this.showLoading(true)
       studyStatus({
         user_id: this.user_id,
         plan_id: this.currenLearnInfo.plan_id,
         is_exper: this.currenLearnInfo.is_exper // 1为0元体验 2为购买课程
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.sameday = res.data.sameday
@@ -448,9 +452,11 @@ export default {
     },
     // 学习计划课程列表list
     getCourseList () {
+      this.showLoading(true)
       courseList({
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.courseListLearn = res.data
@@ -462,11 +468,13 @@ export default {
     // 学习计划考试时间list
     getTestTime () {
       this.timeListLearn = []
+      this.showLoading(true)
       testTime({
         user_id: this.user_id,
         course_id: this.planChooseInfo.course_id,
         types: this.planChooseInfo.is_exper || 2 // 1:0元体验 2:购买课程
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.timeListLearn = res.data
@@ -477,12 +485,14 @@ export default {
     },
     // 添加学习计划
     getAddStudy () {
+      this.showLoading(true)
       addStudy({
         user_id: this.user_id,
         course_id: this.planChooseInfo.course_id,
         test_time: this.planChooseInfo.test_time,
         types: this.planChooseInfo.is_exper || 2 // 1为0元体验 2为购买课程
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           if (res.data.state === 1) {
@@ -503,9 +513,11 @@ export default {
     },
     // 未完成计划列表
     getHangAir () {
+      this.showLoading(true)
       hangAir({
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.noFinishPlanList = res.data
@@ -530,6 +542,7 @@ export default {
         this.$Message.error('学习计划已结束')
         return
       }
+      this.showLoading(true)
       getVideo({
         user_id: this.user_id,
         course_id: this.currenLearnInfo.course_id,
@@ -538,6 +551,7 @@ export default {
         days: this.currenLearnInfo.join_days,
         sameday: 1 // 是今天1不是2
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.isDrawer = true
@@ -595,12 +609,14 @@ export default {
     // 月份获取日
     getEveryday (v) {
       this.everydayList = []
+      this.showLoading(true)
       everyday({
         user_id: this.user_id,
         plan_id: this.currenLearnInfo.plan_id,
         month: v,
         is_exper: this.currenLearnInfo.is_exper // 1为0元体验 2为购买课程
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.everydayList = res.data.date
@@ -649,6 +665,7 @@ export default {
         this.isDrawer = true
         return
       }
+      this.showLoading(true)
       getVideo({
         user_id: this.user_id,
         course_id: this.currenLearnInfo.course_id,
@@ -657,6 +674,7 @@ export default {
         days: v.days,
         sameday: v.sameday
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         this.learnVideoList = res.data.video
         this.isDrawer = true
@@ -730,11 +748,13 @@ export default {
     },
     // 确定退出学习计划
     sureOutplan () {
+      this.showLoading(true)
       outPlan({
         user_id: this.user_id,
         plan_id: this.currenLearnInfo.plan_id,
         types: this.currenLearnInfo.is_exper
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.getLearnIndex()

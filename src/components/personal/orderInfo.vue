@@ -138,12 +138,14 @@ export default {
       if (parseInt(this.selIdx) === 0) {
         this.pay_status = 3
       }
+      this.showLoading(true)
       myOrder({
         user_id: this.user_id,
         limit: this.limit,
         page: this.page,
         pay_status: this.pay_status
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.orderList = res.data.data

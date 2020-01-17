@@ -387,7 +387,9 @@ export default {
           this.count = TIME_COUNT
           this.show = false
           this.disabled = true
+          this.showLoading(true)
           getSmsCode({ mobile: Encrypt(this.form2.mobile), state: 1 }).then(res => {
+            this.showLoading(false)
             if (res.data.code === 200) {
               this.timer = setInterval(() => {
                 if (this.count > 0 && this.count <= TIME_COUNT) {
@@ -437,7 +439,9 @@ export default {
         this.$Message.error('该手机号不符合格式')
       } else {
         if (!this.timer2) {
+          this.showLoading(true)
           forgetPaw({ mobile: Encrypt(this.form3.mobile) }).then(res => {
+            this.showLoading(false)
             if (res.data.code === 200) {
               this.count2 = TIME_COUNT2
               this.show2 = false
@@ -474,7 +478,9 @@ export default {
         this.$Message.error('手机号错误')
       } else {
         if (!this.timer3) {
+          this.showLoading(true)
           getSmsCode({ mobile: Encrypt(this.form4.mobile), state: 2 }).then(res => {
+            this.showLoading(false)
             if (res.data.code === 200) {
               this.count3 = TIME_COUNT3
               this.show3 = false
@@ -516,7 +522,9 @@ export default {
       } else if (!rePaw.test(this.form.password)) {
         this.$Message.error('密码必须为6-16位数字、字母、下划线组合')
       } else {
+        this.showLoading(true)
         this.handleLogin({ mobile: Encrypt(this.form.mobile), password: this.form.password }).then(data => {
+          this.showLoading(false)
           this.getUserInfo().then(() => {
             if (this.callBack) {
               this.$router.replace({ path: this.callBack,
@@ -548,7 +556,9 @@ export default {
       } else if (this.single === false) {
         this.$Message.error('请仔细阅读用户注册协议')
       } else {
+        this.showLoading(true)
         webReg({ 'mobile': Encrypt(this.form2.mobile), 'password': this.form2.text_pwd, 'pass': this.form2.confirm_pwd, 'mobilecode': this.form2.code }).then(res => {
+          this.showLoading(false)
           if (res.data.code === 200) {
             // 开始学习 完善资料
             this.$router.replace({ path: 'login',
@@ -634,7 +644,9 @@ export default {
       } else if (!rePaw.test(this.form3.new_pwd)) {
         this.$Message.error('密码必须为6-16位数字、字母、下划线组合')
       } else {
+        this.showLoading(true)
         resetPaw({ 'mobile': Encrypt(this.form3.mobile), 'password': this.form3.new_pwd, 'verifycode': this.form3.code }).then(res => {
+          this.showLoading(false)
           if (res.data.code === 200) {
             this.count2 = 0
             this.show2 = true
@@ -668,7 +680,9 @@ export default {
       } else if (!re.test(this.form4.mobile)) {
         this.$Message.error('手机号错误')
       } else {
+        this.showLoading(true)
         quickLogin({ 'mobile': Encrypt(this.form4.mobile), 'mobilecode': this.form4.code }).then(res => {
+          this.showLoading(false)
           if (res.data.code === 200) {
             this.$Message.success('登录成功')
             this.$store.commit('setToken', res.data.data.token)

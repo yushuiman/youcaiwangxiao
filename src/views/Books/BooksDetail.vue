@@ -69,9 +69,11 @@ export default {
       'getUserInfo'
     ]),
     getBooksDetail () {
+      this.showLoading(true)
       booksDetails({
         id: this.books_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.booksDetail = res.data

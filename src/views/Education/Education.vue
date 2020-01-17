@@ -30,7 +30,7 @@
                 <p class="ci-teacher-day">讲师：{{items.teacher_name}}</p>
                 <div class="ci-cpe">
                   <span class="cpe-fen">CPE积分：{{items.cpe_integral}}分</span>
-                  <span class="ci-pay-free">{{ items.billing_status == 1 ? '免费课' : items.billing_status == 2 ? '¥' + items.price : items.billing_status == 3 ? '积分兑换' : '等级进入' }}</span>
+                  <span class="ci-pay-free">{{ items.billing_status == 1 ? '¥' + items.price : items.billing_status == 2 ? '免费课' : items.billing_status == 3 ? '积分兑换' : '等级进入' }}</span>
                 </div>
               </div>
             </li>
@@ -90,7 +90,9 @@ export default {
   methods: {
     // banner
     deuShufflingBanner () {
+      this.showLoading(true)
       deuShuffling().then((data) => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.eduBannerList = res.data
@@ -101,7 +103,9 @@ export default {
     },
     // 课程预告
     getPreviewCourseList () {
+      this.showLoading(true)
       previewCourse().then((data) => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.previewCourseList = res.data
@@ -121,7 +125,9 @@ export default {
     },
     // 课程包
     getFirstPackageList () {
+      this.showLoading(true)
       firstPackage().then((data) => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.firstPackageList = res.data

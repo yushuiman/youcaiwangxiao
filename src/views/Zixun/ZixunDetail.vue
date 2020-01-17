@@ -39,9 +39,11 @@ export default {
   methods: {
     // 详情
     getNewsDetails () {
+      this.showLoading(true)
       newsDetails({
         news_id: this.news_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.detailInfo = res.data

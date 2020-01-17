@@ -290,11 +290,13 @@ export default {
     },
     // 订单信息
     getShowOrder () {
+      this.showLoading(true)
       showOrder({
         user_id: this.user_id,
         package_id: this.package_id,
         is_live: this.is_live
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.addressList = res.data.address
@@ -363,6 +365,7 @@ export default {
       if (!this.checkForm()) {
         return
       }
+      this.showLoading(true)
       addAddress({
         user_id: this.user_id,
         consignee: this.curAddressInfo.consignee,
@@ -370,6 +373,7 @@ export default {
         address: this.curAddressInfo.address,
         is_default: 2
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.getShowOrder()
@@ -385,6 +389,7 @@ export default {
       if (!this.checkForm()) {
         return
       }
+      this.showLoading(true)
       editAddress({
         user_id: this.user_id,
         address_id: this.curAddressInfo.address_id,
@@ -393,6 +398,7 @@ export default {
         address: this.curAddressInfo.address,
         is_default: this.curAddressInfo.is_default
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.getShowOrder()
@@ -411,11 +417,13 @@ export default {
     },
     // 优惠券列表
     getCoupon () {
+      this.showLoading(true)
       availableCoupon({
         user_id: this.user_id,
         package_id: this.package_id,
         is_live: this.is_live
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.couponList = res.data
@@ -544,6 +552,7 @@ export default {
       }
       const tempPage = window.open('', '_blank')
       await this.getUserInfo()
+      this.showLoading(true)
       addOrder({
         user_id: this.user_id,
         package_id: this.package_id, // 课程套餐id或者直播id
@@ -561,6 +570,7 @@ export default {
         companOpenBank: this.originBillInfo.companOpenBank, // 公司开户银行
         companBankNum: this.originBillInfo.companBankNum // 银行账户
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.payInfo = res.data

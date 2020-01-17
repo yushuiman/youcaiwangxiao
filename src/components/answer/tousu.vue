@@ -52,7 +52,9 @@ export default {
   },
   methods: {
     getComplainType () {
+      this.showLoading(true)
       complainType().then((data) => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.complainTypeList = res.data
@@ -83,6 +85,7 @@ export default {
         return
       }
       this.errorTs = ''
+      this.showLoading(true)
       complainSub({
         user_id: this.user_id,
         answer_id: this.tousuInfo.id,
@@ -90,6 +93,7 @@ export default {
         answer_type: this.tousuInfo.answer_type, // 追问类型1课程2题库
         content: this.quiz
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.quiz = ''

@@ -61,9 +61,11 @@ export default {
   methods: {
     // 课程大纲（目录）
     getCourseCatalog () {
+      this.showLoading(true)
       courseCatalog({
         package_id: this.package_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.courseCatalogInfo = res.data

@@ -164,9 +164,11 @@ export default {
     },
     // 消费记录
     getConsumptionRecord () {
+      this.showLoading(true)
       consumptionRecord({
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.consumptionRecordList = res.data
@@ -180,9 +182,11 @@ export default {
     },
     // 优惠券列表
     getCoupons () {
+      this.showLoading(true)
       coupons({
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           let { num, available, Invalid } = res.data

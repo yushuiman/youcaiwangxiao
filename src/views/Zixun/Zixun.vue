@@ -87,12 +87,14 @@ export default {
     },
     // 列表
     getNewsList () {
+      this.showLoading(true)
       newsList({
         limit: this.limit,
         page: this.page
         // parent_id: 1 // 父类id
         // type_id: 1 // 子类id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.total = res.data.total

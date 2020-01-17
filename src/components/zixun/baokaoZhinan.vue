@@ -30,7 +30,9 @@ export default {
   methods: {
     // 报考指南
     getBkznList () {
+      this.showLoading(true)
       bkznList().then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.bkznList = res.data

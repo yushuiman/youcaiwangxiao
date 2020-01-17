@@ -212,10 +212,12 @@ export default {
     },
     // 拿题
     getTopicList () {
+      this.showLoading(true)
       continueQuestion({
         Id: this.$route.query.id,
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           let { topics, total, title } = res.data
@@ -332,7 +334,9 @@ export default {
       window.sessionStorage.setItem('subTopics', JSON.stringify(this.subTopics))
       window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
       window.sessionStorage.setItem('diffRes', '') // 区分不同接口请求
+      this.showLoading(true)
       getdtPapers(this.subTopics).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           // 保存之后跳转到题库页面

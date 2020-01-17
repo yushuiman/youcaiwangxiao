@@ -90,12 +90,14 @@ export default {
     // 做题记录
     getQuestionRecord () {
       this.noDataFlag = false
+      this.showLoading(true)
       questionRecord({
         user_id: this.user_id,
         course_id: this.course_id,
         limit: this.limit,
         page: this.page
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.questionRecordList = res.data.question

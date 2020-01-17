@@ -234,10 +234,12 @@ export default {
       })
     },
     getAbiAssess () {
+      this.showLoading(true)
       abiAssess({
         user_id: this.user_id,
         course_id: this.$route.query.course_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.ycfen = res.data.ycfen

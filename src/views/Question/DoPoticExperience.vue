@@ -164,9 +164,11 @@ export default {
     },
     // 0元体验拿题
     getZExperience () {
+      this.showLoading(true)
       zExperience({
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         this.noDataFlag = true
         const res = data.data
         if (res.code === 200) {

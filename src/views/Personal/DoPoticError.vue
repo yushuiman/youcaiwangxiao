@@ -197,12 +197,14 @@ export default {
     },
     // 拿题
     getTopicList () {
+      this.showLoading(true)
       wrongCheck({
         user_id: this.user_id,
         section_id: this.getQuestion.section_id,
         course_id: this.getQuestion.course_id,
         know_id: this.getQuestion.know_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           let { topics, total, title } = res.data
@@ -263,12 +265,14 @@ export default {
       this.subGetPapers(type)
     },
     subGetPapers (type) {
+      this.showLoading(true)
       errorCenter({
         used_time: this.subTopics.used_time,
         question_content: this.subTopics.question_content.question,
         user_id: this.user_id,
         course_id: this.subTopics.course_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           // 保存之后跳转到题库页面

@@ -116,9 +116,11 @@ export default {
     ]),
     // 用户信息
     getPersonalInfo () {
+      this.showLoading(true)
       getPersonal({
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.personalInfo = res.data
@@ -138,12 +140,14 @@ export default {
     },
     // 消息列表
     getSysteMessage () {
+      this.showLoading(true)
       systeMessage({
         user_id: this.user_id,
         limit: this.limit,
         page: this.page,
         types: this.selIdxNews === 0 ? 1 : 2 // 1网校公告2系统消息
       }).then(data => {
+        this.showLoading(false)
         this.noDataFlag = false
         const res = data.data
         let { message, num } = res.data
@@ -160,11 +164,13 @@ export default {
         this.diffNews(item) // 12345种消息
         return
       }
+      this.showLoading(true)
       read({
         user_id: this.user_id,
         message_id: item.message_id,
         type: item.type
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.getIndexMessage() // 更新未读消息状态
@@ -196,9 +202,11 @@ export default {
     },
     // 详情
     getListMessage (item) {
+      this.showLoading(true)
       listMessage({
         message_id: item.message_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           const res = data.data

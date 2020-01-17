@@ -111,9 +111,11 @@ export default {
     },
     // 是否注册
     getIsRegister () {
+      this.showLoading(true)
       isRegister({
         mobile: Encrypt(this.mobile)
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.errorTxt = ''
@@ -129,10 +131,12 @@ export default {
         this.errorTxt = '密码必须为6-16位哦~~'
         return
       }
+      this.showLoading(true)
       accountLogin({
         mobile: Encrypt(this.mobile),
         password: this.password
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.$store.commit('setToken', res.data.token)
@@ -153,10 +157,12 @@ export default {
         this.errorTxt = '请输入验证码'
         return
       }
+      this.showLoading(true)
       kRegister({
         mobile: Encrypt(this.mobile),
         mobilecode: this.yzmcode
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.errorTxt = ''
@@ -168,10 +174,12 @@ export default {
     },
     // 快捷短信登录
     quickLoginRes () {
+      this.showLoading(true)
       quickLogin({
         mobile: Encrypt(this.mobile),
         mobilecode: this.yzmcode
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.$store.commit('setToken', res.data.token)
@@ -186,9 +194,11 @@ export default {
     },
     // 忘记密码 获取验证码
     forgetPawYzm () {
+      this.showLoading(true)
       forgetPaw({
         mobile: Encrypt(this.mobile)
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.downCount()
@@ -205,10 +215,12 @@ export default {
     // 获取短信验证码
     getCode (type) {
       clearInterval(this.timer)
+      this.showLoading(true)
       getSmsCode({
         mobile: Encrypt(this.mobile),
         state: type // 注册1 快捷2
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.downCount() // 倒计时
@@ -232,11 +244,13 @@ export default {
       } else if (!rePaw.test(this.password)) {
         this.errorTxt = '密码必须为6-16位数字、字母、下划线组合'
       } else {
+        this.showLoading(true)
         resetPaw({
           'mobile': Encrypt(this.mobile),
           'password': this.password,
           'verifycode': this.yzmcode
         }).then(data => {
+          this.showLoading(false)
           const res = data.data
           if (res.code === 200) {
             this.errorTxt = '密码重置成功'

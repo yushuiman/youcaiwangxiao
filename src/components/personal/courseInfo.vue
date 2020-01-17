@@ -181,9 +181,11 @@ export default {
     },
     // 我的课程
     getMyCourse () {
+      this.showLoading(true)
       myCourse({
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.myCourseList = res.data
@@ -197,9 +199,11 @@ export default {
     },
     // 播放记录
     getWatchRecords () {
+      this.showLoading(true)
       watchRecords({
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.watchRecordsList = res.data
@@ -213,11 +217,13 @@ export default {
     },
     // 收藏课程包
     getMyCollpackage () {
+      this.showLoading(true)
       myCollpackage({
         user_id: this.user_id,
         limit: this.limit,
         page: this.page
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.myCollpackageList = res.data
@@ -231,10 +237,12 @@ export default {
     },
     // 获取收藏课程目录
     getMyCollcourse (val) {
+      this.showLoading(true)
       myCollcourse({
         user_id: this.user_id,
         package_id: val.package_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.myCollcourseList = res.data
@@ -255,11 +263,13 @@ export default {
     },
     // 获取收藏课程章节
     getMyCollvideo (val) {
+      this.showLoading(true)
       myCollvideo({
         user_id: this.user_id,
         package_id: val.package_id,
         course_id: val.course_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.myCollvideoList = res.data.section

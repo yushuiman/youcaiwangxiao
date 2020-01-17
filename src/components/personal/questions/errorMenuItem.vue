@@ -102,10 +102,12 @@ export default {
     },
     getErrorsectionList (val) {
       this.noDataFlag = false
+      this.showLoading(true)
       personalWrongtopic({
         course_id: this.course_id,
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.errorSecList = res.data
@@ -126,12 +128,14 @@ export default {
     },
     // 知识点数据
     getKnowList () {
+      this.showLoading(true)
       getKnow({
         user_id: this.user_id,
         course_id: this.getPoticData.course_id,
         section_id: this.getPoticData.section_id,
         knob_id: this.getPoticData.knob_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.knowList = res.data

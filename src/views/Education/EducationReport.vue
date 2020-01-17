@@ -211,6 +211,7 @@ export default {
       this.makeGenerateImg()
     },
     makeGenerateImg () {
+      this.showLoading(true)
       generateImg({
         user_id: this.user_id,
         id: this.selectedProductsId,
@@ -219,6 +220,7 @@ export default {
         identity: this.identity,
         source: 1 // pc1app2
       }).then((data) => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.download(res.data.img_href)

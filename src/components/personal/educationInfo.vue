@@ -124,9 +124,11 @@ export default {
     },
     // 我的课程
     getMyCourse () {
+      this.showLoading(true)
       myCPEcourse({
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.myCourseList = res.data
@@ -140,9 +142,11 @@ export default {
     },
     // 播放记录
     getWatchRecords () {
+      this.showLoading(true)
       watchRecords({
         user_id: this.user_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.watchRecordsList = res.data
