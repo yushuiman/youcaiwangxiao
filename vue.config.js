@@ -156,7 +156,7 @@ module.exports = {
     https: false,
     hotOnly: false,
     // proxy: 'http://ycapi.youcaiwx.com'
-    proxy: 'https://dest.youcaiwx.cn'
-    // proxy: 'https://api.youcaiwx.cn'
+    // proxy: 'https://dest.youcaiwx.cn'
+    proxy: 'https://api.youcaiwx.cn'
   }
 }
