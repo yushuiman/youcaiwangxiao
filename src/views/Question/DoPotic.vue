@@ -190,13 +190,15 @@ export default {
       'getUserInfo'
     ]),
     scrollToTop () {
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      if (scrollTop > 50) {
-        this.$refs.fixedTit.style.position = 'fixed'
-        this.$refs.fixedTit.style.top = 70 + 'px'
-        this.$refs.fixedTit.style.width = 895 + 'px'
-      } else {
-        this.$refs.fixedTit.style = ''
+      if (this.$refs.fixedTit) {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+        if (scrollTop > 50) {
+          this.$refs.fixedTit.style.position = 'fixed'
+          this.$refs.fixedTit.style.top = 70 + 'px'
+          this.$refs.fixedTit.style.width = 895 + 'px'
+        } else {
+          this.$refs.fixedTit.style = ''
+        }
       }
     },
     goAnchor (selector) {
@@ -218,8 +220,10 @@ export default {
     },
     // 拿题
     getTopicList () {
+      // this.showLoading(true)
       this.getQuestion.user_id = this.user_id
       topicList(this.getQuestion).then(data => {
+        // this.showLoading(false)
         this.noDataFlag = true
         const res = data.data
         if (res.code === 200) {

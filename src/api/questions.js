@@ -79,6 +79,13 @@ export const sprintCourse = (data) => { // 冲刺训练营
     method: 'post'
   })
 }
+export const tips = (data) => { // 冲刺训练营 提示
+  return axios.request({
+    url: '/web/Question/tips',
+    data,
+    method: 'post'
+  })
+}
 export const topicList = (data) => { // 6大板块拿题
   return axios.request({
     url: '/web/Question/topicList',

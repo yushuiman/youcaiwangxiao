@@ -20,13 +20,12 @@
 </template>
 
 <script>
-import { volumeList } from '@/api/questions'
 export default {
   props: {
-    course_id: {
-      type: Number
+    volumeList: {
+      type: Array
     },
-    user_id: {
+    course_id: {
       type: Number
     },
     plate_id: {
@@ -35,7 +34,6 @@ export default {
   },
   data () {
     return {
-      volumeList: [],
       getPoticData: {
         course_id: this.course_id,
         paper_id: '', // 阶段测试,论述题,冲刺训练营 这个取接口返回的
@@ -52,22 +50,8 @@ export default {
     }
   },
   mounted () {
-    this.getVolumeList()
   },
   methods: {
-    getVolumeList (val) {
-      volumeList({
-        course_id: this.course_id,
-        user_id: this.user_id
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.volumeList = res.data
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
     // 去做题
     goToPic (v) {
       this.modal1 = true

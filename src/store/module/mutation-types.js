@@ -1,0 +1,1 @@
+export const SHOWLOADINGFLAG = 'SHOWLOADINGFLAG' // 显示遮罩

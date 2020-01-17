@@ -647,7 +647,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10000;
+    z-index: 100;
   }
   .video-info-c{
     position: relative;
@@ -774,7 +774,7 @@ export default {
     background: rgba(0, 0, 0, .8);
     color: #ffffff;
     text-align: center;
-    z-index: 333333;
+    z-index: 102;
     display: table;
     .course-tip{
       display: table-cell;

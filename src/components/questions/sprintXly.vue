@@ -9,7 +9,7 @@
       </div>
     </div>
     <ul class="jd-test-list">
-      <li class="jd-test-item" v-for="(v, index) in courseList" :key="index" @click="goToPic(v)">
+      <li class="jd-test-item" v-for="(v, index) in sprintCourseList" :key="index" @click="goToPic(v)">
         <div>
           <i class="star-icon" :class="{'star-diff-icon': v.difficulty == 'C', 'star-middle-icon': v.difficulty == 'B', 'star-easy-icon': v.difficulty == 'A'}"></i>
           <span>{{v.paper_name}}</span>
@@ -18,27 +18,27 @@
       </li>
     </ul>
     <div class="tishi" v-if="flagTs1">
-      <p>这是一堆提示文字，有多少字呢，也不知道，反正两行应该足够了，这个条的高度就随着行数变，每次 打开都有，反正也不碍事，他嫌碍事就叉掉。</p>
+      <p>{{tips.plate_content}}</p>
       <i class="close-icon" @click="tsPopup"></i>
     </div>
     <Modal
       v-model="flagTs2"
-      title="提示"
+      :title="tips.paper_title"
       @on-ok="ok"
       @on-cancel="cancel">
-      <p class="ts">这又是一堆提示文字，有多少字呢，也不知道，反正两行应该足够了，这个条的高度就随着行数变，每次 打开都有。</p>
+      <p class="ts">{{tips.paper_content}}</p>
     </Modal>
   </div>
 </template>
 
 <script>
-import { sprintCourse } from '@/api/questions'
+import { tips } from '@/api/questions'
 export default {
   props: {
-    course_id: {
-      type: Number
+    sprintCourseList: {
+      type: Array
     },
-    user_id: {
+    course_id: {
       type: Number
     },
     plate_id: {
@@ -47,7 +47,6 @@ export default {
   },
   data () {
     return {
-      courseList: [],
       getPoticData: {
         course_id: this.course_id,
         paper_id: '', // 阶段测试,论述题,冲刺训练营 这个取接口返回的
@@ -60,24 +59,24 @@ export default {
         paper_type: 1 // 单选1 论述2
       },
       flagTs1: true,
-      flagTs2: false
+      flagTs2: false,
+      tips: {}
     }
   },
   mounted () {
-    this.getCourseList()
+    this.getTips()
   },
   methods: {
     tsPopup (type) {
       this.flagTs1 = false
     },
-    getCourseList () {
-      sprintCourse({
-        course_id: this.course_id
-        // plate_id: this.plate_id
+    getTips () {
+      tips({
+        plate_id: this.getPoticData.plate_id
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.courseList = res.data
+          this.tips = res.data
         } else {
           this.$Message.error(res.msg)
         }

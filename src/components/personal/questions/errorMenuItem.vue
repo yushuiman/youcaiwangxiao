@@ -97,7 +97,6 @@ export default {
   },
   methods: {
     getCourseIdSel (e) {
-      window.sessionStorage.setItem('questionIndexSel', e.target.selectedIndex)
       window.sessionStorage.setItem('course_id', this.course_id)
       this.getErrorsectionList()
     },

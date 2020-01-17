@@ -156,6 +156,7 @@ export default {
    .erweima{
      float: right;
      text-align: center;
+     margin-top: 6px;
      img {
        width: 119px;
        height: 119px;

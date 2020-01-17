@@ -57,14 +57,14 @@
   </div>
 </template>
 <script>
-import { getSection, getKnow } from '@/api/questions'
+import { getKnow } from '@/api/questions'
 
 export default {
   props: {
-    course_id: {
-      type: Number
+    sectionList: {
+      type: Array
     },
-    user_id: {
+    course_id: {
       type: Number
     },
     plate_id: {
@@ -73,7 +73,6 @@ export default {
   },
   data () {
     return {
-      sectionList: [], // 知识点章节
       getPoticData: {
         course_id: this.course_id,
         paper_id: '', // 阶段测试,论述题,冲刺训练营 这个取接口返回的
@@ -93,22 +92,8 @@ export default {
   components: {
   },
   mounted () {
-    this.getSectionList()
   },
   methods: {
-    getSectionList (val) {
-      getSection({
-        user_id: this.user_id,
-        course_id: this.course_id
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.sectionList = res.data
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
     // 选择练习考试模式
     doMode (type) {
       this.getPoticData.paper_mode = type

@@ -54,13 +54,8 @@
     <!-- 已购买课程 有题库 -->
     <div class="qt-wrap-l fl" v-if="!experience">
       <!-- 科目标题 -->
-      <!-- <Row class="qt-subject">
-        <Col span="6" v-for="(item, index) in projectArr" :key="index">
-          <div class="qt-course" :class="{'curren': questionIndexSel == index}" @click="getQuestionIndex(item.id, index)">{{item.name}}</div>
-        </Col>
-      </Row> -->
       <div class="qt-subject" style="display: flex;">
-        <div v-for="(item, index) in projectArr" :key="index" class="qt-course" :class="{'curren': questionIndexSel == index}"
+        <div v-for="(item, index) in projectArr" :key="index" class="qt-course" :class="{'curren': course_id == item.id}"
         @click="getQuestionIndex(item.id, index)" style="padding: 0 30px;">{{item.name}}</div>
       </div>
       <!-- 答题详情(做题数 正确率 平均分) -->
@@ -122,13 +117,13 @@
         footer-hide
         :title="plateTitle"
         class="practiceModal">
-        <know-section v-if="showPlateModal == 1" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></know-section>
-        <jieduan-test v-if="showPlateModal == 2" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></jieduan-test>
-        <discuss-self v-if="showPlateModal == 3" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></discuss-self>
-        <error-section v-if="showPlateModal == 4" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></error-section>
-        <lianxi-self v-if="showPlateModal == 5" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></lianxi-self>
-        <group-lianxi v-if="showPlateModal == 6" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></group-lianxi>
-        <sprint-xly v-if="showPlateModal == 7" :course_id="course_id" :user_id="user_id" :plate_id="showPlateModal"></sprint-xly>
+        <know-section v-if="plate_id == 1" :course_id="course_id" :user_id="user_id" :plate_id="plate_id" :sectionList="sectionList"></know-section>
+        <jieduan-test v-if="plate_id == 2" :course_id="course_id" :user_id="user_id" :plate_id="plate_id" :courseList="courseList"></jieduan-test>
+        <discuss-self v-if="plate_id == 3" :course_id="course_id" :user_id="user_id" :plate_id="plate_id" :courseList="courseList"></discuss-self>
+        <error-section v-if="plate_id == 4" :course_id="course_id" :user_id="user_id" :plate_id="plate_id" :errorSecList="errorSecList"></error-section>
+        <lianxi-self v-if="plate_id == 5" :course_id="course_id" :user_id="user_id" :plate_id="plate_id" :sectionList="sectionList"></lianxi-self>
+        <group-lianxi v-if="plate_id == 6" :course_id="course_id" :user_id="user_id" :plate_id="plate_id" :volumeList="volumeList"></group-lianxi>
+        <sprint-xly v-if="plate_id == 7" :course_id="course_id" :user_id="user_id" :plate_id="plate_id" :sprintCourseList="sprintCourseList"></sprint-xly>
       </Modal>
     </div>
     <!-- 预测评估 学员排名 -->
@@ -170,7 +165,7 @@
 </template>
 
 <script>
-import { getProject, questionIndex, studentsRanking } from '@/api/questions'
+import { getProject, questionIndex, studentsRanking, getSection, getCourse, getErrorsection, volumeList, sprintCourse } from '@/api/questions'
 import knowSection from '../../components/questions/knowSection'
 import jieduanTest from '../../components/questions/jieduanTest'
 import discussSelf from '../../components/questions/discussSelf'
@@ -183,7 +178,6 @@ export default {
   data () {
     return {
       projectArr: [], // 科目
-      questionIndexSel: window.sessionStorage.getItem('questionIndexSel') || 0,
       course_id: parseInt(window.sessionStorage.getItem('course_id')) || '',
       plateList: [
         {
@@ -224,11 +218,16 @@ export default {
       ],
       personalTxtArr: ['答题记录', '我的错题', '收藏夹'],
       visible: false,
-      showPlateModal: 0, // 显示弹窗对应模块
+      plate_id: 0, // 显示弹窗对应模块
       plateTitle: '', // 显示弹窗对应模块title问案
       questionResult: {}, // 正确率，做题数，平均分
       studentsRankList: [], // 学生排名
-      experience: true // 0元体验
+      experience: true, // 0元体验
+      sectionList: [], // 1、5板块
+      courseList: [], // 2、3板块
+      errorSecList: [], // 4板块
+      volumeList: [], // 6板块
+      sprintCourseList: [] // 7板块
     }
   },
   components: {
@@ -266,15 +265,17 @@ export default {
     ]),
     // 展示课程
     projectList () {
+      // this.showLoading(true)
       getProject({
         user_id: this.user_id
       }).then(data => {
+        // this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           // 非0元体验
           if (res.data && res.data.length) {
             this.projectArr = res.data
-            this.getQuestionIndex(this.course_id || res.data[0].id, this.questionIndexSel)
+            this.getQuestionIndex(this.course_id || res.data[0].id)
             this.experience = false
           }
           // 0元体验
@@ -298,8 +299,6 @@ export default {
       }
       this.course_id = id
       window.sessionStorage.setItem('course_id', id)
-      window.sessionStorage.setItem('questionIndexSel', index)
-      this.questionIndexSel = index
       questionIndex({
         user_id: this.user_id,
         course_id: id
@@ -317,8 +316,101 @@ export default {
     async doQuestions ({ id, title }) {
       await this.getUserInfo()
       this.plateTitle = title
-      this.showPlateModal = id
+      this.plate_id = id
+      this.sectionList = [] // 1、5板块
+      this.courseList = [] // 2、3板块
+      this.errorSecList = [] // 4板块
+      this.volumeList = [] // 6板块
+      this.sprintCourseList = [] // 7板块
+      if (id === 1 || id === 5) {
+        this.getSectionList()
+      }
+      if (id === 2 || id === 3) {
+        this.getCourseList()
+      }
+      if (id === 4) {
+        this.getErrorsectionList()
+      }
+      if (id === 6) {
+        this.getVolumeList()
+      }
+      if (id === 7) {
+        this.getSprintCourseList()
+      }
       this.visible = true
+    },
+
+    // 7大板块拿题
+    // 1、5板块
+    getSectionList () {
+      // this.showLoading(true)
+      getSection({
+        user_id: this.user_id,
+        course_id: this.course_id
+      }).then(data => {
+        // this.showLoading(false)
+        const res = data.data
+        if (res.code === 200) {
+          this.sectionList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 2、3板块
+    getCourseList () {
+      getCourse({
+        course_id: this.course_id,
+        plate_id: this.plate_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.courseList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 4板块
+    getErrorsectionList (val) {
+      getErrorsection({
+        course_id: this.course_id,
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.errorSecList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 6板块
+    getVolumeList (val) {
+      volumeList({
+        course_id: this.course_id,
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.volumeList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 7板块
+    getSprintCourseList () {
+      sprintCourse({
+        course_id: this.course_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.sprintCourseList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     },
     // 学员排名
     getStudentsRanking (id) {
@@ -419,6 +511,7 @@ export default {
     @include lh(60, 60);
     border-radius: 8px;
     background: $colfff;
+    overflow: hidden;
   }
   .qt-course{
     text-align: center;

@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import user from './module/user'
 import nav from './module/nav'
 import news from './module/news'
+import loading from './module/loading'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -20,6 +21,7 @@ export default new Vuex.Store({
   modules: {
     user,
     nav,
-    news
+    news,
+    loading
   }
 })

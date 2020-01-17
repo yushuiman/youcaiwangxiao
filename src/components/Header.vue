@@ -159,7 +159,7 @@ export default {
     width: 100%;
     position: fixed;
     background: $colfff;
-    z-index: 1000;
+    z-index: 100;
     height: 70px;
     .head-w {
       width: 1300px;

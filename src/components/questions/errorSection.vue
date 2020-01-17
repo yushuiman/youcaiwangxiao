@@ -44,14 +44,14 @@
   </div>
 </template>
 <script>
-import { getErrorsection, geterrorKnow } from '@/api/questions'
+import { geterrorKnow } from '@/api/questions'
 
 export default {
   props: {
-    course_id: {
-      type: Number
+    errorSecList: {
+      type: Array
     },
-    user_id: {
+    course_id: {
       type: Number
     },
     plate_id: {
@@ -60,7 +60,6 @@ export default {
   },
   data () {
     return {
-      errorSecList: [], // 知识点章节
       getPoticData: {
         course_id: this.course_id,
         paper_id: '', // 阶段测试,论述题,冲刺训练营 这个取接口返回的
@@ -79,22 +78,8 @@ export default {
   components: {
   },
   mounted () {
-    this.getErrorsectionList()
   },
   methods: {
-    getErrorsectionList (val) {
-      getErrorsection({
-        course_id: this.course_id,
-        user_id: this.user_id
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.errorSecList = res.data
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
     // 知识点显示
     getKnow (item, val, index) {
       this.KnowShow = true

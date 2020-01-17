@@ -14,6 +14,7 @@ import router from './router/'
 import store from './store/'
 import Iview from 'iview'
 import ElementUI from 'element-ui'
+import loading from './libs/loadingPlugin'
 // import vueAwesomeSwiper from 'vue-awesome-swiper'
 // import 'fullpage.js/vendors/scrolloverflow'
 // import VueFullPage from 'vue-fullpage'
@@ -21,6 +22,7 @@ import ElementUI from 'element-ui'
 // Vue.use(VueFullPage)
 Vue.use(Iview)
 Vue.use(ElementUI)
+Vue.use(loading)
 // Vue.use(vueAwesomeSwiper)
 new Vue({
   router,

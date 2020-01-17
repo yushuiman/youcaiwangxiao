@@ -975,10 +975,6 @@ export default {
   }
   .sel-course-list{
     width:440px;
-    // position: absolute;
-    // z-index: 1000;
-    // top: 46px;
-    // left: 0;
     border: 1px solid #979797;
     background: #ffffff;
     li{

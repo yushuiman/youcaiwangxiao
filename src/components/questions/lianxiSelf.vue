@@ -49,14 +49,14 @@
   </div>
 </template>
 <script>
-import { getSection, getKnow } from '@/api/questions'
+import { getKnow } from '@/api/questions'
 
 export default {
   props: {
-    course_id: {
-      type: Number
+    sectionList: {
+      type: Array
     },
-    user_id: {
+    course_id: {
       type: Number
     },
     plate_id: {
@@ -65,7 +65,6 @@ export default {
   },
   data () {
     return {
-      sectionList: [], // 知识点章节
       numArr: [5, 10, 15, 20, 25, 30], // 随即题数
       getPoticData: {
         course_id: this.course_id,
@@ -88,22 +87,8 @@ export default {
   components: {
   },
   mounted () {
-    this.getSectionList()
   },
   methods: {
-    getSectionList (val) {
-      getSection({
-        course_id: this.course_id,
-        user_id: this.user_id
-      }).then(data => {
-        const res = data.data
-        if (res.code === 200) {
-          this.sectionList = res.data
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
     // 知识点显示
     getKnow (item, val, index) {
       this.KnowShow = true
