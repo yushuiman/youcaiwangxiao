@@ -311,6 +311,8 @@ export default {
     },
     // 交卷
     jiaojuan (type) {
+      this.visible = false
+      this.subTopics.question_content.question = []
       for (var i = 0; i < this.topics.length; i++) {
         this.subTopics.question_content.question.push({
           question_id: this.topics[i].ID,
@@ -318,7 +320,6 @@ export default {
           user_answer: this.topics[i].userOption || ''
         })
       }
-      this.visible = false
       this.subTopics.user_id = this.user_id
       if (parseInt(this.getQuestion.plate_id) === 6) {
         this.subTopics.used_time = this.user_s

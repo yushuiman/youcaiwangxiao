@@ -215,6 +215,8 @@ export default {
     },
     // 交卷
     jiaojuan () {
+      this.visible = false
+      this.experienceTopics.question_content = []
       // 未做题，直接点击交卷，做题信息user_answer=‘’
       for (var j = 0; j < this.topics.length; j++) {
         this.experienceTopics.question_content.push({
@@ -223,7 +225,6 @@ export default {
           user_answer: this.topics[j].userOption || ''
         })
       }
-      this.visible = false
       this.experienceTopics.user_id = this.user_id
       this.experienceTopics.used_time = this.$refs.addCountTime.userAnswerTime
       this.getExperienceStati()

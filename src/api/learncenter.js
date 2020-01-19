@@ -9,7 +9,7 @@ export const isRegister = (data) => { // 是否注册过
 }
 export const kRegister = (data) => { // 快捷注册
   return axios.request({
-    url: '/web/Register/kRegister',
+    url: '/web/Login/quickLogin',
     data,
     method: 'post'
   })

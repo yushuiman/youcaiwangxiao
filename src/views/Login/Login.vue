@@ -522,9 +522,7 @@ export default {
       } else if (!rePaw.test(this.form.password)) {
         this.$Message.error('密码必须为6-16位数字、字母、下划线组合')
       } else {
-        this.showLoading(true)
         this.handleLogin({ mobile: Encrypt(this.form.mobile), password: this.form.password }).then(data => {
-          this.showLoading(false)
           this.getUserInfo().then(() => {
             if (this.callBack) {
               this.$router.replace({ path: this.callBack,
