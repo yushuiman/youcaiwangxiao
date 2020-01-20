@@ -293,7 +293,7 @@ export default {
       line-height: 22px;
     }
     img{
-      max-width: 100%;
+      width: 100%;
     }
   }
   .topic-opition{
