@@ -1,9 +1,10 @@
 <template>
   <div class="u-course-wrap">
-    <!-- answerType：personal只为区分样式  -->
+    <!-- 个人中心  -->
     <ul class="tab-list" v-if="answerType == 'personal'">
       <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
+    <!-- 学习计划 -->
     <ul class="tab-list-learn" v-if="answerType == 'learn'">
       <li class="tab-item-learn" v-for="(v, index) in txtArr" :class="{'active': selIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
@@ -318,8 +319,13 @@ export default {
       this.imgUrl = url
       this.visible = true
     },
-    tabClk (v, index) {
+    tabClk (v, index, type) {
       this.selIdx = index
+      this.page = 1
+      this.initRes()
+      if (this.answerType === 'learn') {
+        return
+      }
       this.$router.replace({ path: '/personal',
         query: {
           ...this.$route.query,
@@ -327,8 +333,6 @@ export default {
           selIdx: index
         }
       })
-      this.page = 1
-      this.initRes()
     },
     initRes () {
       if (parseInt(this.selIdx) === 0) {

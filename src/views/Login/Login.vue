@@ -163,7 +163,7 @@
           <div class="yc-bot">优财智业（北京）科技发展有限公司</div>
         </div>
         <!-- 快速登录 -->
-        <div v-if="this.$route.query.type == 'fast_login'">
+        <div v-if="isLogin == 'fast_login'">
           <div class="logo_img">
             <img :src="logoImg" alt="">
           </div>
@@ -204,7 +204,7 @@
         </div>
       </div>
       <!-- 忘记密码 -->
-      <div class="forget-pwd"  v-if="isForget == 'forget'">
+      <div class="forget-pwd" v-if="isForget == 'forget'">
         <div class="logo_img3">
           <img :src="logoImg" alt="">
         </div>
@@ -328,7 +328,7 @@ export default {
       token: state => state.user.token
     }),
     isLogin () {
-      return this.$route.query.type || 'login'
+      return this.$route.query.isFlag || 'login'
     },
     isForget () {
       return this.$route.query.is_forget || 'log-reg'
@@ -364,7 +364,7 @@ export default {
       this.$router.replace({ path: 'login',
         query: {
           ...this.$route.query,
-          type: type
+          isFlag: type
         }
       })
     },

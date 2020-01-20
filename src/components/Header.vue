@@ -138,7 +138,8 @@ export default {
       this.$router.replace({ path: '/login',
         query: {
           ...this.$route.query,
-          type: type
+          is_forget: 'log-reg',
+          isFlag: type
         }
       })
     },

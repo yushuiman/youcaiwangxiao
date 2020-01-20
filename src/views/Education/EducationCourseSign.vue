@@ -124,6 +124,10 @@ export default {
         })
         return
       }
+      if (this.isntroduction.href_type === 1) {
+        window.open(this.isntroduction.activity_address, '_blank')
+        return
+      }
       this.visible = true
     },
     previewSign () {

@@ -609,14 +609,14 @@ export default {
     // 月份获取日
     getEveryday (v) {
       this.everydayList = []
-      this.showLoading(true)
+      // this.showLoading(true)
       everyday({
         user_id: this.user_id,
         plan_id: this.currenLearnInfo.plan_id,
         month: v,
         is_exper: this.currenLearnInfo.is_exper // 1为0元体验 2为购买课程
       }).then(data => {
-        this.showLoading(false)
+        // this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.everydayList = res.data.date
