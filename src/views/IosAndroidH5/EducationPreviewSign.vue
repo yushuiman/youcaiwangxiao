@@ -122,6 +122,10 @@ export default {
     },
     // 报名
     signEduPreview () {
+      if (this.isntroduction.href_type === 1) {
+        window.open(this.isntroduction.activity_address, '_blank')
+        return
+      }
       this.visible = true
     },
     closeSign () {

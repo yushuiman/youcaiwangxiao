@@ -100,7 +100,7 @@ export default {
     },
     jiangyiDown (url) {
       if (!url) {
-        this.$Message.error('请单独下载章节讲义')
+        this.$Message.error('暂无讲义')
         return
       }
       window.location.href = url

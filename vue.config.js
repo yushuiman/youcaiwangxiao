@@ -140,10 +140,10 @@ module.exports = {
     // 配置 externals
     // 防止将某些 import 的包(package)打包到 bundle 中，而是在运行时(runtime)再去从外部获取这些扩展依赖
 
-    config.externals = {
-      'vue': 'Vue',
-      'iview': 'iview'
-    }
+    // config.externals = {
+    //   'vue': 'Vue',
+    //   'iview': 'iview'
+    // }
   },
   devServer: {
     // overlay: {

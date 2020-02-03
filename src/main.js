@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import 'babel-polyfill'
 // import 'swiper/dist/css/swiper.css'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -8,21 +9,28 @@ import './assets/scss/common.css'
 // import 'animate.css'
 // import 'vue-fullpage/vue-fullpage.css'
 
-import Vue from 'vue'
 import App from './App.vue'
 import router from './router/'
 import store from './store/'
 import Iview from 'iview'
 import ElementUI from 'element-ui'
+// import VueSocketIO from 'vue-socket.io'
 import loading from './libs/loadingPlugin'
-// import vueAwesomeSwiper from 'vue-awesome-swiper'
-// import 'fullpage.js/vendors/scrolloverflow'
 // import VueFullPage from 'vue-fullpage'
+// import vueAwesomeSwiper from 'vue-awesome-swiper'
+// import 'fullpage.js/vendors/scrollovergflow'
+// import '../node_modules/fullpage.js/vendors/scrolloverflow'
 
-// Vue.use(VueFullPage)
 Vue.use(Iview)
 Vue.use(ElementUI)
+// Vue.use(
+//   new VueSocketIO({
+//     debug: true,
+//     connection: 'http://metinseylan.com:1992' //
+//   })
+// )
 Vue.use(loading)
+// Vue.use(VueFullPage)
 // Vue.use(vueAwesomeSwiper)
 new Vue({
   router,
