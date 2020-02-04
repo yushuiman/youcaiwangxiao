@@ -20,9 +20,11 @@ import loading from './libs/loadingPlugin'
 // import vueAwesomeSwiper from 'vue-awesome-swiper'
 // import 'fullpage.js/vendors/scrollovergflow'
 // import '../node_modules/fullpage.js/vendors/scrolloverflow'
+import io from 'socket.io-client'
 
 Vue.use(Iview)
 Vue.use(ElementUI)
+Vue.prototype.$io = io
 // Vue.use(
 //   new VueSocketIO({
 //     debug: true,

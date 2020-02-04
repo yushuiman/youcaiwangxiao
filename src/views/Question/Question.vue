@@ -56,7 +56,7 @@
       <!-- 科目标题 -->
       <div class="qt-subject" style="display: flex;">
         <div v-for="(item, index) in projectArr" :key="index" class="qt-course" :class="{'curren': course_id == item.id}"
-        @click="getQuestionIndex(item.id, index)" style="padding: 0 30px;">{{item.name}}</div>
+        @click="getQuestionIndex(item, index)" style="padding: 0 30px;">{{item.name}}</div>
       </div>
       <!-- 答题详情(做题数 正确率 平均分) -->
       <Row class="qt-answer-detail">
@@ -83,7 +83,7 @@
         </Col>
       </Row>
       <!-- 知识点练习 阶段测试 论述题自测 冲刺 -->
-      <Row class="practice-wrap">
+      <Row class="practice-wrap" v-if="isSprintXly == 1">
         <Col span="12" class="practice-item" v-for="(item, index) in plateList.slice(0, 4)" :key="index">
           <div class="prt-info-com prt-info" :class="['prt-info-0' + (index+1)]">
             <div class="prt-flex">
@@ -92,6 +92,21 @@
                 <h2>{{item.title}}</h2>
                 <p>{{item.describe}}</p>
               </div>
+            </div>
+            <button class="prt-btn btn-com" @click="doQuestions(item)">去做题</button>
+          </div>
+        </Col>
+      </Row>
+      <!-- 知识点练习 阶段测试 论述题自测 -->
+      <Row class="practice-wrap" v-if="isSprintXly == 2">
+        <Col span="8" class="practice-item" v-for="(item, index) in plateList.slice(0, 3)" :key="index">
+          <div class="prt-info-com prt-info-else" :class="['prt-info-0' + (index+1)]" >
+            <div class="prt-flex">
+              <div class="prt-txt">
+                <h2>{{item.title}}</h2>
+                <p>{{item.describe}}</p>
+              </div>
+              <i class="prt-icon"></i>
             </div>
             <button class="prt-btn btn-com" @click="doQuestions(item)">去做题</button>
           </div>
@@ -179,6 +194,7 @@ export default {
     return {
       projectArr: [], // 科目
       course_id: parseInt(window.sessionStorage.getItem('course_id')) || '',
+      isSprintXly: 2, // 1展示2不展示冲刺训练营
       plateList: [
         {
           id: 1,
@@ -275,7 +291,15 @@ export default {
           // 非0元体验
           if (res.data && res.data.length) {
             this.projectArr = res.data
-            this.getQuestionIndex(this.course_id || res.data[0].id)
+            this.projectArr.forEach(val => {
+              if (val.id === (this.course_id || res.data[0].id)) {
+                this.isSprintXly = val.status
+              }
+            })
+            this.getQuestionIndex({
+              id: this.course_id || res.data[0].id,
+              status: this.isSprintXly
+            })
             this.experience = false
           }
           // 0元体验
@@ -288,7 +312,7 @@ export default {
       })
     },
     // 课程对应正确率，做题数，平均分
-    getQuestionIndex (id, index) {
+    getQuestionIndex ({ id, status }, index) {
       if (!this.token) {
         this.$router.push({ path: '/login',
           query: {
@@ -298,6 +322,7 @@ export default {
         return
       }
       this.course_id = id
+      this.isSprintXly = status
       window.sessionStorage.setItem('course_id', id)
       this.showLoading(true)
       questionIndex({
@@ -616,9 +641,12 @@ export default {
   .prt-info-com{
     background: #ffffff;
     margin-left: 20px;
-    padding: 26px 30px;
+    padding: 23px 20px 21px 20px;
     border-radius: 8px;
     box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
+    &.prt-info{
+      padding: 26px 30px;
+    }
   }
   .prt-info{
     display: flex;
@@ -670,7 +698,8 @@ export default {
   }
   .prt-txt{
     padding-left: 27px;
-    .prt-info-three &{
+    flex: 1;
+    .prt-info-else &, .prt-info-three &{
       padding-left: 0;
     }
     h2{
@@ -685,11 +714,11 @@ export default {
     }
   }
   .btn-com{
-    .prt-info &{
+    .prt-info-else &, .prt-info &{
       color: $colfff;
       background: rgba(24,116,253,1);
     }
-    .prt-info-three &{
+    .prt-info-else &, .prt-info-three &{
       margin-top: 30px;
     }
     .cal-tit &{

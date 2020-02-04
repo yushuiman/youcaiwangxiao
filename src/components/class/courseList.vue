@@ -70,7 +70,7 @@ export default {
         if (res.code === 200) {
           this.courseCatalogInfo = res.data
           this.courseCatalogInfo.forEach((v, index) => {
-            v.index = index + 1
+            v.index = index + 1 + ''
           })
         } else {
           this.$Message.error(res.msg)

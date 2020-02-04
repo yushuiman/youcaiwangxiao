@@ -64,7 +64,6 @@ export default {
       },
       signMobile: '', // 课程预告报名手机号
       signName: '', // 课程预告报名名字
-      previewCourseList: [], // 课程预告
       visible: false // 课程预告报名
     }
   },

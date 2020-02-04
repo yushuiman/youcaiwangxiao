@@ -162,22 +162,22 @@ export default {
   }
   .r-icon{
     .try-item &{
-      @include bg_img(30, 30, '../assets/images/fixed/try.png');
+      @include bg_img(19, 20, '../assets/images/fixed/try.png');
     }
     .service-item &{
-      @include bg_img(20, 20, '../assets/images/fixed/service.png');
+      @include bg_img(18, 20, '../assets/images/fixed/service.png');
     }
     .hotline-item &{
-      @include bg_img(20, 20, '../assets/images/fixed/line.png');
+      @include bg_img(20, 16, '../assets/images/fixed/line.png');
     }
     .weixin-item &{
-      @include bg_img(23, 23, '../assets/images/fixed/iweixin.png');
+      @include bg_img(23, 19, '../assets/images/fixed/iweixin.png');
     }
     .qq-item &{
-      @include bg_img(23, 23, '../assets/images/fixed/QQ.png');
+      @include bg_img(17, 17, '../assets/images/fixed/QQ.png');
     }
     .go-top-item &{
-      @include bg_img(30, 30, '../assets/images/fixed/top.png');
+      @include bg_img(26, 22, '../assets/images/fixed/top.png');
     }
   }
   .com-show {

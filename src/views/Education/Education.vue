@@ -67,6 +67,7 @@ export default {
           stopOnLastSlide: false
         }
       },
+      previewCourseList: [], // 课程预告
       firstPackageList: [] // 课程包
     }
   },

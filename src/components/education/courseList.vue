@@ -93,10 +93,10 @@ export default {
         const res = data.data
         if (res.code === 200) {
           res.data.forEach((v, index) => {
-            v.index = index + 1
+            v.index = index + 1 + ''
             if (v.video && v.video.length) {
               v.video.forEach((val, index) => {
-                val.index = index + 1
+                val.index = index + 1 + ''
               })
             }
           })
