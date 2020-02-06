@@ -57,8 +57,8 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
+          this.$Message.success('提交成功')
           this.$emit('modalShow', false)
-          this.$Message.success('纠错问题提交成功')
         } else {
           this.$Message.error(res.msg)
         }
@@ -87,6 +87,7 @@ export default {
   .ts-box{
     height: 20px;
     line-height: 20px;
+    color: #E84342;
   }
   .btn-box{
     text-align: center;

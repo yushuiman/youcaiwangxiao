@@ -165,7 +165,7 @@
       </div>
     </Modal>
     <!-- 是否完成支付 -->
-    <pay-modal :visible.sync="visible"></pay-modal>
+    <pay-modal :visible.sync="visible" :orderInfo="payInfo"></pay-modal>
   </div>
 </template>
 

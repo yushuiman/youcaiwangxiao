@@ -58,7 +58,7 @@
       :width="795"
       @on-visible-change="modalQueVisible"
       class="iview-modal">
-      <upload-img v-if="typeShow == 'dy'" :getQuestion="getQuestion"></upload-img>
+      <upload-img v-if="typeShow == 'dy'" :getQuestion="getQuestion" @modalShow="modalShow"></upload-img>
       <error-correction v-if="typeShow == 'jc'" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
     </Modal>
   </div>
@@ -96,7 +96,7 @@ export default {
         paper_type: parseInt(this.$route.query.paper_type) || 1
       },
       visible: false,
-      typeShow: false, // 答疑dy，纠错jc
+      typeShow: '', // 答疑dy，纠错jc
       dataStorage: JSON.parse(window.sessionStorage.getItem('subTopics'))
     }
   },
@@ -423,8 +423,10 @@ export default {
       this.getQuestion.question_id = qId
     },
     modalQueVisible (val) {
+      document.body.removeAttribute('style')
       if (!val) {
-        this.typeShow = false
+        this.visible = false
+        this.typeShow = ''
       }
     }
   },

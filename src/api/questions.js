@@ -81,7 +81,7 @@ export const sprintCourse = (data) => { // 冲刺训练营
 }
 export const tips = (data) => { // 冲刺训练营 提示
   return axios.request({
-    url: '/web/Question/tips',
+    url: '/apps/Question/tips',
     data,
     method: 'post'
   })

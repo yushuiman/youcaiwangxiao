@@ -52,11 +52,9 @@ export default {
   },
   methods: {
     callBackGetGoods () {
-      this.showLoading(true)
       getGoods({
         order_num: this.order_num
       }).then((data) => {
-        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           if (res.data.status === 1) {

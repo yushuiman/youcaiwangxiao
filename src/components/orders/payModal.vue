@@ -27,13 +27,15 @@ export default {
   props: {
     visible: {
       type: Boolean
+    },
+    orderInfo: {
+      type: Object
     }
   },
   data () {
     return {
       // visible: true,
       is_live: parseInt(this.$route.query.is_live), // 1直播订单、2课程订单、3图书订单4积分订单
-      orderInfo: {},
       btnTxt: '已完成支付',
       finishSts: false,
       consultInfo: JSON.parse(window.sessionStorage.getItem('consultInfo')) || {} // 在线咨询
@@ -45,7 +47,6 @@ export default {
   },
   methods: {
     callBackGetGoods (val) {
-      this.orderInfo = JSON.parse(window.sessionStorage.getItem('payInfo'))
       if (val === '确定') {
         this.$emit('update:visible', false)
         return

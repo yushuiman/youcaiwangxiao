@@ -257,7 +257,9 @@ export default {
         if (res.code === 200) {
           this.quiz = ''
           this.quiz_image = []
+          this.$Message.success('提交成功')
           this.questionallAnswerList()
+          this.$emit('modalShow', false)
         } else {
           this.$Message.error(res.msg)
         }

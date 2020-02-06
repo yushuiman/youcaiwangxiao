@@ -68,7 +68,8 @@ export default {
         plate_id: '',
         paper_mode: 2, // 练习模式1 考试2
         paper_type: 1 // 单选1 论述2
-      }
+      },
+      noDataFlag: false
     }
   },
   components: {
