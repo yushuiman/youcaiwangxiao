@@ -271,6 +271,9 @@ export default {
     border-radius: 4px;
     box-sizing: border-box;
     background: #ffffff;
+    img{
+      width: 100%;
+    }
   }
   .clt-tab{
     padding-top: 44px;

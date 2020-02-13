@@ -381,6 +381,9 @@ export default {
   }
   .clt-main{
     width: 902px;
+    img{
+      width: 100%;
+    }
   }
   .clt-tab{
     @include lh(49, 49);

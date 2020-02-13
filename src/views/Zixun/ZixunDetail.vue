@@ -1,5 +1,5 @@
 <template>
-  <div class="zixun-wrap">
+  <div class="zixun-detail-wrap">
     <img src="../../assets/images/zixun/banner.jpg" alt="" width="100%" height="100">
     <div class="zx-main w-wrap">
       <div class="zxm-left">
@@ -56,48 +56,53 @@ export default {
 }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .zx-main{
-    padding: 20px 0;
-    display: flex;
-    justify-content: space-between;
-    border-radius: 8px;
-    .zxm-left{
-      width: 903px;
-      background: #ffffff;
-      padding: 20px 60px;
+  .zixun-detail-wrap{
+    .zx-main{
+      padding: 20px 0;
+      display: flex;
+      justify-content: space-between;
+      border-radius: 8px;
+      .zxm-left{
+        width: 903px;
+        background: #ffffff;
+        padding: 20px 60px;
+      }
+      .zxm-right{
+        width: 278px;
+      }
     }
-    .zxm-right{
-      width: 278px;
-    }
-  }
-  .zx-address{
-    line-height: 25px;
-    font-size: 18px;
-    color: $col999;
-    a{
+    .zx-address{
+      line-height: 25px;
+      font-size: 18px;
       color: $col999;
+      a{
+        color: $col999;
+      }
     }
-  }
-  .zx-title{
-    font-size: 18px;
-    line-height: 25px;
-    margin-top: 31px;
-    margin-bottom: 6px;
-    text-align: center;
-  }
-  .zx-source{
-    text-align: center;
-    color: $col999;
-    span{
-      margin-left: 14px;
+    .zx-title{
+      font-size: 18px;
+      line-height: 25px;
+      margin-top: 31px;
+      margin-bottom: 6px;
+      text-align: center;
     }
-  }
-  .zx-cont{
-    padding-top: 21px;
-    margin-top: 21px;
-    border-top: 1px solid #E6E6E6;
-    line-height: 22px;
+    .zx-source{
+      text-align: center;
+      color: $col999;
+      span{
+        margin-left: 14px;
+      }
+    }
+    .zx-cont{
+      padding-top: 21px;
+      margin-top: 21px;
+      border-top: 1px solid #E6E6E6;
+      line-height: 22px;
+      img{
+        width: 100%;
+      }
+    }
   }
 </style>

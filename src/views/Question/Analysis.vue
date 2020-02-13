@@ -419,7 +419,11 @@ export default {
     },
     modalShow (flag, qId, type) {
       this.visible = flag
-      this.typeShow = type
+      if (this.visible) {
+        this.typeShow = type
+      } else {
+        this.typeShow = ''
+      }
       this.getQuestion.question_id = qId
     },
     modalQueVisible (val) {

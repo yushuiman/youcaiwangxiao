@@ -1,5 +1,5 @@
 <template>
-  <div class="course-like-main" :class="{'styw': isW}">
+  <div class="course-like-main">
     <div class="like-title">
       <img src="../../assets/images/course/like.png" alt="">
       <span>课程推荐</span>
@@ -67,9 +67,6 @@ export default {
         vertical-align: middle;
         margin-top: -3px;
       }
-    }
-    &.styw{
-      width: 298px;
     }
   }
   .like-list {

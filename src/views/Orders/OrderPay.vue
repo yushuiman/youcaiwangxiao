@@ -25,12 +25,12 @@
             <Icon type="md-checkmark" />
           </div>
         </li>
-        <!-- <li class="jd-way" :class="{'cur': pay_type == 8}" @click="changePayWay(8)">
+        <li class="jd-way" :class="{'cur': pay_type == 8}" @click="changePayWay(8)">
           <div class="bottomright" v-if="pay_type == 8">
             <div class="triangle"></div>
             <Icon type="md-checkmark" />
           </div>
-        </li> -->
+        </li>
       </ul>
       <div class="orpay-cashier">
         <p>应付金额：<span>¥{{pay_price}}</span></p>

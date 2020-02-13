@@ -108,40 +108,42 @@ export default {
 }
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .right-com{
-    padding: 0 10px;
-    background: #ffffff;
-    border-radius: 8px;
-  }
-  .com-title{
-    padding-left: 27px;
-    height: 39px;
-    line-height: 39px;
-    border-bottom: 1px solid #E6E6E6;
-    background: url('../../assets/images/course/like.png') no-repeat left center;
-    background-size: 20px 20px;
-  }
-  .com-list{
-    padding: 10px 0;
-    margin-bottom: 20px;
-    .com-item{
-      height: 26px;
-      line-height: 26px;
-      display: flex;
-      justify-content: space-between;
-      cursor: pointer;
-      color: $col666;
-      .c-black{
-        width: 65%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .c-gray{
-        font-size: 12px;
-        color: $col999;
+  .learntips-wrap{
+    .right-com{
+      padding: 0 10px;
+      background: #ffffff;
+      border-radius: 8px;
+    }
+    .com-title{
+      padding-left: 27px;
+      height: 39px;
+      line-height: 39px;
+      border-bottom: 1px solid #E6E6E6;
+      background: url('../../assets/images/course/like.png') no-repeat left center;
+      background-size: 20px 20px;
+    }
+    .com-list{
+      padding: 10px 0;
+      margin-bottom: 20px;
+      .com-item{
+        height: 26px;
+        line-height: 26px;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+        color: $col666;
+        .c-black{
+          width: 65%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .c-gray{
+          font-size: 12px;
+          color: $col999;
+        }
       }
     }
   }
@@ -182,6 +184,25 @@ export default {
       }
     }
   }
+  .learntips-cont{
+    h2{
+      padding-left: 20px;
+      padding-bottom: 13px;
+      font-size: 20px;
+    }
+    .l-detail{
+      padding: 20px;
+      background:rgba(255,255,255,1);
+      box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
+      border-radius: 8px;
+      color: #4A4A4A;
+      font-size: 16px;
+      line-height: 24px;
+    }
+    img{
+      width: 100%;
+    }
+  }
   .learntips-icon{
     width: 20px;
     height: 18px;
@@ -212,22 +233,6 @@ export default {
     }
     .learntips-item-04.curren &, .learntips-item-04:hover &{
       background-image: url('../../assets/images/user/user-active-icon04.png');
-    }
-  }
-  .learntips-cont{
-    h2{
-      padding-left: 20px;
-      padding-bottom: 13px;
-      font-size: 20px;
-    }
-    .l-detail{
-      padding: 20px;
-      background:rgba(255,255,255,1);
-      box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
-      border-radius: 8px;
-      color: #4A4A4A;
-      font-size: 16px;
-      line-height: 24px;
     }
   }
 </style>

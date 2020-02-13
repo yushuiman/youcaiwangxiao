@@ -124,64 +124,69 @@ export default {
 
 <style lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .zx-main{
-    padding: 20px 0;
-    display: flex;
-    justify-content: space-between;
-    border-radius: 8px;
-    .zxm-left{
-      width: 903px;
-    }
-    .zxm-right{
-      width: 278px;
-    }
-  }
-  .zixun-slide{
-    img{
-      width: 100%;
-    }
-  }
-  .zx-list{
-    background: #ffffff;
-    padding: 0 20px;
-  }
-  .zx-item{
-    padding: 21px 0;
-    display: flex;
-    .fengmian-img{
-      width: 160px;
-      height: 101px;
-      margin-right: 21px;
-      cursor: pointer;
-    }
-  }
-  .wenan-info{
-    cursor: pointer;
-    flex: 1;
-    h1{
-      font-size: 18px;
-      line-height: 20px;
-      color: $col333;
-    }
-    .details{
-      line-height: 20px;
-      height: 40px;
-      margin-top: 14px;
-      color: $col666;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      -webkit-line-clamp: 2;
-    }
-    .details *{
-      width: auto!important;
-    }
-    .source-time{
-      line-height: 20px;
-      margin-top: 4px;
-      color: $col999;
+  .zixun-wrap{
+    .zx-main{
+      padding: 20px 0;
       display: flex;
       justify-content: space-between;
+      border-radius: 8px;
+      .zxm-left{
+        width: 903px;
+      }
+      .zxm-right{
+        width: 278px;
+      }
+    }
+    .zixun-slide{
+      img{
+        width: 100%;
+      }
+    }
+    .zx-list{
+      background: #ffffff;
+      padding: 0 20px;
+    }
+    .zx-item{
+      padding: 21px 0;
+      display: flex;
+      .fengmian-img{
+        width: 160px;
+        height: 101px;
+        margin-right: 21px;
+        cursor: pointer;
+      }
+    }
+    .wenan-info{
+      cursor: pointer;
+      flex: 1;
+      h1{
+        font-size: 18px;
+        line-height: 20px;
+        color: $col333;
+      }
+      .details *{
+        width: auto!important;
+      }
+      .details{
+        line-height: 20px;
+        height: 40px;
+        margin-top: 14px;
+        color: $col666;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
+        img{
+          width: 100%!important;
+        }
+      }
+      .source-time{
+        line-height: 20px;
+        margin-top: 4px;
+        color: $col999;
+        display: flex;
+        justify-content: space-between;
+      }
     }
   }
 </style>
