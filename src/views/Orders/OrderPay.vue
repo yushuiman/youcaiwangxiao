@@ -75,7 +75,6 @@ export default {
         // 支付宝
         if (this.pay_type === 4) {
           window.location.href = config.baseUrl.pro + '/alipay/Pagepay/zfbpay?order_num=' + this.order_num + '&name=' + '优财' + '&price=' + this.pay_price + '&body='
-          // window.open(config.baseUrl.pro + '/alipay/Pagepay/zfbpay?order_num=' + this.order_num + '&name=' + '优财' + '&price=' + this.pay_price + '&body=' + '')
         }
         // 微信
         if (this.pay_type === 2) {
@@ -88,9 +87,14 @@ export default {
         if (this.pay_type === 8) {
           let tradeTime = this.transformTime()
           let amount = this.pay_price * 100
-          let callback = config.baseUrl.pro + '/personal?order'
-          if (this.is_live === 2) {
-            callback = config.baseUrl.pro + '/personal'
+          let callback // 京东支付回调url,个人中心我的订单
+          let callback2 // 测试和生产接口
+          if (window.location.href.indexOf('www.youcaiwx.cn') > -1) {
+            callback = 'https://www.youcaiwx.cn'
+            callback2 = config.baseUrl.pro
+          } else {
+            callback = 'https://deste.youcaiwx.cn'
+            callback2 = config.baseUrl.dev
           }
           let obj = Base64.encode(JSON.stringify({
             version: 'V2.0',
@@ -103,8 +107,8 @@ export default {
             amount: amount + '', // 价格
             currency: 'CNY',
             note: '',
-            callbackUrl: callback,
-            notifyUrl: config.baseUrl.pro + '/Jdpay/AsynNotifyAction/execute',
+            callbackUrl: callback + '/personal?type=order',
+            notifyUrl: callback2 + '/Jdpay/AsynNotifyAction/execute',
             ip: '10.45.251.153',
             userType: '',
             userId: this.user_id + '',
@@ -116,7 +120,7 @@ export default {
             specName: '',
             saveUrl: 'https://wepay.jd.com/jdpay/saveOrder'
           }))
-          window.location.href = config.baseUrl.pro + '/demo/action/ClientOrder.php?list=' + obj
+          window.location.href = callback2 + '/demo/action/ClientOrder.php?list=' + obj
         }
       })
     },

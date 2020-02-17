@@ -439,15 +439,14 @@ export default {
         repwd: this.confimpwd
       }).then(data => {
         const res = data.data
-        if (res.code === 405) {
-          this.$Message.error('原密码错误')
-        }
         if (res.code === 200) {
           if (res.data.state === 1) {
             this.handleLogOut()
             this.$Message.success('密码修改成功')
             this.$router.push('/')
           }
+        } else if (res.code === 405) {
+          this.$Message.error('原密码错误')
         } else {
           this.$Message.error(res.msg)
         }
