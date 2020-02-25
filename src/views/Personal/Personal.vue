@@ -100,7 +100,7 @@ export default {
     userTop
   },
   mounted () {
-    this.getUserInfo()
+    // this.getUserInfo()
     if (this.isLoadHttpRequest) {
       this.getPersonalInfo()
     } else {

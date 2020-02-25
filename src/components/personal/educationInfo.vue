@@ -161,9 +161,14 @@ export default {
     // 课程去学习 播放记录去学习
     async courseLearnVideo (val, type) {
       await this.getUserInfo()
-      if (val.is_purchase === 2) {
+      if (val.is_purchase && val.is_purchase === 2) {
         this.$Message.error('请购买课程')
         return
+      }
+      if (type === 1) {
+        window.sessionStorage.setItem('userstatus', 1) // 我的课程一定是已购买
+      } else {
+        window.sessionStorage.setItem('userstatus', val.is_purchase) // 播放记录是否购买
       }
       // 如果有看过的记录，继续学习
       if (val.video) {
@@ -175,11 +180,6 @@ export default {
           video_id: val.video.video_id
         }
         this.$router.push({ path: '/education-video', query: obj })
-        if (type === 1) {
-          window.sessionStorage.setItem('userstatus', 1) // 我的课程一定是已购买
-        } else {
-          window.sessionStorage.setItem('userstatus', val.is_purchase) // 播放记录是否购买
-        }
         return
       }
       // 否则去课程列表页面

@@ -241,7 +241,7 @@ export default {
     //   this.reload()
     // },
     ended () {
-      this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
+      // this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
       this.computedNextVid() // 计算下一个要播放的视频
       this.reload()
       // window.location.reload()
@@ -262,7 +262,7 @@ export default {
       // 初始化监听一次socket io
       if (this.playCourseInfo.userstatus === 1) {
         if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
-          this.socketIo()
+          // this.socketIo()
           this.subFirstSocket()
         }
       }
@@ -272,7 +272,7 @@ export default {
         if (this.playCourseInfo.userstatus === 1) {
           if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
             if (instance.getStatus() === 'playing') {
-              this.socketIo()
+              // this.socketIo()
             }
           }
         }

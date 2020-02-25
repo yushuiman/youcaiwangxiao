@@ -86,10 +86,10 @@ export default {
   },
   mounted () {
     if (this.isLoadHttpRequest) {
-      this.init()
+      // this.init()
     } else {
       this.$watch('isLoadHttpRequest', function (val, oldVal) {
-        this.init()
+        // this.init()
       })
     }
   },

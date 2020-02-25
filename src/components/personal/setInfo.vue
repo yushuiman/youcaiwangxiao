@@ -540,6 +540,7 @@ export default {
     color: white;
     background: rgba(24, 116, 253, 1);
     border-radius: 16px;
+    font-size: 16px;
   }
 
   .change_avatar {

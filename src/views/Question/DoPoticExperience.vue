@@ -124,6 +124,9 @@ export default {
     poticList,
     countUp
   },
+  created () {
+    this.prohibit()
+  },
   mounted () {
     if (this.isLoadHttpRequest) {
       this.getZExperience()
@@ -135,6 +138,19 @@ export default {
     window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
+    prohibit () { // 禁用鼠标右击、F12
+      document.oncontextmenu = function () {
+        return false
+      }
+      document.onkeydown = function (e) {
+        if (e.ctrlKey && (e.keyCode === 65 || e.keyCode === 67 || e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 80 || e.keyCode === 83 || e.keyCode === 85 || e.keyCode === 86 || e.keyCode === 117)) {
+          return false
+        }
+        if (e.keyCode === 18 || e.keyCode === 123) {
+          return false
+        }
+      }
+    },
     scrollToTop () {
       if (this.$refs.fixedTit) {
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
