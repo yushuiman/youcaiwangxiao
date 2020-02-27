@@ -14,6 +14,6 @@ export default {
    */
   baseUrl: {
     dev: '',
-    pro: 'http://ycapi.youcaiwx.com'
+    pro: 'https://dest.youcaiwx.cn'
   }
 }
