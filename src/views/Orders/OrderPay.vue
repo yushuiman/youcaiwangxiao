@@ -25,12 +25,12 @@
             <Icon type="md-checkmark" />
           </div>
         </li>
-        <!-- <li class="jd-way" :class="{'cur': pay_type == 8}" @click="changePayWay(8)">
+        <li class="jd-way" :class="{'cur': pay_type == 8}" @click="changePayWay(8)">
           <div class="bottomright" v-if="pay_type == 8">
             <div class="triangle"></div>
             <Icon type="md-checkmark" />
           </div>
-        </li> -->
+        </li>
       </ul>
       <div class="orpay-cashier">
         <p>应付金额：<span>¥{{pay_price}}</span></p>
@@ -89,12 +89,14 @@ export default {
           let amount = this.pay_price * 100
           let callback // 京东支付回调url,个人中心我的订单
           let callback2 // 测试和生产接口
-          if (window.location.href.indexOf('www.youcaiwx.cn') > -1) {
-            callback = 'https://www.youcaiwx.cn'
-            callback2 = config.baseUrl.pro
-          } else {
+          console.log(window.location.href)
+          console.log(window.location.href.indexOf('deste.youcaiwx.cn') > -1)
+          if (window.location.href.indexOf('deste.youcaiwx.cn') > -1) {
             callback = 'https://deste.youcaiwx.cn'
             callback2 = config.baseUrl.dev
+          } else {
+            callback = 'https://www.youcaiwx.cn'
+            callback2 = config.baseUrl.pro
           }
           let obj = Base64.encode(JSON.stringify({
             version: 'V2.0',
@@ -120,6 +122,8 @@ export default {
             specName: '',
             saveUrl: 'https://wepay.jd.com/jdpay/saveOrder'
           }))
+          console.log('回调地址：' + callback)
+          console.log('接口地址：' + callback2)
           window.location.href = callback2 + '/demo/action/ClientOrder.php?list=' + obj
         }
       })

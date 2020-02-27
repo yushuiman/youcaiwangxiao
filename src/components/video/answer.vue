@@ -94,7 +94,6 @@
               <button class="zhuiwen" v-if="item.user_self == 1 && item.is_close == 1" @click="zhiwen(item)">追问</button>
             </li>
             <!-- 2学员追问 -->
-            <!-- :class="{'othq-item-zhiwen': replyList[item.id][1].z_reply_status == 2}" -->
             <li class="othq-item" v-if="replyList[item.id][1] && (replyList[item.id][1].z_quiz != '')">
               <div class="othq-item-t">
                 <img :src="replyList[item.id][1].head" alt="" class="head-logo">
@@ -106,7 +105,7 @@
               </div>
               <p class="othq-txt">{{replyList[item.id][1].z_quiz}}</p>
               <div class="quiz-image-list course_img">
-                <div class="demo-upload-list" v-for="(val, index) in replyList[item.id][1].quiz_image" :key="index">
+                <div class="demo-upload-list" v-for="(val, index) in replyList[item.id][1].z_quiz_image" :key="index">
                   <template>
                     <img :src="val">
                     <div class="demo-upload-list-cover">

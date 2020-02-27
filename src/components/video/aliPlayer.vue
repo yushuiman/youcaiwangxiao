@@ -516,8 +516,8 @@ export default {
     background-size: contain;
   }
   .prism-player .prism-big-play-btn .outter{
-    border: 0;
-    background: none;
+    /* border: 0;
+    background: none; */
   }
   .prism-player .prism-volume .volume-icon{
     background: url('../../assets/images/video/play-voice-m.png') no-repeat;
@@ -535,10 +535,10 @@ export default {
   .prism-player .prism-volume-control .volume-cursor:hover{
     background: #F99111;
   }
-  .prism-player .prism-volume .volume-icon:hover{
+  /* .prism-player .prism-volume .volume-icon:hover{
     background: url('../../assets/images/video/volumehover.png') no-repeat;
     background-size: contain;
-  }
+  } */
   .prism-player .prism-volume .volume-icon.mute{
     background: url('../../assets/images/video/volumemutehover.png') no-repeat;
     background-size: contain;

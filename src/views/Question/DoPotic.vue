@@ -175,7 +175,7 @@ export default {
     errorCorrection
   },
   created () {
-    this.this.prohibit()
+    this.prohibit()
   },
   mounted () {
     if (this.isLoadHttpRequest) {

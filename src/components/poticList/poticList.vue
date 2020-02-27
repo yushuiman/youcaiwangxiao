@@ -301,7 +301,7 @@ export default {
       line-height: 22px;
     }
     img{
-      width: 100%;
+      max-width: 100%;
     }
   }
   .topic-opition{
