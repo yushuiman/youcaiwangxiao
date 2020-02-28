@@ -1,7 +1,7 @@
 <template>
   <div class="index-wrap">
     <div class="banner-wrap">
-      <img src="@/assets/images/index/banner.png" alt="">
+      <img src="@/assets/images/index/banner.png" alt="" width="100%" height="auto">
     </div>
     <ul class="class-wrap w-wrap">
       <li class="class-item class-item01">
@@ -48,7 +48,7 @@
         <img class="ci-img" src="@/assets/images/index/undraw_setup_wizard_r6mr.png" alt="">
       </li> -->
     </ul>
-    <img class="cma-title-bg" src="@/assets/images/index/cma-title-bg.png" alt="">
+    <img class="cma-title-bg" src="@/assets/images/index/cma-title-bg.png" alt="" width="100%" height="auto">
     <div class="cma-consultation">
       <div class="w-wrap clearfix">
         <div class="cma-txt-bg fl">CMA咨询</div>
@@ -63,7 +63,7 @@
           <img src="@/assets/images/index/tit_icon.png" alt="">
           <span class="part-icon">合作伙伴</span>
         </div>
-        <img class="hzhb-img" src="@/assets/images/index/hzhb2.png" alt="" >
+        <img class="hzhb-img" src="@/assets/images/index/hzhb2.png" alt="" width="100%" height="auto">
       </div>
     </div>
   </div>
@@ -117,11 +117,6 @@ export default {
 </script>
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../assets/scss/app";
-  .index-wrap{
-    img{
-      width: 100%;
-    }
-  }
   // 课程list
   .class-wrap{
     padding-bottom: 29px;

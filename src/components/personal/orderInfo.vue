@@ -304,6 +304,7 @@ export default {
         border: 1px solid #F99111;
         box-sizing: border-box;
         margin-left: 20px;
+        background: none;
         &.pay-btn{
           width: 80px;
           color: #ffffff;
@@ -384,6 +385,7 @@ export default {
       margin-left: 20px;
       font-size: 18px;
       height: 30px;
+      background: none;
       &.go-pay{
         width: 80px;
         color: #ffffff;

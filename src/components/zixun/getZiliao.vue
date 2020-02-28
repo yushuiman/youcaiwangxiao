@@ -99,7 +99,7 @@ export default {
     padding-top: 16px;
     input{
       width: 100%;
-      line-height: 28px;
+      height: 28px;
       font-size: 12px;
       color: #666666;
       border-radius: 3px;

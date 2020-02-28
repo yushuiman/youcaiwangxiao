@@ -670,11 +670,9 @@ export default {
     }
   }
   .prt-flex{
+    width: 80%;
     display: flex;
     align-items: center;
-    // .prt-info-08 &{
-    //   align-items: center;
-    // }
   }
   .prt-icon{
     .prt-info-01 &{

@@ -322,9 +322,9 @@ export default {
       var _this = this
       var socket
       if (process.env.NODE_ENV === 'production') {
-        socket = this.$io(config.baseUrl.pro)
+        socket = io(config.baseUrl.pro)
       } else {
-        socket = this.$io('https://dest.youcaiwx.cn')
+        socket = io('https://dest.youcaiwx.cn')
       }
       socket.on('connect', function () {
         socket.emit('success', { username: _this.user_id })

@@ -66,6 +66,9 @@
               <li>
                 <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">快捷支付</a>
               </li>
+              <li>
+                <a href="https://www.youcaiwx.cn/course-detail?package_id=28" target="_blank">京东分期</a>
+              </li>
             </ul>
             <ul class="footer-instru">
               <li>

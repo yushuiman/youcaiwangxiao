@@ -163,8 +163,8 @@ export default {
     }
   }
   .user-name-instr{
-    position: absolute;
-    left: 142px;
+    // position: absolute;
+    // left: 142px;
     margin-left: 28px;
     h2{
       font-size: 28px;

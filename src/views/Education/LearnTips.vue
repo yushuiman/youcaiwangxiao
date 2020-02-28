@@ -149,7 +149,7 @@ export default {
   }
   .learntips-info{
     @include flexJustify;
-    padding-top: 30px;
+    padding: 30px 0;
     .learntips-menu{
       width: 127px;
     }
