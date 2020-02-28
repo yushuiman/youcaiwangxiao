@@ -366,6 +366,7 @@ export default {
         border-radius: 20px;
         font-size: 18px;
         box-sizing: border-box;
+        background: none;
         &.buy-btn{
           text-align: center;
           background: #FF9B3A;

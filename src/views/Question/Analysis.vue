@@ -215,7 +215,7 @@ export default {
     goAnchor (selector) {
       var anchor = this.$el.querySelector(selector)
       setTimeout(() => {
-        document.documentElement.scrollTop = anchor.offsetTop - 150
+        document.documentElement.scrollTop = document.body.scrollTop = anchor.offsetTop - 150
       }, 300)
     },
     // 6大板块解析

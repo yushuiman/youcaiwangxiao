@@ -212,7 +212,7 @@ export default {
     goAnchor (selector) {
       var anchor = this.$el.querySelector(selector)
       setTimeout(() => {
-        document.documentElement.scrollTop = anchor.offsetTop - 150
+        document.documentElement.scrollTop = document.body.scrollTop = anchor.offsetTop - 150
       }, 300)
     },
     // 已做题数量 右边进度条用

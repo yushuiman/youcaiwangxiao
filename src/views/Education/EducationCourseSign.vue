@@ -253,6 +253,7 @@ export default {
         border-radius: 15px;
         font-size: 16px;
         box-sizing: border-box;
+        background: none;
         &.sign-btn{
           text-align: center;
           background: #FF9B3A;

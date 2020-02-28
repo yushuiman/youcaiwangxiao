@@ -67,7 +67,7 @@
                 <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">快捷支付</a>
               </li>
               <li>
-                <a href="https://www.youcaiwx.cn/course-detail?package_id=28" target="_blank">京东分期</a>
+                <router-link target="_blank" :to="{path: 'course-detail', query: { package_id: 28 }}">京东分期</router-link>
               </li>
             </ul>
             <ul class="footer-instru">
@@ -105,7 +105,7 @@
 export default {
   data () {
     return {
-      curYear: '2019'
+      curYear: '2020'
     }
   },
   mounted () {
