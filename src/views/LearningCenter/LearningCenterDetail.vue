@@ -632,14 +632,18 @@ export default {
             if (v.year < this.currYear) {
               v.beforeDate = 1
             } else {
-              if (v.dayNum === this.currDay) {
-                v.currDate = 1
-              }
-              if (v.dayNum < this.currDay) {
+              if (v.monthNum < this.currMonth) {
                 v.beforeDate = 1
-              }
-              if (v.dayNum > this.currDay) {
-                v.afterDate = 1
+              } else {
+                if (v.dayNum === this.currDay) {
+                  v.currDate = 1
+                }
+                if (v.dayNum < this.currDay) {
+                  v.beforeDate = 1
+                }
+                if (v.dayNum > this.currDay) {
+                  v.afterDate = 1
+                }
               }
             }
           })
