@@ -78,8 +78,8 @@ import aliPlayer from '@/components/video/aliPlayer'
 import answer from '@/components/video/answer'
 import HeadName from '@/components/common/HeadName'
 import { videoCredentials, videoPlayback, collection, firstSocket } from '@/api/class'
-import { getVideo } from '@/api/learncenter'
-import config from '@/config'
+import { getVideo, studyVideo } from '@/api/learncenter'
+// import config from '@/config'
 import { mapState } from 'vuex'
 
 export default {
@@ -247,7 +247,7 @@ export default {
       }
     },
     ended () {
-      // this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
+      this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
       this.computedNextVid() // 计算下一个要播放的视频
       this.reload()
       // window.location.reload()
@@ -273,7 +273,7 @@ export default {
           if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
             // if (instance.getStatus() === 'playing') {
             // }
-            // this.socketIo()
+            this.socketIo()
           }
         }
       }, 30000)
@@ -304,32 +304,33 @@ export default {
         section_id: this.playCourseInfo.section_id,
         video_id: this.playCourseInfo.video_id,
         watch_time: this.playtime,
-        video_type: 1, // 视频类型 1视频2直播
-        type: 2, // 播放类型 1课程视频播放2学习中心
+        // video_type: 1, // 视频类型 1视频2直播
         days: this.playCourseInfo.days,
         plan_id: this.playCourseInfo.plan_id
       }
       console.log(message)
-      var _this = this
-      var socket
-      if (process.env.NODE_ENV === 'production') {
-        socket = io(config.baseUrl.pro)
-      } else {
-        socket = io('https://dest.youcaiwx.cn')
-      }
-      socket.on('connect', function () {
-        socket.emit('success', { username: _this.user_id })
-        console.log('learn-video连接成功')
+      studyVideo(message).then(data => {
       })
-      // 公开聊天
-      socket.on('sendMsg', function (msg) {
-        let json = JSON.parse(msg)
-        console.log(json)
-      })
-      socket.emit('sendMsg', {
-        'username': _this.user_id,
-        'msg': message
-      })
+      // var _this = this
+      // var socket
+      // if (process.env.NODE_ENV === 'production') {
+      //   socket = io(config.baseUrl.pro)
+      // } else {
+      //   socket = io('https://dest.youcaiwx.cn')
+      // }
+      // socket.on('connect', function () {
+      //   socket.emit('success', { username: _this.user_id })
+      //   console.log('learn-video连接成功')
+      // })
+      // // 公开聊天
+      // socket.on('sendMsg', function (msg) {
+      //   let json = JSON.parse(msg)
+      //   console.log(json)
+      // })
+      // socket.emit('sendMsg', {
+      //   'username': _this.user_id,
+      //   'msg': message
+      // })
     },
     computedNextVid () {
       this.playCourseInfoNext = Object.assign({}, this.playCourseInfo)
@@ -449,7 +450,7 @@ export default {
           }).then(data => {
             let res = data.data
             this.videoCredentials = res.data
-            this.playtime = this.videoCredentials.watch_time
+            // this.playtime = this.videoCredentials.watch_time
           })
         } else {
           this.$Message.error(res.msg)

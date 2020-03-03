@@ -119,3 +119,10 @@ export const studyStatus = (data) => { // 学习状态中 学习中 已经结束
     method: 'post'
   })
 }
+export const studyVideo = (data) => { // 学习记录 ，30秒一次
+  return axios.request({
+    url: '/web/Plan/studyVideo',
+    data,
+    method: 'post'
+  })
+}

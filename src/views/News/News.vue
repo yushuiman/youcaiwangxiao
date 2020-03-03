@@ -50,9 +50,7 @@
                 <a class="prev-item" @click="changeItem(2)">下一条 &gt;&gt;</a>
               </div>
             </div>
-            <div class="news-info">
-              {{newsDetail.message.content}}
-            </div>
+            <div class="news-info" v-html="newsDetail.message.content"></div>
           </div>
         </div>
         <div class="no-data" v-if="noDataFlag">暂无消息</div>

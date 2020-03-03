@@ -106,8 +106,8 @@
                       <div class="tips-item" v-if="v.is_rest == 2">今天休息啦～</div>
                     </li>
                   </ul>
-              </Submenu>
-            </Menu>
+                </Submenu>
+              </Menu>
             </div>
             <div class="answer-box" v-if="tabIdx == 1">
               <answer-info :user_id="user_id" :answerType="answerType"></answer-info>
@@ -609,14 +609,12 @@ export default {
     // 月份获取日
     getEveryday (v) {
       this.everydayList = []
-      // this.showLoading(true)
       everyday({
         user_id: this.user_id,
         plan_id: this.currenLearnInfo.plan_id,
         month: v,
         is_exper: this.currenLearnInfo.is_exper // 1为0元体验 2为购买课程
       }).then(data => {
-        // this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.everydayList = res.data.date
@@ -634,7 +632,9 @@ export default {
             } else {
               if (v.monthNum < this.currMonth) {
                 v.beforeDate = 1
-              } else {
+              } else if (v.monthNum > this.currMonth) {
+                v.afterDate = 1
+              } else if (v.monthNum === this.currMonth) {
                 if (v.dayNum === this.currDay) {
                   v.currDate = 1
                 }
@@ -680,13 +680,15 @@ export default {
       }).then(data => {
         this.showLoading(false)
         const res = data.data
-        this.learnVideoList = res.data.video
+        if (res.data.video && res.data.video.length) {
+          this.learnVideoList = res.data.video
+          this.learnVideoList.forEach(val => {
+            val.beforeDate = v.beforeDate
+            val.afterDate = v.afterDate
+            val.currDate = v.currDate
+          })
+        }
         this.isDrawer = true
-        this.learnVideoList.forEach(val => {
-          val.beforeDate = v.beforeDate
-          val.afterDate = v.afterDate
-          val.currDate = v.currDate
-        })
       })
     },
     // 学习视频 看视频
@@ -1310,6 +1312,9 @@ export default {
     }
     .days-item-orange &{
       @include bg-img(61, 61, '../../assets/images/learncenter/days-orange-icon.png');
+    }
+    .days-item-gray &{
+      @include bg-img(61, 61, '../../assets/images/learncenter/days-gray-icon.png');
     }
     .days-item-rest &{
       @include bg-img(61, 61, '../../assets/images/learncenter/days-rest-icon.png');

@@ -70,7 +70,6 @@
           :is_zhengke="playCourseInfo.is_zhengke"
           @closeModel="closeModel">
         </course-list>
-          <!-- @switchVideo="switchVideo" -->
         <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer>
         <div class="jiangyi" v-if="flagJy">
           <div class="close-box" @click="closeModel">
