@@ -12,6 +12,13 @@ export const courseList = (data) => { // 课程列表
     method: 'post'
   })
 }
+export const jdCourseList = (data) => { // 京东课程列表
+  return axios.request({
+    url: '/web/Course/jdCourseList',
+    data,
+    method: 'post'
+  })
+}
 export const guessLike = (data) => { // 猜你喜欢
   return axios.request({
     url: '/web/Course/guessLike',

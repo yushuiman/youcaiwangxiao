@@ -5,6 +5,7 @@ import education from '../router/education'
 Vue.use(Router)
 const Home = r => require.ensure([], () => r(require('@/views/Home')), 'Home')
 const Course = r => require.ensure([], () => r(require('@/views/Course/Course')), 'Course')
+const CourseJd = r => require.ensure([], () => r(require('@/views/CourseJd/Course')), 'Course')
 const courseDetail = r => require.ensure([], () => r(require('@/views/Course/CourseDetail')), 'courseDetail')
 const courseVideo = r => require.ensure([], () => r(require('@/views/Video/Video')), 'courseVideo')
 const Question = r => require.ensure([], () => r(require('@/views/Question/Question')), 'Question')
@@ -52,6 +53,17 @@ const router = new Router({
       path: '/course',
       name: 'course',
       component: Course,
+      meta: {
+        title: '课程',
+        showHeader: true,
+        showFooter: true,
+        showRightSlider: true
+      }
+    },
+    {
+      path: '/course-jd',
+      name: 'CourseJd',
+      component: CourseJd,
       meta: {
         title: '课程',
         showHeader: true,
