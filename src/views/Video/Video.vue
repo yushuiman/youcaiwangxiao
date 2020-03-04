@@ -253,11 +253,6 @@ export default {
       document.getElementById('rightCourseList').scrollTop = ofH
       // 跳转到上次播放时间
       instance.seek(this.playtime - 5)
-      // if (parseInt(this.playtime) === parseInt(instance.getDuration())) {
-      //   instance.seek(this.playtime - 5)
-      // } else {
-      //   instance.seek(this.playtime)
-      // }
       // 初始化监听一次socket io
       if (this.playCourseInfo.userstatus === 1) {
         if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {

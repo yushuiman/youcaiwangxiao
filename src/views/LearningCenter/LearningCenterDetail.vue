@@ -1429,6 +1429,7 @@ export default {
     button{
       width: 50%;
       height: 46px;
+      background: #ffffff;
       &.potic-btn{
         border-left: 1px solid #E6E6E6;
       }
