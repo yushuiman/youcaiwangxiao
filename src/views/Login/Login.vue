@@ -878,6 +878,7 @@ export default {
   }
   .line .line-lr {
     width: 150px;
+    display: block;
     border: 1px solid #EEEEEE;
   }
   .line span:nth-of-type(2) {

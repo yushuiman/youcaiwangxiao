@@ -85,7 +85,15 @@ export default {
   },
   methods: {
     getCourseIdSel (e) {
-      window.sessionStorage.setItem('course_id', this.course_id)
+      this.courseList.forEach((val) => {
+        if (val.course_id === this.course_id) {
+          if (val.is_purchase === 1) {
+            window.sessionStorage.setItem('course_id', this.course_id)
+          } else {
+            window.sessionStorage.removeItem('course_id')
+          }
+        }
+      })
       this.getQuestionRecord()
     },
     // 做题记录

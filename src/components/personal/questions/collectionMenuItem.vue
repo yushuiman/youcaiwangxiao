@@ -12,14 +12,14 @@
           <template slot="title">
             <div class="menu-section-title">
               {{item.know_section_name}}
-              <span>（收藏<em>{{item.sectioncoun}}</em>道题）</span>
+              <span style="color:#999999;">（<em style="color:#999999;">{{item.sectioncoun}}</em>道题）</span>
             </div>
           </template>
           <div class="error-menu-er" v-for="(val, key) in item.knob" :key="key" style="padding: 10px 40px;">
             <div class="menu-jie-title">
               <div>
                 {{val.knob_name}}
-                <span>（收藏<em style="color:#f00;">{{val.knobcoun}}</em>道题）</span>
+                <span style="color:#999999;">（<em style="color:#999999;">{{val.knobcoun}}</em>道题）</span>
               </div>
               <button class="btn-zsd" @click="getKnow(item, val, key)">选择知识点</button>
             </div>
@@ -98,7 +98,15 @@ export default {
   },
   methods: {
     getCourseIdSel (e) {
-      window.sessionStorage.setItem('course_id', this.course_id)
+      this.courseList.forEach((val) => {
+        if (val.course_id === this.course_id) {
+          if (val.is_purchase === 1) {
+            window.sessionStorage.setItem('course_id', this.course_id)
+          } else {
+            window.sessionStorage.removeItem('course_id')
+          }
+        }
+      })
       this.getMyCollquestion()
     },
     getMyCollquestion (val) {

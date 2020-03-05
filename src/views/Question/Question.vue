@@ -292,7 +292,7 @@ export default {
           if (res.data && res.data.length) {
             this.projectArr = res.data
             this.projectArr.forEach(val => {
-              if (val.id === (this.course_id || res.data[0].id)) {
+              if (val.id == (this.course_id || res.data[0].id)) {
                 this.isSprintXly = val.status
               }
             })
@@ -322,8 +322,8 @@ export default {
         return
       }
       this.course_id = id
-      this.isSprintXly = status
       window.sessionStorage.setItem('course_id', id)
+      this.isSprintXly = status
       this.showLoading(true)
       questionIndex({
         user_id: this.user_id,

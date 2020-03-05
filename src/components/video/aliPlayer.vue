@@ -240,6 +240,7 @@ export default {
     return {
       playerId: 'aliplayer_' + Math.floor(Math.random() * 100000000000000000),
       scriptTagStatus: 0,
+      isReload: false,
       instance: null
     }
   },
@@ -316,13 +317,18 @@ export default {
             autoPlayDelay: _this.autoPlayDelay
           })
           // 绑定事件，当 AliPlayer 初始化完成后，将编辑器实例通过自定义的 ready 事件交出去
+          var _video = document.querySelector('video')
           _this.instance.on('ready', () => {
             this.$emit('ready', _this.instance)
           })
           _this.instance.on('play', () => {
+            _video.removeEventListener('click', this.play)
+            _video.addEventListener('click', this.pause)
             this.$emit('play', _this.instance)
           })
           _this.instance.on('pause', () => {
+            _video.removeEventListener('click', this.pause)
+            _video.addEventListener('click', this.play)
             this.$emit('pause', _this.instance)
           })
           _this.instance.on('ended', () => {
@@ -448,6 +454,11 @@ export default {
        */
     reloaduserPlayInfoAndVidRequestMts: function (vid, playauth) {
       this.instance.reloaduserPlayInfoAndVidRequestMts(vid, playauth)
+    },
+    reloadPlayer: function () {
+      this.isReload = true
+      this.initAliplayer()
+      this.isReload = false
     },
     switchPlay () {
       // var _video = document.querySelector('video')
