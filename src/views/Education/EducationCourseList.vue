@@ -135,18 +135,7 @@ export default {
         this.form.price_start = ''
         this.form.price_end = ''
       }
-      this.getListPackage()
-    },
-    // 条件删除
-    delChoose (type) {
-      switch (type) {
-        case '课程类别':
-          this.form.class_id = ''
-          break
-        case '类型':
-          this.form.billing_status = ''
-          break
-      }
+      this.form.page = 1
       this.getListPackage()
     },
     // 分页
