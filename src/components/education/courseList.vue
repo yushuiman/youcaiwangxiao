@@ -34,17 +34,7 @@
 import { courseCatalog, secvCatalog } from '@/api/education'
 import { mapState } from 'vuex'
 export default {
-  props: {
-    type_id: {
-      type: Number
-    },
-    package_id: {
-      type: Number
-    },
-    userstatus: {
-      type: Number
-    }
-  },
+  props: ['type_id', 'package_id', 'userstatus'],
   data () {
     return {
       courseCatalogInfo: [], // 课程大纲（目录）

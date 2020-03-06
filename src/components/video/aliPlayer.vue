@@ -459,18 +459,6 @@ export default {
       this.isReload = true
       this.initAliplayer()
       this.isReload = false
-    },
-    switchPlay () {
-      // var _video = document.querySelector('video')
-      // console.log(_video)
-      // player.on('play', function (e) {
-      //   _video.removeEventListener('click', play)
-      //   _video.addEventListener('click', pause)
-      // })
-      // player.on('pause', function (e) {
-      //   _video.removeEventListener('click', pause)
-      //   _video.addEventListener('click', play)
-      // })
     }
   }
 }

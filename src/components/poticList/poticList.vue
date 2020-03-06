@@ -36,16 +36,16 @@
       <div class="resolving">
         <span class="resolve-tit" @click="resolveToggle(item.flag, index)">{{item.flag ? '收起' : '解析'}}<Icon type="ios-arrow-down" :class="{'shouqi': item.flag}"/></span>
         <div class="resolve-detail" v-show="item.flag">
-          <!-- 非论述题，另外5个板块解析 -->
+          <!-- 非论述题，展示正确答案，用户答案 -->
           <p class="right-resolve" v-if="item.topicType == 1 && getQuestion.sc != 1">
             <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
             <span v-if="item.options[0].userOption">我的答案<em>{{item.options[0].userOption}}</em></span>
             <span v-else>我的答案<em>未作答</em></span>
           </p>
-          <!-- 收藏不展示用户答案 -->
-          <!-- <p class="right-resolve" v-if="getQuestion.sc == 1">
+          <!-- 非论述题，收藏不展示用户答案 -->
+          <p class="right-resolve" v-if="item.topicType == 1 && getQuestion.sc == 1">
             <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
-          </p> -->
+          </p>
           <div class="instr-resolve instr-resolve-tw">
             <span>解析：</span>
             <div class="twtw">
@@ -59,7 +59,7 @@
       </div>
     </div>
   </div>
-  <!-- 二、真题/练习页面 做题-->
+  <!-- 二、真题/练习模式 做题-->
   <div class="topic-main" v-else>
     <div class="topic-list" :class="{'topic-list-pb': item.flag}" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
       <div class="topic-top">
@@ -77,7 +77,7 @@
           <img v-if="item.topic[3]" :src="item.topic[3]" alt="">
           <p v-if="item.topic[4]">{{item.topic[4]}}</p>
         </div>
-        <!-- 练习模式：有解析答对答错状态-->
+        <!-- 练习模式：有解析、答对、答错状态-->
         <ul class="topic-opition" v-if="getQuestion.paper_mode == 1 && item.topicType == 1">
           <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPoticPractice(item, v, index, key)">
             <div class="opi-abcd">
@@ -86,7 +86,7 @@
             <p>{{v.topic}}</p>
           </li>
         </ul>
-        <!-- 真题模式：正常，无解析答对答错状态-->
+        <!-- 真题模式：正常，无解析、答对、答错状态-->
         <ul class="topic-opition" v-if="getQuestion.paper_mode != 1 && item.topicType == 1">
           <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPotic(item, v, index, key)">
             <div class="opi-abcd">

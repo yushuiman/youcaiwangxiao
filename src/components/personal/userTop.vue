@@ -26,14 +26,7 @@
 import { learnClock } from '@/api/personal'
 import { mapActions, mapState } from 'vuex'
 export default {
-  props: {
-    personalInfo: {
-      type: Object
-    },
-    user_id: {
-      type: Number
-    }
-  },
+  props: ['personalInfo', 'user_id'],
   data () {
     return {
       learnClockInfo: {} // 签到打卡
