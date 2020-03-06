@@ -47,11 +47,6 @@ export default {
           class_name: 'userm-item-01'
         },
         {
-          type: 'education',
-          tit: '后续教育',
-          class_name: 'userm-item-07'
-        },
-        {
           type: 'questions',
           tit: '题库',
           class_name: 'userm-item-02'
@@ -65,6 +60,11 @@ export default {
           type: 'answer',
           tit: '答疑',
           class_name: 'userm-item-04'
+        },
+        {
+          type: 'education',
+          tit: '后续教育',
+          class_name: 'userm-item-07'
         },
         {
           type: 'order',
