@@ -213,6 +213,7 @@ export default {
         this.form.price_start = this.priceStart
         this.form.price_end = this.priceEnd
       }
+      this.form.page = 1
       this.getCourseList()
     },
     // 条件删除
@@ -228,6 +229,7 @@ export default {
           this.form.ym = ''
           break
       }
+      this.form.page = 1
       this.getCourseList()
     },
     // 跳转到课程详情页

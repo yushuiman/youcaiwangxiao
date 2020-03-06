@@ -296,6 +296,10 @@ export default {
             for (let index = 0; index < array.length; index++) {
               if (array[index].id == this.course_id) {
                 this.isSprintXly = array[index].status
+                this.getQuestionIndex({
+                  id: this.course_id,
+                  status: this.isSprintXly
+                })
                 return
               }
             }
