@@ -2,7 +2,7 @@
   <div class="jieduan-test">
     <div class="com-bg">
       <div class="diff-easy">
-        试卷难度：简单
+        试卷难度：简单course_id:{{course_id}}
         <i class="star-icon star-easy-icon"></i>中等
         <i class="star-icon star-middle-icon"></i>困难
         <i class="star-icon star-diff-icon"></i>

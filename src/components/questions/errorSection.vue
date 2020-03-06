@@ -1,7 +1,7 @@
 <template>
   <div class="error-section-wrap height-com">
     <div class="com-bg">
-      考试模式
+      考试模式course_id:{{course_id}}
     </div>
     <Menu accordion width="100%">
       <Submenu :name="index+1" v-for="(item, index) in errorSecList" :key="index">

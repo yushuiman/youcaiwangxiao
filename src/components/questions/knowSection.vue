@@ -1,5 +1,6 @@
 <template>
   <div class="zsd-section-wrap height-com">
+    course_id:{{course_id}}
     <div class="com-bg">
       <div class="mode-tab">
         <span :class="{'curren':getPoticData.paper_mode == 1 }" @click="doMode(1)"><i></i>练习模式</span>

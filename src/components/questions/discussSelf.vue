@@ -1,7 +1,7 @@
 <template>
   <div class="discuss-self height-com">
     <div class="com-bg">
-      精准答案对比
+      精准答案对比course_id:{{course_id}}
     </div>
     <ul class="jd-test-list">
       <li class="jd-test-item" v-for="(v, index) in courseList" :key="index" @click="goToPic(v)">

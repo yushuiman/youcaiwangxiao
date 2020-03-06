@@ -1,7 +1,7 @@
 <template>
   <div class="lianxi-self-wrap height-com">
     <div class="com-bg">
-      <span>请选择需要练习的章节</span>
+      <span>请选择需要练习的章节course_id:{{course_id}}</span>
       <div class="order-sel">
         <button class="btn-com" :class="{'curren': selNum == index}" v-for="(num, index) in numArr" :key="index" @click="orderDoNum(num, index)">{{num}}</button>
       </div>

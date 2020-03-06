@@ -1,7 +1,7 @@
 <template>
   <div class="group-lianxi height-com">
     <div class="com-bg">
-      请选择需要练习的章节
+      请选择需要练习的章节course_id:{{course_id}}
     </div>
     <ul class="jd-test-list">
       <li class="jd-test-item" v-for="(v, index) in volumeList" :key="index" @click="goToPic(v)">

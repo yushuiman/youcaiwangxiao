@@ -56,7 +56,7 @@
       <!-- 科目标题 -->
       <div class="qt-subject" style="display: flex;">
         <div v-for="(item, index) in projectArr" :key="index" class="qt-course" :class="{'curren': course_id == item.id}"
-        @click="getQuestionIndex(item, index)" style="padding: 0 30px;">{{item.name}}</div>
+        @click="getQuestionIndex(item, index)" style="padding: 0 30px;">{{item.name}}course_id: {{course_id}}</div>
       </div>
       <!-- 答题详情(做题数 正确率 平均分) -->
       <Row class="qt-answer-detail">
@@ -93,7 +93,7 @@
                 <p>{{item.describe}}</p>
               </div>
             </div>
-            <button class="prt-btn btn-com" @click="doQuestions(item)">去做题</button>
+            <button class="prt-btn btn-com" @click="doQuestions(item)">去做题</button>course_id: {{course_id}}
           </div>
         </Col>
       </Row>
@@ -108,7 +108,7 @@
               </div>
               <i class="prt-icon"></i>
             </div>
-            <button class="prt-btn btn-com" @click="doQuestions(item)">去做题</button>
+            <button class="prt-btn btn-com" @click="doQuestions(item)">去做题course_id: {{course_id}}</button>
           </div>
         </Col>
       </Row>
@@ -292,7 +292,7 @@ export default {
           if (res.data && res.data.length) {
             this.projectArr = res.data
             this.projectArr.forEach(val => {
-              if (val.id == (this.course_id || res.data[0].id)) {
+              if (val.id === (this.course_id || res.data[0].id)) {
                 this.isSprintXly = val.status
               }
             })
@@ -313,6 +313,10 @@ export default {
     },
     // 课程对应正确率，做题数，平均分
     getQuestionIndex ({ id, status }, index) {
+      this.course_id = id
+      this.isSprintXly = status
+      console.log('切换course_id:' + this.course_id)
+      window.sessionStorage.setItem('course_id', id)
       if (!this.token) {
         this.$router.push({ path: '/login',
           query: {
@@ -321,9 +325,6 @@ export default {
         })
         return
       }
-      this.course_id = id
-      window.sessionStorage.setItem('course_id', id)
-      this.isSprintXly = status
       this.showLoading(true)
       questionIndex({
         user_id: this.user_id,
