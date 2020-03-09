@@ -9,7 +9,7 @@
     <!-- <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"> -->
     <title>CMA|CMA考试|CMA网课-优财网校-专注CMA培训10周年</title>
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <script src='//youcaiwx.cn/static/js/socket.io.js'></script>
+    <!-- <script src='//youcaiwx.cn/static/js/socket.io.js'></script> -->
     <script>
       // 因为能力评估的h5页面，不会适配pie统计图，所以没有做dpr适配。
       if(window.location.href.indexOf('capacity-assessment-app')>-1){
@@ -79,6 +79,9 @@
         }(window, window.lib || (window.lib = {}));
       }
     </script>
+    <style>
+      #cnzz_stat_icon_1278668111,#cnzz_stat_icon_1278668111 img{ display: none; }
+    </style>
   </head>
   <body>
     <div id="app">
@@ -86,6 +89,11 @@
       <!-- 引入组件库 -->
       <!-- <script src="https://cdn.bootcss.com/iview/3.5.0-rc.1/iview.min.js"></script> -->
     </div>
+    <script type="text/javascript">
+      document.write(unescape(
+        "%3Cspan id='cnzz_stat_icon_1278668111'%3E%3C/span%3E%3Cscript src='https://s4.cnzz.com/z_stat.php%3Fid%3D1278668111%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"
+        ));
+    </script>
     <script src="./vendor/vendor.dll.js"></script>
   </body>
 </html>
