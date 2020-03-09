@@ -108,31 +108,32 @@ export default {
         this.getPersonalInfo()
       })
     }
-    // window.addEventListener('scroll', this.scrollToTop)
+    window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
     ...mapActions([
       'getUserInfo'
     ]),
-    // scrollToTop () {
-    //   let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-    //   if (scrollTop > 70) {
-    //     this.$refs.usermLeft.style.position = 'fixed'
-    //     this.$refs.userTop1.style.position = 'fixed'
-    //     this.$refs.userTop1.style.top = 70 + 'px'
-    //     this.$refs.usermLeft.style.top = 120 + 'px'
-    //     this.$refs.usermLeft.style.width = 120 + 'px'
-    //     this.$refs.usermLeft.style.height = 120 + 'px'
-    //     this.$refs.usermRight.style.marginLeft = 229 + 'px'
-    //     if (this.$refs.usermLeft.style) {
-    //     }
-    //   } else {
-    //     if (this.$refs.usermLeft.style && scrollTop > 0) {
-    //       this.$refs.usermLeft.removeAttribute('style')
-    //       this.$refs.usermRight.removeAttribute('style')
-    //     }
-    //   }
-    // },
+    scrollToTop () {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      if (scrollTop > 100) {
+        this.$refs.usermLeft.style.position = 'fixed'
+        this.$refs.usermLeft.style.top = 50 + 'px'
+        // this.$refs.userTop1.style.position = 'fixed'
+        // this.$refs.userTop1.style.top = 70 + 'px'
+        // this.$refs.usermLeft.style.top = 120 + 'px'
+        // this.$refs.usermLeft.style.width = 120 + 'px'
+        // this.$refs.usermLeft.style.height = 120 + 'px'
+        // this.$refs.usermRight.style.marginLeft = 229 + 'px'
+        if (this.$refs.usermLeft.style) {
+        }
+      } else {
+        // this.$refs.usermLeft.removeAttribute('style')
+        // this.$refs.usermRight.removeAttribute('style')
+        // if (this.$refs.usermLeft.style && scrollTop > 0) {
+        // }
+      }
+    },
     // 切换tab课程题库答疑直播订单账号
     switchInfo ({ type }, index) {
       this.clkTit = type
@@ -204,7 +205,8 @@ export default {
   @import "../../assets/scss/app";
   @import "../../assets/scss/personal.css";
   .user-main{
-    @include flexJustify;
+    // @include flexJustify;
+    position: relative;
     padding-top: 38px;
     .userm-left{
       width: 128px;
@@ -212,6 +214,9 @@ export default {
     }
     .userm-right{
       width: 971px;
+      position: absolute;
+      left: 229px;
+      top: 38px;
     }
   }
   .userm-list{
