@@ -173,7 +173,6 @@ export default {
     watchKeydοwn (keyNum) {
       let player = this.$refs.aliPlayers
       let playStatus = player.getStatus()
-      console.log(keyNum + '' + playStatus + '' + this.isPlay)
       if (keyNum === 32) { // 空格暂停播放
         if (player.getCurrentTime() > 0) {
           this.isPlay = true
