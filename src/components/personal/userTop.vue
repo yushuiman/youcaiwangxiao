@@ -2,7 +2,7 @@
   <div class="user-top-wrap">
     <div class="w-wrap">
       <div class="user-info">
-        <img ref="fixedTit" :src="personalInfo.head" alt="头像" class="head-logo" :class="{'headCla': fixedFlag}" @click="setBaseInfo">
+        <img ref="fixedTit" :src="personalInfo.head" alt="头像" class="head-logo" :class="{'headCla': fixedFlag, 'headCla2': fixedFlag2}" @click="setBaseInfo">
         <div class="user-flex">
           <div class="user-detail-left">
             <h2>{{personalInfo.username}}</h2>
@@ -10,6 +10,12 @@
               <p>加入优财<span><i>{{personalInfo.day}}</i>天</span></p>
               <em></em>
               <p>累计做题<span><i>{{personalInfo.day}}</i>道</span></p>
+            </div>
+            <div class="test-time" v-if="examine.status == 1">
+              <i></i>距离考试还有<span></span><span></span><span></span>天啦！
+            </div>
+            <div class="test-time" v-if="examine.status == 2 || examine.status == 3">
+              <i></i><a @click="setTestTime">请输入考试日期～</a>
             </div>
           </div>
           <div class="user-detail-right">
@@ -25,17 +31,63 @@
         </div>
       </div>
     </div>
+    <Modal title="设置考试时间"
+      v-model="visible"
+      footer-hide
+      :width="401"
+      @on-visible-change="testVisible"
+      class="iview-modal">
+      <div>
+        <ul>
+          <li>
+            <label>考试科目：</label>
+            <select name="" id=""></select>
+          </li>
+          <li>
+            <label>考试时间：</label>
+            <select name="" id=""></select>
+          </li>
+        </ul>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
-import { learnClock } from '@/api/personal'
+import { learnClock, userCourse, courseTime, ctimeSub } from '@/api/personal'
 import { mapActions, mapState } from 'vuex'
 export default {
-  props: ['personalInfo', 'user_id', 'fixedFlag'],
+  // 个人中心fixedFlag 消息中心fixedFlag2
+  props: ['personalInfo', 'user_id', 'fixedFlag', 'fixedFlag2', 'examine'],
+  // props: {
+  //   personalInfo: {
+  //     type: Object,
+  //     default: () => {
+  //       return {
+  //         head: '32323',
+  //         day: 32
+  //       }
+  //     }
+  //   },
+  //   examine: {
+  //     type: Object
+  //   },
+  //   user_id: {
+  //     type: Number
+  //   },
+  //   fixedFlag: {
+  //     type: Boolean
+  //   },
+  //   fixedFlag2: {
+  //     type: Boolean
+  //   }
+  // },
   data () {
     return {
-      learnClockInfo: {} // 签到打卡
+      learnClockInfo: {}, // 签到打卡
+      visible: false,
+      userCourse: [],
+      courseTime: []
     }
   },
   computed: {
@@ -106,6 +158,52 @@ export default {
     // 点击头像
     setBaseInfo () {
       this.$emit('setBaseInfo', 'set')
+    },
+    // 设置科目考试时间
+    setTestTime () {
+      this.getUserCourse()
+      this.getCourseTime()
+      this.visible = true
+    },
+    testVisible (val) {
+      console.log(val)
+    },
+    getUserCourse () {
+      userCourse({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.learnClockInfo = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    getCourseTime () {
+      courseTime({
+        course_id: 1
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.learnClockInfo = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    getCtimeSub () {
+      ctimeSub({
+        user_id: this.user_id,
+        examine_id: 2
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.learnClockInfo = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     }
   }
 }
@@ -142,9 +240,13 @@ export default {
         top: 50px;
         margin-left: 11px;
       }
+      &.headCla2{
+        position: absolute;
+      }
     }
   }
   .user-detail-left{
+    font-size: 16px;
     h2{
       font-size: 22px;
     }
@@ -160,9 +262,7 @@ export default {
       height: 32px;
       background: #979797;
     }
-    // calendar-icon
     p{
-      font-size: 16px;
       line-height: 22px;
       text-align: center;
       span{
@@ -171,6 +271,23 @@ export default {
           color: #FFDF70;
           font-style: normal;
         }
+      }
+    }
+  }
+  .test-time{
+    height: 21px;
+    line-height: 21px;
+    i{
+      margin-right: 8px;
+      vertical-align: middle;
+      margin-top: -4px;
+      @include bg-img(23, 21, '../../assets/images/user/calendar-icon.png');
+    }
+    a{
+      text-decoration: underline;
+      color: #ffffff;
+      &:hover{
+        color: #8EBBFF;
       }
     }
   }

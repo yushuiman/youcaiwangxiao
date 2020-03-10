@@ -1,7 +1,7 @@
 <template>
   <div class="user-wrap">
     <!-- 用户信息 -->
-    <user-top :user_id="user_id" :personalInfo="personalInfo" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
+    <user-top :user_id="user_id" :personalInfo="personalInfo" :fixedFlag2="fixedFlag2" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
     <!-- main -->
     <div class="u-news-wrap w-wrap">
       <ul class="tab-list">
@@ -68,6 +68,7 @@ export default {
   data () {
     return {
       personalInfo: {}, // 个人信息
+      fixedFlag2: true,
       txtArr: ['网校公告', '系统消息'],
       selIdxNews: 0,
       limit: 10,

@@ -1,7 +1,7 @@
 <template>
   <div class="user-wrap">
     <!-- 用户信息 -->
-    <user-top :personalInfo="personalInfo" :user_id="user_id" :fixedFlag="fixedFlag" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
+    <user-top :personalInfo="personalInfo" :examine="examine" :user_id="user_id" :fixedFlag="fixedFlag" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
     <!-- main -->
     <div class="user-main w-wrap">
       <div class="userm-left" ref="usermLeft" :class="{'fixedCla': fixedFlag}">
@@ -79,7 +79,8 @@ export default {
         }
       ],
       clkTit: this.$route.query.type || 'course',
-      personalInfo: {} // 个人信息
+      personalInfo: {}, // 个人信息
+      examine: {} // 设置课程考试时间
     }
   },
   computed: {
@@ -154,6 +155,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.personalInfo = res.data
+          this.examine = res.data.examine
           this.personalInfo.address.forEach(v => {
             v.flag = false
             v.value = '设置默认地址'
