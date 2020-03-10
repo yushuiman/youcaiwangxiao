@@ -1,21 +1,27 @@
 <template>
   <div class="user-top-wrap">
     <div class="w-wrap">
-      <div class="integral-signin">{{personalInfo.integral}}积分
-        <span :class="{'gray': personalInfo.is_card == 1}" @click="getLearnClock">{{personalInfo.is_card == 1 ? '已签到' : '签到'}}</span>
-      </div>
-      <div class="user-flex">
-        <div class="user-info">
-          <img ref="fixedTit" :src="personalInfo.head" alt="头像" class="head-logo" @click="setBaseInfo">
-          <div class="user-name-instr">
+      <div class="user-info">
+        <img ref="fixedTit" :src="personalInfo.head" alt="头像" class="head-logo" :class="{'headCla': fixedFlag}" @click="setBaseInfo">
+        <div class="user-flex">
+          <div class="user-detail-left">
             <h2>{{personalInfo.username}}</h2>
-            <p>您已入学<span>{{personalInfo.day}}</span>天啦！</p>
+            <div class="days-num">
+              <p>加入优财<span><i>{{personalInfo.day}}</i>天</span></p>
+              <em></em>
+              <p>累计做题<span><i>{{personalInfo.day}}</i>道</span></p>
+            </div>
           </div>
-        </div>
-        <div class="go-on-some">
-          <a class="zhibo"><Icon type="ios-play" />最近直播</a>
-          <a @click="goStudy">继续学习</a>
-          <a @click="goDotopic">继续做题</a>
+          <div class="user-detail-right">
+            <div class="integral-signin">{{personalInfo.integral}}积分
+              <span :class="{'gray': personalInfo.is_card == 1}" @click="getLearnClock">{{personalInfo.is_card == 1 ? '已签到' : '签到'}}</span>
+            </div>
+            <div class="go-on-some">
+              <a class="zhibo"><Icon type="ios-play" />最近直播</a>
+              <a @click="goStudy">继续学习</a>
+              <a @click="goDotopic">继续做题</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -26,7 +32,7 @@
 import { learnClock } from '@/api/personal'
 import { mapActions, mapState } from 'vuex'
 export default {
-  props: ['personalInfo', 'user_id'],
+  props: ['personalInfo', 'user_id', 'fixedFlag'],
   data () {
     return {
       learnClockInfo: {} // 签到打卡
@@ -109,14 +115,63 @@ export default {
   @import "../../assets/scss/app";
   .user-top-wrap{
     font-size: 18px;
-    height: 206px;
     background: #112441 url('../../assets/images/user/user-top-bg.jpg') repeat center;
     background-size: 349px 167px;
     color: #ffffff;
-    padding-top: 30px;
-    padding-bottom: 24px;
-    .w-wrap{
-      position: relative;
+    padding: 14px 0;
+  }
+  .user-flex{
+    height: 178px;
+    @include flexJustifyAlignItem;
+    margin-left: 186px;
+  }
+  .user-info{
+    .head-logo{
+      width: 178px;
+      height: 178px;
+      border: 4px solid $colfff;
+      border-radius: 50%;
+      box-sizing: border-box;
+      cursor: pointer;
+      position: fixed;
+      top: 84px;
+      margin-left: -36px;
+      &.headCla{
+        width: 120px;
+        height: 120px;
+        top: 50px;
+        margin-left: 11px;
+      }
+    }
+  }
+  .user-detail-left{
+    h2{
+      font-size: 22px;
+    }
+  }
+  .days-num{
+    display: flex;
+    align-items: center;
+    margin-top: 13px;
+    margin-bottom: 35px;
+    em{
+      margin: 0 20px;
+      width: 1px;
+      height: 32px;
+      background: #979797;
+    }
+    // calendar-icon
+    p{
+      font-size: 16px;
+      line-height: 22px;
+      text-align: center;
+      span{
+        display: block;
+        i{
+          color: #FFDF70;
+          font-style: normal;
+        }
+      }
     }
   }
   .integral-signin{
@@ -138,40 +193,8 @@ export default {
       }
     }
   }
-  .user-flex{
-    @include flexJustifyAlignItem;
-    position: absolute;
-    width: 100%;
-    top: 60px;
-  }
-  .user-info{
-    @include flexJustifyAlignItem;
-    .head-logo{
-      width: 142px;
-      height: 142px;
-      border: 4px solid $colfff;
-      border-radius: 50%;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
-  }
-  .user-name-instr{
-    // position: absolute;
-    // left: 142px;
-    margin-left: 28px;
-    h2{
-      font-size: 28px;
-    }
-    p{
-      font-size: 16px;
-      line-height: 40px;
-      span{
-        font-size: 24px;
-        margin: 0 4px;
-      }
-    }
-  }
   .go-on-some{
+    margin-top: 84px;
     a{
       padding: 0 16px;
       height: 35px;

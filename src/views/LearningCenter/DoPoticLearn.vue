@@ -314,6 +314,8 @@ export default {
   },
   beforeDestroy () {
     window.removeEventListener('scroll', this.scrollToTop)
+    document.oncontextmenu = undefined
+    document.onkeydown = undefined
   }
 }
 </script>

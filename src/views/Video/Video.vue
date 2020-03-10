@@ -567,8 +567,8 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
+    document.onkeydown = undefined
     window.sessionStorage.removeItem('ofH')
-    console.log('remove aliplayer')
     next()
   }
 }

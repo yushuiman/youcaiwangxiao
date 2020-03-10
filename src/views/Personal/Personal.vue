@@ -1,10 +1,10 @@
 <template>
   <div class="user-wrap">
     <!-- 用户信息 -->
-    <user-top :personalInfo="personalInfo" :user_id="user_id" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
+    <user-top :personalInfo="personalInfo" :user_id="user_id" :fixedFlag="fixedFlag" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
     <!-- main -->
     <div class="user-main w-wrap">
-      <div class="userm-left" ref="usermLeft">
+      <div class="userm-left" ref="usermLeft" :class="{'fixedCla': fixedFlag}">
         <ul class="userm-list">
           <li class="userm-item" :class="[v.class_name, {'curren': clkTit == v.type}]" v-for="(v, index) in userArr" :key="index" @click="switchInfo(v, index)">
             <i class="userm-icon"></i>{{v.tit}}
@@ -40,6 +40,7 @@ import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
+      fixedFlag: false,
       userArr: [
         {
           type: 'course',
@@ -100,7 +101,6 @@ export default {
     userTop
   },
   mounted () {
-    // this.getUserInfo()
     if (this.isLoadHttpRequest) {
       this.getPersonalInfo()
     } else {
@@ -117,21 +117,9 @@ export default {
     scrollToTop () {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       if (scrollTop > 100) {
-        this.$refs.usermLeft.style.position = 'fixed'
-        this.$refs.usermLeft.style.top = 50 + 'px'
-        // this.$refs.userTop1.style.position = 'fixed'
-        // this.$refs.userTop1.style.top = 70 + 'px'
-        // this.$refs.usermLeft.style.top = 120 + 'px'
-        // this.$refs.usermLeft.style.width = 120 + 'px'
-        // this.$refs.usermLeft.style.height = 120 + 'px'
-        // this.$refs.usermRight.style.marginLeft = 229 + 'px'
-        if (this.$refs.usermLeft.style) {
-        }
+        this.fixedFlag = true
       } else {
-        // this.$refs.usermLeft.removeAttribute('style')
-        // this.$refs.usermRight.removeAttribute('style')
-        // if (this.$refs.usermLeft.style && scrollTop > 0) {
-        // }
+        this.fixedFlag = false
       }
     },
     // 切换tab课程题库答疑直播订单账号
@@ -189,11 +177,6 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     // window.sessionStorage.removeItem('type')
-    // window.sessionStorage.removeItem('selIdxCourse')
-    // window.sessionStorage.removeItem('selIdxQuestion')
-    // window.sessionStorage.removeItem('selIdxAnswer')
-    // window.sessionStorage.removeItem('selIdxOrder')
-    // window.sessionStorage.removeItem('selIdxAccount')
     document.body.removeAttribute('style')
     this.visible = false
     next()
@@ -208,9 +191,14 @@ export default {
     // @include flexJustify;
     position: relative;
     padding-top: 38px;
+    min-height: 700px;
     .userm-left{
       width: 128px;
       font-size: 18px;
+      position: fixed;
+      &.fixedCla{
+        top: 160px;
+      }
     }
     .userm-right{
       width: 971px;

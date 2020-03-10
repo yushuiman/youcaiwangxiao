@@ -484,7 +484,7 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     window.sessionStorage.removeItem('ofH')
-    console.log('remove aliplayer')
+    document.onkeydown = undefined
     next()
   }
 }
