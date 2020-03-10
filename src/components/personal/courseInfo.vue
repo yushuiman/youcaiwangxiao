@@ -283,14 +283,14 @@ export default {
     // async courseLearnVideo (val, type) {
     courseLearnVideo (val, type) {
       // await this.getUserInfo()
-      if (val.is_purchase && val.is_purchase === 2) {
-        this.$Message.error('请购买课程')
-        return
-      }
       if (type === 1) {
         window.sessionStorage.setItem('userstatus', 1) // 我的课程一定是已购买
       } else {
         window.sessionStorage.setItem('userstatus', val.is_purchase) // 播放记录是否购买
+      }
+      if (val.is_purchase && val.is_purchase === 2) {
+        this.$Message.error('请购买课程')
+        return
       }
       // 如果有看过的记录，继续学习
       if (val.video) {
