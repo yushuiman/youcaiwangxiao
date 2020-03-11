@@ -365,7 +365,7 @@ export default {
     button{
       width: 2.133333rem;
       height: .8rem;
-      background: #0267FF;
+      background: $blueColor;
       color: #ffffff;
       margin: .266667rem auto;
       border-radius: .106667rem;

@@ -9,7 +9,7 @@
             <div class="days-num">
               <p>加入优财<span><i>{{personalInfo.day}}</i>天</span></p>
               <em></em>
-              <p>累计做题<span><i>{{personalInfo.day}}</i>道</span></p>
+              <p>累计做题<span><i>{{personalInfo.total_num}}</i>道</span></p>
             </div>
             <!-- 1进行中2过期3未设置 -->
             <div class="test-time" v-if="examine.status == 1">
@@ -86,14 +86,15 @@ export default {
       watchRecordsList: state => state.user.watchRecordsList
     }),
     days () {
+      let arr = this.examine.day.toString().split('')
       let num
-      if (this.examine.day == 0) {
-        num = '000'
+      if (arr.length == 1) {
+        num = '00' + this.examine.day
       }
-      if (this.examine.day >= 10) {
+      if (arr.length == 2) {
         num = '0' + this.examine.day
       }
-      if (this.examine.day >= 100) {
+      if (arr.length == 3) {
         num = '' + this.examine.day
       }
       return num
@@ -179,7 +180,7 @@ export default {
           this.userCourseList = res.data // 科目
           this.courseId = res.data[0].course_id
           // examine.status：1进行中2过期3未设置
-          if (this.examine.status == 1 || this.examine.status == 2) {
+          if (this.examine.status == 1) {
             this.userCourseList.forEach(val => {
               if (val.course_id == this.examine.course_id) {
                 this.courseId = val.course_id
@@ -201,7 +202,7 @@ export default {
           this.courseTimeList = res.data // 时间
           // examine.status：1进行中2过期3未设置
           this.examineId = res.data[0].examine_id
-          if (this.examine.status == 1 || this.examine.status == 2) {
+          if (this.examine.status == 1) {
             this.courseTimeList.forEach(val => {
               if (val.examine_id == this.examine.examine_id) {
                 this.examineId = val.examine_id
@@ -222,9 +223,6 @@ export default {
         if (res.code === 200) {
           this.visible = false
           this.$emit('getPersonalInfo')
-          if (res.data.status == 2) {
-            this.$Message.error('失败')
-          }
         } else {
           this.$Message.error(res.msg)
         }

@@ -126,7 +126,7 @@ export default {
     height: 30px;
     line-height: 30px;
     .out-login{
-      color: #0267FF;
+      color: $blueColor;
     }
     img{
       vertical-align: middle;

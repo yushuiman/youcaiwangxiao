@@ -642,13 +642,13 @@ export default {
     border-radius: 6px;
     box-sizing: border-box;
     &:hover{
-      border: 1px solid #0267FF;
+      border: 1px solid $blueColor;
       & .adr-change{
         display: block;
       }
     }
     &.cur{
-      border: 1px solid #0267FF;
+      border: 1px solid $blueColor;
     }
     .adr-name{
       display: flex;

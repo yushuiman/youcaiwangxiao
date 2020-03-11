@@ -405,7 +405,6 @@ export default {
     }
     .open-txt{
       cursor: pointer;
-      font-size: 13px;
       color: $blueColor;
       text-align: right;
     }

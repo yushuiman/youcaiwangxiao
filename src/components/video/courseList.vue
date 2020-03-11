@@ -53,8 +53,7 @@ export default {
     return {
       courseCatalogInfo: [], // 课程大纲（目录）
       secvCatalogArr: [],
-      packageList: [],
-      ofH: window.sessionStorage.getItem('ofH')
+      packageList: []
     }
   },
   computed: {

@@ -40,8 +40,8 @@
                 <div class="ans-know-name" v-else></div>
                 <div class="open-txt" @click="openShow(items, index, 0)">
                   {{items.openFlag ? '收起':'展开'}}
-                  <Icon type="md-arrow-dropdown" style="font-size: 28px;margin-top: -3px;" v-if="answerType == 'personal' && !items.openFlag"/>
-                  <Icon type="md-arrow-dropup" style="font-size: 28px;margin-top: -3px;" v-if="answerType == 'personal' && items.openFlag"/>
+                  <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="answerType == 'personal' && !items.openFlag"/>
+                  <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="answerType == 'personal' && items.openFlag"/>
                 </div>
               </div>
               <ul class="u-othq-list-teacher" v-if="items[0].reply_status == 1 && items.openFlag">
@@ -160,8 +160,8 @@
                 <div class="ans-know-name" v-else></div>
                 <div class="open-txt" @click="openShow(items, index, 1)">
                   {{items.openFlag ? '收起':'展开'}}
-                  <Icon type="md-arrow-dropdown" style="font-size: 28px;margin-top: -3px;" v-if="answerType == 'personal' && !items.openFlag"/>
-                  <Icon type="md-arrow-dropup" style="font-size: 28px;margin-top: -3px;" v-if="answerType == 'personal' && items.openFlag"/>
+                  <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="answerType == 'personal' && !items.openFlag"/>
+                  <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="answerType == 'personal' && items.openFlag"/>
                 </div>
               </div>
               <ul class="u-othq-list-teacher" v-if="items[0].reply_status == 1 && items.openFlag">
@@ -468,9 +468,7 @@ export default {
     }
     .open-txt{
       cursor: pointer;
-      font-size: 13px;
       color: $blueColor;
-      text-align: right;
     }
     .u-othq-list-teacher &{
       padding: 20px 0;
