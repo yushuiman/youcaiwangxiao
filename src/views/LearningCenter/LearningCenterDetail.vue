@@ -7,17 +7,6 @@
         <div class="learn-detail-top">
           <div class="learn-course-info">
             <div class="selmoni-course">
-              <!-- <div class="sel-course-name" @click="selCourseList">
-                <em>{{selCourseName}}</em>
-                <span class="arow" v-if="!selCourseFlag"><Icon type="md-arrow-dropdown" style="font-size: 28px;margin-top: -3px;color: #666666;"/></span>
-                <span class="arow" v-if="selCourseFlag"><Icon type="md-arrow-dropup" style="font-size: 28px;margin-top: -3px;color: #666666;"/></span>
-              </div>
-              <transition name="fade">
-                <ul class="sel-course-list" ref="selCourseRef" v-if="selCourseFlag">
-                  <li class="sel-course-item" v-for="(v, index) in learnList" :key="index" @click="selCourse(v)">{{v.plan_name}}</li>
-                  <li class="add-course" @click="planLearn">+添加学习计划</li>
-                </ul>
-              </transition> -->
               <Dropdown trigger="click" placement="top-start" :transfer="true" @on-visible-change="dropDownVisible">
                 <div class="sel-course-name">
                   <em>{{selCourseName}}</em>

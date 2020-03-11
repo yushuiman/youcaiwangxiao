@@ -12,17 +12,11 @@
     border: 0;
     padding: 20px 26px;
 }
-
-.ivu-modal-header-inner {
-    font-size: 26px;
-    height: auto;
-    line-height: 1
-}
 .ivu-modal-body{
     padding: 0;
 }
 .iview-modal .ivu-modal-header-inner {
-    font-size: 26px;
+    font-size: 22px;
     height: auto;
     line-height: 1
 }

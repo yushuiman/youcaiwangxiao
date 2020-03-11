@@ -11,11 +11,15 @@
               <em></em>
               <p>累计做题<span><i>{{personalInfo.day}}</i>道</span></p>
             </div>
+            <!-- 1进行中2过期3未设置 -->
             <div class="test-time" v-if="examine.status == 1">
-              <i></i>距离考试还有<span></span><span></span><span></span>天啦！
+              <i @click="setTestTime"></i>距离考试还有<span>{{days.substring(0,1)}}</span><span>{{days.substring(1,2)}}</span><span>{{days.substring(2,3)}}</span>天啦！
             </div>
-            <div class="test-time" v-if="examine.status == 2 || examine.status == 3">
-              <i></i><a @click="setTestTime">请输入考试日期～</a>
+            <div class="test-time" v-if="examine.status == 2" @click="setTestTime">
+              <i></i><a>考试已结束，请重新选择您的课程～</a>
+            </div>
+            <div class="test-time" v-if="examine.status == 3" @click="setTestTime">
+              <i></i><a>请输入考试日期～</a>
             </div>
           </div>
           <div class="user-detail-right">
@@ -37,17 +41,24 @@
       :width="401"
       @on-visible-change="testVisible"
       class="iview-modal">
-      <div>
-        <ul>
-          <li>
-            <label>考试科目：</label>
-            <select name="" id=""></select>
+      <div class="set-test-time-modal">
+        <ul class="set-test-time">
+          <li class="st-item">
+            <label>考试科目</label>
+            <select name="public-choice" v-model="courseId" @change="getCourseSelected">
+              <option :value="item.course_id" v-for="item in userCourseList" :key="item.course_id">{{item.name}}</option>
+            </select>
           </li>
-          <li>
-            <label>考试时间：</label>
-            <select name="" id=""></select>
+          <li class="st-item">
+            <label>考试时间</label>
+            <select name="public-choice" v-model="examineId" @change="getTimeSelected">
+              <option :value="item.examine_id" v-for="item in courseTimeList" :key="item.course_id">{{item.examine_time}}</option>
+            </select>
           </li>
         </ul>
+        <div class="test-time-save">
+          <button class="btn-com test-btn" @click="saveTestTime">保存</button>
+        </div>
       </div>
     </Modal>
   </div>
@@ -59,45 +70,36 @@ import { mapActions, mapState } from 'vuex'
 export default {
   // 个人中心fixedFlag 消息中心fixedFlag2
   props: ['personalInfo', 'user_id', 'fixedFlag', 'fixedFlag2', 'examine'],
-  // props: {
-  //   personalInfo: {
-  //     type: Object,
-  //     default: () => {
-  //       return {
-  //         head: '32323',
-  //         day: 32
-  //       }
-  //     }
-  //   },
-  //   examine: {
-  //     type: Object
-  //   },
-  //   user_id: {
-  //     type: Number
-  //   },
-  //   fixedFlag: {
-  //     type: Boolean
-  //   },
-  //   fixedFlag2: {
-  //     type: Boolean
-  //   }
-  // },
   data () {
     return {
       learnClockInfo: {}, // 签到打卡
       visible: false,
-      userCourse: [],
-      courseTime: []
+      examineId: '', /// 当前选中
+      courseId: '', // 当前选中
+      userCourseList: [], // 科目
+      courseTimeList: [] // 时间
     }
   },
   computed: {
     ...mapState({
       token: state => state.user.token,
       watchRecordsList: state => state.user.watchRecordsList
-    })
+    }),
+    days () {
+      let num
+      if (this.examine.day == 0) {
+        num = '000'
+      }
+      if (this.examine.day >= 10) {
+        num = '0' + this.examine.day
+      }
+      if (this.examine.day >= 100) {
+        num = '' + this.examine.day
+      }
+      return num
+    }
   },
   mounted () {
-
   },
   methods: {
     ...mapActions([
@@ -162,11 +164,11 @@ export default {
     // 设置科目考试时间
     setTestTime () {
       this.getUserCourse()
-      this.getCourseTime()
+      // this.getCourseTime()
       this.visible = true
     },
     testVisible (val) {
-      console.log(val)
+      // console.log(val)
     },
     getUserCourse () {
       userCourse({
@@ -174,7 +176,17 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.learnClockInfo = res.data
+          this.userCourseList = res.data // 科目
+          this.courseId = res.data[0].course_id
+          // examine.status：1进行中2过期3未设置
+          if (this.examine.status == 1 || this.examine.status == 2) {
+            this.userCourseList.forEach(val => {
+              if (val.course_id == this.examine.course_id) {
+                this.courseId = val.course_id
+              }
+            })
+          }
+          this.getCourseTime()
         } else {
           this.$Message.error(res.msg)
         }
@@ -182,28 +194,47 @@ export default {
     },
     getCourseTime () {
       courseTime({
-        course_id: 1
+        course_id: this.courseId
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.learnClockInfo = res.data
+          this.courseTimeList = res.data // 时间
+          // examine.status：1进行中2过期3未设置
+          this.examineId = res.data[0].examine_id
+          if (this.examine.status == 1 || this.examine.status == 2) {
+            this.courseTimeList.forEach(val => {
+              if (val.examine_id == this.examine.examine_id) {
+                this.examineId = val.examine_id
+              }
+            })
+          }
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
-    getCtimeSub () {
+    saveTestTime () {
       ctimeSub({
         user_id: this.user_id,
-        examine_id: 2
+        examine_id: this.examineId
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.learnClockInfo = res.data
+          this.visible = false
+          this.$emit('getPersonalInfo')
+          if (res.data.status == 2) {
+            this.$Message.error('失败')
+          }
         } else {
           this.$Message.error(res.msg)
         }
       })
+    },
+    getCourseSelected (e) {
+      this.getCourseTime()
+    },
+    getTimeSelected (e) {
+      console.log(this.examineId)
     }
   }
 }
@@ -211,6 +242,7 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
+  $btnGredientYellow: #FFE17A,#FFD338;
   .user-top-wrap{
     font-size: 18px;
     background: #112441 url('../../assets/images/user/user-top-bg.jpg') repeat center;
@@ -290,6 +322,19 @@ export default {
         color: #8EBBFF;
       }
     }
+    span{
+      width: 26px;
+      height: 26px;
+      line-height: 26px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      color: #1F314C;
+      margin: 0 2px;
+      display: inline-block;
+      @include bg-linear-gradient($btnGredientYellow, to bottom);
+      border-radius: 4px;
+    }
   }
   .integral-signin{
     text-align: right;
@@ -331,5 +376,35 @@ export default {
         }
       }
     }
+  }
+  .set-test-time{
+    padding: 15px 28px;
+    border-top: 1px solid #E6E6E6;
+    border-bottom: 1px solid #E6E6E6;
+  }
+  .st-item{
+    margin: 20px 0;
+    color: $col999;
+    font-size: 16px;
+    label{
+      margin-right: 20px;
+      color: $col333;
+    }
+    select{
+      width: 257px;
+      height: 45px;
+      background: #E6E6E6;
+      border-radius: 4px;
+      border: 1px solid #E6E6E6;
+      color: $col999;
+    }
+  }
+  .test-time-save{
+    padding: 20px 0;
+    text-align: center;
+  }
+  .test-btn{
+    background: $blueColor;
+    color: #ffffff;
   }
 </style>

@@ -76,6 +76,8 @@ input,
 select,
 textarea {
   font-size: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
 }
 table {
   border-collapse: collapse;
