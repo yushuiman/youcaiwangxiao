@@ -117,3 +117,10 @@ export const firstSocket = (data) => { // socket首次
     method: 'post'
   })
 }
+export const courseVideo = (data) => { // socket首次
+  return axios.request({
+    url: '/web/Course/courseVideo',
+    data,
+    method: 'post'
+  })
+}

@@ -305,29 +305,8 @@ export default {
         days: this.playCourseInfo.days,
         plan_id: this.playCourseInfo.plan_id
       }
-      console.log(message)
       studyVideo(message).then(data => {
       })
-      // var _this = this
-      // var socket
-      // if (process.env.NODE_ENV === 'production') {
-      //   socket = io(config.baseUrl.pro)
-      // } else {
-      //   socket = io('https://dest.youcaiwx.cn')
-      // }
-      // socket.on('connect', function () {
-      //   socket.emit('success', { username: _this.user_id })
-      //   console.log('learn-video连接成功')
-      // })
-      // // 公开聊天
-      // socket.on('sendMsg', function (msg) {
-      //   let json = JSON.parse(msg)
-      //   console.log(json)
-      // })
-      // socket.emit('sendMsg', {
-      //   'username': _this.user_id,
-      //   'msg': message
-      // })
     },
     computedNextVid () {
       this.playCourseInfoNext = Object.assign({}, this.playCourseInfo)

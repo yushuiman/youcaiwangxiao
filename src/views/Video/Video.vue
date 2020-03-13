@@ -87,7 +87,7 @@ import aliPlayer from '@/components/video/aliPlayer'
 import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
 import HeadName from '@/components/common/HeadName'
-import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, collection, firstSocket } from '@/api/class'
+import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, collection, firstSocket, courseVideo } from '@/api/class'
 import config from '@/config'
 import { mapState } from 'vuex'
 
@@ -150,14 +150,9 @@ export default {
       var _this = this
       document.onkeydown = function (e) {
         let key = window.event.keyCode
-        // alert(key)
         _this.watchKeydοwn(key)
       }
     })
-    // if (this.flagCourse || this.flagAnswer || this.flagJy) {
-    // }
-    // this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
-    // this.getVideoPlayback(this.$route.query.video_id)
   },
   methods: {
     watchKeydοwn (keyNum) {
@@ -239,7 +234,7 @@ export default {
     //   this.reload()
     // },
     ended () {
-      // this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
+      this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
       this.computedNextVid() // 计算下一个要播放的视频
       this.reload()
       // window.location.reload()
@@ -264,7 +259,7 @@ export default {
         // 已购买并且视频播放时间大于0 socket
         if (this.playCourseInfo.userstatus === 1) {
           if (instance.getStatus() === 'playing' && this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
-            // this.socketIo()
+            this.socketIo()
           }
         }
       }, 30000)
@@ -306,29 +301,9 @@ export default {
         section_id: this.playCourseInfo.section_id,
         video_id: this.playCourseInfo.video_id,
         watch_time: this.playtime,
-        video_type: 1, // 视频类型 1视频2直播
-        type: 1 // 播放类型 1课程视频播放2学习中心
+        video_type: 1 // 视频类型 1视频2直播
       }
-      console.log(message)
-      var _this = this
-      var socket
-      if (process.env.NODE_ENV === 'production') {
-        socket = io(config.baseUrl.pro)
-      } else {
-        socket = io('https://dest.youcaiwx.cn')
-      }
-      socket.on('connect', function () {
-        socket.emit('success', { username: _this.user_id })
-        console.log('course-video连接成功')
-      })
-      // 公开聊天
-      // socket.on('sendMsg', function (msg) {
-      //   let json = JSON.parse(msg)
-      //   console.log(json)
-      // })
-      socket.emit('sendMsg', {
-        'username': _this.user_id,
-        'msg': message
+      courseVideo(message).then(data => {
       })
     },
     computedNextVid () {

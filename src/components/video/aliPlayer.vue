@@ -564,6 +564,9 @@ export default {
   .prism-player .prism-time-display .current-time{
     color: #ffffff;
   }
+  .prism-player .prism-ErrorMessage .prism-error-operation a.prism-button-orange{
+    display: none;
+  }
   .shuiyin-wrap .shuiyin{
     position: absolute;
     left: 10%;
