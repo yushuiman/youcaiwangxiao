@@ -305,8 +305,8 @@ export default {
     }
   }
   .test-time{
-    height: 21px;
-    line-height: 21px;
+    height: 26px;
+    line-height: 26px;
     i{
       margin-right: 8px;
       vertical-align: middle;
