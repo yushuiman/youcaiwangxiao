@@ -273,7 +273,7 @@ export default {
             this.socketIo()
           }
         }
-      }, 3000)
+      }, 30000)
     },
     // 首次socket
     subFirstSocket () {
@@ -305,6 +305,7 @@ export default {
         days: this.playCourseInfo.days,
         plan_id: this.playCourseInfo.plan_id
       }
+      // console.log(message)
       studyVideo(message).then(data => {
       })
     },
