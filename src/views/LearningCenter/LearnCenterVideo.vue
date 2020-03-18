@@ -249,9 +249,6 @@ export default {
       this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
       this.computedNextVid() // 计算下一个要播放的视频
       this.reload()
-      // window.location.reload()
-      // await this.initSecvCatalog(this.playCourseInfoNext.course_id)
-      // this.$refs.aliPlayers.ended()
     },
     // 播放器
     ready (instance) {

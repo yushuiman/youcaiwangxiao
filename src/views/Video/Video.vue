@@ -14,21 +14,19 @@
       <HeadName :showName="false"></HeadName>
     </div>
     <div class="video-main" id="box">
-      <div class="vid-kcqh" :class="{'active': flagCourse}">
-        <h1 class="vc-title">套餐内课程</h1>
-        <div class="vc-list" :class="{'cur': item.course_id == playCourseInfo.course_id}" v-for="(item, index) in packageList" :key="index" @click="getSecvCatalog(item)">
-          <img :src="item.pc_img" alt="">
-          <div class="c-info">
-            <h2>{{item.name}}</h2>
-            <p>讲师: {{item.teacher_name}}</p>
-          </div>
-        </div>
+      <div class="video-section-list" :class="{'active': flagCourse}">
+        <course-list
+          :courseSections="courseSections"
+          :openMenu="openMenu"
+          :is_zhengke="playCourseInfo.is_zhengke"
+          @closeModel="closeModel">
+        </course-list>
       </div>
       <div class="video-info-l">
         <ul class="vinfo-ul">
-          <li class="vinfo-item" @click="showModel('课程<br />切换')">
+          <li class="vinfo-item" @click="showModel('章节')">
             <i class="vio-icon vio-icon-01"></i>
-            <p class="txt">课程<br />切换</p>
+            <p class="txt">章节</p>
           </li>
           <!-- 正课且购买 -->
           <li class="vinfo-item" v-if="playCourseInfo.is_zhengke == 1 && playCourseInfo.userstatus == 1" @click="showModel('答疑')">
@@ -41,35 +39,29 @@
           </li>
         </ul>
       </div>
-      <div class="video-info-c" id="left" :style="{ height: clicentH + 'px' }">
-        <ali-player
-          ref="aliPlayers"
-          v-if="videoCredentials.playAuth"
-          :vid="VideoId"
-          :playauth="videoCredentials.playAuth"
-          :user_id="user_id"
-          @ready="ready"
-          @ended="ended">
-        </ali-player>
-        <div class="try-watch-dialog" v-if="tryWatchFlag">
-          <div class="course-tip">
-            <div @click="goBuy">试看结束，请购买</div>
-            <div @click="replay">重新试听</div>
+      <div class="video-info-c" id="left" :style="{ height: screenHeight - 137 + 'px' }">
+        <div class="course-video-box">
+          <ali-player
+            ref="aliPlayers"
+            v-if="videoCredentials.playAuth"
+            :vid="VideoId"
+            :playauth="videoCredentials.playAuth"
+            :user_id="user_id"
+            @ready="ready"
+            @ended="ended">
+          </ali-player>
+          <div class="try-watch-dialog" v-if="tryWatchFlag">
+            <div class="course-tip">
+              <div @click="goBuy">试看结束，请购买</div>
+              <div @click="replay">重新试听</div>
+            </div>
           </div>
         </div>
       </div>
-      <!-- v-if="this.flagKc || this.flagAnswer || this.flagJy" -->
-      <div id="resize" class="course-drag" :class="{'course-drag-hide': !this.flagKc && !this.flagAnswer && !this.flagJy}">
+      <div id="resize" class="course-drag" :class="{'course-drag-hide': !this.flagAnswer && !this.flagJy}">
         <div class="drag"></div>
       </div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
-        <course-list
-          v-if="flagKc"
-          :courseSections="courseSections"
-          :openMenu="openMenu"
-          :is_zhengke="playCourseInfo.is_zhengke"
-          @closeModel="closeModel">
-        </course-list>
         <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer>
         <div class="jiangyi" v-if="flagJy">
           <div class="close-box" @click="closeModel">
@@ -104,7 +96,7 @@
 </template>
 <script>
 import aliPlayer from '@/components/video/aliPlayer'
-import courseList from '@/components/video/courseList'
+import courseList from '@/components/video/courseList1'
 import answer from '@/components/video/answer'
 import HeadName from '@/components/common/HeadName'
 import likeList from '@/components/class/likeList.vue'
@@ -116,11 +108,10 @@ export default {
   inject: ['reload'],
   data () {
     return {
-      clicentH: document.documentElement.clientHeight - 137,
+      screenHeight: document.documentElement.clientHeight || document.body.clientHeight,
       isChoose: 'answer',
       selMenu: 3,
-      vinfo: ['课程<br />切换', '答疑', '讲义'],
-      flagKc: true,
+      vinfo: ['章节', '答疑', '讲义'],
       flagAnswer: false,
       flagCourse: false,
       flagJy: false,
@@ -152,7 +143,8 @@ export default {
       tryWatchTimer: null,
       tryWatchFlag: false,
       tryQatchNum: 180, // 试看3分钟
-      isPlay: false
+      isPlay: false,
+      screenTimer: null
     }
   },
   components: {
@@ -168,11 +160,6 @@ export default {
     })
   },
   mounted () {
-    console.log(document.body.clientHeight) // 网页可见区域高(body)
-    console.log(document.body.offsetHeight) // 网页可见区域宽(body)，包括border、margin等
-    console.log(document.body.scrollHeight) // 网页正文全文高，包括有滚动条时的未见区域
-    console.log(window.screen.height) // 屏幕分辨率的高
-    console.log(window.screen.availHeight) // 屏幕可用工作区的高
     this.getCourseCatalog() // 课程大纲（目录）
     this.dragControllerDiv()
     this.$nextTick(() => {
@@ -182,6 +169,28 @@ export default {
         _this.watchKeydοwn(key)
       }
     })
+    const that = this
+    window.onresize = () => {
+      return (() => {
+        window.screenHeight = document.documentElement.screenHeight || document.body.clientHeight
+        that.screenHeight = window.screenHeight
+      })()
+    }
+  },
+  watch: {
+    screenHeight (val) {
+      // 为了避免频繁触发resize函数导致页面卡顿，使用定时器
+      if (!this.screenTimer) {
+        // 一旦监听到的screenHeight值改变，就将其重新赋给data里的screenHeight
+        this.screenHeight = val
+        this.screenTimer = true
+        let that = this
+        setTimeout(function () {
+          // 打印screenHeight变化的值
+          that.screenTimer = false
+        }, 300)
+      }
+    }
   },
   methods: {
     watchKeydοwn (keyNum) {
@@ -407,14 +416,11 @@ export default {
     },
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
-      if (val === '课程<br />切换') {
+      if (val === '章节') {
         this.flagCourse = !this.flagCourse
         this.flagAnswer = false
         this.flagJy = false
         this.wImportant = 0
-        if (this.flagKc) {
-          this.wImportant = 382
-        }
       }
       if (val === '答疑') {
         this.flagAnswer = !this.flagAnswer
@@ -422,11 +428,7 @@ export default {
         if (this.flagAnswer) {
           this.wImportant = 495
         } else {
-          if (this.flagKc) {
-            this.wImportant = 382
-          } else {
-            this.wImportant = 0
-          }
+          this.wImportant = 0
         }
       }
       if (val === '讲义') {
@@ -435,24 +437,14 @@ export default {
         if (this.flagJy) {
           this.wImportant = 495
         } else {
-          if (this.flagKc) {
-            this.wImportant = 382
-          } else {
-            this.wImportant = 0
-          }
+          this.wImportant = 0
         }
       }
     },
     closeModel (msg) {
-      if (msg === 'kc') {
-        this.flagKc = false
-      }
       this.flagAnswer = false
       this.flagJy = false
       this.wImportant = 0
-      if (this.flagKc) {
-        this.wImportant = 382
-      }
     },
     // 课程大纲（目录）
     getCourseCatalog () {
@@ -475,18 +467,6 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-    },
-    // 课程大纲(章节 video)
-    getSecvCatalog (item, idx) {
-      this.$router.replace({ path: 'course-video',
-        query: {
-          package_id: this.$route.query.package_id,
-          course_id: item.course_id
-        }
-      })
-      window.sessionStorage.removeItem('ofH')
-      // window.location.reload()
-      this.reload()
     },
     // 初始化展示章节
     initSecvCatalog (id) {
@@ -659,15 +639,20 @@ export default {
   .video-info-l{
     background: #1c1f21;
     width: 60px;
+    display: flex;
+    align-items: center;
     z-index: 100;
   }
   .video-info-c{
     position: relative;
     flex: 1;
-    background: #000000;
-    border-radius: 10px;
-    margin: 20px 0;
-    overflow: hidden;
+    padding: 20px 0;
+    .course-video-box{
+      height: 100%;
+      background: #000000;
+      border-radius: 10px;
+      overflow: hidden;
+    }
   }
   .video-info-r{
     position: relative;
@@ -699,7 +684,7 @@ export default {
         @include bg_img(26, 24, '../../assets/images/video/answer-active-icon.png');
       }
       .vio-icon-03{
-        @include bg_img(26, 25, '../../assets/images/video/jiangyi-active-icon.png');
+        @include bg_img(24, 25, '../../assets/images/video/jiangyi-active-icon.png');
       }
     }
     .txt{
@@ -716,13 +701,15 @@ export default {
       @include bg_img(26, 24, '../../assets/images/video/answer-icon.png');
     }
     &.vio-icon-03{
-      @include bg_img(26, 25, '../../assets/images/video/jiangyi-icon.png');
+      @include bg_img(24, 25, '../../assets/images/video/jiangyi-icon.png');
+      background-size: 100% 100%;
     }
   }
   // 课程包
-  .vid-kcqh{
+  .video-section-list{
     position: absolute;
     width: 386px;
+    padding: 20px 0;
     top: 0;
     left: -386px;
     opacity: 0;
@@ -734,37 +721,6 @@ export default {
     &.active{
       opacity: 1;
       left: 60px;
-    }
-    .vc-title{
-      color: #E6E6E6;
-      padding-left: 30px;
-      padding-top: 30px;
-      padding-bottom: 13px;
-    }
-  }
-  .vc-list{
-    padding: 15px 30px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    &.cur, &:hover{
-      background: #1c1f21;
-    }
-    img{
-      @include wh(87, 48);
-      margin-right: 20px;
-      border-radius: 4px;
-    }
-    .c-info{
-      h2{
-        font-size: 16px;
-        color: #E6E6E6;
-      }
-      p{
-        font-size: 12px;
-        color: $col999;
-        margin-top: 8px;
-      }
     }
   }
   // 讲义
