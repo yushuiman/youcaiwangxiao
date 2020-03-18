@@ -14,7 +14,7 @@
       <HeadName :showName="false"></HeadName>
     </div>
     <div class="video-main" id="box">
-      <div class="vid-kcqh" v-if="flagCourse">
+      <div class="vid-kcqh" :class="{'active': flagCourse}">
         <h1 class="vc-title">套餐内课程</h1>
         <div class="vc-list" :class="{'cur': item.course_id == playCourseInfo.course_id}" v-for="(item, index) in packageList" :key="index" @click="getSecvCatalog(item)">
           <img :src="item.pc_img" alt="">
@@ -41,7 +41,7 @@
           </li>
         </ul>
       </div>
-      <div class="video-info-c" id="left">
+      <div class="video-info-c" id="left" :style="{ height: clicentH + 'px' }">
         <ali-player
           ref="aliPlayers"
           v-if="videoCredentials.playAuth"
@@ -80,6 +80,26 @@
         </div>
       </div>
     </div>
+    <div class="cl-three-wrap w-wrap clearfix">
+      <div class="clt-list-info-l fl">
+        <div class="clt-tab">
+          <span @click="tabChoose('answer')" :class="{'on': isChoose == 'answer'}">答疑</span>
+          <span @click="tabChoose('download')" :class="{'on': isChoose == 'download'}">讲义下载</span>
+        </div>
+        <div class="clt-main">
+          <div class="clt-jianjie" v-show="isChoose == 'kcjj'">
+            ssdfsdfsdfsdf
+          </div>
+          <div class="clt-kcdg" v-show="isChoose == 'kjdg'">
+            ssdfsdfsdfsdf水电费水电费
+          </div>
+        </div>
+      </div>
+      <div class="clt-else-info-r fr">
+        <!-- 猜你喜欢 -->
+        <like-list></like-list>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -87,14 +107,17 @@ import aliPlayer from '@/components/video/aliPlayer'
 import courseList from '@/components/video/courseList'
 import answer from '@/components/video/answer'
 import HeadName from '@/components/common/HeadName'
+import likeList from '@/components/class/likeList.vue'
 import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, collection, firstSocket, courseVideo } from '@/api/class'
-import config from '@/config'
+// import config from '@/config'
 import { mapState } from 'vuex'
 
 export default {
   inject: ['reload'],
   data () {
     return {
+      clicentH: document.documentElement.clientHeight - 137,
+      isChoose: 'answer',
       selMenu: 3,
       vinfo: ['课程<br />切换', '答疑', '讲义'],
       flagKc: true,
@@ -136,7 +159,8 @@ export default {
     aliPlayer,
     courseList,
     answer,
-    HeadName
+    HeadName,
+    likeList
   },
   computed: {
     ...mapState({
@@ -144,6 +168,11 @@ export default {
     })
   },
   mounted () {
+    console.log(document.body.clientHeight) // 网页可见区域高(body)
+    console.log(document.body.offsetHeight) // 网页可见区域宽(body)，包括border、margin等
+    console.log(document.body.scrollHeight) // 网页正文全文高，包括有滚动条时的未见区域
+    console.log(window.screen.height) // 屏幕分辨率的高
+    console.log(window.screen.availHeight) // 屏幕可用工作区的高
     this.getCourseCatalog() // 课程大纲（目录）
     this.dragControllerDiv()
     this.$nextTick(() => {
@@ -243,6 +272,15 @@ export default {
     },
     // 播放器
     ready (instance) {
+      // 倍速设置
+      let speed = window.sessionStorage.getItem('speed')
+      if (speed && speed != '正常') {
+        instance.setSpeed(parseInt(speed))
+        document.querySelector('.prism-setting-speed .current-setting').innerHTML = speed
+        console.log('倍速：' + document.querySelector('.prism-setting-speed .current-setting').innerHTML)
+      }
+      // 先静音 打扰我听歌
+      instance.setVolume(0)
       let ofH = window.sessionStorage.getItem('ofH')
       document.getElementById('rightCourseList').scrollTop = ofH
       // 跳转到上次播放时间
@@ -339,6 +377,8 @@ export default {
           this.playCourseInfoNext.video_id = this.courseSections[currentProfileIndex].videos[currentProfileIndex2].video_id
         }
       }
+      // 倍速记忆
+      window.sessionStorage.setItem('speed', document.querySelector('.prism-setting-speed .current-setting').innerHTML)
       this.$router.replace({ path: '/course-video',
         query: {
           ...this.$route.query,
@@ -532,6 +572,10 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // tab切换 (答疑 讲义下载)
+    tabChoose (type) {
+      this.isChoose = type
     }
   },
   beforeDestroy () {
@@ -606,22 +650,15 @@ export default {
   }
 
   .video-main{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    top: 70px;
     width: 100%;
     background: #1D1F21;
     overflow: hidden;
     display: flex;
-    justify-content: space-between;
+    position: relative;
   }
   .video-info-l{
     background: #1c1f21;
     width: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     z-index: 100;
   }
   .video-info-c{
@@ -635,7 +672,6 @@ export default {
   .video-info-r{
     position: relative;
     background: #1c1f21;
-    // width: 384px;
     padding: 0;
     right: 0;
     z-index: 1;
@@ -646,6 +682,9 @@ export default {
   // 左边菜单
   .vinfo-ul{
     width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
   }
   .vinfo-item{
     padding: 30px 0;
@@ -685,11 +724,17 @@ export default {
     position: absolute;
     width: 386px;
     top: 0;
-    left: 60px;
+    left: -386px;
+    opacity: 0;
     bottom: 19px;
-    z-index: 101;
+    z-index: 99;
     background: #26292C;
     overflow-y: scroll;
+    transition: .3s all linear;
+    &.active{
+      opacity: 1;
+      left: 60px;
+    }
     .vc-title{
       color: #E6E6E6;
       padding-left: 30px;
@@ -781,5 +826,31 @@ export default {
     &.course-drag-hide{
       visibility: hidden;
     }
+  }
+  // 新增
+  .clt-main{
+    width: 902px;
+    img{
+      width: 100%;
+    }
+  }
+  .clt-tab{
+    @include lh(67, 67);
+    background: #f00;
+    span{
+      font-size: 16px;
+      padding: 0 21px;
+      display: inline-block;
+      cursor: pointer;
+      &.on{
+        color: $blueColor;
+      }
+    }
+  }
+  .clt-kcdg{
+    width: 902px;
+  }
+  .clt-else-info-r{
+    padding-top: 49px;
   }
 </style>

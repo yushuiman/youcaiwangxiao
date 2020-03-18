@@ -85,14 +85,14 @@
                   </template>
                   <ul class="days-list">
                     <!-- 今天课程已结束哦～ 继续学习吧～ 还没有开课哦～ 今天是周末哦～ -->
-                    <li class="days-item" :class="{'days-item-blue': v.beforeDate == 1, 'days-item-orange': v.currDate == 1 && v.is_rest != 2, 'days-item-gray': v.afterDate == 1 && v.is_rest != 2, 'days-item-rest': v.is_rest == 2}"
+                    <li class="days-item" :class="{'days-item-rest': v.is_rest == 2, 'days-item-blue': v.beforeDate == 1, 'days-item-orange': v.currDate == 1 && v.is_rest != 2, 'days-item-gray': v.afterDate == 1 && v.is_rest != 2}"
                       v-for="(v, index) in everydayList" :key="index" @click="getLearnVideo(v)">
                       <i class="status-icon"></i>
                       <p>{{v.date}}</p>
+                      <div class="tips-item" v-if="v.is_rest == 2">今天休息啦～</div>
                       <div class="tips-item" v-if="v.beforeDate == 1">今天课程已结束哦～</div>
                       <div class="tips-item" v-if="v.afterDate == 1 && v.is_rest != 2">还没有开课哦～</div>
                       <div class="tips-item" v-if="v.currDate == 1 && v.is_rest != 2">继续学习吧～</div>
-                      <div class="tips-item" v-if="v.is_rest == 2">今天休息啦～</div>
                     </li>
                   </ul>
                 </Submenu>
@@ -1236,14 +1236,14 @@ export default {
     &:hover .tips-item{
       display: block;
     }
-    &.days-item-blue:hover .status-icon{
-      box-shadow: 0 5px 12px 2px rgba(78,174,253,.5);
-    }
     &.days-item-orange:hover .status-icon{
       box-shadow: 0 5px 12px 2px rgba(251,172,120,.5);
     }
     &.days-item-gray:hover .status-icon, &.days-item-rest:hover .status-icon{
       box-shadow: 0 5px 12px 2px rgba(199,199,199,.5);
+    }
+    &.days-item-blue:hover .status-icon{
+      box-shadow: 0 5px 12px 2px rgba(78,174,253,.5);
     }
   }
 
@@ -1267,13 +1267,6 @@ export default {
       border-left: 8px solid transparent;
       border-right: 8px solid transparent;
     }
-    .days-item-blue &{
-      width: 140px;
-      @include bg-linear-gradient($btnGredientBlue, to left);
-      &:before{
-        border-bottom: 8px solid #39BBFD;
-      }
-    }
     .days-item-orange &{
       width: 100px;
       @include bg-linear-gradient($btnGredientOrange, to left);
@@ -1291,14 +1284,18 @@ export default {
     .days-item-rest &{
       width: 100px;
     }
+    .days-item-blue &{
+      width: 140px;
+      @include bg-linear-gradient($btnGredientBlue, to left);
+      &:before{
+        border-bottom: 8px solid #39BBFD;
+      }
+    }
   }
   .status-icon{
     display: inline-block;
     border-radius: 50%;
     @include bg-img(61, 61, '../../assets/images/learncenter/days-gray-icon.png');
-    .days-item-blue &{
-      @include bg-img(61, 61, '../../assets/images/learncenter/days-blue-icon.png');
-    }
     .days-item-orange &{
       @include bg-img(61, 61, '../../assets/images/learncenter/days-orange-icon.png');
     }
@@ -1307,6 +1304,9 @@ export default {
     }
     .days-item-rest &{
       @include bg-img(61, 61, '../../assets/images/learncenter/days-rest-icon.png');
+    }
+    .days-item-blue &{
+      @include bg-img(61, 61, '../../assets/images/learncenter/days-blue-icon.png');
     }
   }
   // 公告学员动态

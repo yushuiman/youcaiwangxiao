@@ -77,11 +77,12 @@ export default {
           video_id: v.video_id
         }
       })
-      // this.$emit('switchVideo')
-      this.reload()
-      // window.location.reload()
+      // 倍速记忆
+      window.sessionStorage.setItem('speed', document.querySelector('.prism-setting-speed .current-setting').innerHTML)
+      // 列表位置记忆
       let anchor = this.$el.querySelector('#showBox' + key + '' + index)
       window.sessionStorage.setItem('ofH', anchor.offsetTop)
+      this.reload()
     },
     jiangyiDown (url) {
       if (!url) {
