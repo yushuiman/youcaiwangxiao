@@ -19,9 +19,9 @@
                 </DropdownMenu>
               </Dropdown>
             </div>
-            <div class="ewm-box">
+            <!-- <div class="ewm-box">
               <i class="ewm-icon"></i>
-            </div>
+            </div> -->
             <span class="learn-status" :class="{'gray': sameday == 2}">{{ sameday == 1 ? '学习中' : '已结束' }}</span>
             <span class="surplus-day"><i></i>离考试还有{{currenLearnInfo.number}}<em>天</em></span>
           </div>
@@ -1060,20 +1060,21 @@ export default {
     border-radius: 20px;
     text-align: center;
     display: inline-block;
+    margin: 0 14px;
     &.gray{
       @include bg-linear-gradient($btnGredientGray, to left);
     }
   }
-  .ewm-box{
-    margin: 0 22px;
-    .ewm-icon{
-      vertical-align: middle;
-      @include bg-img(28, 28, '../../assets/images/learncenter/ewm.png');
-    }
-  }
+  // .ewm-box{
+  //   margin: 0 22px;
+  //   .ewm-icon{
+  //     vertical-align: middle;
+  //     @include bg-img(28, 28, '../../assets/images/learncenter/ewm.png');
+  //   }
+  // }
   .surplus-day{
     padding: 0 12px;
-    margin-left: 14px;
+    // margin-left: 14px;
     height: 30px;
     line-height: 30px;
     background:rgba(232,67,66,.1);
