@@ -20,7 +20,7 @@
               <a @click="goLogin('reg')">注册</a>
               <!-- <router-link :to="{path: 'login', query: {type:'reg'}}">注册</router-link> -->
             </div>
-            <HeadName v-if="this.token"></HeadName>
+            <HeadName v-if="token"></HeadName>
           </div>
         </div>
       </div>

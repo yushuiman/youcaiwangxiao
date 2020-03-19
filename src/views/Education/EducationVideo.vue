@@ -97,7 +97,7 @@ export default {
         section_id: this.$route.query.section_id,
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
-        userstatus: parseInt(window.sessionStorage.getItem('userstatus')) || 2 // 1购买2未购买
+        userstatus: window.sessionStorage.getItem('userstatus') || 2 // 1购买2未购买
       },
       playCourseInfoNext: {},
       packageList: [],
@@ -167,7 +167,7 @@ export default {
     },
     dragControllerDiv () {
       var resize = document.getElementById('resize')
-      var left = document.getElementById('left')
+      // var left = document.getElementById('left')
       var right = document.getElementById('right')
       var box = document.getElementById('box')
       resize.onmousedown = function (e) {
@@ -181,7 +181,7 @@ export default {
           if (moveLen > maxT - 382) moveLen = maxT - 382
 
           resize.style.left = moveLen
-          left.style.width = moveLen + 'px'
+          // left.style.width = moveLen + 'px'
           right.style.width = (box.clientWidth - moveLen - 10) + 'px'
         }
         document.onmouseup = function (evt) {
@@ -202,7 +202,7 @@ export default {
       let ofH = window.sessionStorage.getItem('ofH')
       document.getElementById('rightCourseList').scrollTop = ofH
       // 入库观看视频
-      if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
+      if (this.user_id != '' && this.playCourseInfo.package_id != '' && this.playCourseInfo.course_id != '' && this.playCourseInfo.section_id != '' && this.playCourseInfo.video_id != '') {
         this.subrecord() // 观看记录入库
         this.isSignQuery() // 查询当前是否签到
       }
@@ -225,15 +225,15 @@ export default {
         section_id: this.playCourseInfo.section_id,
         course_id: this.playCourseInfo.course_id
       }
-      var currentProfileIndex = (profiles || []).findIndex((profile) => profile.section_id + '' === currentProfile.section_id + '')
+      var currentProfileIndex = (profiles || []).findIndex((profile) => profile.section_id == currentProfile.section_id)
       var profiles2 = this.courseSections[currentProfileIndex].video
       var currentProfile2 = {
         video_id: this.playCourseInfo.video_id,
         VideoId: this.playCourseInfo.VideoId
       }
-      var currentProfileIndex2 = (profiles2 || []).findIndex((profile2) => profile2.video_id + '' === currentProfile2.video_id + '')
-      if (currentProfileIndex === profiles.length - 1) {
-        if (currentProfileIndex2 === profiles2.length - 1) {
+      var currentProfileIndex2 = (profiles2 || []).findIndex((profile2) => profile2.video_id == currentProfile2.video_id)
+      if (currentProfileIndex == profiles.length - 1) {
+        if (currentProfileIndex2 == profiles2.length - 1) {
           this.playCourseInfoNext.section_id = this.courseSections[0].section_id
           this.playCourseInfoNext.video_id = this.courseSections[0].video[0].video_id
           this.playCourseInfoNext.VideoId = this.courseSections[0].video[0].VideoId
@@ -244,7 +244,7 @@ export default {
           this.playCourseInfoNext.VideoId = this.courseSections[currentProfileIndex].video[currentProfileIndex2].VideoId
         }
       } else {
-        if (currentProfileIndex2 === profiles2.length - 1) {
+        if (currentProfileIndex2 == profiles2.length - 1) {
           ++currentProfileIndex
           this.playCourseInfoNext.section_id = this.courseSections[currentProfileIndex].section_id
           this.playCourseInfoNext.video_id = this.courseSections[currentProfileIndex].video[0].video_id
@@ -308,7 +308,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.packageList = res.data
-          this.playCourseInfo.course_id = parseInt(this.$route.query.course_id || this.packageList[0].course_id)
+          this.playCourseInfo.course_id = this.$route.query.course_id || this.packageList[0].course_id
           this.initSecvCatalog(this.playCourseInfo.course_id)
         } else {
           this.$Message.error(res.msg)
@@ -338,19 +338,19 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.courseSections = res.data
+          this.playCourseInfo.section_id = this.$route.query.section_id || this.courseSections[0].section_id
+          this.playCourseInfo.video_id = this.$route.query.video_id || this.courseSections[0].video[0].video_id
+          this.playCourseInfo.VideoId = this.$route.query.VideoId || this.courseSections[0].video[0].VideoId
           this.courseSections.forEach((v, key) => {
-            let sectionId = parseInt(this.$route.query.section_id)
-            let vidId = parseInt(this.$route.query.video_id)
+            let sectionId = this.playCourseInfo.section_id
+            let vidId = this.playCourseInfo.video_id
             v.video.forEach((val, index) => {
-              if (sectionId === v.section_id && vidId === val.video_id) {
+              if (sectionId == v.section_id && vidId == val.video_id) {
                 let openMenu = (key + 1) + '-' + (index + 1)
                 this.openMenu = openMenu
               }
             })
           })
-          this.playCourseInfo.section_id = this.$route.query.section_id || this.courseSections[0].section_id
-          this.playCourseInfo.video_id = this.$route.query.video_id || this.courseSections[0].video[0].video_id
-          this.playCourseInfo.VideoId = this.$route.query.VideoId || this.courseSections[0].video[0].VideoId
           this.getVideoPlayback()
         } else {
           this.$Message.error(res.msg)
@@ -392,8 +392,6 @@ export default {
       this.timer = setInterval(() => {
         let curVideoTime = parseInt(this.$refs.aliPlayers.getCurrentTime())
         if (curVideoTime === durationTime) {
-          // this.$refs.aliPlayers.ended()
-          // this.isSignQuery()
           clearInterval(this.timer)
           return
         }

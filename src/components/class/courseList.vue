@@ -62,6 +62,13 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.courseCatalogInfo = res.data
+          this.$router.replace({ path: 'course-detail',
+            query: {
+              ...this.$route.query,
+              course_id: this.courseCatalogInfo[0].course_id,
+              is_zhengke: this.courseCatalogInfo[0].is_zhengke
+            }
+          })
           this.courseCatalogInfo.forEach((v, index) => {
             v.index = index + 1 + ''
           })
@@ -74,7 +81,7 @@ export default {
     getSecvCatalog (item, index) {
       let obj = this.secvCatalogList
       for (let i in obj) {
-        if (item.course_id === parseInt(i)) {
+        if (item.course_id == i) {
           return
         }
       }
@@ -114,7 +121,8 @@ export default {
           package_id: this.package_id,
           course_id: item.course_id,
           section_id: val.section_id,
-          video_id: v.video_id
+          video_id: v.video_id,
+          is_zhengke: item.is_zhengke
         }
       })
     }

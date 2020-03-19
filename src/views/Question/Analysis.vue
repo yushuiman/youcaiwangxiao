@@ -69,7 +69,7 @@ import { questionParsing, experienceParsing, checkItem } from '@/api/questions'
 import { errorParsing, error2Parsing, myCollcsee } from '@/api/personal'
 import { questionParsingLearn } from '@/api/learncenter'
 import poticList from '../../components/poticList/poticList'
-import uploadImg from '../../components/common/ask'
+import uploadImg from '../../components/common/askQuestion'
 import errorCorrection from '../../components/common/errorCorrection'
 import { mapState } from 'vuex'
 export default {
@@ -90,10 +90,10 @@ export default {
       getQuestion: {
         jiexi: 1,
         question_id: 0, // 题id
-        course_id: parseInt(this.$route.query.course_id),
-        plate_id: parseInt(this.$route.query.plate_id),
-        sc: parseInt(this.$route.query.sc),
-        paper_type: parseInt(this.$route.query.paper_type) || 1
+        course_id: this.$route.query.course_id,
+        plate_id: this.$route.query.plate_id,
+        sc: this.$route.query.sc,
+        paper_type: this.$route.query.paper_type || 1
       },
       visible: false,
       typeShow: '', // 答疑dy，纠错jc
@@ -118,7 +118,7 @@ export default {
     window.addEventListener('scroll', this.scrollToTop)
     if (this.isLoadHttpRequest) {
       // 0元体验解析
-      if (this.getQuestion.plate_id === 8 && this.diffRes !== 3) {
+      if (this.getQuestion.plate_id == 8 && this.diffRes !== 3) {
         this.getExperienceParsing()
         return
       }
@@ -152,7 +152,7 @@ export default {
     } else {
       this.$watch('isLoadHttpRequest', function (val, oldVal) {
         // 0元体验解析 之前没有考虑这么周全，需求一点点增加，不想改变已有的逻辑了
-        if (this.getQuestion.plate_id === 8 && this.diffRes !== 3) {
+        if (this.getQuestion.plate_id == 8 && this.diffRes !== 3) {
           this.getExperienceParsing()
           return
         }
@@ -461,57 +461,6 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   @import "../../assets/scss/dopotic";
-//   .do-potic-wrap{
-//     padding: 20px 0;
-//     font-size: 18px;
-//     color: $col666;
-//     .dptic-wrap-l{
-//       width: 895px;
-//     }
-//     .dptic-wrap-r{
-//       width: 285px;
-//       position: fixed;
-//       top: 90px;
-//       margin-left: 915px;
-//     }
-//   }
-//   // 封装start
-//   .right-bottom-wrap{
-//     background: $colfff;
-//     margin-bottom: 20px;
-//     padding: 20px;
-//   }
-//   .title-com{
-//     font-size: 18px;
-//     color: $col333;
-//     display: flex;
-//     justify-content: space-between;
-//     align-items: center;
-//   }
-//    // 封装end
-//   .dptic-title{
-//     padding: 0 20px;
-//     @include lh(60, 60);
-//     border-radius: 8px;
-//     background: $colfff;
-//     margin-bottom: 20px;
-//     box-sizing: border-box;
-//     .menu-title{
-//       color: $col333;
-//       font-size: 20px;
-//     }
-//   }
-//   .go-result-box{
-//     text-align: center;
-//     padding: 12px 0;
-//     margin-bottom: 20px;
-//     .btn-com{
-//       width: 141px;
-//       height: 37px;
-//       border-radius: 19px;
-//       font-size: 18px;
-//     }
-//   }
 //  // 右边做题状态
   .anscard-sts{
     i{
@@ -538,33 +487,4 @@ export default {
       }
     }
   }
-//   .anscard-list{
-//     padding-top: 10px;
-//     height: 288px;
-//     overflow: auto;
-//     li{
-//       float: left;
-//       width: 28px;
-//       height: 28px;
-//       line-height: 28px;
-//       text-align: center;
-//       border: 1px solid $col666;
-//       border-radius: 14px;
-//       margin: 10px;
-//       cursor: pointer;
-//       &.blue-bg, &.red-bg, &.green-bg{
-//         border: 0;
-//         color: $colfff;
-//       }
-//       &.blue-bg{
-//         background: #3485FF;
-//       }
-//       &.red-bg{
-//         background: #ED7171;
-//       }
-//       &.green-bg{
-//         background: #47BF7F;
-//       }
-//     }
-//   }
 </style>

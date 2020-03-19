@@ -52,9 +52,7 @@ export default {
   },
   methods: {
     getComplainType () {
-      this.showLoading(true)
       complainType().then((data) => {
-        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.complainTypeList = res.data

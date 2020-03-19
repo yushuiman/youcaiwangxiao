@@ -165,6 +165,8 @@ export default {
   },
   data () {
     return {
+      limit: 5,
+      page: 1,
       answerList: [],
       quiz: '', // 提问文案
       quiz_image: [], // 提问图片 以,号分割
@@ -236,7 +238,7 @@ export default {
       })
     },
     closeModel () {
-      this.$emit('closeModel')
+      this.$emit('closeModel', 'answer')
     },
     // 问题提交
     answerSubmit () {
@@ -278,17 +280,23 @@ export default {
     // 问题列表
     getAnswerList () {
       answerList({
+        user_id: this.user_id,
         video_id: this.playCourseInfo.video_id,
         section_id: this.playCourseInfo.section_id,
         course_id: this.playCourseInfo.course_id,
         package_id: this.playCourseInfo.package_id,
-        user_id: this.user_id
+        limit: this.limit,
+        page: this.page,
+        video_time: 586, // 视频时间节点
+        status: 1 // 是否是按照视频节点查询1是2不是
       }).then(data => {
         const res = data.data
         this.answerList = res.data
-        this.answerList.map((val, index) => {
-          val.openFlag = false
-        })
+        if (this.answerList && this.answerList.length) {
+          this.answerList.map((val, index) => {
+            val.openFlag = false
+          })
+        }
       })
     },
     // 展开收起

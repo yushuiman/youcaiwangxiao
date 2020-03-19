@@ -78,7 +78,7 @@ export default {
   mounted () {
     if (this.isLoadHttpRequest) {
       // 0元体验做题成绩统计
-      if (parseInt(this.$route.query.plate_id) === 8) {
+      if (this.$route.query.plate_id == 8) {
         this.experienceStatiInfo()
         return
       }
@@ -92,7 +92,7 @@ export default {
     } else {
       this.$watch('isLoadHttpRequest', function (val, oldVal) {
         // 0元体验做题成绩统计
-        if (parseInt(this.$route.query.plate_id) === 8) {
+        if (this.$route.query.plate_id == 8) {
           this.experienceStatiInfo()
           return
         }

@@ -73,7 +73,7 @@ export default {
     getSecvCatalog (item, index) {
       let obj = this.secvCatalogList
       for (let i in obj) {
-        if (item.course_id === parseInt(i)) {
+        if (item.course_id == i) {
           return
         }
       }
@@ -107,7 +107,7 @@ export default {
         })
         return
       }
-      if (this.userstatus === 2) {
+      if (this.userstatus == 2) {
         this.$Message.error('请购买课程')
         return
       }

@@ -112,14 +112,11 @@ export default {
     },
     initRes () {
       this.noDataFlag = false
-      if (parseInt(this.selIdx) === 0) {
+      if (this.selIdx == 0) {
         this.getMyCourse()
       }
-      if (parseInt(this.selIdx) === 1) {
+      if (this.selIdx == 1) {
         this.getWatchRecords()
-      }
-      if (parseInt(this.selIdx) === 2) {
-        // this.getWatchRecords()
       }
     },
     // 我的课程
@@ -161,7 +158,7 @@ export default {
     // 课程去学习 播放记录去学习
     async courseLearnVideo (val, type) {
       await this.getUserInfo()
-      if (val.is_purchase && val.is_purchase === 2) {
+      if (val.is_purchase && val.is_purchase == 2) {
         this.$Message.error('请购买课程')
         return
       }

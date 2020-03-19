@@ -103,7 +103,7 @@ export default {
     },
     // 继续观看
     goonWatch () {
-      if (this.watchRecordsList.is_purchase === 2) {
+      if (this.watchRecordsList.is_purchase == 2) {
         this.$Message.error('请购买课程')
         return
       }
@@ -111,7 +111,8 @@ export default {
         package_id: this.watchRecordsList.package_id,
         course_id: this.watchRecordsList.video.course_id,
         section_id: this.watchRecordsList.video.section_id,
-        video_id: this.watchRecordsList.video.video_id
+        video_id: this.watchRecordsList.video.video_id,
+        is_zhengke: this.watchRecordsList.video.is_zhengke
       }
       window.sessionStorage.setItem('userstatus', this.watchRecordsList.is_purchase) // 是否购买
       window.sessionStorage.setItem('playtime', this.watchRecordsList.video.watch_time) // 获取当前播放时间

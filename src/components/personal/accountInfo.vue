@@ -155,10 +155,10 @@ export default {
       this.initRes()
     },
     initRes () {
-      if (parseInt(this.selIdx) === 0) {
+      if (this.selIdx == 0) {
         this.getConsumptionRecord()
       }
-      if (parseInt(this.selIdx) === 1) {
+      if (this.selIdx == 1) {
         this.getCoupons()
       }
     },

@@ -8,7 +8,7 @@
               <span class="menu-title">{{title}}</span>
             </Col>
             <Col span="4">
-              <div class="answer-time" v-if="this.getQuestion.plate_id == 6">
+              <div class="answer-time" v-if="getQuestion.plate_id == 6">
                 <count-down ref="reduceCountTime" @countdownend="countdownend" :time="answer_time">
                   <template slot-scope="props" >
                       0{{ props.totalHours }}:
@@ -238,7 +238,7 @@ export default {
         if (res.code === 200) {
           let { topics, total, title } = res.data
           this.topics = topics
-          this.total = parseInt(total)
+          this.total = total
           this.title = title
           this.answer_time = parseInt(res.data.answer_time) * 1000
           window.sessionStorage.setItem('answer_times', parseInt(res.data.answer_time))
@@ -254,7 +254,7 @@ export default {
               }
             })
             // 练习模式
-            if (parseInt(this.getQuestion.paper_mode) === 1) {
+            if (this.getQuestion.paper_mode == 1) {
               val.options.forEach((v, index) => {
                 if (v.userOption !== '') {
                   if (v.option.indexOf(v.right) > -1) {
@@ -282,7 +282,7 @@ export default {
           })
           this.doPoticInfo(num.length)
           // 拿到题，开始倒计时
-          if (parseInt(this.getQuestion.plate_id) === 6) {
+          if (this.getQuestion.plate_id == 6) {
             this.timerDown()
           }
         } else {
@@ -301,7 +301,7 @@ export default {
       this.visible = true
       this.txtShow = v
       if (v === '暂停') {
-        if (parseInt(this.getQuestion.plate_id) === 6) { // 组卷模考 为倒计时 其他为正计时
+        if (this.getQuestion.plate_id == 6) { // 组卷模考 为倒计时 其他为正计时
           this.$refs.reduceCountTime.pause()
           clearInterval(this.timers)
           return
@@ -313,7 +313,7 @@ export default {
     goOnDopic (type) {
       this.visible = false
       if (type === 'time') {
-        if (parseInt(this.getQuestion.plate_id) === 6) { // 组卷模考 为倒计时 其他为正计时
+        if (this.getQuestion.plate_id == 6) { // 组卷模考 为倒计时 其他为正计时
           this.$refs.reduceCountTime.start()
           this.timerDown()
           return
@@ -337,7 +337,7 @@ export default {
         })
       }
       this.subTopics.user_id = this.user_id
-      if (parseInt(this.getQuestion.plate_id) === 6) {
+      if (this.getQuestion.plate_id == 6) {
         this.subTopics.used_time = this.user_s
       } else {
         this.subTopics.used_time = this.$refs.addCountTime.userAnswerTime

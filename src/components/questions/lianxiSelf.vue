@@ -32,7 +32,7 @@
       class="practiceModal">
       <div class="height-com">
         <div class="com-bg menu-jie-title">
-          请选择需要练习的知识点（最多选三个）<button class="btn-com do-potic-btn" v-if="this.knowIdArr.length>0" @click="goToPic()">去做题</button>
+          请选择需要练习的知识点（最多选三个）<button class="btn-com do-potic-btn" v-if="knowIdArr.length>0" @click="goToPic()">去做题</button>
         </div>
         <ul class="know-list">
           <li v-for="(val, key) in knowList" :key="key" @click="multipleChoices(val, key)">

@@ -126,7 +126,7 @@ export default {
         section_id: this.$route.query.section_id,
         video_id: this.$route.query.video_id,
         is_zhengke: this.$route.query.is_zhengke,
-        userstatus: parseInt(window.sessionStorage.getItem('userstatus')) || 2, // 1购买2未购买
+        userstatus: window.sessionStorage.getItem('userstatus') || 2, // 1购买2未购买
         days: this.$route.query.days,
         plan_id: this.$route.query.plan_id
       },
@@ -219,7 +219,7 @@ export default {
     },
     dragControllerDiv () {
       var resize = document.getElementById('resize')
-      var left = document.getElementById('left')
+      // var left = document.getElementById('left')
       var right = document.getElementById('right')
       var box = document.getElementById('box')
       resize.onmousedown = function (e) {
@@ -233,7 +233,7 @@ export default {
           if (moveLen > maxT - 382) moveLen = maxT - 382
 
           resize.style.left = moveLen
-          left.style.width = moveLen + 'px'
+          // left.style.width = moveLen + 'px'
           right.style.width = (box.clientWidth - moveLen - 10) + 'px'
         }
         document.onmouseup = function (evt) {
@@ -255,18 +255,17 @@ export default {
       // 跳转到上次播放时间
       instance.seek(this.playtime - 5)
       // 初始化监听一次socket io
-      if (this.playCourseInfo.userstatus === 1) {
-        if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
+      if (this.playCourseInfo.userstatus == 1) {
+        if (this.user_id != '' && this.playCourseInfo.package_id != '' && this.playCourseInfo.course_id != '' && this.playCourseInfo.section_id != '' && this.playCourseInfo.video_id != '') {
           // this.socketIo()
           this.subFirstSocket()
         }
       }
       // 30秒监听一次socket
       this.socketTimer = setInterval(() => {
-        this.playtime = parseInt(instance.getCurrentTime())
         // 视频播放时间大于0 socket
-        if (this.playCourseInfo.userstatus === 1) {
-          if (instance.getStatus() === 'playing' && this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
+        if (this.playCourseInfo.userstatus == 1) {
+          if (instance.getStatus() == 'playing' && this.user_id != '' && this.playCourseInfo.package_id != '' && this.playCourseInfo.course_id != '' && this.playCourseInfo.section_id != '' && this.playCourseInfo.video_id != '') {
             this.socketIo()
           }
         }
@@ -312,8 +311,8 @@ export default {
       var currentProfile = {
         video_id: this.playCourseInfo.video_id
       }
-      var currentProfileIndex = (profiles || []).findIndex((profile) => profile.video_id + '' === currentProfile.video_id + '')
-      if (currentProfileIndex === profiles.length - 1) {
+      var currentProfileIndex = (profiles || []).findIndex((profile) => profile.video_id == currentProfile.video_id)
+      if (currentProfileIndex == profiles.length - 1) {
         this.playCourseInfoNext.video_id = this.learnVideoList[0].video_id
       } else {
         ++currentProfileIndex
@@ -378,7 +377,7 @@ export default {
     // 视频列表
     goLearnVideo () {
       let types = 2
-      if (this.playCourseInfo.userstatus === 2) { // 0元体验 userstatus==2未购买
+      if (this.playCourseInfo.userstatus == 2) { // 0元体验 userstatus==2未购买
         types = 1
       }
       this.showLoading(true)
@@ -395,7 +394,7 @@ export default {
         if (res.code === 200) {
           this.learnVideoList = res.data.video
           this.learnVideoList.forEach(v => {
-            if (parseInt(this.playCourseInfo.video_id) === v.video_id) {
+            if (this.playCourseInfo.video_id == v.video_id) {
               this.playtime = v.watch_time
             }
           })
@@ -424,7 +423,6 @@ export default {
           }).then(data => {
             let res = data.data
             this.videoCredentials = res.data
-            // this.playtime = this.videoCredentials.watch_time
           })
         } else {
           this.$Message.error(res.msg)
@@ -442,12 +440,11 @@ export default {
         }
       })
       this.goLearnVideo()
-      // window.location.reload()
       this.reload()
       this.playtime = v.watch_time
     },
     courseCollection (collectId) { // 1收藏2取消收藏
-      if (this.videoCredentials.collect === 2) {
+      if (this.videoCredentials.collect == 2) {
         this.videoCredentials.collect = 1
       } else {
         this.videoCredentials.collect = 2
@@ -462,7 +459,7 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          if (this.videoCredentials.collect === 1) {
+          if (this.videoCredentials.collect == 1) {
             this.$Message.success('收藏成功')
           } else {
             this.$Message.success('取消成功')

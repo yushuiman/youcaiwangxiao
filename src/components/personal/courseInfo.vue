@@ -184,13 +184,13 @@ export default {
     },
     initRes () {
       this.noDataFlag = false
-      if (parseInt(this.selIdx) === 0) {
+      if (this.selIdx == 0) {
         this.getMyCourse()
       }
-      if (parseInt(this.selIdx) === 1) {
+      if (this.selIdx == 1) {
         this.getWatchRecords()
       }
-      if (parseInt(this.selIdx) === 2) {
+      if (this.selIdx == 2) {
         this.getMyCollpackage()
       }
     },
@@ -282,6 +282,7 @@ export default {
       this.sessionPlayInfo.package_id = val.package_id
       this.sessionPlayInfo.course_id = val.course_id
       this.sessionPlayInfo.section_id = val.section_id
+      this.sessionPlayInfo.is_zhengke = v.is_zhengke
       window.sessionStorage.setItem('userstatus', val.is_purchase) // 是否购买
       this.is_purchase = val.is_purchase // 2未购买
       this.visible = true
@@ -312,7 +313,7 @@ export default {
       } else {
         window.sessionStorage.setItem('userstatus', val.is_purchase) // 播放记录是否购买
       }
-      if (val.is_purchase && val.is_purchase === 2) {
+      if (val.is_purchase && val.is_purchase == 2) {
         this.$Message.error('请购买课程')
         return
       }
@@ -322,7 +323,8 @@ export default {
           package_id: item.package_id || val.package_id,
           course_id: val.video.course_id,
           section_id: val.video.section_id,
-          video_id: val.video.video_id
+          video_id: val.video.video_id,
+          is_zhengke: val.is_zhengke || val.video.is_zhengke
         }
         this.$router.push({ path: '/course-video', query: obj })
         return
@@ -330,7 +332,9 @@ export default {
       // 否则去课程列表页面
       this.$router.push({ path: '/course-video',
         query: {
-          package_id: item.package_id || val.package_id
+          package_id: item.package_id || val.package_id,
+          course_id: val.course_id || val.video.course_id,
+          is_zhengke: val.is_zhengke || val.video.is_zhengke
         }
       })
     },
@@ -338,7 +342,7 @@ export default {
     // async collectionLearnVideo (item, val) {
     collectionLearnVideo (item, val) {
       // await this.getUserInfo()
-      if (this.is_purchase === 2) {
+      if (this.is_purchase == 2) {
         this.$Message.error('请购买课程')
         return
       }

@@ -14,12 +14,11 @@
       <HeadName :showName="false"></HeadName>
     </div>
     <div class="video-main" id="box">
-      <div class="video-section-list" :class="{'active': flagCourse}">
+      <div class="video-section-list" id="video-section-list" :class="{'active': flagCourse}">
         <course-list
           :courseSections="courseSections"
           :openMenu="openMenu"
-          :is_zhengke="playCourseInfo.is_zhengke"
-          @closeModel="closeModel">
+          :is_zhengke="playCourseInfo.is_zhengke">
         </course-list>
       </div>
       <div class="video-info-l">
@@ -58,32 +57,35 @@
           </div>
         </div>
       </div>
-      <div id="resize" class="course-drag" :class="{'course-drag-hide': !this.flagAnswer && !this.flagJy}">
+      <div id="resize" class="course-drag" :class="{'course-drag-hide': flagClosed}">
         <div class="drag"></div>
       </div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
-        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer>
+        <div class="video-panel-close" v-if="flagClosed" @click="closeModel('closed')">
+          <i></i>
+        </div>
         <div class="jiangyi" v-if="flagJy">
-          <div class="close-box" @click="closeModel">
+          <div class="close-box" @click="closeModel('jy')">
             <i class="close-icon"></i>
           </div>
           <h1 class="vc-title">讲义</h1>
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%" style="position:absolute;top: 90px;bottom:0;width:100%;height: 88%;"></iframe>
         </div>
+        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer>
       </div>
     </div>
     <div class="cl-three-wrap w-wrap clearfix">
       <div class="clt-list-info-l fl">
         <div class="clt-tab">
           <span @click="tabChoose('answer')" :class="{'on': isChoose == 'answer'}">答疑</span>
-          <span @click="tabChoose('download')" :class="{'on': isChoose == 'download'}">讲义下载</span>
+          <span @click="tabChoose('jydown')" :class="{'on': isChoose == 'jydown'}">讲义下载</span>
         </div>
         <div class="clt-main">
-          <div class="clt-jianjie" v-show="isChoose == 'kcjj'">
-            ssdfsdfsdfsdf
+          <div class="clt-jianjie" v-if="isChoose == 'answer'">
+            <ask-course :user_id="user_id" :playCourseInfo="playCourseInfo"></ask-course>
           </div>
-          <div class="clt-kcdg" v-show="isChoose == 'kjdg'">
-            ssdfsdfsdfsdf水电费水电费
+          <div class="clt-kcdg" v-if="isChoose == 'jydown'">
+        水电费水电费
           </div>
         </div>
       </div>
@@ -96,11 +98,13 @@
 </template>
 <script>
 import aliPlayer from '@/components/video/aliPlayer'
-import courseList from '@/components/video/courseList1'
+import courseList from '@/components/video/courseList'
+import askCourse from '@/components/common/askCourse'
 import answer from '@/components/video/answer'
 import HeadName from '@/components/common/HeadName'
 import likeList from '@/components/class/likeList.vue'
-import { videoPlayback, videoCredentials, courseCatalog, secvCatalog, collection, firstSocket, courseVideo } from '@/api/class'
+// courseCatalog
+import { videoPlayback, videoCredentials, secvCatalog, collection, firstSocket, courseVideo } from '@/api/class'
 // import config from '@/config'
 import { mapState } from 'vuex'
 
@@ -114,14 +118,15 @@ export default {
       vinfo: ['章节', '答疑', '讲义'],
       flagAnswer: false,
       flagCourse: false,
-      flagJy: false,
-      wImportant: 382,
+      flagJy: true,
+      flagClosed: false,
+      wImportant: 495,
       VideoId: '', // 视频VideoId
       videoCredentials: {
         handouts: '', // 讲义
         playAuth: '', // 获取视频凭证
         collect: '', // 收藏
-        watch_time: '', // 观看时间
+        watch_time: 0, // 观看时间,视频上次播放时间
         Title: '' // name
       },
       playCourseInfo: {
@@ -129,16 +134,15 @@ export default {
         section_id: this.$route.query.section_id,
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
-        is_zhengke: 0,
-        userstatus: parseInt(window.sessionStorage.getItem('userstatus')) || 2 // 1购买2未购买
+        is_zhengke: this.$route.query.is_zhengke || 2,
+        userstatus: window.sessionStorage.getItem('userstatus') || 2 // 1购买2未购买
       },
       playCourseInfoNext: {},
-      packageList: [],
+      // packageList: [],
       secvCatalogArr: [],
       courseSections: [],
       openMenu: '1-1', // 默认播放菜单menu-index
       playVideoInfo: window.sessionStorage.getItem('playVideoInfo'), // 视频播放信息
-      playtime: 0, // 视频上次播放时间
       socketTimer: null,
       tryWatchTimer: null,
       tryWatchFlag: false,
@@ -152,7 +156,8 @@ export default {
     courseList,
     answer,
     HeadName,
-    likeList
+    likeList,
+    askCourse
   },
   computed: {
     ...mapState({
@@ -160,7 +165,8 @@ export default {
     })
   },
   mounted () {
-    this.getCourseCatalog() // 课程大纲（目录）
+    // this.getCourseCatalog() // 课程大纲（目录）
+    this.initSecvCatalog()
     this.dragControllerDiv()
     this.$nextTick(() => {
       var _this = this
@@ -242,7 +248,7 @@ export default {
     },
     dragControllerDiv () {
       var resize = document.getElementById('resize')
-      var left = document.getElementById('left')
+      // var left = document.getElementById('left')
       var right = document.getElementById('right')
       var box = document.getElementById('box')
       resize.onmousedown = function (e) {
@@ -255,8 +261,8 @@ export default {
           if (moveLen < 600) moveLen = 600
           if (moveLen > maxT - 382) moveLen = maxT - 382
 
-          resize.style.left = moveLen
-          left.style.width = moveLen + 'px'
+          // resize.style.left = moveLen
+          // left.style.width = moveLen + 'px'
           right.style.width = (box.clientWidth - moveLen - 10) + 'px'
         }
         document.onmouseup = function (evt) {
@@ -275,9 +281,6 @@ export default {
       this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
       this.computedNextVid() // 计算下一个要播放的视频
       this.reload()
-      // window.location.reload()
-      // this.$refs.aliPlayers.ended()
-      // await this.initSecvCatalog(this.playCourseInfoNext.course_id)
     },
     // 播放器
     ready (instance) {
@@ -290,13 +293,17 @@ export default {
       }
       // 先静音 打扰我听歌
       instance.setVolume(0)
-      let ofH = window.sessionStorage.getItem('ofH')
-      document.getElementById('rightCourseList').scrollTop = ofH
+      let ofH = window.sessionStorage.getItem('ofH') || 0
+      document.getElementById('video-section-list').scrollTop = ofH
       // 跳转到上次播放时间
-      instance.seek(this.playtime - 5)
+      if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
+        instance.seek(0)
+      } else {
+        instance.seek(this.videoCredentials.watch_time)
+      }
       // 初始化监听一次socket io
-      if (this.playCourseInfo.userstatus === 1) {
-        if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
+      if (this.playCourseInfo.userstatus == 1) {
+        if (this.user_id != '' && this.playCourseInfo.package_id != '' && this.playCourseInfo.course_id != '' && this.playCourseInfo.section_id != '' && this.playCourseInfo.video_id != '') {
           // this.socketIo()
           this.subFirstSocket()
         }
@@ -304,14 +311,14 @@ export default {
       // 30秒监听一次socket
       this.socketTimer = setInterval(() => {
         // 已购买并且视频播放时间大于0 socket
-        if (this.playCourseInfo.userstatus === 1) {
-          if (instance.getStatus() === 'playing' && this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
+        if (this.playCourseInfo.userstatus == 1) {
+          if (instance.getStatus() == 'playing' && this.user_id != '' && this.playCourseInfo.package_id != '' && this.playCourseInfo.course_id != '' && this.playCourseInfo.section_id != '' && this.playCourseInfo.video_id != '') {
             this.socketIo()
           }
         }
       }, 30000)
       // 未购买试看3分钟
-      if (this.playCourseInfo.userstatus === 2) {
+      if (this.playCourseInfo.userstatus == 2) {
         this.tryWatchTimer = setInterval(() => {
           let playtime = parseInt(instance.getCurrentTime())
           if (playtime >= this.tryQatchNum) {
@@ -319,7 +326,7 @@ export default {
             instance.pause()
             instance.seek(this.tryQatchNum)
           } else {
-            this.playtime = playtime
+            this.videoCredentials.watch_time = playtime
           }
         }, 1000)
       }
@@ -332,7 +339,7 @@ export default {
         course_id: this.playCourseInfo.course_id,
         section_id: this.playCourseInfo.section_id,
         video_id: this.playCourseInfo.video_id,
-        watch_time: this.playtime,
+        watch_time: this.videoCredentials.watch_time,
         video_type: 1, // 视频类型 1视频2直播
         status: 1 // 播放类型 1课程视频播放2学习中心
       }).then((data) => {
@@ -340,14 +347,14 @@ export default {
     },
     // 每30秒一次
     socketIo () {
-      this.playtime = parseInt(this.$refs.aliPlayers.getCurrentTime())
+      this.videoCredentials.watch_time = parseInt(this.$refs.aliPlayers.getCurrentTime())
       var message = {
         user_id: this.user_id,
         package_id: this.$route.query.package_id,
         course_id: this.playCourseInfo.course_id,
         section_id: this.playCourseInfo.section_id,
         video_id: this.playCourseInfo.video_id,
-        watch_time: this.playtime,
+        watch_time: this.videoCredentials.watch_time,
         video_type: 1 // 视频类型 1视频2直播
       }
       courseVideo(message).then(data => {
@@ -360,14 +367,14 @@ export default {
         section_id: this.playCourseInfo.section_id,
         course_id: this.playCourseInfo.course_id
       }
-      var currentProfileIndex = (profiles || []).findIndex((profile) => profile.section_id + '' === currentProfile.section_id + '')
+      var currentProfileIndex = (profiles || []).findIndex((profile) => profile.section_id == currentProfile.section_id)
       var profiles2 = this.courseSections[currentProfileIndex].videos
       var currentProfile2 = {
         video_id: this.playCourseInfo.video_id
       }
-      var currentProfileIndex2 = (profiles2 || []).findIndex((profile2) => profile2.video_id + '' === currentProfile2.video_id + '')
-      if (currentProfileIndex === profiles.length - 1) {
-        if (currentProfileIndex2 === profiles2.length - 1) {
+      var currentProfileIndex2 = (profiles2 || []).findIndex((profile2) => profile2.video_id == currentProfile2.video_id)
+      if (currentProfileIndex == profiles.length - 1) {
+        if (currentProfileIndex2 == profiles2.length - 1) {
           this.playCourseInfoNext.section_id = this.courseSections[0].section_id
           this.playCourseInfoNext.video_id = this.courseSections[0].videos[0].video_id
         } else {
@@ -376,7 +383,7 @@ export default {
           this.playCourseInfoNext.video_id = this.courseSections[currentProfileIndex].videos[currentProfileIndex2].video_id
         }
       } else {
-        if (currentProfileIndex2 === profiles2.length - 1) {
+        if (currentProfileIndex2 == profiles2.length - 1) {
           ++currentProfileIndex
           this.playCourseInfoNext.section_id = this.courseSections[currentProfileIndex].section_id
           this.playCourseInfoNext.video_id = this.courseSections[currentProfileIndex].videos[0].video_id
@@ -416,80 +423,81 @@ export default {
     },
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
+      // this.flagClosed = true
+      // if (this.flagJy) {
+      // }
       if (val === '章节') {
         this.flagCourse = !this.flagCourse
-        this.flagAnswer = false
-        this.flagJy = false
-        this.wImportant = 0
       }
       if (val === '答疑') {
         this.flagAnswer = !this.flagAnswer
-        this.flagJy = false
-        if (this.flagAnswer) {
-          this.wImportant = 495
-        } else {
-          this.wImportant = 0
-        }
+        this.flagJy = !this.flagAnswer
+        this.wImportant = 495
       }
       if (val === '讲义') {
-        this.flagJy = !this.flagJy
+        this.flagJy = true
         this.flagAnswer = false
-        if (this.flagJy) {
-          this.wImportant = 495
-        } else {
-          this.wImportant = 0
-        }
+        this.wImportant = 495
       }
     },
     closeModel (msg) {
-      this.flagAnswer = false
-      this.flagJy = false
-      this.wImportant = 0
+      this.flagCourse = false
+      if (msg === 'jy') {
+        this.flagJy = false
+        this.flagClosed = true
+        this.wImportant = 95
+      }
+      if (msg === 'answer' || msg === 'closed') {
+        this.flagJy = true
+        this.flagClosed = false
+        this.flagAnswer = false
+        this.wImportant = 495
+      }
     },
     // 课程大纲（目录）
-    getCourseCatalog () {
-      this.showLoading(true)
-      courseCatalog({
-        package_id: this.$route.query.package_id
-      }).then(data => {
-        this.showLoading(false)
-        const res = data.data
-        if (res.code === 200) {
-          this.packageList = res.data
-          this.playCourseInfo.course_id = parseInt(this.$route.query.course_id || this.packageList[0].course_id)
-          this.packageList.forEach(v => {
-            if (this.playCourseInfo.course_id === v.course_id) {
-              this.playCourseInfo.is_zhengke = v.is_zhengke
-            }
-          })
-          this.initSecvCatalog(this.playCourseInfo.course_id)
-        } else {
-          this.$Message.error(res.msg)
-        }
-      })
-    },
+    // getCourseCatalog () {
+    //   this.showLoading(true)
+    //   courseCatalog({
+    //     package_id: this.$route.query.package_id
+    //   }).then(data => {
+    //     this.showLoading(false)
+    //     const res = data.data
+    //     if (res.code === 200) {
+    //       this.packageList = res.data
+    //       this.playCourseInfo.course_id = this.$route.query.course_id || this.packageList[0].course_id
+    //       this.packageList.forEach(v => {
+    //         if (this.playCourseInfo.course_id == v.course_id) {
+    //           this.playCourseInfo.is_zhengke = v.is_zhengke
+    //         }
+    //       })
+    //       this.initSecvCatalog(this.playCourseInfo.course_id)
+    //     } else {
+    //       this.$Message.error(res.msg)
+    //     }
+    //   })
+    // },
     // 初始化展示章节
-    initSecvCatalog (id) {
+    initSecvCatalog () {
       this.showLoading(true)
       secvCatalog({
-        course_id: id
+        course_id: this.playCourseInfo.course_id
       }).then(data => {
         this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.courseSections = res.data
+          this.playCourseInfo.section_id = this.$route.query.section_id || this.courseSections[0].section_id
+          this.playCourseInfo.video_id = this.$route.query.video_id || this.courseSections[0].videos[0].video_id
           this.courseSections.forEach((v, key) => {
-            let sectionId = parseInt(this.$route.query.section_id)
-            let videoId = parseInt(this.$route.query.video_id)
+            let sectionId = this.playCourseInfo.section_id
+            let videoId = this.playCourseInfo.video_id
             v.videos.forEach((val, index) => {
-              if (sectionId === v.section_id && videoId === val.video_id) {
+              if (sectionId == v.section_id && videoId == val.video_id) {
                 let openMenu = (key + 1) + '-' + (index + 1)
                 this.openMenu = openMenu
               }
             })
           })
-          this.playCourseInfo.section_id = this.$route.query.section_id || this.courseSections[0].section_id
-          this.playCourseInfo.video_id = this.$route.query.video_id || this.courseSections[0].videos[0].video_id
           this.getVideoPlayback(this.playCourseInfo.video_id)
         } else {
           this.$Message.error(res.msg)
@@ -515,7 +523,6 @@ export default {
           }).then(data => {
             let res = data.data
             this.videoCredentials = res.data
-            this.playtime = this.videoCredentials.watch_time
           })
         } else {
           this.$Message.error(res.msg)
@@ -523,12 +530,7 @@ export default {
       })
     },
     courseCollection (collectId) { // 1收藏2取消收藏
-      // if (parseInt(this.$route.query.status) === 2) {
-      //   this.$Message.error('试听课程，请购买后收藏')
-      //   return
-      // }
-      // this.videoCredentials.collect = 2
-      if (this.videoCredentials.collect === 2) {
+      if (this.videoCredentials.collect == 2) {
         this.videoCredentials.collect = 1
       } else {
         this.videoCredentials.collect = 2
@@ -543,7 +545,7 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          if (this.videoCredentials.collect === 1) {
+          if (this.videoCredentials.collect == 1) {
             this.$Message.success('收藏成功')
           } else {
             this.$Message.success('取消成功')
@@ -641,7 +643,7 @@ export default {
     width: 60px;
     display: flex;
     align-items: center;
-    z-index: 100;
+    z-index: 102;
   }
   .video-info-c{
     position: relative;
@@ -714,7 +716,7 @@ export default {
     left: -386px;
     opacity: 0;
     bottom: 19px;
-    z-index: 99;
+    z-index: 101;
     background: #26292C;
     overflow-y: scroll;
     transition: .3s all linear;
@@ -776,11 +778,20 @@ export default {
   .course-drag {
     position: relative;
     width: 10px;
-    height: 100%;
     cursor: col-resize;
     z-index: 2;
     &.course-drag-hide{
-      visibility: hidden;
+      display: none;
+    }
+  }
+  .video-panel-close{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    i{
+      @include bg-img(30, 20, '../../assets/images/video/class-active-icon.png');
     }
   }
   // 新增
@@ -792,7 +803,6 @@ export default {
   }
   .clt-tab{
     @include lh(67, 67);
-    background: #f00;
     span{
       font-size: 16px;
       padding: 0 21px;

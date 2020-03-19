@@ -1,38 +1,28 @@
 <template>
-  <keep-alive>
-    <div class="rightCourseList" id="rightCourseList">
-      <div class="close-box" @click="closeModel()">
-        <i class="close-icon"></i>
-      </div>
-      <h1 class="vc-title">章节目录</h1>
-        <el-row class="tac munu-active" id="tac">
-          <el-col :span="24">
-            <el-menu
-              :default-active="openMenu"
-              class="el-menu-vertical-demo"
-              background-color="#1D1F21"
-              text-color="#E6E6E6"
-              active-text-color="#F99111">
-              <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key" :ref="'a'+ key" :id="'a'+ key">
-                <template slot="title">
-                  <span class="sec-name">{{val.section_name}}</span>
-                  <span class="down-load" @click.stop="jiangyiDown(val.handouts)">讲义</span>
-                </template>
-                <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
-                @click="playVideo(val, v, key, index)" :id="'showBox'+ (key) + (index)" style="height: 36px;line-height: 36px;color:#999999;">
-                  <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
-                  <span class="sl">{{v.video_name}}</span>
-                  <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1)}"></i>
-                </el-menu-item>
-              </el-submenu>
-            </el-menu>
-          </el-col>
-        </el-row>
-    </div>
-  </keep-alive>
+  <el-row class="ta munu-active" id="tac">
+    <el-col :span="24">
+      <el-menu
+        :default-active="openMenu"
+        class="el-menu-vertical-demo"
+        background-color="#26292C"
+        text-color="#999999"
+        active-text-color="#F99111">
+        <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key" :ref="'a'+ key" :id="'a'+ key">
+          <template slot="title">
+            <span class="sec-name">{{val.section_name}}</span>
+          </template>
+          <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
+          @click="playVideo(val, v, key, index)" :id="'showBox'+ (key) + (index)" style="height: 36px;line-height: 36px;color:#999999;">
+            <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
+            <span class="sl">{{v.video_name}}</span>
+            <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1)}"></i>
+          </el-menu-item>
+        </el-submenu>
+      </el-menu>
+    </el-col>
+  </el-row>
 </template>
 <script>
-// import { secvCatalog } from '@/api/class'
 import { mapState } from 'vuex'
 
 export default {
@@ -51,24 +41,11 @@ export default {
   },
   data () {
     return {
-      courseCatalogInfo: [], // 课程大纲（目录）
-      secvCatalogArr: [],
-      packageList: []
     }
-  },
-  computed: {
-    ...mapState({
-      token: state => state.user.token,
-      user_id: state => state.user.user_id
-    })
   },
   mounted () {
   },
   methods: {
-    closeModel () {
-      this.$emit('closeModel', 'kc')
-    },
-    // 跳转到播放页面
     playVideo (val, v, key, index) {
       this.$router.replace({ path: 'course-video',
         query: {
@@ -83,64 +60,19 @@ export default {
       let anchor = this.$el.querySelector('#showBox' + key + '' + index)
       window.sessionStorage.setItem('ofH', anchor.offsetTop)
       this.reload()
-    },
-    jiangyiDown (url) {
-      if (!url) {
-        this.$Message.error('暂无讲义')
-        return
-      }
-      window.location.href = url
     }
+    // jiangyiDown (url) {
+    //   if (!url) {
+    //     this.$Message.error('暂无讲义')
+    //     return
+    //   }
+    //   window.location.href = url
+    // }
   }
 }
 </script>
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .rightCourseList{
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    overflow-y: auto;
-  }
-  .vc-title{
-    padding-top: 18px;
-    padding-bottom: 30px;
-    padding-left: 20px;
-    font-size: 20px;
-    color: #E6E6E6;
-  }
-  .vc-list{
-    padding-bottom: 30px;
-    padding-left: 20px;
-    display: flex;
-    align-items: center;
-    img{
-      @include wh(87, 48);
-      margin-right: 20px;
-      border-radius: 4px;
-    }
-    .c-info{
-      h2{
-        font-size: 16px;
-        color: #E6E6E6;
-      }
-      p{
-        font-size: 12px;
-        color: $col999;
-        margin-top: 8px;
-      }
-    }
-  }
-  .close-box{
-    text-align: right;
-    padding-top: 25px;
-    padding-right: 20px;
-    .close-icon{
-      @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
-    }
-  }
   .el-video-icon{
     @include wh(14, 14);
     display: inline-block;
@@ -184,11 +116,5 @@ export default {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-  }
-  .down-load{
-    border: 1px solid rgba(249,145,17,1);
-    color: rgba(249,145,17,1);
-    border-radius: 3px;
-    padding: 0 3px;
   }
 </style>

@@ -190,7 +190,7 @@ export default {
         if (res.code === 200) {
           let { topics, total, title } = res.data
           this.topics = topics
-          this.total = parseInt(total)
+          this.total = total
           this.title = title
           this.answer_time = res.data.answer_time // 0元体验没有用到
           if (topics && topics.length) {

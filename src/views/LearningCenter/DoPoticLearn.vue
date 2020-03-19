@@ -214,7 +214,7 @@ export default {
         if (res.code === 200) {
           let { topics, total, title } = res.data
           this.topics = topics
-          this.total = parseInt(total)
+          this.total = total
           this.title = title
           this.answer_time = parseInt(res.data.answer_time) * 1000
           if (this.topics.length === 0) {

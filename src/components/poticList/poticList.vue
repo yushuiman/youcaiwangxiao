@@ -120,20 +120,21 @@
 import { questionCollection } from '@/api/questions'
 import { mapState } from 'vuex'
 export default {
-  props: {
-    topics: {
-      type: Array
-    },
-    getQuestion: {
-      type: Object
-    },
-    total: {
-      type: Number
-    },
-    ID: {
-      type: String
-    }
-  },
+  props: ['topics', 'getQuestion', 'total', 'ID'],
+  // props: {
+  //   topics: {
+  //     type: Array
+  //   },
+  //   getQuestion: {
+  //     type: Object
+  //   },
+  //   total: {
+  //     type: Number
+  //   },
+  //   ID: {
+  //     type: String
+  //   }
+  // },
   data () {
     return {
     }
@@ -215,7 +216,7 @@ export default {
     // 收藏
     qtCollection (item) {
       let { ID, collection } = item
-      if (parseInt(collection) === 1) {
+      if (collection == 1) {
         item.collection = 0
       } else {
         item.collection = 1

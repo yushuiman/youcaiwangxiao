@@ -90,7 +90,7 @@ import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
-      package_id: parseInt(this.$route.query.package_id),
+      package_id: this.$route.query.package_id,
       isChoose: 'kcjj',
       teacehr: [], // 教师信息
       isntroduction: {}, // 课程简介
@@ -147,7 +147,9 @@ export default {
       window.sessionStorage.setItem('userstatus', this.isntroduction.userstatus) // 是否购买
       this.$router.push({ path: '/course-video',
         query: {
-          package_id: this.package_id
+          package_id: this.package_id,
+          course_id: this.$route.query.course_id,
+          is_zhengke: this.$route.query.is_zhengke
         }
       })
     },

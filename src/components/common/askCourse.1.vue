@@ -1,18 +1,14 @@
 <template>
   <div class="u-course-wrap">
     <!-- 个人中心  -->
-    <ul class="tab-list" v-if="answerType == 'personal'">
+    <ul class="tab-list">
       <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
-    <!-- 学习计划 -->
-    <ul class="tab-list-learn" v-if="answerType == 'learn'">
-      <li class="tab-item-learn" v-for="(v, index) in txtArr" :class="{'active': selIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
-    </ul>
     <div class="all-main">
+      <!-- 全部答疑 -->
       <div v-if="selIdx == 0">
         <div v-if="courseAnswerList && courseAnswerList.length">
           <ul class="u-othq-list">
-            <!-- 提问 -->
             <li class="u-othq-item" v-for="(items, index) in courseAnswerList" :key="index">
               <div class="u-othq-item-t">
                 <img :src="items[0].head" alt="" class="head-logo">
@@ -40,8 +36,8 @@
                 <div class="ans-know-name" v-else></div>
                 <div class="open-txt" @click="openShow(items, index, 0)">
                   {{items.openFlag ? '收起':'展开'}}
-                  <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="answerType == 'personal' && !items.openFlag"/>
-                  <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="answerType == 'personal' && items.openFlag"/>
+                  <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="!items.openFlag"/>
+                  <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="items.openFlag"/>
                 </div>
               </div>
               <ul class="u-othq-list-teacher" v-if="items[0].reply_status == 1 && items.openFlag">
@@ -129,6 +125,7 @@
           暂无答疑
         </div>
       </div>
+      <!-- 精华答疑 -->
       <div v-if="selIdx == 1">
         <div v-if="questionAnswerList && questionAnswerList.length">
           <ul class="u-othq-list">
@@ -160,8 +157,8 @@
                 <div class="ans-know-name" v-else></div>
                 <div class="open-txt" @click="openShow(items, index, 1)">
                   {{items.openFlag ? '收起':'展开'}}
-                  <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="answerType == 'personal' && !items.openFlag"/>
-                  <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="answerType == 'personal' && items.openFlag"/>
+                  <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="!items.openFlag"/>
+                  <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="items.openFlag"/>
                 </div>
               </div>
               <ul class="u-othq-list-teacher" v-if="items[0].reply_status == 1 && items.openFlag">
@@ -259,36 +256,24 @@
 </template>
 
 <script>
-import { courseAnswer, questionAnswer } from '@/api/personal'
+import { answerList } from '@/api/class'
+import { questionAnswer } from '@/api/personal'
 import zhuiwen from '@/components/answer/zhuiwen'
 import tousu from '@/components/answer/tousu'
 import { mapState } from 'vuex'
 export default {
-  props: {
-    user_id: {
-      type: Number
-    },
-    answerType: {
-      type: String,
-      default: 'personal'
-    }
-  },
+  props: ['user_id', 'playCourseInfo'],
   data () {
     return {
       visible: false,
-      txtArr: ['课程答疑', '题库答疑'],
+      txtArr: ['全部', '精选'],
       selIdx: this.$route.query.selIdx || 0,
       limit: 5,
       page: 1,
       total: 1,
       courseAnswerList: [],
-      // courseMyAnswer: {},
-      // courseReply: {},
       questionAnswerList: [],
-      // questionMyAnswer: {},
-      // questionReply: {},
       noDataFlag: false,
-      numNew: this.$route.query.num, // 如果从消息页面提醒进来，对应的消息展开
       answerVisible: false, // 追问modal
       zhuiwenInfo: {}, // 追问内容
       tousuVisible: false, // 投诉modal
@@ -323,16 +308,6 @@ export default {
       this.selIdx = index
       this.page = 1
       this.initRes()
-      if (this.answerType === 'learn') {
-        return
-      }
-      this.$router.replace({ path: '/personal',
-        query: {
-          ...this.$route.query,
-          type: 'answer',
-          selIdx: index
-        }
-      })
     },
     initRes () {
       if (this.selIdx == 0) {
@@ -349,27 +324,29 @@ export default {
     // 课程答疑
     getCourseAnswer () {
       this.showLoading(true)
-      courseAnswer({
+      answerList({
         user_id: this.user_id,
+        video_id: this.playCourseInfo.video_id,
+        section_id: this.playCourseInfo.section_id,
+        course_id: this.playCourseInfo.course_id,
+        package_id: this.playCourseInfo.package_id,
         limit: this.limit,
-        page: this.page
+        page: this.page,
+        video_time: 586, // 视频时间节点
+        status: 2 // 是否是按照视频节点查询1是2不是
       }).then(data => {
         this.noDataFlag = true
         this.showLoading(false)
         const res = data.data
-        if (res.code === 200) {
-          if (res.data && res.data.list) {
-            let { num, list } = res.data
-            this.total = num
-            this.courseAnswerList = list
+        if (res.code == 200) {
+          if (res.data && res.data.data) {
+            this.courseAnswerList = res.data.data
+            this.total = res.data.total
             if (this.courseAnswerList.length) {
               this.noDataFlag = false
             }
             this.courseAnswerList.map((val, index) => {
               val.openFlag = false
-              if (this.numNew == val[0].id) { // 如果从消息页面提醒进来，对应的消息展开
-                val.openFlag = true
-              }
             })
           }
         } else {
@@ -377,7 +354,7 @@ export default {
         }
       })
     },
-    // 题库答疑
+    // 精选答疑
     getQuestionAnswer () {
       this.showLoading(true)
       questionAnswer({
@@ -388,7 +365,7 @@ export default {
         this.noDataFlag = true
         this.showLoading(false)
         const res = data.data
-        if (res.code === 200) {
+        if (res.code == 200) {
           if (res.data && res.data.list) {
             let { num, list } = res.data
             this.total = num
@@ -398,9 +375,6 @@ export default {
             }
             this.questionAnswerList.map((val, index) => {
               val.openFlag = false
-              if (this.numNew == val[0].Id) { // 如果从消息页面提醒进来，对应的消息展开
-                val.openFlag = true
-              }
             })
           }
         } else {

@@ -204,7 +204,7 @@ export default {
     doPoticInfo (num = 0, index = 0) {
       this.percentNum = num
       this.percent = this.percentNum / this.total * 100
-      if (this.total === index) {
+      if (this.total == index) {
         return
       }
       if (index > 0) {
@@ -225,7 +225,7 @@ export default {
         if (res.code === 200) {
           let { topics, total, title } = res.data
           this.topics = topics
-          this.total = parseInt(total)
+          this.total = total
           this.title = title
           this.answer_time = res.data.answer_time // 错题记录没有用到
           this.topics.map((val, index) => {
