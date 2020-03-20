@@ -1,6 +1,6 @@
 <template>
   <div class="zixun-detail-wrap">
-    <img src="../../assets/images/zixun/banner.jpg" alt="" width="100%" height="100">
+    <zixun-banner></zixun-banner>
     <div class="zx-main w-wrap">
       <div class="zxm-left">
         <p class="zx-address">您的位置：<router-link :to="{path: '/zixun'}">{{detailInfo.parent_name}} </router-link>> {{detailInfo.type_name}}</p>
@@ -20,6 +20,7 @@
 
 <script>
 import { newsDetails } from '@/api/zixun'
+import zixunBanner from '../../components/zixun/zixunBanner'
 import baokaoZhinan from '../../components/zixun/baokaoZhinan'
 import getZiliao from '../../components/zixun/getZiliao'
 export default {
@@ -30,6 +31,7 @@ export default {
     }
   },
   components: {
+    zixunBanner,
     baokaoZhinan,
     getZiliao
   },
