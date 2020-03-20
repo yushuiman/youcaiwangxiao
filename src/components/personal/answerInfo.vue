@@ -53,7 +53,7 @@
                       <h3>{{items[1].reply_user_name}}<span class="teacher-light">老师</span></h3>
                       <p>{{items[1].repls_time}}</p>
                     </div>
-                    <span class="othq-huifu tousu" @click="tousuAnswer(items[0].id)">投诉</span>
+                    <span class="othq-huifu tousu" v-if="items.user_self == 1 && items.is_complain == 2" @click="tousuAnswer(items[0].id)">投诉</span>
                   </div>
                   <p class="othq-txt">{{items[1].reply_quiz}}</p>
                   <div class="quiz-image-list course_img">
@@ -98,7 +98,7 @@
                       <h3>{{items[3].reply_user_name}}<span class="teacher-light">老师</span></h3>
                       <p>{{items[3].z_reply_time}}</p>
                     </div>
-                    <span class="othq-huifu tousu" @click="tousuAnswer(items[0].id)">投诉</span>
+                    <span class="othq-huifu tousu" v-if="items.user_self == 1 && items.is_complain == 2" @click="tousuAnswer(items[0].id)">投诉</span>
                   </div>
                   <p class="othq-txt">{{items[3].z_reply_quiz}}</p>
                   <div class="quiz-image-list course_img">
@@ -173,7 +173,7 @@
                       <h3>{{items[1].reply_user_name}}<span class="teacher-light">老师</span></h3>
                       <p>{{items[1].repls_time}}</p>
                     </div>
-                    <span class="othq-huifu tousu" @click="tousuAnswer(items[0].Id)">投诉</span>
+                    <span class="othq-huifu tousu" v-if="items.user_self == 1 && items.is_complain == 2" @click="tousuAnswer(items[0].Id)">投诉</span>
                   </div>
                   <p class="othq-txt">{{items[1].reply_quiz}}</p>
                   <div class="quiz-image-list course_img">
@@ -218,7 +218,7 @@
                       <h3>{{items[3].reply_user_name}}<span class="teacher-light">老师</span></h3>
                       <p>{{items[3].z_reply_time}}</p>
                     </div>
-                    <span class="othq-huifu tousu" @click="tousuAnswer(items[0].Id)">投诉</span>
+                    <span class="othq-huifu tousu" v-if="items.user_self == 1 && items.is_complain == 2" @click="tousuAnswer(items[0].Id)">投诉</span>
                   </div>
                   <p class="othq-txt">{{items[3].z_reply_quiz}}</p>
                   <div class="quiz-image-list course_img">

@@ -348,9 +348,9 @@ export default {
       })
     },
     // 去做题 展示对应模块题库
-    // async doQuestions ({ id, title }) {
-    doQuestions ({ id, title }) {
-      // await this.getUserInfo()
+    async doQuestions ({ id, title }) {
+    // doQuestions ({ id, title }) {
+      await this.getUserInfo()
       this.plateTitle = title
       this.plate_id = id
       this.sectionList = [] // 1、5板块

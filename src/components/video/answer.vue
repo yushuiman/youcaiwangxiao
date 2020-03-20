@@ -77,7 +77,7 @@
                   <h3>{{replyList[item.id][0].reply_user_name}}<span class="teacher-light">老师</span></h3>
                   <p>{{replyList[item.id][0].repls_time}}</p>
                 </div>
-                <span class="tousu" v-if="item.user_self == 1" @click="tousuAnswer(item)">投诉</span>
+                <span class="tousu" v-if="item.user_self == 1 && item.is_complain == 2" @click="tousuAnswer(item)">投诉</span>
               </div>
               <p class="othq-txt">{{replyList[item.id][0].reply_quiz}}</p>
               <div class="quiz-image-list course_img" v-if="replyList[item.id][0].reply_image">
@@ -123,7 +123,7 @@
                   <h3>{{replyList[item.id][2].reply_user_name}}<span class="teacher-light">老师</span></h3>
                   <p>{{replyList[item.id][2].z_reply_time}}</p>
                 </div>
-                <span class="tousu" v-if="item.user_self == 1" @click="tousuAnswer(item)">投诉</span>
+                <span class="tousu" v-if="item.user_self == 1 && item.is_complain == 2" @click="tousuAnswer(item)">投诉</span>
               </div>
               <p class="othq-txt">{{replyList[item.id][2].z_reply_quiz}}</p>
               <div class="quiz-image-list course_img">
@@ -161,11 +161,14 @@ export default {
     },
     user_id: {
       type: Number
+    },
+    videoCredentials: {
+      type: Object
     }
   },
   data () {
     return {
-      limit: 5,
+      limit: 2,
       page: 1,
       answerList: [],
       quiz: '', // 提问文案
@@ -287,7 +290,7 @@ export default {
         package_id: this.playCourseInfo.package_id,
         limit: this.limit,
         page: this.page,
-        video_time: 586, // 视频时间节点
+        video_time: this.videoCredentials.watch_time, // 视频时间节点
         status: 1 // 是否是按照视频节点查询1是2不是
       }).then(data => {
         const res = data.data

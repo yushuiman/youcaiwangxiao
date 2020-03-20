@@ -1,37 +1,32 @@
 <template>
   <div class="zixun-wrap">
-    <img :src="zixunBanner[0].image_href" alt="" width="100%" v-if="zixunBanner.length==1">
-    <swiper :options="swiperOptionRec" v-if="zixunBanner.length>1">
-      <swiper-slide class="zixun-slide" v-for="(item, index) in zixunBanner" :key="index">
-        <img :src="item.image_href" alt="">
-      </swiper-slide>
-    </swiper>
+    <zixun-banner></zixun-banner>
     <div class="zx-main w-wrap">
       <keep-alive>
-      <div class="zxm-left">
-        <ul class="zx-list">
-          <li class="zx-item" v-for="(item, index) in zixunList" :key="index" @click="getNewsDetails(item.news_id)">
-            <img class="fengmian-img" :src="item.image" alt="">
-            <div class="wenan-info">
-              <h1 class="title">{{item.title}}</h1>
-              <div class="details" v-html="item.content"></div>
-              <p class="source-time">
-                <span>来源：{{item.source}}</span>
-                <span>{{item.create_time}}</span>
-              </p>
-            </div>
-          </li>
-        </ul>
-        <div style="padding: 20px; text-align: center;">
-          <Page
-          :total="total"
-          @on-change="onChange"
-          :current="page"
-          :page-size="limit"
-          size="small"
-          />
+        <div class="zxm-left">
+          <ul class="zx-list">
+            <li class="zx-item" v-for="(item, index) in zixunList" :key="index" @click="getNewsDetails(item.news_id)">
+              <img class="fengmian-img" :src="item.image" alt="">
+              <div class="wenan-info">
+                <h1 class="title">{{item.title}}</h1>
+                <div class="details" v-html="item.content"></div>
+                <p class="source-time">
+                  <span>来源：{{item.source}}</span>
+                  <span>{{item.create_time}}</span>
+                </p>
+              </div>
+            </li>
+          </ul>
+          <div style="padding: 20px; text-align: center;">
+            <Page
+            :total="total"
+            @on-change="onChange"
+            :current="page"
+            :page-size="limit"
+            size="small"
+            />
+          </div>
         </div>
-      </div>
       </keep-alive>
       <div class="zxm-right">
         <!-- 报考指南 -->
@@ -44,47 +39,28 @@
 </template>
 
 <script>
-import { newsList, zxbanner } from '@/api/zixun'
+import { newsList } from '@/api/zixun'
+import zixunBanner from '../../components/zixun/zixunBanner'
 import baokaoZhinan from '../../components/zixun/baokaoZhinan'
 import getZiliao from '../../components/zixun/getZiliao'
-import 'swiper/dist/css/swiper.css'
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
   data () {
     return {
       limit: 10,
       page: 1,
       total: 10,
-      zixunBanner: [],
-      zixunList: [],
-      swiperOptionRec: {
-        loop: true,
-        autoplay: {
-          delay: 5000,
-          stopOnLastSlide: false
-        }
-      }
+      zixunList: []
     }
   },
   components: {
+    zixunBanner,
     baokaoZhinan,
-    getZiliao,
-    swiper,
-    swiperSlide
+    getZiliao
   },
   mounted () {
-    this.getZxbanner() // 资讯banner
     this.getNewsList() // 消息列表
   },
   methods: {
-    getZxbanner () {
-      zxbanner().then((data) => {
-        const res = data.data
-        if (res.code === 200) {
-          this.zixunBanner = res.data
-        }
-      })
-    },
     // 列表
     getNewsList () {
       this.showLoading(true)
@@ -135,11 +111,6 @@ export default {
       }
       .zxm-right{
         width: 278px;
-      }
-    }
-    .zixun-slide{
-      img{
-        width: 100%;
       }
     }
     .zx-list{

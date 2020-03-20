@@ -72,7 +72,7 @@
                   <h3>{{replyList[item.Id][0].username}}<span class="teacher-light">老师</span></h3>
                   <p>{{replyList[item.Id][0].creates_time}}</p>
                 </div>
-                <span class="tousu" v-if="item.user_self == 1" @click="tousuAnswer(item)">投诉</span>
+                <span class="tousu" v-if="item.user_self == 1 && item.is_complain == 2" @click="tousuAnswer(item)">投诉</span>
               </div>
               <p class="othq-txt">{{replyList[item.Id][0].quiz}}</p>
               <div class="quiz-image-list course_img">
@@ -118,7 +118,7 @@
                   <h3>{{replyList[item.Id][2].username}}<span class="teacher-light">老师</span></h3>
                   <p>{{replyList[item.Id][2].creates_time}}</p>
                 </div>
-                <span class="tousu" v-if="item.user_self == 1" @click="tousuAnswer(item)">投诉</span>
+                <span class="tousu" v-if="item.user_self == 1 && item.is_complain == 2" @click="tousuAnswer(item)">投诉</span>
               </div>
               <p class="othq-txt">{{replyList[item.Id][2].quiz}}</p>
               <div class="quiz-image-list course_img">

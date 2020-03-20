@@ -71,7 +71,7 @@
           <h1 class="vc-title">讲义</h1>
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%" style="position:absolute;top: 90px;bottom:0;width:100%;height: 88%;"></iframe>
         </div>
-        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer>
+        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer>
       </div>
     </div>
     <div class="cl-three-wrap w-wrap clearfix">
@@ -81,11 +81,16 @@
           <span @click="tabChoose('jydown')" :class="{'on': isChoose == 'jydown'}">讲义下载</span>
         </div>
         <div class="clt-main">
-          <div class="clt-jianjie" v-if="isChoose == 'answer'">
-            <ask-course :user_id="user_id" :playCourseInfo="playCourseInfo"></ask-course>
+          <div class="clt-jianjie" v-if="isChoose == 'answer' && videoCredentials.playAuth">
+            <ask-course :user_id="user_id" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials"></ask-course>
           </div>
           <div class="clt-kcdg" v-if="isChoose == 'jydown'">
-        水电费水电费
+            <ul>
+              <li v-for="(val, index) in courseSections" :key="index">{{val.section_name}}
+                <span>{{val.handouts}}</span>
+                <i>下载</i>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -99,7 +104,7 @@
 <script>
 import aliPlayer from '@/components/video/aliPlayer'
 import courseList from '@/components/video/courseList'
-import askCourse from '@/components/common/askCourse'
+import askCourse from '@/components/video/askCourse'
 import answer from '@/components/video/answer'
 import HeadName from '@/components/common/HeadName'
 import likeList from '@/components/class/likeList.vue'
@@ -139,7 +144,7 @@ export default {
       },
       playCourseInfoNext: {},
       // packageList: [],
-      secvCatalogArr: [],
+      // secvCatalogArr: [],
       courseSections: [],
       openMenu: '1-1', // 默认播放菜单menu-index
       playVideoInfo: window.sessionStorage.getItem('playVideoInfo'), // 视频播放信息

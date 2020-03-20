@@ -69,7 +69,7 @@ import { questionParsing, experienceParsing, checkItem } from '@/api/questions'
 import { errorParsing, error2Parsing, myCollcsee } from '@/api/personal'
 import { questionParsingLearn } from '@/api/learncenter'
 import poticList from '../../components/poticList/poticList'
-import uploadImg from '../../components/common/askQuestion'
+import uploadImg from '../../components/analysis/askQuestion'
 import errorCorrection from '../../components/common/errorCorrection'
 import { mapState } from 'vuex'
 export default {
