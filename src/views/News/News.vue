@@ -1,7 +1,7 @@
 <template>
   <div class="user-wrap">
     <!-- 用户信息 -->
-    <user-top :user_id="user_id" :personalInfo="personalInfo" :fixedFlag2="fixedFlag2" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
+    <user-top :personalInfo="personalInfo" :examine="examine" :user_id="user_id" :fixedFlag2="fixedFlag2" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
     <!-- main -->
     <div class="u-news-wrap w-wrap">
       <ul class="tab-list">
@@ -84,7 +84,8 @@ export default {
         6: '课程'
       },
       newsDetail: {},
-      newsFlag: true
+      newsFlag: true,
+      examine: {} // 设置课程考试时间
     }
   },
   computed: {
@@ -123,6 +124,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.personalInfo = res.data
+          this.examine = res.data.examine
         } else {
           this.$Message.error(res.msg)
         }
