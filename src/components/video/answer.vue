@@ -1,14 +1,17 @@
 <template>
   <div class="ask-wrap">
     <!--提问-->
-    <div class="ask">
-      <div class="close-box" @click="closeModel">
-        <i class="close-icon"></i>
+    <div class="my-ask">
+      <div class="vc-title">
+        <p>提问题</p>
+        <Icon type="md-close" style="color:#999999;font-size: 22px;" @click="closeModel"/>
       </div>
-      <h1 class="vc-title">提问题</h1>
-      <textarea autofocus v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"
-        v-on:focus="send"></textarea>
+      <textarea autofocus v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3" v-on:focus="send"></textarea>
       <div class="submitAnswer clearfix">
+        <div class="course_time fl">
+          <Icon type="ios-play" style="color:#999999;font-size: 16px;vertical-align:center;margin-right:5px;margin-top: -3px;"/>
+          <span>{{formatSeconds(videoCredentials.watch_time)}}</span>
+        </div>
         <div class="course_img fl">
           <div class="demo-upload-list" v-for="(item, index) in quiz_image" :key="index">
             <template>
@@ -40,9 +43,9 @@
         </div>
       </div>
     </div>
-    <!--其他问题-->
-    <div class="others" :class="{'has-img': quiz_image.length}" v-if="answerList.length">
-      <h1 class="vc-title">本节其他问题</h1>
+    <!--其他问题 :class="{'has-img': quiz_image.length}"-->
+    <div class="others" v-if="answerList.length">
+      <div class="vc-title">相关答疑</div>
       <ul class="othq-list">
         <li class="othq-item" v-for="(item, index) in answerList" :key="index">
           <div class="othq-item-t">
@@ -192,6 +195,21 @@ export default {
     zhuiwen,
     tousu
   },
+  computed: {
+    // askTime () {
+    //   if (this.form.class_id) {
+    //     let cla = ''
+    //     this.subject_type.forEach(val => {
+    //       if (val.id === this.form.class_id) {
+    //         cla = val.class_name
+    //       }
+    //     })
+    //     return cla
+    //   } else {
+    //     return ''
+    //   }
+    // }
+  },
   mounted () {
     if (process.env.NODE_ENV === 'production') {
       this.apiPath = config.baseUrl.pro + '/upload/Index/uploadImage'
@@ -291,7 +309,7 @@ export default {
         limit: this.limit,
         page: this.page,
         video_time: this.videoCredentials.watch_time, // 视频时间节点
-        status: 1 // 是否是按照视频节点查询1是2不是
+        status: 1 // 是否是按照视频节点查询1是2不是3精选
       }).then(data => {
         const res = data.data
         this.answerList = res.data
@@ -334,6 +352,15 @@ export default {
       this.tousuInfo.id = val.id
       this.tousuInfo.answer_type = 1
       this.tousuVisible = true
+    },
+    // 时分秒
+    formatSeconds (value) {
+      let result = parseInt(value)
+      let h = Math.floor(result / 3600) < 10 ? '0' + Math.floor(result / 3600) : Math.floor(result / 3600)
+      let m = Math.floor((result / 60 % 60)) < 10 ? '0' + Math.floor((result / 60 % 60)) : Math.floor((result / 60 % 60))
+      let s = Math.floor((result % 60)) < 10 ? '0' + Math.floor((result % 60)) : Math.floor((result % 60))
+      result = `${h}:${m}:${s}`
+      return result
     }
   }
 }
@@ -352,53 +379,45 @@ export default {
     background: #F8FAFC;
   }
   .vc-title{
-    padding-top: 18px;
-    padding-bottom: 30px;
-    font-size: 20px;
-    color: $col333;
+    font-size: 16px;
+    height: 65px;
+    line-height: 65px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    p{
+      flex: 1;
+    }
+    span{
+      margin: 0 20px;
+      &.active{
+        color: $blueColor;
+      }
+    }
   }
-  .ask {
-    width: 495px;
-    width: 100%;
-    height: 100%;
+  .my-ask {
     padding: 0 20px;
     background: #ffffff;
     box-sizing: border-box;
-    overflow-y: scroll;
   }
   .others{
     width: 100%;
-    padding: 12px 20px 0 20px;
+    padding: 8px 20px 0 20px;
     background: #F8FAFC;
-    position: absolute;
-    top: 295px;
-    left: 0;
-    bottom: 0;
-    box-sizing: border-box;
-    overflow: auto;
-    &.has-img{
-      top: 348px;
-    }
-  }
-  .othq-list{
     // position: absolute;
-    // width: 100%;
-    // top: 68px;
+    // top: 252px;
     // left: 0;
     // bottom: 0;
-    // overflow-y: scroll;
-  }
-  .close-box{
-    text-align: right;
-    padding-top: 25px;
-    .close-icon{
-      @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
-    }
+    box-sizing: border-box;
+    overflow: auto;
+    // &.has-img{
+    //   top: 298px;
+    // }
   }
   .texta {
     resize: none;
     width: 100%;
-    height: 114px;
+    height: 121px;
     color: rgba(199, 199, 199, 1);
     padding: 7px 12px;
     border: 1px solid rgba(102, 102, 102, 1);
@@ -409,13 +428,22 @@ export default {
   .submitAnswer{
     padding: 20px 0;
     position: relative;
+    .course_time{
+      width: 72px;
+      height: 26px;
+      line-height: 26px;
+      border-radius: 2px;
+      text-align: center;
+      margin-right: 10px;
+      background: #F5F5F5;
+    }
     .submit {
-      width: 77px;
-      height: 30px;
-      line-height: 30px;
+      width: 72px;
+      height: 26px;
+      line-height: 26px;
       background: rgba(249, 145, 17, 1);
       border-radius: 20px;
-      font-size: 16px;
+      font-size: 14px;
       color: $colfff;
     }
     .errorTxt{
@@ -426,7 +454,6 @@ export default {
     }
   }
   .othq-list-teacher{
-    // border-top: 1px solid #E6E6E6;
     margin-top: 15px;
   }
   .othq-item{

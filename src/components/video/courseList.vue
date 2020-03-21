@@ -61,13 +61,6 @@ export default {
       window.sessionStorage.setItem('ofH', anchor.offsetTop)
       this.reload()
     }
-    // jiangyiDown (url) {
-    //   if (!url) {
-    //     this.$Message.error('暂无讲义')
-    //     return
-    //   }
-    //   window.location.href = url
-    // }
   }
 }
 </script>

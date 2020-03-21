@@ -142,42 +142,17 @@
                 </template>
               </div>
             </div>
-            <!--
-              .u-othq-item-b{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-  }
-  .ans-know-name{
-    span{
-      padding: 0 6px;
-      height: 25px;
-      line-height: 25px;
-      background:rgba(2,103,255,.15);
-      border-radius: 6px;
-      color: $blueColor;
-      display: inline-block;
-      text-align: center;
-      margin-right: 5px;
-    }
-  }
-             -->
-            <div class="open-txt" @click="openShow(item, index)">
-              {{item.openFlag ? '收起':'展开'}}
-              <Icon type="md-arrow-dropdown" style="font-size: 20px; margin-top: -3px;" v-if="!item.openFlag"/>
-              <Icon type="md-arrow-dropup" style="font-size: 20px; margin-top: -3px;" v-if="item.openFlag"/>
-            </div>
-            <!-- <div class="u-othq-item-b">
-              <div class="ans-know-name" v-if="item.section_name && item.section_name!=''">
-                <span v-for="(v, index) in item.section_name" :key="index">{{v}}</span>
+            <div class="u-othq-item-b">
+              <div class="ans-know-name" v-if="item.know_name.length && item.know_name!=''">
+                <span v-for="(v, index) in item.know_name" :key="index">{{v}}</span>
               </div>
               <div class="ans-know-name" v-else></div>
               <div class="open-txt" @click="openShow(item, index)">
                 {{item.openFlag ? '收起':'展开'}}
-                <Icon type="md-arrow-dropdown" style="font-size: 20px; margin-top: -3px;" v-if="!item.openFlag"/>
-                <Icon type="md-arrow-dropup" style="font-size: 20px; margin-top: -3px;" v-if="item.openFlag"/>
+                <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="!item.openFlag"/>
+                <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="item.openFlag"/>
               </div>
-            </div> -->
+            </div>
             <!-- 老师回复以及追问-->
             <ul class="othq-list-teacher" v-if="replyList[item.id] && item.openFlag">
               <!-- 1老师回复 -->
@@ -274,8 +249,8 @@ export default {
   data () {
     return {
       txtArr: ['全部', '精选'],
-      selIdx: this.$route.query.selIdx || 0,
-      limit: 5,
+      selIdx: 0,
+      limit: 10,
       page: 1,
       total: 0,
       noDataFlag: false,
@@ -319,11 +294,12 @@ export default {
       this.initRes()
     },
     initRes () {
+      this.answerList = []
       if (this.selIdx == 0) {
         this.getAnswerList(2)
       }
       if (this.selIdx == 1) {
-        this.getAnswerList(1)
+        this.getAnswerList(3)
       }
     },
     // 问题列表
@@ -337,18 +313,13 @@ export default {
         limit: this.limit,
         page: this.page,
         video_time: this.videoCredentials.watch_time, // 视频时间节点
-        status: status // 是否是按照视频节点查询1是2不是
+        status: status // 是否是按照视频节点查询1是2不是3精选
       }).then(data => {
+        this.noDataFlag = true
         const res = data.data
-        if (status === 2) {
-          this.noDataFlag = true
-          this.answerList = res.data.data
-          this.total = res.data.total
-        }
-        if (status === 1) {
-          this.answerList = res.data
-        }
-        if (this.answerList.length) {
+        this.answerList = res.data.data
+        this.total = res.data.total
+        if (this.answerList && this.answerList.length) {
           this.noDataFlag = false
           this.answerList.map((val, index) => {
             val.openFlag = false
@@ -381,6 +352,9 @@ export default {
     onChange (val) {
       this.page = val
       this.initRes()
+      // setTimeout(() => {
+      //   document.documentElement.scrollTop = document.body.scrollTop = anchor.offsetTop - 150
+      // }, 300)
     },
     // 追问
     zhiwen (val) {
@@ -401,7 +375,7 @@ export default {
   @import "../../assets/scss/app";
   .ask-tab-list{
     width: 100%;
-    padding-bottom: 20px;
+    padding: 0 30px 20px 30px;
     text-align: center;
     display: flex;
     li{
@@ -496,6 +470,24 @@ export default {
     .tousu{
       color: $col999;
       cursor: pointer;
+    }
+  }
+  .u-othq-item-b{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  .ans-know-name{
+    span{
+      padding: 0 6px;
+      height: 25px;
+      line-height: 25px;
+      background:rgba(2,103,255,.15);
+      border-radius: 6px;
+      color: $blueColor;
+      display: inline-block;
+      text-align: center;
+      margin-right: 5px;
     }
   }
   .teacher-light{

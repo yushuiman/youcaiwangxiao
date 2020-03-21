@@ -62,39 +62,41 @@
       </div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
         <div class="video-panel-close" v-if="flagClosed" @click="closeModel('closed')">
-          <i></i>
+          <Icon type="ios-arrow-round-back" style="font-size: 44px; color:#ffffff;"/>
         </div>
         <div class="jiangyi" v-if="flagJy">
-          <div class="close-box" @click="closeModel('jy')">
-            <i class="close-icon"></i>
+          <div class="vc-title">
+            <p>
+              <span class="active">讲义</span>
+              <span>讲义全屏</span>
+            </p>
+            <Icon type="md-close" style="color:#999999;font-size: 22px;" @click="closeModel('jy')"/>
           </div>
-          <h1 class="vc-title">讲义</h1>
-          <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%" style="position:absolute;top: 90px;bottom:0;width:100%;height: 88%;"></iframe>
+          <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%" style="position:absolute;top: 65px;bottom:0;width:100%;height: 88%;"></iframe>
         </div>
         <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer>
       </div>
     </div>
-    <div class="cl-three-wrap w-wrap clearfix">
-      <div class="clt-list-info-l fl">
-        <div class="clt-tab">
-          <span @click="tabChoose('answer')" :class="{'on': isChoose == 'answer'}">答疑</span>
-          <span @click="tabChoose('jydown')" :class="{'on': isChoose == 'jydown'}">讲义下载</span>
-        </div>
-        <div class="clt-main">
-          <div class="clt-jianjie" v-if="isChoose == 'answer' && videoCredentials.playAuth">
+    <div class="answer-jy-wrap w-wrap clearfix">
+      <div class="aj-list-info-l fl">
+        <ul class="tab-list-all-jx">
+          <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': chooseIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+        </ul>
+        <div class="aj-main">
+          <div class="aj-answer" v-if="chooseIdx == 0 && videoCredentials.playAuth">
             <ask-course :user_id="user_id" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials"></ask-course>
           </div>
-          <div class="clt-kcdg" v-if="isChoose == 'jydown'">
-            <ul>
-              <li v-for="(val, index) in courseSections" :key="index">{{val.section_name}}
-                <span>{{val.handouts}}</span>
-                <i>下载</i>
+          <div class="aj-jy" v-if="chooseIdx == 1">
+            <ul class="jy-ul">
+              <li class="jy-item" v-for="(val, index) in courseSections" :key="index" @click="jiangyiDown(val.handouts)">
+                <p>{{val.section_name}}</p>
+                <span><i></i>下载</span>
               </li>
             </ul>
           </div>
         </div>
       </div>
-      <div class="clt-else-info-r fr">
+      <div class="aj-else-info-r fr">
         <!-- 猜你喜欢 -->
         <like-list></like-list>
       </div>
@@ -118,9 +120,10 @@ export default {
   data () {
     return {
       screenHeight: document.documentElement.clientHeight || document.body.clientHeight,
-      isChoose: 'answer',
+      chooseIdx: 0,
       selMenu: 3,
       vinfo: ['章节', '答疑', '讲义'],
+      txtArr: ['答疑', '讲义下载'],
       flagAnswer: false,
       flagCourse: false,
       flagJy: true,
@@ -459,6 +462,13 @@ export default {
         this.wImportant = 495
       }
     },
+    jiangyiDown (url) {
+      if (!url) {
+        this.$Message.error('暂无讲义')
+        return
+      }
+      window.location.href = url
+    },
     // 课程大纲（目录）
     // getCourseCatalog () {
     //   this.showLoading(true)
@@ -561,8 +571,8 @@ export default {
       })
     },
     // tab切换 (答疑 讲义下载)
-    tabChoose (type) {
-      this.isChoose = type
+    tabClk (type, index) {
+      this.chooseIdx = index
     }
   },
   beforeDestroy () {
@@ -629,11 +639,22 @@ export default {
     }
   }
   .vc-title{
-    padding-top: 18px;
-    padding-bottom: 30px;
-    padding-left: 30px;
-    font-size: 20px;
-    color: $col333;
+    padding: 0 20px;
+    font-size: 16px;
+    height: 65px;
+    line-height: 65px;
+    display: flex;
+    align-items: center;
+    p{
+      flex: 1;
+    }
+    span{
+      margin: 0 20px;
+      cursor: pointer;
+      &.active{
+        color: $blueColor;
+      }
+    }
   }
 
   .video-main{
@@ -740,14 +761,6 @@ export default {
     overflow: auto;
     background: $colfff;
   }
-  .close-box{
-    text-align: right;
-    padding-top: 25px;
-    padding-right: 20px;
-    .close-icon{
-      @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
-    }
-  }
   .try-watch-dialog{
     position: absolute;
     left: 0;
@@ -795,33 +808,82 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    i{
-      @include bg-img(30, 20, '../../assets/images/video/class-active-icon.png');
-    }
   }
   // 新增
-  .clt-main{
-    width: 902px;
-    img{
-      width: 100%;
+  .answer-jy-wrap{
+    padding-bottom: 20px;
+    .aj-list-info-l{
+      width: 902px;
     }
   }
-  .clt-tab{
-    @include lh(67, 67);
-    span{
+  .tab-list-all-jx {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding: 20px 30px 25px;
+    .tab-item {
       font-size: 16px;
-      padding: 0 21px;
-      display: inline-block;
+      margin: 0 30px;
+      position: relative;
       cursor: pointer;
-      &.on{
-        color: $blueColor;
+      &:before {
+        position: absolute;
+        content: "";
+        left: 50%;
+        width: 36px;
+        height: 2px;
+        background: none;
+        margin-top: 22px;
+        margin-left: -18px;
+      }
+      &.active {
+        color: #0267FF;
+        &:before {
+          background: #0267FF;
+        }
       }
     }
   }
-  .clt-kcdg{
+  .aj-jy{
     width: 902px;
   }
-  .clt-else-info-r{
+  .aj-else-info-r{
     padding-top: 49px;
+  }
+  .jy-ul{
+    background:rgba(255,255,255,1);
+    box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
+    border-radius: 8px;
+  }
+  .jy-item{
+    height: 60px;
+    line-height: 60px;
+    padding: 0 20px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    &:after{
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      content: "";
+      height: 1px;
+      background: #E6E6E6;
+      margin: 0 20px;
+    }
+    &:hover{
+      background: #F3F6FF;
+    }
+    p{
+      flex: 1,
+    }
+    span{
+      color: $blueColor;
+      i{
+        margin-right: 10px;
+        @include bg-img(12, 12, '../../assets/images/video/down-icon.jpg');
+      }
+    }
   }
 </style>
