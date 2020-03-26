@@ -100,7 +100,7 @@ export default {
     },
     jiangyiDown (url) {
       if (!url) {
-        this.$Message.error('暂无讲义')
+        this.$Message.error('串讲不支持下载')
         return
       }
       window.location.href = url

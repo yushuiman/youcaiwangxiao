@@ -6,11 +6,12 @@
         <p>提问题</p>
         <Icon type="md-close" style="color:#999999;font-size: 22px;" @click="closeModel"/>
       </div>
-      <textarea autofocus v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3" v-on:focus="send"></textarea>
+      <textarea v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3" v-on:focus="send"></textarea>
       <div class="submitAnswer clearfix">
         <div class="course_time fl">
           <Icon type="ios-play" style="color:#999999;font-size: 16px;vertical-align:center;margin-right:5px;margin-top: -3px;"/>
-          <span>{{formatSeconds(videoCredentials.watch_time)}}</span>
+          <span>{{formatSeconds(answerTime)}}</span>
+          <!-- <span>{{answerTime}}</span> -->
         </div>
         <div class="course_img fl">
           <div class="demo-upload-list" v-for="(item, index) in quiz_image" :key="index">
@@ -167,6 +168,9 @@ export default {
     },
     videoCredentials: {
       type: Object
+    },
+    answerTime: {
+      type: Number
     }
   },
   data () {
@@ -277,10 +281,10 @@ export default {
       }
       this.errorTs = ''
       let quizImage = this.quiz_image.join(',')
-      let vtime = window.sessionStorage.getItem('pauseWatchTime') || 0
+      // let vtime = window.sessionStorage.getItem('pauseWatchTime') || 0
       answerSub({
         quiz: this.quiz,
-        video_time: vtime,
+        video_time: this.answerTime,
         quiz_image: quizImage,
         user_id: this.user_id,
         video_id: this.playCourseInfo.video_id,
@@ -359,7 +363,11 @@ export default {
       let h = Math.floor(result / 3600) < 10 ? '0' + Math.floor(result / 3600) : Math.floor(result / 3600)
       let m = Math.floor((result / 60 % 60)) < 10 ? '0' + Math.floor((result / 60 % 60)) : Math.floor((result / 60 % 60))
       let s = Math.floor((result % 60)) < 10 ? '0' + Math.floor((result % 60)) : Math.floor((result % 60))
-      result = `${h}:${m}:${s}`
+      if (parseInt(h.substr(1)) > 0) {
+        result = `${h}:${m}:${s}`
+      } else {
+        result = `${m}:${s}`
+      }
       return result
     }
   }
@@ -429,7 +437,7 @@ export default {
     padding: 20px 0;
     position: relative;
     .course_time{
-      width: 72px;
+      padding: 0 6px;
       height: 26px;
       line-height: 26px;
       border-radius: 2px;

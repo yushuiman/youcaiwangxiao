@@ -23,7 +23,7 @@
   </el-row>
 </template>
 <script>
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 
 export default {
   inject: ['reload'],
@@ -54,12 +54,13 @@ export default {
           video_id: v.video_id
         }
       })
+      this.$emit('switchVideo', 2)
       // 倍速记忆
-      window.sessionStorage.setItem('speed', document.querySelector('.prism-setting-speed .current-setting').innerHTML)
+      // window.sessionStorage.setItem('speed', document.querySelector('.prism-setting-speed .current-setting').innerHTML)
       // 列表位置记忆
       let anchor = this.$el.querySelector('#showBox' + key + '' + index)
       window.sessionStorage.setItem('ofH', anchor.offsetTop)
-      this.reload()
+      // this.reload()
     }
   }
 }

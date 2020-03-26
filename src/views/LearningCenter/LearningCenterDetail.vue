@@ -59,7 +59,7 @@
                 <p v-if="currenLearnInfo.newVideo && currenLearnInfo.newVideo.video_name">{{currenLearnInfo.newVideo.video_name}}</p>
                 <p v-else>无</p>
               </li>
-              <li class="learnvideo">
+              <li class="learnbtn">
                 <button class="btn-com" :class="{'gray': sameday == 2}" @click="goLearnVideo">开始学习</button>
               </li>
             </ul>
@@ -1163,6 +1163,7 @@ export default {
         background: #E6E6E6;
       }
       &.learnvideo{
+        max-width: 500px;
         &:after{
           width: 0;
         }

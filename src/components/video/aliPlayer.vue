@@ -1,25 +1,72 @@
 <template>
-<!--  @click="switchPlay" -->
-  <div class='prism-player' :id='playerId' :style='playStyle'>
+  <div class='prism-player' :class="{'prism-player-hide-some': fixedVideo}" :id='playerId'>
+    <div class="video-setting" :class="{'hide': fixedVideo}">
+      <div class="setting-info">
+        <div class="v-switch-item">
+          <span @click.stop="switchVideo(3)">上一节</span>|<span @click.stop="switchVideo(4)">下一节</span>
+        </div>
+        <ul class="v-setting-ul">
+          <li class="v-set-item v-set-collect">
+            <i class="set-icon collect-icon" :class="{'active': videoCredentials.collect == 1}" @click="courseCollection"></i>
+          </li>
+          <li class="v-set-item v-set-voice">
+            <i class="set-icon voice-icon" :class="{'voice-mute-icon': isMute == 1}" @click="setVoice"></i>
+            <Slider v-model="voiceNum" @on-input="onInput" style="width: 80px;height: 4px;background:#f00;"></Slider>
+          </li>
+          <li class="v-set-item v-set-quality">
+            <i class="set-icon quality-icon">{{qualityTxt}}</i>
+            <div class="check-set">
+              <div>
+                <h4>清晰度</h4>
+                <p v-for="(v, index) in qualityList" :key="index" @click="setQuality(v)">
+                  {{v.text}}
+                  <Icon type="ios-checkmark" v-if="qualityTxt == v.text" style="font-size: 20px;position:absolute;right: 10px;top: 5px;"/>
+                </p>
+              </div>
+            </div>
+          </li>
+          <li class="v-set-item v-set-speed">
+            <i class="set-icon speed-icon">{{speedTxt}}</i>
+            <div class="check-set">
+              <div>
+                <h4>倍速</h4>
+                <p v-for="(v, index) in speedList" :key="index" @click="handSetSpeed(v)">
+                  {{v.text}}
+                  <Icon type="ios-checkmark" v-if="speedTxt == v.text" style="font-size: 20px;position:absolute;right: 10px;top: 5px;"/>
+                </p>
+              </div>
+            </div>
+          </li>
+          <!-- <li class="v-set-item v-set-screen">
+            <i class="set-icon screen-icon"></i>
+            <div></div>
+          </li> -->
+        </ul>
+      </div>
+    </div>
     <div class="shuiyin-wrap">
       <div class="shuiyin">优财网校{{user_id}}</div>
       <div class="shuiyin">优财网校{{user_id}}</div>
       <div class="shuiyin">优财网校{{user_id}}</div>
-      <div class="shuiyin">优财网校{{user_id}}</div>
+      <div class="shuiyin">优财网校{{vid}}</div>
     </div>
   </div>
 </template>
 
 <script>
+import Cookies from 'js-cookie'
 export default {
   name: 'Aliplayer',
   props: {
+    fixedVideo: {
+      type: Boolean,
+      default: false
+    },
+    videoCredentials: {
+      type: Object
+    },
     user_id: {
       type: Number
-    },
-    playStyle: {
-      type: String,
-      default: ''
     },
     aliplayerSdkPath: {
       type: String,
@@ -47,7 +94,7 @@ export default {
     },
     controlBarVisibility: {
       type: String,
-      default: 'hover'
+      default: 'always'
     },
     useH5Prism: {
       type: Boolean,
@@ -236,12 +283,54 @@ export default {
       }
     ]
   },
+  // inject: ['reload'],
   data () {
     return {
       playerId: 'aliplayer_' + Math.floor(Math.random() * 100000000000000000),
       scriptTagStatus: 0,
       isReload: false,
-      instance: null
+      instance: null,
+      speedTxt: Cookies.get('speedTxt') || '正常',
+      qualityTxt: Cookies.get('qualityTxt') || '高清',
+      voiceNum: parseInt(Cookies.get('voicenum')) || 100, // 音量
+      voiceNum1: parseInt(Cookies.get('voicenum1')) || 100, // 音量
+      speedList: [
+        {
+          text: '0.5X',
+          speednum: 0.5
+        },
+        {
+          text: '正常',
+          speednum: 1
+        },
+        {
+          text: '1.25X',
+          speednum: 1.25
+        },
+        {
+          text: '1.5X',
+          speednum: 1.5
+        },
+        {
+          text: '2X',
+          speednum: 2
+        }
+      ],
+      qualityList: [
+        {
+          text: '流畅',
+          type: 'FD'
+        },
+        {
+          text: '标清',
+          type: 'LD'
+        },
+        {
+          text: '高清',
+          type: 'SD'
+        }
+      ],
+      isMute: 2 // 1静音2正常
     }
   },
   mounted () {
@@ -459,6 +548,64 @@ export default {
       this.isReload = true
       this.initAliplayer()
       this.isReload = false
+    },
+    // 设置声音
+    setVoice () {
+      this.voiceNum = parseInt(Cookies.get('voicenum'))
+      this.voiceNum1 = parseInt(Cookies.get('voicenum1'))
+      // 1静音2正常
+      if (this.isMute == 1) {
+        this.isMute = 2
+        // if (this.voiceNum == 0) {
+        //   this.voiceNum = this.voiceNum || 100
+        // } else {
+        // }
+        this.voiceNum = this.voiceNum1 || 100
+        this.instance.setVolume(this.voiceNum1 / 100)
+        return
+      }
+      if (this.isMute == 2) {
+        this.isMute = 1
+        this.voiceNum = 0
+        this.instance.setVolume(0)
+        Cookies.set('voicenum', this.voiceNum1)
+        Cookies.set('voicenum1', this.voiceNum1)
+      }
+    },
+    onInput () {
+      this.instance.setVolume(this.voiceNum / 100)
+      if (this.voiceNum == 0) {
+        this.isMute = 1
+        Cookies.set('voicenum', this.voiceNum)
+        return
+      }
+      Cookies.set('voicenum', this.voiceNum)
+      Cookies.set('voicenum1', this.voiceNum)
+      this.isMute = 2
+    },
+    // 设置清晰度
+    setQuality ({ text, type }) {
+      this.qualityTxt = text
+      Cookies.set('qualityTxt', text)
+      Cookies.set('selectedStreamLevel', type)
+      // document.querySelector('.check-set').style.display = 'none'
+      // this.reload()
+      // this.$emit('switchQuality')
+      this.$emit('switchVideo', 1)
+    },
+    // 设置倍速
+    handSetSpeed ({ text, speednum }) {
+      this.speedTxt = text
+      Cookies.set('speedTxt', text)
+      Cookies.set('speednum', speednum)
+      this.instance.setSpeed(speednum)
+      // document.querySelector('.check-set').style.display = 'none'
+    },
+    courseCollection () {
+      this.$emit('courseCollection')
+    },
+    switchVideo (type) {
+      this.$emit('switchVideo', type)
     }
   }
 }
@@ -466,6 +613,7 @@ export default {
 
 <style>
   @import url('https://g.alicdn.com/de/prismplayer/2.8.2/skins/default/aliplayer-min.css');
+  @import "../../assets/scss/aliplayer.css";
   .prism-player .prism-progress .prism-progress-played{
     background: #F99111!important;
   }
@@ -499,7 +647,7 @@ export default {
     margin-top: -32px!important;
     margin-left: -32px!important;
   }
-  .prism-player .prism-play-btn.playing{
+  /* .prism-player .prism-play-btn.playing{
     background: url('../../assets/images/video/play-stop-m.png') no-repeat;
     background-size: contain;
   }
@@ -513,12 +661,8 @@ export default {
   .prism-player .prism-fullscreen-btn{
     background: url('../../assets/images/video/play-screen-m.png') no-repeat;
     background-size: contain;
-  }
-  .prism-player .prism-big-play-btn .outter{
-    /* border: 0;
-    background: none; */
-  }
-  .prism-player .prism-volume .volume-icon{
+  } */
+  /* .prism-player .prism-volume .volume-icon{
     background: url('../../assets/images/video/play-voice-m.png') no-repeat;
     background-size: contain;
   }
@@ -533,12 +677,12 @@ export default {
   }
   .prism-player .prism-volume-control .volume-cursor:hover{
     background: #F99111;
-  }
+  } */
   /* .prism-player .prism-volume .volume-icon:hover{
     background: url('../../assets/images/video/volumehover.png') no-repeat;
     background-size: contain;
   } */
-  .prism-player .prism-volume .volume-icon.mute{
+  /* .prism-player .prism-volume .volume-icon.mute{
     background: url('../../assets/images/video/volumemutehover.png') no-repeat;
     background-size: contain;
   }
@@ -563,10 +707,24 @@ export default {
   }
   .prism-player .prism-time-display .current-time{
     color: #ffffff;
+  } */
+  /* video被进度条遮挡 */
+  .prism-player video{
+    padding-bottom: 44px;
   }
+  /* 设置icon 隐藏 */
+  /* .prism-player .prism-fullscreen-btn, */
+  .prism-player .prism-volume,.prism-player .prism-cc-btn,.prism-player .prism-setting-btn,.prism-player .prism-volume{
+    display: none;
+  }
+  .prism-player .prism-info-left-bottom{display:none!important;}
+  .prism-player-hide-some .prism-fullscreen-btn {display:none;}
+  /* 诊断 隐藏*/
   .prism-player .prism-ErrorMessage .prism-error-operation a.prism-button-orange{
     display: none;
   }
+  /* 自定义icon */
+  /* 水印 */
   .shuiyin-wrap .shuiyin{
     position: absolute;
     left: 10%;

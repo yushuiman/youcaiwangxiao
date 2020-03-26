@@ -17,6 +17,7 @@ class HttpRequest {
   getInsideConfig () {
     const config = {
       baseURL: this.baseUrl,
+      timeout: 10000,
       headers: {
         'token': store.state.user.token
         // 'token': getToken()
@@ -44,7 +45,7 @@ class HttpRequest {
     })
     // 响应拦截
     instance.interceptors.response.use(res => {
-      this.distroy(url)
+      // this.distroy(url)
       const { data, code } = res
       if (res.data.code === 401) {
         res.data.msg = '用户信息已过期，请登录~'
@@ -68,7 +69,7 @@ class HttpRequest {
         code
       }
     }, error => {
-      this.distroy(url)
+      // this.distroy(url)
       return Promise.reject(error)
     })
   }

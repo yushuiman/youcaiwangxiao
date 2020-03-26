@@ -79,7 +79,6 @@ export default {
   inject: ['reload'],
   data () {
     return {
-      selMenu: 3,
       vinfo: ['课程<br />切换', '讲义'],
       flagKc: true,
       flagCourse: false,

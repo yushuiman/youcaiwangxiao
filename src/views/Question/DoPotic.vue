@@ -363,6 +363,9 @@ export default {
         } else {
           this.$Message.error(res.msg)
         }
+      }, () => {
+        this.$Message.error('网络不给力，请重新尝试')
+        this.showLoading(false)
       })
     },
     // 纠错显示
