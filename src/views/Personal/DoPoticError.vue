@@ -97,6 +97,7 @@ import { wrongCheck, errorCenter } from '@/api/personal'
 import poticList from '../../components/poticList/poticList'
 import countUp from '../../components/common/countUp'
 import errorCorrection from '../../components/common/errorCorrection'
+import $ from 'jquery'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -196,9 +197,9 @@ export default {
     },
     goAnchor (selector) {
       var anchor = this.$el.querySelector(selector)
-      setTimeout(() => {
-        document.documentElement.scrollTop = document.body.scrollTop = anchor.offsetTop - 150
-      }, 300)
+      $('html, body').animate({
+        scrollTop: anchor.offsetTop - 150
+      }, 500)
     },
     // 已做题数量 右边进度条用
     doPoticInfo (num = 0, index = 0) {
@@ -315,6 +316,8 @@ export default {
     }
   },
   beforeDestroy () {
+    document.oncontextmenu = undefined
+    document.onkeydown = undefined
     window.removeEventListener('scroll', this.scrollToTop)
   }
 }
