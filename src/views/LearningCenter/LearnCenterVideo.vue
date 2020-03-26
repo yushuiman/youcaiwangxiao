@@ -75,7 +75,7 @@
           </div>
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="100%" ></iframe>
         </div>
-        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials" :answerTime="answerTime" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer>
+        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials" :answerTime="answerTime" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo" @addKeydown="addKeydown"></answer>
       </div>
     </div>
     <div class="answer-jy-wrap w-wrap clearfix">
@@ -89,9 +89,9 @@
           </div>
           <div class="aj-jy" v-if="chooseIdx == 1">
             <ul class="jy-ul">
-              <li class="jy-item" v-for="(val, index) in learnVideoList" :key="index" @click="jiangyiDown(val.handouts)">
+              <li class="jy-item" v-for="(val, index) in learnVideoList" :key="index">
                 <p>{{val.video_name}}</p>
-                <span><i></i>下载</span>
+                <span @click="jiangyiDown(val.handouts)"><i></i>下载</span>
               </li>
             </ul>
           </div>
@@ -182,6 +182,7 @@ export default {
     this.$nextTick(() => {
       var _this = this
       document.onkeydown = function (e) {
+        e.preventDefault()
         let key = window.event.keyCode
         _this.watchKeydοwn(key)
       }
@@ -286,12 +287,13 @@ export default {
     },
     // 1切换视频清晰度，2目录切换视频，3切换上一个视频，4切换下一个视频
     switchVideo (type, v) {
+      // console.log(232322332)
       // clearInterval(this.socketTimer)
       // this.socketTimer = null
       this.flagCourse = false
       this.chooseIdx = 0
       if (type === 1) {
-        this.$refs.aliPlayers.ended(this.VideoId, this.videoCredentials.playAuth)
+        this.getVideoPlayback(2)
       }
       if (type === 2) {
         this.$router.replace({ path: '/learn-center-video',
@@ -303,43 +305,33 @@ export default {
             video_id: v.video_id
           }
         })
-        this.flagAnswer = false
-        this.flagJy = true
-        this.flagClosed = true
-        this.wImportant = 495
+        if (!this.fixedVideo) {
+          this.flagAnswer = false
+          this.flagJy = true
+          this.flagClosed = true
+          this.wImportant = 495
+        }
         this.getVideoPlayback(2)
-        this.$refs.updateAnswerRef.initRes()
       }
       if (type == 3) {
-        this.flagAnswer = false
-        this.flagJy = true
-        this.flagClosed = true
-        this.wImportant = 495
+        if (!this.fixedVideo) {
+          this.flagAnswer = false
+          this.flagJy = true
+          this.flagClosed = true
+          this.wImportant = 495
+        }
         this.computedPrevVid()
-        this.$refs.updateAnswerRef.initRes()
       }
       if (type == 4) {
-        this.flagAnswer = false
-        this.flagJy = true
-        this.flagClosed = true
-        this.wImportant = 495
+        if (!this.fixedVideo) {
+          this.flagAnswer = false
+          this.flagJy = true
+          this.flagClosed = true
+          this.wImportant = 495
+        }
         this.computedNextVid()
-        this.$refs.updateAnswerRef.initRes()
       }
     },
-    // playVideo (v) {
-    //   this.$router.replace({ path: '/learn-center-video',
-    //     query: {
-    //       ...this.$route.query,
-    //       package_id: v.package_id,
-    //       course_id: v.course_id,
-    //       section_id: v.section_id,
-    //       video_id: v.video_id
-    //     }
-    //   })
-    //   this.getVideoPlayback(2)
-    //   // this.videoCredentials.watch_time = v.watch_time
-    // },
     ended () {
       this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
       this.computedNextVid() // 计算下一个要播放的视频
@@ -466,6 +458,15 @@ export default {
     stopVideo () {
       this.$refs.aliPlayers.pause()
       // window.sessionStorage.setItem('pauseWatchTime', parseInt(this.$refs.aliPlayers.getCurrentTime()))
+    },
+    // 提问鼠标离开
+    addKeydown () {
+      var _this = this
+      document.onkeydown = function (e) {
+        e.preventDefault()
+        let key = window.event.keyCode
+        _this.watchKeydοwn(key)
+      }
     },
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
@@ -594,6 +595,7 @@ export default {
       }).then(() => {
         if (type == 2) {
           this.$refs.aliPlayers.ended(this.VideoId, this.videoCredentials.playAuth)
+          this.$refs.updateAnswerRef.initRes()
         }
       })
     },

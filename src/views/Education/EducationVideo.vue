@@ -518,7 +518,7 @@ export default {
       cursor: pointer;
       &.email-icon{
         @include wh(18, 14);
-        margin: 0 31px;
+        // margin: 0 31px;
       }
       &.head-logo{
         @include wh(30, 30);

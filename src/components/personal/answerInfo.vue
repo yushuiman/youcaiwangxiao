@@ -38,7 +38,7 @@
                   <span v-for="(v, index) in items[0].know_name" :key="index">{{v}}</span>
                 </div>
                 <div class="ans-know-name" v-else></div>
-                <div class="open-txt" @click="openShow(items, index, 0)">
+                <div class="open-txt" @click="openShow(items, index, 0)" v-if="items[0].reply_status == 1">
                   {{items.openFlag ? '收起':'展开'}}
                   <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="answerType == 'personal' && !items.openFlag"/>
                   <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="answerType == 'personal' && items.openFlag"/>
@@ -158,7 +158,7 @@
                   <span v-for="(v, index) in items[0].know_name" :key="index">{{v}}</span>
                 </div>
                 <div class="ans-know-name" v-else></div>
-                <div class="open-txt" @click="openShow(items, index, 1)">
+                <div class="open-txt" @click="openShow(items, index, 1)" v-if="items[0].reply_status == 1">
                   {{items.openFlag ? '收起':'展开'}}
                   <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="answerType == 'personal' && !items.openFlag"/>
                   <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="answerType == 'personal' && items.openFlag"/>
@@ -440,8 +440,6 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .u-othq-list{
-  }
   .u-othq-list-teacher{
     border-top: 1px solid #E6E6E6;
     margin-top: 15px;

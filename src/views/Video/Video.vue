@@ -85,7 +85,7 @@
           </div>
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="100%" ></iframe>
         </div>
-        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials" :answerTime="answerTime" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer>
+        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials" :answerTime="answerTime" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo" @addKeydown="addKeydown"></answer>
       </div>
     </div>
     <div class="answer-jy-wrap w-wrap clearfix">
@@ -99,9 +99,9 @@
           </div>
           <div class="aj-jy" v-if="chooseIdx == 1">
             <ul class="jy-ul">
-              <li class="jy-item" v-for="(val, index) in courseSections" :key="index" @click="jiangyiDown(val.handouts)">
+              <li class="jy-item" v-for="(val, index) in courseSections" :key="index">
                 <p>{{val.section_name}}</p>
-                <span><i></i>下载</span>
+                <span @click="jiangyiDown(val.handouts)"><i></i>下载</span>
               </li>
             </ul>
           </div>
@@ -232,6 +232,7 @@ export default {
     this.$nextTick(() => {
       var _this = this
       document.onkeydown = function (e) {
+        e.preventDefault()
         let key = window.event.keyCode
         _this.watchKeydοwn(key)
       }
@@ -338,31 +339,34 @@ export default {
       // this.socketTimer = null
       this.flagCourse = false
       if (type === 1) {
-        this.$refs.aliPlayers.ended(this.VideoId, this.videoCredentials.playAuth)
+        this.getVideoPlayback(2)
       }
       if (type === 2) {
-        this.flagAnswer = false
-        this.flagJy = true
-        this.flagClosed = true
-        this.wImportant = 495
+        if (!this.fixedVideo) {
+          this.flagAnswer = false
+          this.flagJy = true
+          this.flagClosed = true
+          this.wImportant = 495
+        }
         this.getVideoPlayback(2)
-        this.$refs.updateAnswerRef.initRes()
       }
       if (type == 3) {
-        this.flagAnswer = false
-        this.flagJy = true
-        this.flagClosed = true
-        this.wImportant = 495
+        if (!this.fixedVideo) {
+          this.flagAnswer = false
+          this.flagJy = true
+          this.flagClosed = true
+          this.wImportant = 495
+        }
         this.computedPrevVid()
-        this.$refs.updateAnswerRef.initRes()
       }
       if (type == 4) {
-        this.flagAnswer = false
-        this.flagJy = true
-        this.flagClosed = true
-        this.wImportant = 495
+        if (!this.fixedVideo) {
+          this.flagAnswer = false
+          this.flagJy = true
+          this.flagClosed = true
+          this.wImportant = 495
+        }
         this.computedNextVid()
-        this.$refs.updateAnswerRef.initRes()
       }
     },
     ended () {
@@ -548,6 +552,15 @@ export default {
       this.$refs.aliPlayers.pause()
       // window.sessionStorage.setItem('pauseWatchTime', parseInt(this.$refs.aliPlayers.getCurrentTime()))
     },
+    // 提问鼠标离开
+    addKeydown () {
+      var _this = this
+      document.onkeydown = function (e) {
+        e.preventDefault()
+        let key = window.event.keyCode
+        _this.watchKeydοwn(key)
+      }
+    },
     // 去购买
     // goBuy () {
     //   this.$router.push({ path: '/course-detail',
@@ -721,7 +734,7 @@ export default {
       }).then(() => {
         if (type == 2) {
           this.$refs.aliPlayers.ended(this.VideoId, this.videoCredentials.playAuth)
-          // this.$refs.aliPlayers.setSpeed(this.speednum)
+          this.$refs.updateAnswerRef.initRes()
         }
       })
     },

@@ -6,7 +6,7 @@
         <p>提问题</p>
         <Icon type="md-close" style="color:#999999;font-size: 22px;" @click="closeModel"/>
       </div>
-      <textarea v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3" v-on:focus="send"></textarea>
+      <textarea v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3" v-on:focus="send" v-on:blur="blurInp"></textarea>
       <div class="submitAnswer clearfix">
         <div class="course_time fl">
           <Icon type="ios-play" style="color:#999999;font-size: 16px;vertical-align:center;margin-right:5px;margin-top: -3px;"/>
@@ -68,7 +68,7 @@
               </template>
             </div>
           </div>
-          <div class="open-txt" @click="openShow(item, index)">
+          <div class="open-txt" @click="openShow(item, index)" v-if="item.reply_status == 1">
             {{item.openFlag ? '收起':'展开'}}
           </div>
           <!-- 老师回复以及追问-->
@@ -200,19 +200,6 @@ export default {
     tousu
   },
   computed: {
-    // askTime () {
-    //   if (this.form.class_id) {
-    //     let cla = ''
-    //     this.subject_type.forEach(val => {
-    //       if (val.id === this.form.class_id) {
-    //         cla = val.class_name
-    //       }
-    //     })
-    //     return cla
-    //   } else {
-    //     return ''
-    //   }
-    // }
   },
   mounted () {
     if (process.env.NODE_ENV === 'production') {
@@ -224,6 +211,10 @@ export default {
     // 暂停播放
     send () {
       this.$emit('stopVideo')
+      document.onkeydown = undefined
+    },
+    blurInp () {
+      this.$emit('addKeydown')
     },
     handleView (url) {
       this.imgUrl = url

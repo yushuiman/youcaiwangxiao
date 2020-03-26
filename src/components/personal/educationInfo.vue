@@ -7,15 +7,31 @@
       <!-- 课程 -->
       <div class="u-course-my" v-if="selIdx == 0">
         <div class="u-course-buy" v-if="myCourseList.length">
-          <div class="uc-item" v-for="(val, key) in myCourseList" :key="key">
-            <img :src="val.pc_img" alt="" class="uci-img">
-            <div class="uci-detail">
-              <h2 class="ucid-name">{{val.name}}<span>CPE积分：{{val.cpe_integral}}分</span></h2>
-              <p class="ucid-des">{{val.description}}</p>
-              <p class="ucid-learn" v-if="val.video">学习至{{val.video.video_name}}</p>
-              <p class="ucid-learn" v-else>学习至未学习</p>
+          <div class="uc-pakeage-course-list" v-for="(item, index) in myCourseList" :key="index">
+            <div class="uc-item" :class="{'uc-item-package': item.flag}">
+              <img :src="item.pc_img" alt="" class="uci-img">
+              <div class="uci-detail">
+                <h2 class="ucid-name">{{item.name}}<span>CPE积分：{{item.cpe_integral}}分</span></h2>
+                <p class="ucid-des">{{item.description}}</p>
+              </div>
+              <div class="open-txt" @click="openShow(item, index)">
+                {{item.flag ? '收起':'查看课程'}}
+                <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="!item.flag"/>
+                <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="item.flag"/>
+              </div>
             </div>
-            <button class="btn-com" @click="courseLearnVideo(val, 1)">去学习</button>
+            <ul v-if="item.flag && item.cpe_course.length">
+              <li class="uc-item uc-item-course" v-for="(val, key) in item.cpe_course" :key="key">
+                <img :src="val.pc_img" alt="" class="uci-img">
+                <div class="uci-detail">
+                  <h2 class="ucid-name">{{val.course_name}}<span>CPE积分：{{val.cpe_integral}}分</span></h2>
+                  <p class="ucid-des">{{val.description}}</p>
+                  <p class="ucid-learn" v-if="val.video">学习至{{val.video.video_name}}</p>
+                  <p class="ucid-learn" v-else>学习至未学习</p>
+                </div>
+                <button class="btn-com" @click="courseLearnVideo(item, val, 1)">去学习</button>
+              </li>
+            </ul>
           </div>
         </div>
         <div class="no-data no-data-course" v-if="noDataFlag">
@@ -36,7 +52,7 @@
                 <p class="ucid-learn" v-else>学习至未学习</p>
                 <p class="cpe-status" :class="{'cpe-finish': val.complete == 1}">{{val.complete == 1 ? '已完成' : '未完成'}}</p>
               </div>
-              <button class="btn-com uci-learn" @click="courseLearnVideo(val, 2)">开始学习</button>
+              <button class="btn-com uci-learn" @click="courseLearnVideo(item, val, 2)">开始学习</button>
             </div>
           </div>
         </div>
@@ -119,6 +135,11 @@ export default {
         this.getWatchRecords()
       }
     },
+    // 展开收起
+    openShow (item, index) {
+      this.myCourseList[index].flag = !item.flag
+      this.$forceUpdate()
+    },
     // 我的课程
     getMyCourse () {
       this.showLoading(true)
@@ -129,6 +150,11 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.myCourseList = res.data
+          if (this.myCourseList && this.myCourseList.length) {
+            this.myCourseList.forEach(v => {
+              v.flag = false
+            })
+          }
           if (this.myCourseList.length === 0) {
             this.noDataFlag = true
           }
@@ -156,22 +182,23 @@ export default {
       })
     },
     // 课程去学习 播放记录去学习
-    async courseLearnVideo (val, type) {
+    async courseLearnVideo (item, val, type) {
+      console.log(item, val)
       await this.getUserInfo()
-      if (val.is_purchase && val.is_purchase == 2) {
-        this.$Message.error('请购买课程')
-        return
-      }
       if (type === 1) {
         window.sessionStorage.setItem('userstatus', 1) // 我的课程一定是已购买
       } else {
         window.sessionStorage.setItem('userstatus', val.is_purchase) // 播放记录是否购买
       }
+      if (val.is_purchase && val.is_purchase == 2) {
+        this.$Message.error('请购买课程')
+        return
+      }
       // 如果有看过的记录，继续学习
       if (val.video) {
         let obj = {
-          type_id: val.type_id,
-          package_id: val.package_id,
+          type_id: item.type_id,
+          package_id: item.package_id,
           course_id: val.video.course_id,
           section_id: val.video.section_id,
           video_id: val.video.video_id
@@ -182,8 +209,9 @@ export default {
       // 否则去课程列表页面
       this.$router.push({ path: '/education-video',
         query: {
-          package_id: val.package_id,
-          type_id: val.type_id
+          package_id: item.package_id,
+          type_id: item.type_id,
+          course_id: val.course_id
         }
       })
     }
@@ -193,10 +221,16 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
+  .uc-pakeage-course-list{
+    margin-bottom: 20px;
+  }
   .uc-item{
     margin-bottom: 20px;
     padding-right: 20px;
     box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
+    .u-course-my &{
+      margin-bottom: 0;
+    }
   }
   .ivu-menu-opened{
     .uc-item-coll{
@@ -210,12 +244,75 @@ export default {
     align-items: center;
     background: #ffffff;
     border-radius: 8px;
+    &.uc-item-package{
+      border-radius: 8px 0 0 0;
+    }
+    &.uc-item-course{
+      padding: 11px 21px;
+      box-shadow: 0 0 0 0 transparent;
+      border-radius: 0;
+      margin-bottom: 0;
+      .uci-img{
+        border-radius: 0
+      }
+    }
     .uci-img{
       width: 198px;
       height: 109px;
       border-radius: 8px 0 0 8px;
     }
+    .uci-detail{
+      flex: 1;
+      padding: 0 20px;
+      .ucid-name{
+        font-size: 16px;
+        line-height: 22px;
+        color: $col333;
+        span{
+          font-size: 14px;
+          margin-left: 16px;
+          color: $blueColor;
+        }
+      }
+      .ucid-des{
+        color: $col999;
+        line-height: 20px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 1;
+        width: 95%;
+      }
+      .ucid-learn{
+        line-height: 20px;
+        color: $blueColor;
+        margin-top: 10px;
+      }
+      .cpe-status{
+        height: 20px;
+        line-height: 20px;
+        margin-top: 8px;
+        padding-left: 20px;
+        color: #E84342;
+        background-image: url('../../assets/images/user/cpe-no.png');
+        background-position: left center;
+        background-repeat: no-repeat;
+        background-size: 15px 15px;
+        &.cpe-finish{
+          color: $blueColor;
+          background-image: url('../../assets/images/user/cpe-finish.png');
+        }
+      }
+      .u-course-record &{
+        .ucid-learn{
+          color: $col666;
+          margin-top: 5px;
+        }
+      }
+    }
     .btn-com{
+      width: 64px;
+      height: 28px;
       background: #1874FD;
       color: $colfff;
       font-size: 16px;
@@ -224,54 +321,14 @@ export default {
       width: 97px;
     }
   }
-  .uci-detail{
-    flex: 1;
-    padding: 0 20px;
-    .ucid-name{
-      font-size: 18px;
-      line-height: 26px;
-      color: $col333;
-      span{
-        font-size: 16px;
-        margin-left: 16px;
-        color: $blueColor;
-      }
+  .uc-item-course{
+    &:nth-child(odd){
+      background: #F3F6FF;
     }
-    .ucid-des{
-      color: $col999;
-      line-height: 20px;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      -webkit-line-clamp: 1;
-      width: 95%;
-    }
-    .ucid-learn{
-      line-height: 20px;
-      color: $blueColor;
-      margin-top: 10px;
-    }
-    .cpe-status{
-      height: 20px;
-      line-height: 20px;
-      margin-top: 8px;
-      padding-left: 20px;
-      color: #E84342;
-      background-image: url('../../assets/images/user/cpe-no.png');
-      background-position: left center;
-      background-repeat: no-repeat;
-      background-size: 15px 15px;
-      &.cpe-finish{
-        color: $blueColor;
-        background-image: url('../../assets/images/user/cpe-finish.png');
-      }
-    }
-    .u-course-record &{
-      .ucid-learn{
-        color: $col666;
-        margin-top: 5px;
-      }
-    }
+  }
+  .open-txt{
+    cursor: pointer;
+    color: #0267FF;
   }
   // 观看记录
   .ucr-item{

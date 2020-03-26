@@ -25,9 +25,10 @@
               <li class="uc-item uc-item-course" v-for="(val, key) in item.course" :key="key">
                 <img :src="val.pc_img" alt="" class="uci-img">
                 <div class="uci-detail">
-                  <h2 class="ucid-name">{{val.name}}</h2>
+                  <h2 class="ucid-name">{{val.course_name}}</h2>
                   <p class="ucid-des">{{val.description}}</p>
                   <p class="ucid-learn" v-if="val.video">学习至{{val.video.video_name}}</p>
+                  <p class="ucid-learn" v-else>学习至未学习</p>
                 </div>
                 <button class="btn-com" @click="courseLearnVideo(item, val, 1)">去学习</button>
               </li>
@@ -305,9 +306,9 @@ export default {
       })
     },
     // 课程去学习 播放记录去学习
-    // async courseLearnVideo (val, type) {
-    courseLearnVideo (item, val, type) {
-      // await this.getUserInfo()
+    async courseLearnVideo (item, val, type) {
+    // courseLearnVideo (item, val, type) {
+      await this.getUserInfo()
       if (type === 1) {
         window.sessionStorage.setItem('userstatus', 1) // 我的课程一定是已购买
       } else {

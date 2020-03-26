@@ -27,7 +27,7 @@
                 </template>
               </div>
             </div>
-            <div class="open-txt" @click="openShow(item, index)">
+            <div class="open-txt" @click="openShow(item, index)" v-if="item.reply_status == 1">
               {{item.openFlag ? '收起':'展开'}}
               <Icon type="md-arrow-dropdown" style="font-size: 20px; margin-top: -3px;" v-if="!item.openFlag"/>
               <Icon type="md-arrow-dropup" style="font-size: 20px; margin-top: -3px;" v-if="item.openFlag"/>
@@ -147,7 +147,7 @@
                 <span v-for="(v, index) in item.know_name" :key="index">{{v}}</span>
               </div>
               <div class="ans-know-name" v-else></div>
-              <div class="open-txt" @click="openShow(item, index)">
+              <div class="open-txt" @click="openShow(item, index)" v-if="item.reply_status == 1">
                 {{item.openFlag ? '收起':'展开'}}
                 <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="!item.openFlag"/>
                 <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="item.openFlag"/>

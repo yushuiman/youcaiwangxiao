@@ -49,7 +49,6 @@
 .login-r img.email-icon {
   width: 18px;
   height: 14px;
-  margin: 0 31px;
 }
 
 .login-r img.head-logo {
@@ -59,7 +58,6 @@
 }
 
 .vc-title {
-  padding: 0 20px;
   font-size: 16px;
   height: 65px;
   line-height: 65px;
@@ -294,6 +292,10 @@
   justify-content: center;
 }
 
+.video-panel-close:hover i {
+  cursor: pointer;
+}
+
 .answer-jy-wrap {
   padding-bottom: 20px;
 }
@@ -372,6 +374,7 @@
 }
 
 .jy-item:hover {
+  cursor: pointer;
   background: #F3F6FF;
 }
 
@@ -388,7 +391,7 @@
   width: 12px;
   height: 12px;
   display: inline-block;
-  background-image: url("../../assets/images/video/down-icon.jpg");
+  background-image: url("../../assets/images/video/down-icon.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: center center;

@@ -59,7 +59,7 @@
               </template>
             </div>
           </div>
-          <div class="open-txt" @click="openShow(item, index)">
+          <div class="open-txt" @click="openShow(item, index)" v-if="item.reply_status == 1">
             {{item.openFlag ? '收起':'展开'}}
           </div>
           <!-- 老师回复以及追问-->
