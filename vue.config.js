@@ -111,6 +111,13 @@ module.exports = {
           deleteOriginalAssets: false // 不删除源文件
         })
       )
+      plugins.push(
+        new webpack.ProvidePlugin({
+          $: 'jquery',
+          jQuery: 'jquery',
+          'windows.jQuery': 'jquery'
+        })
+      )
       // 去掉 console.log
       // plugins.push(
       //   new UglifyJsPlugin({

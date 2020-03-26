@@ -440,8 +440,6 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .u-othq-list{
-  }
   .u-othq-list-teacher{
     border-top: 1px solid #E6E6E6;
     margin-top: 15px;

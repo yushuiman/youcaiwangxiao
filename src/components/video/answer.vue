@@ -369,14 +369,6 @@ export default {
       top: 348px;
     }
   }
-  .othq-list{
-    // position: absolute;
-    // width: 100%;
-    // top: 68px;
-    // left: 0;
-    // bottom: 0;
-    // overflow-y: scroll;
-  }
   .close-box{
     text-align: right;
     padding-top: 25px;
