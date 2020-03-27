@@ -40,7 +40,7 @@
         </ul>
       </div>
       <div class="video-info-c" id="left" :style="{ height: screenHeight - 137 + 'px' }">
-        <div class="course-video-box" :class="{'fix-video': fixedVideo}">
+        <div class="course-video-box" v-if="!fixedVideo">
           <ali-player
             ref="aliPlayers"
             v-if="videoCredentials.playAuth"
@@ -54,12 +54,6 @@
             @switchVideo="switchVideo"
             @courseCollection="courseCollection">
           </ali-player>
-          <!-- <div class="try-watch-dialog" v-if="tryWatchFlag">
-            <div class="course-tip">
-              <div @click="goBuy">试看结束，请购买</div>
-              <div @click="replay">重新试听</div>
-            </div>
-          </div> -->
         </div>
         <div class="pdf-iframe" style="height: 100%;overflow-y: auto;" v-if="fixedVideo">
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="100%"></iframe>
@@ -71,6 +65,21 @@
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
         <div class="video-panel-close" v-if="flagClosed" @click="closeModel('closed')">
           <Icon type="ios-arrow-round-back" style="font-size: 44px; color:#ffffff;"/>
+        </div>
+        <div class="course-video-box" :class="{'fix-video': fixedVideo}" v-if="fixedVideo">
+          <ali-player
+            ref="aliPlayers"
+            v-if="videoCredentials.playAuth"
+            :vid="VideoId"
+            :playauth="videoCredentials.playAuth"
+            :videoCredentials="videoCredentials"
+            :fixedVideo="fixedVideo"
+            :user_id="user_id"
+            @ready="ready"
+            @ended="ended"
+            @switchVideo="switchVideo"
+            @courseCollection="courseCollection">
+          </ali-player>
         </div>
         <div class="jiangyi" v-if="flagJy" :class="{'littleScreen': fixedVideo}">
           <div class="vc-title" v-if="!fixedVideo">
@@ -378,14 +387,15 @@ export default {
       instance.setSpeed(speednum)
       // 先静音 打扰我听歌
       instance.setVolume(voicenum / 100)
-      let ofH = window.sessionStorage.getItem('ofH') || 0
-      document.querySelector('.video-section-list').scrollTop = ofH
       // 跳转到上次播放时间
       if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
         instance.seek(0)
       } else {
         instance.seek(this.videoCredentials.watch_time)
       }
+      // 列表位置记忆
+      let anchor = document.querySelector('#showBox' + this.playCourseInfo.section_id + '' + this.playCourseInfo.video_id).offsetTop
+      document.querySelector('.video-section-list').scrollTop = anchor
       // 初始化监听一次socket io
       if (this.playCourseInfo.userstatus == 1) {
         if (this.user_id != '' && this.playCourseInfo.package_id != '' && this.playCourseInfo.course_id != '' && this.playCourseInfo.section_id != '' && this.playCourseInfo.video_id != '') {
@@ -785,7 +795,6 @@ export default {
     clearInterval(this.socketTimer)
     this.socketTimer = null
     document.onkeydown = undefined
-    window.sessionStorage.removeItem('ofH')
     clearTimeout(this.screenTimer)
     Cookies.remove('speedTxt')
     Cookies.remove('speednum')

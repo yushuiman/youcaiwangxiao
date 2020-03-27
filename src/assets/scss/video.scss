@@ -78,6 +78,10 @@
             color: $blueColor;
         }
     }
+
+    .ivu-icon:hover {
+        cursor: pointer;
+    }
 }
 
 .vsc-title{
@@ -113,16 +117,17 @@
         border-radius: 10px;
         overflow: hidden;
 
-        &.fix-video {
-            border-radius: 0px;
-            position: fixed;
-            width: 326px;
-            height: 216px;
-            right: 0;
-            top: 0;
-            z-index: 102;
-        }
     }
+}
+
+.fix-video {
+    border-radius: 0px;
+    position: absolute;
+    width: 326px;
+    height: 216px;
+    right: 0;
+    top: 0px;
+    z-index: 102;
 }
 
 .video-info-r {
@@ -219,7 +224,7 @@
     background: $colfff;
 
     &.littleScreen {
-        top: 146px;
+        top: 216px;
     }
 }
 

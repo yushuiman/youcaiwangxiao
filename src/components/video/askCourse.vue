@@ -115,7 +115,7 @@
           />
         </div>
       </div>
-      <div style="padding-top: 1px; padding-bottom: 20px; background:#ffffff;" v-if="noDataFlag">
+      <div style="padding-top: 1px; padding-bottom: 20px; background:#ffffff;border-radius: 0 0 8px 8px;" v-if="noDataFlag">
         <div class="no-data">
           暂无答疑
         </div>
@@ -229,7 +229,7 @@
           </li>
         </ul>
       </div>
-      <div style="padding-top: 1px; padding-bottom: 20px; background:#ffffff;" v-if="noDataFlag">
+      <div style="padding-top: 1px; padding-bottom: 20px; background:#ffffff;border-radius: 0 0 8px 8px;" v-if="noDataFlag">
         <div class="no-data">
           暂无答疑
         </div>

@@ -29,7 +29,7 @@
       </div>
       <div class="video-info-c" style="padding-top: 34px;" id="left" :style="{ height: screenHeight - 70 + 'px' }">
         <p style="position:absolute;top:0;color: #F99111;height: 34px;line-height: 34px;">如何获得本课程学分：每个视频学习过程中均会随机弹出签到提示，全部视频都成功签到后才能获得本课程CPE积分。</p>
-        <div class="course-video-box" :class="{'fix-video': fixedVideo}">
+        <div class="course-video-box" v-if="!fixedVideo">
           <ali-player
             ref="aliPlayers"
             v-if="videoCredentials.playAuth"
@@ -58,6 +58,25 @@
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
         <div class="video-panel-close" v-if="flagClosed" @click="closeModel('closed')">
           <Icon type="ios-arrow-round-back" style="font-size: 44px; color:#ffffff;"/>
+        </div>
+        <div class="course-video-box" :class="{'fix-video': fixedVideo}" v-if="fixedVideo">
+          <ali-player
+            ref="aliPlayers"
+            v-if="videoCredentials.playAuth"
+            :vid="playCourseInfo.VideoId"
+            :playauth="videoCredentials.playAuth"
+            :videoCredentials="videoCredentials"
+            :fixedVideo="fixedVideo"
+            :diffLogic="1"
+            :canSign="canSign"
+            :visible="visible"
+            :jianTime="jianTime"
+            :user_id="user_id"
+            @ready="ready"
+            @ended="ended"
+            @signSub="signSub"
+            @switchVideo="switchVideo">
+          </ali-player>
         </div>
         <div class="jiangyi" v-if="flagJy" :class="{'littleScreen': fixedVideo}">
           <div class="vc-title" v-if="!fixedVideo">
@@ -273,8 +292,9 @@ export default {
       instance.setSpeed(speednum)
       // 先静音 打扰我听歌
       instance.setVolume(voicenum / 100)
-      let ofH = window.sessionStorage.getItem('ofH') || 0
-      document.querySelector('.video-section-list').scrollTop = ofH
+      // 列表位置记忆
+      let anchor = document.querySelector('#showBox' + this.playCourseInfo.section_id + '' + this.playCourseInfo.video_id).offsetTop
+      document.querySelector('.video-section-list').scrollTop = anchor
       // 入库观看视频
       if (this.user_id != '' && this.playCourseInfo.package_id != '' && this.playCourseInfo.course_id != '' && this.playCourseInfo.section_id != '' && this.playCourseInfo.video_id != '') {
         this.subrecord() // 观看记录入库
@@ -481,7 +501,6 @@ export default {
     //       course_id: item.course_id
     //     }
     //   })
-    //   window.sessionStorage.removeItem('ofH')
     //   this.reload()
     // },
     // 初始化展示章节
@@ -643,7 +662,6 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    window.sessionStorage.removeItem('ofH')
     document.onkeydown = undefined
     clearTimeout(this.screenTimer)
     Cookies.remove('speedTxt')

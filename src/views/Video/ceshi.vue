@@ -225,7 +225,6 @@ export default {
           course_id: item.course_id
         }
       })
-      window.sessionStorage.removeItem('ofH')
       // window.location.reload()
       this.reload()
     },
@@ -323,7 +322,6 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    window.sessionStorage.removeItem('ofH')
     console.log('remove aliplayer')
     next()
   }

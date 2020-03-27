@@ -57,7 +57,7 @@
       <div class="shuiyin">优财网校{{user_id}}</div>
       <div class="shuiyin">优财网校{{user_id}}</div>
       <div class="shuiyin">优财网校{{user_id}}</div>
-      <div class="shuiyin">优财网校{{vid}}</div>
+      <div class="shuiyin">优财网校{{user_id}}</div>
     </div>
   </div>
 </template>

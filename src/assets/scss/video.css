@@ -82,6 +82,10 @@
   color: #0267FF;
 }
 
+.vc-title .ivu-icon:hover {
+  cursor: pointer;
+}
+
 .vsc-title {
   padding: 33px 20px 20px;
   font-size: 20px;
@@ -117,13 +121,13 @@
   overflow: hidden;
 }
 
-.video-info-c .course-video-box.fix-video {
+.fix-video {
   border-radius: 0px;
-  position: fixed;
+  position: absolute;
   width: 326px;
   height: 216px;
   right: 0;
-  top: 0;
+  top: 0px;
   z-index: 102;
 }
 
@@ -252,7 +256,7 @@
 }
 
 .jiangyi.littleScreen {
-  top: 146px;
+  top: 216px;
 }
 
 .video-screen {
