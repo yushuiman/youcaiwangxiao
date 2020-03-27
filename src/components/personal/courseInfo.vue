@@ -380,7 +380,10 @@ export default {
     background: #ffffff;
     border-radius: 8px;
     &.uc-item-package{
-      border-radius: 8px 0 0 0;
+      border-radius: 8px 8px 0 0;
+      .uci-img{
+        border-radius: 8px 0 0 0px;
+      }
     }
     &.uc-item-course{
       padding: 11px 21px;

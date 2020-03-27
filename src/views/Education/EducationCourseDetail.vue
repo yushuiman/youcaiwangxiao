@@ -129,6 +129,7 @@ export default {
       this.$router.push({ path: '/education-video',
         query: {
           package_id: this.package_id,
+          course_id: this.$route.query.course_id,
           type_id: this.type_id
         }
       })

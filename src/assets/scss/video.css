@@ -58,6 +58,7 @@
 }
 
 .vc-title {
+  padding: 0 20px;
   font-size: 16px;
   height: 65px;
   line-height: 65px;
@@ -76,6 +77,12 @@
 
 .vc-title span.active {
   color: #0267FF;
+}
+
+.vsc-title {
+  padding: 33px 20px 20px;
+  font-size: 20px;
+  color: #E6E6E6;
 }
 
 .video-main {
@@ -216,11 +223,10 @@
 .video-section-list {
   position: absolute;
   width: 386px;
-  padding: 20px 0;
   top: 0;
   left: -386px;
   opacity: 0;
-  bottom: 19px;
+  bottom: 64px;
   z-index: 101;
   background: #26292C;
   overflow-y: scroll;

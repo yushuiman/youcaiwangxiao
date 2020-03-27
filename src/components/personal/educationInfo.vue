@@ -183,7 +183,6 @@ export default {
     },
     // 课程去学习 播放记录去学习
     async courseLearnVideo (item, val, type) {
-      console.log(item, val)
       await this.getUserInfo()
       if (type === 1) {
         window.sessionStorage.setItem('userstatus', 1) // 我的课程一定是已购买
@@ -197,8 +196,8 @@ export default {
       // 如果有看过的记录，继续学习
       if (val.video) {
         let obj = {
-          type_id: item.type_id,
-          package_id: item.package_id,
+          type_id: item.type_id || val.type_id,
+          package_id: item.package_id || val.type_id,
           course_id: val.video.course_id,
           section_id: val.video.section_id,
           video_id: val.video.video_id
@@ -245,7 +244,10 @@ export default {
     background: #ffffff;
     border-radius: 8px;
     &.uc-item-package{
-      border-radius: 8px 0 0 0;
+      border-radius: 8px 8px 0 0;
+      .uci-img{
+        border-radius: 8px 0 0 0px;
+      }
     }
     &.uc-item-course{
       padding: 11px 21px;

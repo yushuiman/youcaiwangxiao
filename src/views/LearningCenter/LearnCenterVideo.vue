@@ -9,6 +9,7 @@
     </div>
     <div class="video-main" id="box">
       <div class="video-section-list" :class="{'active': flagCourse}">
+        <h1 class="vsc-title">章节目录</h1>
         <ul class="video-list">
           <li class="video-item" :class="{'curren': playCourseInfo.video_id == v.video_id}" v-for="(v, index) in learnVideoList" :key="index" @click="switchVideo(2, v)"
           style="height: 36px;line-height: 36px;">
@@ -120,6 +121,7 @@ export default {
   inject: ['reload'],
   data () {
     return {
+      screenTimer: null, // 监听浏览器高度
       screenHeight: document.documentElement.clientHeight || document.body.clientHeight,
       chooseIdx: 0,
       vinfo: ['章节', '答疑', '讲义'],
@@ -151,9 +153,8 @@ export default {
       playCourseInfoNextPrev: {},
       socketTimer: null,
       learnVideoList: [],
-      isPlay: false,
-      answerTime: 0, // 答疑提问时间
-      screenTimer: null
+      isPlay: false, // 视频初始化getStatus获取不准确
+      answerTime: 0 // 答疑提问时间
     }
   },
   components: {
@@ -287,9 +288,6 @@ export default {
     },
     // 1切换视频清晰度，2目录切换视频，3切换上一个视频，4切换下一个视频
     switchVideo (type, v) {
-      // console.log(232322332)
-      // clearInterval(this.socketTimer)
-      // this.socketTimer = null
       this.flagCourse = false
       this.chooseIdx = 0
       if (type === 1) {
@@ -415,7 +413,6 @@ export default {
       }
       var currentProfileIndex = (profiles || []).findIndex((profile) => profile.video_id == currentProfile.video_id)
       if (currentProfileIndex == profiles.length - 1) {
-        // this.playCourseInfoNextPrev.video_id = this.learnVideoList[0].video_id
         this.$Message.error('已经是最后一节')
         return
       } else {
@@ -439,7 +436,6 @@ export default {
       }
       var currentProfileIndex = (profiles || []).findIndex((profile) => profile.video_id == currentProfile.video_id)
       if (currentProfileIndex == 0) {
-        // this.playCourseInfoNextPrev.video_id = this.learnVideoList[0].video_id
         this.$Message.error('已经是第一节')
         return
       } else {
@@ -643,6 +639,7 @@ export default {
     this.socketTimer = null
     document.onkeydown = undefined
     window.sessionStorage.removeItem('ofH')
+    clearTimeout(this.screenTimer)
     Cookies.remove('speedTxt')
     Cookies.remove('speednum')
     Cookies.remove('voicenum')

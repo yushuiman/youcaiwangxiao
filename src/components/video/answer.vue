@@ -1,11 +1,11 @@
 <template>
   <div class="ask-wrap">
     <!--提问-->
+    <div class="vc-title">
+      <p>提问题</p>
+      <Icon type="md-close" style="color:#999999;font-size: 22px;" @click="closeModel"/>
+    </div>
     <div class="my-ask">
-      <div class="vc-title">
-        <p>提问题</p>
-        <Icon type="md-close" style="color:#999999;font-size: 22px;" @click="closeModel"/>
-      </div>
       <textarea v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3" v-on:focus="send" v-on:blur="blurInp"></textarea>
       <div class="submitAnswer clearfix">
         <div class="course_time fl">
@@ -376,23 +376,6 @@ export default {
     height: 100%;
     overflow: auto;
     background: #F8FAFC;
-  }
-  .vc-title{
-    font-size: 16px;
-    height: 65px;
-    line-height: 65px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    p{
-      flex: 1;
-    }
-    span{
-      margin: 0 20px;
-      &.active{
-        color: $blueColor;
-      }
-    }
   }
   .my-ask {
     padding: 0 20px;

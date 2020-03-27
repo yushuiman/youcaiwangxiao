@@ -131,6 +131,7 @@ export default {
   inject: ['reload'],
   data () {
     return {
+      screenTimer: null, // 监听浏览器高度
       screenHeight: document.documentElement.clientHeight || document.body.clientHeight,
       chooseIdx: 0,
       vinfo: ['章节', '答疑', '讲义'],
@@ -199,17 +200,14 @@ export default {
       },
       playCourseInfoNextPrev: {},
       // packageList: [],
-      // secvCatalogArr: [],
       courseSections: [],
       openMenu: '1-1', // 默认播放菜单menu-index
-      playVideoInfo: window.sessionStorage.getItem('playVideoInfo'), // 视频播放信息
       socketTimer: null,
       // tryWatchTimer: null,
       // tryWatchFlag: false,
       // tryQatchNum: 180, // 试看3分钟
-      isPlay: false,
-      answerTime: 0, // 答疑提问时间
-      screenTimer: null
+      isPlay: false, // 视频初始化getStatus获取不准确
+      answerTime: 0 // 答疑提问时间
     }
   },
   components: {
@@ -335,8 +333,6 @@ export default {
     },
     // 1切换视频清晰度，2目录切换视频，3切换上一个视频，4切换下一个视频
     switchVideo (type) {
-      // clearInterval(this.socketTimer)
-      // this.socketTimer = null
       this.flagCourse = false
       if (type === 1) {
         this.getVideoPlayback(2)
@@ -470,7 +466,7 @@ export default {
       if (currentProfileIndex == profiles.length - 1) {
         if (currentProfileIndex2 == profiles2.length - 1) {
           this.$Message.error('已经是最后一节')
-          // return
+          return
           // this.playCourseInfoNextPrev.section_id = this.courseSections[0].section_id
           // this.playCourseInfoNextPrev.video_id = this.courseSections[0].videos[0].video_id
         } else {
@@ -520,6 +516,7 @@ export default {
           // this.playCourseInfoNextPrev.video_id = this.courseSections[currentProfileIndex].videos[currentProfileIndex2].video_id
           // console.log(this.playCourseInfoNextPrev)
           this.$Message.error('已经是第一节')
+          return
         } else {
           --currentProfileIndex2
           this.playCourseInfoNextPrev.section_id = this.courseSections[currentProfileIndex].section_id
@@ -772,7 +769,6 @@ export default {
   beforeDestroy () {
     clearInterval(this.socketTimer)
     this.socketTimer = null
-    console.log('1: ' + this.socketTimer)
     // clearInterval(this.tryWatchTimer)
     if (this.$refs.aliPlayers) {
       this.$refs.aliPlayers.dispose()
@@ -782,8 +778,8 @@ export default {
     clearInterval(this.socketTimer)
     this.socketTimer = null
     document.onkeydown = undefined
-    console.log('2: ' + this.socketTimer)
     window.sessionStorage.removeItem('ofH')
+    clearTimeout(this.screenTimer)
     Cookies.remove('speedTxt')
     Cookies.remove('speednum')
     Cookies.remove('voicenum')

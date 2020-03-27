@@ -61,6 +61,12 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.courseCatalogInfo = res.data
+          this.$router.replace({ path: 'education-course-detail',
+            query: {
+              ...this.$route.query,
+              course_id: this.courseCatalogInfo[0].course_id
+            }
+          })
           this.courseCatalogInfo.forEach((v, index) => {
             v.index = index + 1
           })

@@ -1,41 +1,34 @@
 <template>
-  <keep-alive>
-    <div class="rightCourseList" id="rightCourseList">
-      <div class="close-box" @click="closeModel()">
-        <i class="close-icon"></i>
-      </div>
-      <h1 class="vc-title">章节目录</h1>
-        <el-row class="tac munu-active" id="tac">
-          <el-col :span="24">
-            <el-menu
-              :default-active="openMenu"
-              class="el-menu-vertical-demo"
-              background-color="#1D1F21"
-              text-color="#E6E6E6"
-              active-text-color="#F99111">
-              <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key" :ref="'a'+ key" :id="'a'+ key">
-                <template slot="title">
-                  <span class="sec-name">{{val.section_name}}</span>
-                  <span class="down-load" @click.stop="jiangyiDown(val.handouts)">讲义</span>
-                </template>
-                <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.video" :key="index"
-                @click="playVideo(val, v, key, index)" :id="'showBox'+ (key) + (index)" style="height: 36px;line-height: 36px;color:#999999;">
-                  <div :class="{'already-see': v.record == 1}">
-                    <span class="see-tips">已完成</span>
-                    <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
-                    <span class="sl">{{v.video_name}}</span>
-                    <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1), 'el-dot-see': v.record == 1}"></i>
-                  </div>
-                </el-menu-item>
-              </el-submenu>
-            </el-menu>
-          </el-col>
-        </el-row>
-    </div>
-  </keep-alive>
+  <div class="sec-list">
+    <h1 class="vsc-title">章节目录</h1>
+      <el-row class="tac munu-active" id="tac">
+        <el-col :span="24">
+          <el-menu
+            :default-active="openMenu"
+            class="el-menu-vertical-demo"
+            background-color="#1D1F21"
+            text-color="#E6E6E6"
+            active-text-color="#F99111">
+            <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key" :ref="'a'+ key" :id="'a'+ key">
+              <template slot="title">
+                <span class="sec-name">{{val.section_name}}</span>
+              </template>
+              <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.video" :key="index"
+              @click="playVideo(val, v, key, index)" :id="'showBox'+ (key) + (index)" style="height: 36px;line-height: 36px;color:#999999;">
+                <div :class="{'already-see': v.record == 1}">
+                  <span class="see-tips">已完成</span>
+                  <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
+                  <span class="sl">{{v.video_name}}</span>
+                  <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1), 'el-dot-see': v.record == 1}"></i>
+                </div>
+              </el-menu-item>
+            </el-submenu>
+          </el-menu>
+        </el-col>
+      </el-row>
+  </div>
 </template>
 <script>
-// import { secvCatalog } from '@/api/class'
 import { mapState } from 'vuex'
 
 export default {
@@ -44,10 +37,6 @@ export default {
     showBox: {
       type: String,
       default: ''
-    },
-    flagCourse: {
-      type: Boolean,
-      default: false
     },
     courseSections: {
       type: Array
@@ -58,13 +47,6 @@ export default {
   },
   data () {
     return {
-      courseCatalogInfo: [], // 课程大纲（目录）
-      secvCatalogArr: [],
-      packageList: [],
-      curIndex: '',
-      videoListFlag: true,
-      playIdx: 0,
-      ofH: window.sessionStorage.getItem('ofH')
     }
   },
   computed: {
@@ -76,63 +58,29 @@ export default {
   mounted () {
   },
   methods: {
-    closeModel () {
-      this.videoListFlag = false
-      this.$emit('closeModel', 'kc')
-    },
     // 跳转到播放页面
     playVideo (val, v, key, index) {
-      v.flag = true
-      this.playIdx = v
-      this.$forceUpdate()
       this.$router.replace({ path: 'education-video',
         query: {
           ...this.$route.query,
           section_id: val.section_id,
-          video_id: v.video_id,
-          VideoId: v.VideoId
+          video_id: v.video_id
+          // VideoId: v.VideoId
         }
       })
-      // window.location.reload()
-      this.reload()
+      this.$emit('switchVideo', 2)
+      // 倍速记忆
+      // window.sessionStorage.setItem('speed', document.querySelector('.prism-setting-speed .current-setting').innerHTML)
+      // 列表位置记忆
       let anchor = this.$el.querySelector('#showBox' + key + '' + index)
       window.sessionStorage.setItem('ofH', anchor.offsetTop)
-    },
-    jiangyiDown (url) {
-      if (!url) {
-        this.$Message.error('串讲不支持下载')
-        return
-      }
-      window.location.href = url
+      // this.reload()
     }
   }
 }
 </script>
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .rightCourseList{
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    overflow-y: auto;
-  }
-  .vc-title{
-    padding-top: 18px;
-    padding-bottom: 30px;
-    padding-left: 20px;
-    font-size: 20px;
-    color: #E6E6E6;
-  }
-  .close-box{
-    text-align: right;
-    padding-top: 25px;
-    padding-right: 20px;
-    .close-icon{
-      @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
-    }
-  }
   .el-video-icon{
     @include wh(14, 14);
     display: inline-block;

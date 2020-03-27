@@ -1,12 +1,13 @@
 <template>
   <div class='prism-player' :class="{'prism-player-hide-some': fixedVideo}" :id='playerId'>
+    <!-- 自定义设置 因为阿里倍速无法记忆，并且清晰度切换造成倍速无法记忆 -->
     <div class="video-setting" :class="{'hide': fixedVideo}">
       <div class="setting-info">
         <div class="v-switch-item">
           <span @click.stop="switchVideo(3)">上一节</span>|<span @click.stop="switchVideo(4)">下一节</span>
         </div>
         <ul class="v-setting-ul">
-          <li class="v-set-item v-set-collect">
+          <li class="v-set-item v-set-collect" v-if="diffLogic == 2">
             <i class="set-icon collect-icon" :class="{'active': videoCredentials.collect == 1}" @click="courseCollection"></i>
           </li>
           <li class="v-set-item v-set-voice">
@@ -37,13 +38,21 @@
               </div>
             </div>
           </li>
-          <!-- <li class="v-set-item v-set-screen">
-            <i class="set-icon screen-icon"></i>
-            <div></div>
-          </li> -->
         </ul>
       </div>
     </div>
+    <!-- 后续教育签到 -->
+    <div class="sign-box" v-if="canSign && visible">
+      <div class="opa"></div>
+      <div class="sign-cont">
+        <p>签到获得本课程CPE积分</p>
+        <button class="btn-com" @click="signSub">签到</button>
+        <span>{{jianTime}}秒之后关闭～</span>
+      </div>
+    </div>
+    <!-- 后续教育禁止拖拽进度条 -->
+    <div class="progress-bar" v-if="diffLogic == 1"></div>
+    <!-- 视频水印 -->
     <div class="shuiyin-wrap">
       <div class="shuiyin">优财网校{{user_id}}</div>
       <div class="shuiyin">优财网校{{user_id}}</div>
@@ -65,6 +74,23 @@ export default {
     videoCredentials: {
       type: Object
     },
+    // 后续教育
+    jianTime: {
+      type: Number
+    },
+    visible: {
+      type: Boolean,
+      default: false
+    },
+    canSign: {
+      type: Boolean,
+      default: false
+    },
+    diffLogic: {
+      type: Number,
+      default: 2
+    },
+    // 后续教育结束
     user_id: {
       type: Number
     },
@@ -606,6 +632,16 @@ export default {
     },
     switchVideo (type) {
       this.$emit('switchVideo', type)
+    },
+    signVisible (val) {
+      if (!val) {
+        this.$emit('update:visible', false)
+        this.$emit('update:canSign', false)
+      }
+    },
+    // 签到
+    signSub () {
+      this.$emit('signSub', false)
     }
   }
 }
@@ -744,5 +780,49 @@ export default {
   .shuiyin-wrap .shuiyin:nth-child(4){
     left: 82%;
     top: 82%;
+  }
+  /* 签到 */
+  .sign-box .opa{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.6);
+  }
+  .sign-cont{
+    position: fixed;
+    width: 240px;
+    left: 50%;
+    top: 50%;
+    border-radius: 4px;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    text-align: center;
+    padding: 20px;
+  }
+  .sign-cont p{
+    font-size: 16px;
+  }
+  .sign-cont button{
+    width: 65px;
+    height: 26px;
+    background: #1874FD;
+    color: #ffffff;
+    margin-top: 20px;
+  }
+  .sign-cont span{
+    display: block;
+    margin-top: 5px;
+    color: #999999;
+  }
+  /* 进度条遮挡 */
+  .progress-bar{
+    position: absolute;
+    left: 0;
+    bottom: 39px;
+    width: 100%;
+    height: 12px;
+    z-index: 11;
   }
 </style>
