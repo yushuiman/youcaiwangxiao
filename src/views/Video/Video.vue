@@ -24,16 +24,16 @@
       </div>
       <div class="video-info-l">
         <ul class="vinfo-ul">
-          <li class="vinfo-item" @click="showModel('章节')">
+          <li class="vinfo-item" :class="{'curren': vinfoIdex == 0}" @click="showModel('章节', 0)">
             <i class="vio-icon vio-icon-01"></i>
             <p class="txt">章节</p>
           </li>
           <!-- 正课且购买 -->
-          <li class="vinfo-item" v-if="playCourseInfo.is_zhengke == 1 && playCourseInfo.userstatus == 1" @click="showModel('答疑')">
+          <li class="vinfo-item" :class="{'curren': vinfoIdex == 1}" v-if="playCourseInfo.is_zhengke == 1 && playCourseInfo.userstatus == 1" @click="showModel('答疑', 1)">
             <i class="vio-icon vio-icon-02"></i>
             <p class="txt">答疑</p>
           </li>
-          <li class="vinfo-item" @click="showModel('讲义')">
+          <li class="vinfo-item" :class="{'curren': vinfoIdex == 2}" @click="showModel('讲义', 2)">
             <i class="vio-icon vio-icon-03"></i>
             <p class="txt">讲义</p>
           </li>
@@ -94,9 +94,7 @@
           <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': chooseIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
         </ul>
         <div class="aj-main">
-          <div class="aj-answer" v-if="chooseIdx == 0 && videoCredentials.playAuth">
-            <ask-course ref="updateAnswerRef" :user_id="user_id" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials"></ask-course>
-          </div>
+          <ask-course v-if="chooseIdx == 0 && videoCredentials.playAuth" ref="updateAnswerRef" :user_id="user_id" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials"></ask-course>
           <div class="aj-jy" v-if="chooseIdx == 1">
             <ul class="jy-ul">
               <li class="jy-item" v-for="(val, index) in courseSections" :key="index">
@@ -134,7 +132,7 @@ export default {
       screenTimer: null, // 监听浏览器高度
       screenHeight: document.documentElement.clientHeight || document.body.clientHeight,
       chooseIdx: 0,
-      vinfo: ['章节', '答疑', '讲义'],
+      vinfoIdex: 4,
       txtArr: ['答疑', '讲义下载'],
       flagAnswer: false,
       flagCourse: false,
@@ -341,7 +339,7 @@ export default {
         if (!this.fixedVideo) {
           this.flagAnswer = false
           this.flagJy = true
-          this.flagClosed = true
+          this.flagClosed = false
           this.wImportant = 495
         }
         this.getVideoPlayback(2)
@@ -350,7 +348,7 @@ export default {
         if (!this.fixedVideo) {
           this.flagAnswer = false
           this.flagJy = true
-          this.flagClosed = true
+          this.flagClosed = false
           this.wImportant = 495
         }
         this.computedPrevVid()
@@ -359,7 +357,7 @@ export default {
         if (!this.fixedVideo) {
           this.flagAnswer = false
           this.flagJy = true
-          this.flagClosed = true
+          this.flagClosed = false
           this.wImportant = 495
         }
         this.computedNextVid()
@@ -573,6 +571,7 @@ export default {
     // },
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
+      this.vinfoIdex = index
       if (val === '章节') {
         this.flagCourse = !this.flagCourse
       }
@@ -588,15 +587,23 @@ export default {
         }
         this.flagAnswer = !this.flagAnswer
         this.flagJy = !this.flagAnswer
+        this.flagClosed = false
         this.wImportant = 495
       }
       if (val === '讲义') {
         if (this.fixedVideo) {
           return
         }
-        this.flagJy = true
+        this.flagJy = !this.flagJy
+        if (this.flagJy) {
+          this.flagAnswer = false
+          this.flagClosed = false
+          this.wImportant = 495
+          return
+        }
         this.flagAnswer = false
-        this.wImportant = 495
+        this.wImportant = 95
+        this.flagClosed = true
       }
     },
     closeModel (msg) {

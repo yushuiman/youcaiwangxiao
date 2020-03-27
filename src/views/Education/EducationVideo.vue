@@ -17,11 +17,11 @@
       </div>
       <div class="video-info-l">
         <ul class="vinfo-ul">
-          <li class="vinfo-item" @click="showModel('章节')">
+          <li class="vinfo-item" :class="{'curren': vinfoIdex == 0}" @click="showModel('章节', 0)">
             <i class="vio-icon vio-icon-01"></i>
             <p class="txt">章节</p>
           </li>
-          <li class="vinfo-item" @click="showModel('讲义')">
+          <li class="vinfo-item" :class="{'curren': vinfoIdex == 2}" @click="showModel('讲义', 2)">
             <i class="vio-icon vio-icon-03"></i>
             <p class="txt">讲义</p>
           </li>
@@ -91,7 +91,7 @@ export default {
     return {
       screenTimer: null, // 监听浏览器高度
       screenHeight: document.documentElement.clientHeight || document.body.clientHeight,
-      vinfo: ['章节', '讲义'],
+      vinfoIdex: 4,
       flagAnswer: false,
       flagCourse: false,
       flagJy: true,
@@ -237,7 +237,7 @@ export default {
         if (!this.fixedVideo) {
           this.flagAnswer = false
           this.flagJy = true
-          this.flagClosed = true
+          this.flagClosed = false
           this.wImportant = 495
         }
         this.getVideoPlayback(2)
@@ -246,7 +246,7 @@ export default {
         if (!this.fixedVideo) {
           this.flagAnswer = false
           this.flagJy = true
-          this.flagClosed = true
+          this.flagClosed = false
           this.wImportant = 495
         }
         this.computedPrevVid()
@@ -255,7 +255,7 @@ export default {
         if (!this.fixedVideo) {
           this.flagAnswer = false
           this.flagJy = true
-          this.flagClosed = true
+          this.flagClosed = false
           this.wImportant = 495
         }
         this.computedNextVid()
@@ -396,30 +396,24 @@ export default {
       }
     },
     showModel (val, index) {
+      this.vinfoIdex = index
       if (val === '章节') {
         this.flagCourse = !this.flagCourse
-      }
-      if (val === '答疑') {
-        this.answerTime = parseInt(this.$refs.aliPlayers.getCurrentTime())
-        if (this.fixedVideo) {
-          this.fixedVideo = !this.fixedVideo
-          this.flagAnswer = true
-          this.flagJy = false
-          this.flagClosed = false
-          this.wImportant = 495
-          return
-        }
-        this.flagAnswer = !this.flagAnswer
-        this.flagJy = !this.flagAnswer
-        this.wImportant = 495
       }
       if (val === '讲义') {
         if (this.fixedVideo) {
           return
         }
-        this.flagJy = true
+        this.flagJy = !this.flagJy
+        if (this.flagJy) {
+          this.flagAnswer = false
+          this.flagClosed = false
+          this.wImportant = 495
+          return
+        }
         this.flagAnswer = false
-        this.wImportant = 495
+        this.wImportant = 95
+        this.flagClosed = true
       }
     },
     closeModel (msg) {

@@ -14,7 +14,7 @@
               <span class="sec-name">{{val.section_name}}</span>
             </template>
             <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
-            @click="playVideo(val, v, key, index)" :id="'showBox'+ (key) + (index)" style="height: 36px;line-height: 36px;color:#999999;">
+            @click="playVideo(val, v, key, index)" :id="'showBox'+ (key) + (index)" style="height: 29px;line-height: 29px;color:#999999;margin: 5px 0;">
               <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
               <span class="sl">{{v.video_name}}</span>
               <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1)}"></i>

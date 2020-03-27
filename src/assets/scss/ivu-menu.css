@@ -287,3 +287,9 @@
 .munu-active .el-menu-item.is-active {
     color: #F99111!important;
 }
+.el-submenu__title .el-submenu__icon-arrow{
+    font-size: 18px;
+    right: 18px;
+    font-weight: bold;
+    color: #999999;
+}

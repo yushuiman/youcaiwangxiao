@@ -60,8 +60,11 @@
     font-size: 16px;
     height: 65px;
     line-height: 65px;
+    font-size: 16px;
+    font-weight:500;
     display: flex;
     align-items: center;
+    background: #ffffff;
 
     p {
         flex: 1;
@@ -358,6 +361,15 @@
     position: relative;
     display: flex;
     justify-content: space-between;
+    &:first-child{
+        border-radius: 8px 8px 0 0;
+    }
+    &:last-child{
+        border-radius: 0 0 8px 8px;
+        &:after{
+            height: 0px;
+        }
+    }
     &:after {
         position: absolute;
         left: 0;

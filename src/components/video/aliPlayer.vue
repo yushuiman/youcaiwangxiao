@@ -120,7 +120,7 @@ export default {
     },
     controlBarVisibility: {
       type: String,
-      default: 'always'
+      default: 'hover'
     },
     useH5Prism: {
       type: Boolean,
@@ -744,6 +744,10 @@ export default {
   .prism-player .prism-time-display .current-time{
     color: #ffffff;
   } */
+  /* 封面图 */
+  .prism-player .prism-cover{
+    z-index: 13;
+  }
   /* video被进度条遮挡 */
   .prism-player video{
     padding-bottom: 44px;

@@ -46,7 +46,7 @@
     </div>
     <!--其他问题 :class="{'has-img': quiz_image.length}"-->
     <div class="others" v-if="answerList.length">
-      <div class="vc-title">相关答疑</div>
+      <div class="vc-title" style="padding: 0;background: #F8FAFC;">相关答疑</div>
       <ul class="othq-list">
         <li class="othq-item" v-for="(item, index) in answerList" :key="index">
           <div class="othq-item-t">
@@ -400,11 +400,13 @@ export default {
     resize: none;
     width: 100%;
     height: 121px;
+    line-height: 18px;
     color: rgba(199, 199, 199, 1);
     padding: 7px 12px;
     border: 1px solid rgba(102, 102, 102, 1);
     border-radius: 8px;
     color: $col333;
+    text-align: justify;
     box-sizing: border-box;
   }
   .submitAnswer{
@@ -427,6 +429,9 @@ export default {
       border-radius: 20px;
       font-size: 14px;
       color: $colfff;
+      &:hover{
+        box-shadow:0px 2px 11px 0px rgba(255,171,68,0.9);
+      }
     }
     .errorTxt{
       position: absolute;
@@ -496,11 +501,14 @@ export default {
     padding-bottom: 5px;
     display: flex;
     align-items: center;
-    line-height: 26px;
     .head-logo{
       @include wh(40, 40);
       border-radius: 100%;
       margin-right: 10px;
+    }
+    h3{
+      line-height: 26px;
+      font-weight: 500;
     }
     p{
       font-size: 12px;

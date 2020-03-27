@@ -436,11 +436,14 @@ export default {
     padding-bottom: 5px;
     display: flex;
     align-items: center;
-    line-height: 26px;
     .head-logo{
       @include wh(40, 40);
       border-radius: 100%;
       margin-right: 10px;
+    }
+    h3{
+      line-height: 26px;
+      font-weight: 500;
     }
     p{
       font-size: 12px;

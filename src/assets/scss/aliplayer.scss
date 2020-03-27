@@ -9,7 +9,7 @@
 }
 // 播放器set icon
 .video-setting {
-    display: block;
+    display: none;
     position: absolute;
     left: 180px;
     right: 30px;
@@ -20,7 +20,9 @@
 .video-setting.hide{
     display: none;
 }
-
+.prism-player:hover .video-setting {
+    display: block;
+}
 .setting-info {
     height: 100%;
     display: flex;
