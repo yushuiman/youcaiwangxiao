@@ -219,7 +219,7 @@ export default {
     },
     goAnchor (selector) {
       var anchor = this.$el.querySelector(selector)
-      $('html, body').animate({
+      $('html, body').stop().animate({
         scrollTop: anchor.offsetTop - 150
       }, 500)
     },
