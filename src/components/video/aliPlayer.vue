@@ -576,6 +576,9 @@ export default {
       this.isReload = false
     },
     // 设置声音
+    keySetVoice () {
+      this.voiceNum = parseInt(Cookies.get('voicenum'))
+    },
     setVoice () {
       this.voiceNum = parseInt(Cookies.get('voicenum'))
       this.voiceNum1 = parseInt(Cookies.get('voicenum1'))

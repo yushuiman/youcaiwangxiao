@@ -17,7 +17,7 @@
           </div>
         </div>
       </div>
-      <!-- v-if="this.flagKc || this.flagAnswer || this.flagJy" -->
+      <!-- v-if="flagKc || flagAnswer || flagJy" -->
       <div id="resize" class="course-drag" :class="{'course-drag-hide': !this.flagKc && !this.flagAnswer && !this.flagJy}">
         <div class="drag"></div>
       </div>

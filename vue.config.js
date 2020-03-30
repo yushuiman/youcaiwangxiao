@@ -78,6 +78,7 @@ module.exports = {
     //     });
   },
   configureWebpack: config => {
+    config.entry.app = ["babel-polyfill", "./src/main.js"];
     if (IS_PROD) {
       const plugins = []
       //   plugins.push(

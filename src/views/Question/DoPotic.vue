@@ -8,15 +8,15 @@
               <span class="menu-title">{{title}}</span>
             </Col>
             <Col span="4">
-              <div class="answer-time" v-if="this.getQuestion.plate_id == 6">
-                <count-down ref="reduceCountTime" @countdownend="countdownend" :time="answer_time">
-                  <template slot-scope="props">
-                    0{{ props.totalHours }}:
-                    {{ props.minutes }}:
-                    {{ props.seconds }}
-                  </template>
-                </count-down>
-              </div>
+              <!-- 其他板块正计时 -->
+              <count-down v-if="getQuestion.plate_id == 6" ref="reduceCountTime" @countdownend="countdownend" :time="answer_time">
+                <template slot-scope="props">
+                  0{{ props.totalHours }}:
+                  {{ props.minutes }}:
+                  {{ props.seconds }}
+                </template>
+              </count-down>
+              <!-- 组卷模考倒计时 -->
               <count-up ref="addCountTime" v-else></count-up>
             </Col>
           </Row>

@@ -301,15 +301,17 @@ export default {
         // 音量大小 //获得当前音量
         let volume = parseInt(player.getVolume() * 100)
         if (volume < 100) {
-          volume = (volume + 1) / 100
-          player.setVolume(volume)
+          volume = (volume + 1)
+          Cookies.set('voicenum', volume)
+          player.keySetVoice()
         }
       }
       if (keyNum === 40) { // 加音量
         let volume = parseInt(player.getVolume() * 100)
         if (volume > 0) {
-          volume = (volume - 1) / 100
-          player.setVolume(volume)
+          volume = (volume - 1)
+          Cookies.set('voicenum', volume)
+          player.keySetVoice()
         }
       }
     },
@@ -383,9 +385,9 @@ export default {
       this.socketTimer = null
       // 倍速设置
       let speednum = Cookies.get('speednum') || 1
-      let voicenum = Cookies.get('voicenum') || 100
       instance.setSpeed(speednum)
-      // 先静音 打扰我听歌
+      // 音量设置
+      let voicenum = Cookies.get('voicenum') || 100
       instance.setVolume(voicenum / 100)
       // 跳转到上次播放时间
       if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
@@ -394,8 +396,10 @@ export default {
         instance.seek(this.videoCredentials.watch_time)
       }
       // 列表位置记忆
-      let anchor = document.querySelector('#showBox' + this.playCourseInfo.section_id + '' + this.playCourseInfo.video_id).offsetTop
-      document.querySelector('.video-section-list').scrollTop = anchor
+      let anchor = document.querySelector('#showBox' + this.playCourseInfo.section_id + '' + this.playCourseInfo.video_id)
+      let anchortop = document.querySelector('#showBox' + this.playCourseInfo.section_id + '' + this.playCourseInfo.video_id).offsetTop 
+      let achparent = anchor.parentNode.offsetTop
+      document.querySelector('.video-section-list').scrollTop = anchortop + achparent
       // 初始化监听一次socket io
       if (this.playCourseInfo.userstatus == 1) {
         if (this.user_id != '' && this.playCourseInfo.package_id != '' && this.playCourseInfo.course_id != '' && this.playCourseInfo.section_id != '' && this.playCourseInfo.video_id != '') {

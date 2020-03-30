@@ -16,7 +16,7 @@
             <el-menu-item :index="(key+1) + '-' + (index+1)" v-for="(v, index) in val.videos" :key="index"
             @click="playVideo(val, v, key, index)" :id="'showBox'+ val.section_id + '' + v.video_id" style="height: 29px;line-height: 29px;color:#999999;margin: 5px 0;">
               <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
-              <span class="sl">showBox{{key}}{{index}}  {{v.video_name}}</span>
+              <span class="sl">{{v.video_name}}</span>
               <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1)}"></i>
             </el-menu-item>
           </el-submenu>
