@@ -56,6 +56,7 @@
       v-model="visible"
       footer-hide
       :width="795"
+      :scrollable="true"
       @on-visible-change="modalQueVisible"
       class="iview-modal">
       <upload-img v-if="typeShow == 'dy'" :getQuestion="getQuestion" @modalShow="modalShow"></upload-img>

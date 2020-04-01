@@ -3,6 +3,7 @@
     v-model="answerVisible"
     footer-hide
     :width="795"
+    :scrollable="true"
     @on-visible-change="answerChangeVisible"
     class="iview-modal">
     <!--提问题-->
@@ -40,8 +41,8 @@
         </div>
       </div>
     </div>
-    <Modal title="图片预览" v-model="visible" :width="795">
-      <img :src="imgUrl" v-if="visible" style="width: 100%;">
+    <Modal title="图片预览" v-model="visible" :width="795" :scrollable="true">
+      <img :src="imgUrl" style="width: 100%;">
     </Modal>
   </Modal>
 </template>

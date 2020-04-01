@@ -228,6 +228,7 @@ export default {
         type: item.collection
       }).then(data => {
         if (data.data.code === 200) {
+          this.$Message.success('收藏成功~')
         } else {
           this.$Message.error(data.data.msg)
         }

@@ -44,8 +44,9 @@
       </div>
       <Modal v-model="visible"
         :width="447"
-        :mask-closable=false
-        :closable=false
+        :mask-closable="false"
+        :closable="false"
+        :scrollable="true"
         footer-hide
         class="dopic-modal">
         <div class="stop-box" v-if="txtShow == '暂停'">

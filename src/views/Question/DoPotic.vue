@@ -56,8 +56,9 @@
       </div>
       <Modal v-model="visible"
         :width="447"
-        :mask-closable=false
-        :closable=false
+        :mask-closable="false"
+        :closable="false"
+        :scrollable="true"
         footer-hide
         class="dopic-modal">
         <div class="stop-box" v-if="txtShow == '暂停'">
@@ -94,6 +95,7 @@
         title="纠错"
         v-model="visibleError"
         footer-hide
+        :scrollable="true"
         :width="795"
         class="iview-modal">
         <error-correction v-if="visibleError" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>

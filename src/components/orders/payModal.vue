@@ -1,8 +1,8 @@
 <template>
   <Modal v-model="visible"
     :width="490"
-    :mask-closable=false
-    :closable=false
+    :mask-closable="false"
+    :closable="false"
     @on-visible-change="payModalVisible"
     footer-hide
     >

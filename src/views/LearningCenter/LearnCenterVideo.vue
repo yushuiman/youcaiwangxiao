@@ -91,7 +91,7 @@
           </div>
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="100%" ></iframe>
         </div>
-        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials" :answerTime="answerTime" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo" @addKeydown="addKeydown"></answer>
+        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials" :answerTime="answerTime" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo" @addKeydown="addKeydown" @updataAnswerall="updataAnswerall"></answer>
       </div>
     </div>
     <div class="answer-jy-wrap w-wrap clearfix">
@@ -635,9 +635,9 @@ export default {
         const res = data.data
         if (res.code === 200) {
           if (this.videoCredentials.collect == 1) {
-            this.$Message.success('收藏成功')
+            this.$Message.success('收藏成功~')
           } else {
-            this.$Message.success('取消成功')
+            this.$Message.success('取消成功~')
           }
         } else {
           this.$Message.error(res.msg)
@@ -647,6 +647,10 @@ export default {
     // tab切换 (答疑 讲义下载)
     tabClk (type, index) {
       this.chooseIdx = index
+    },
+    // 答疑提问成功
+    updataAnswerall () {
+      this.$refs.updateAnswerRef.initRes()
     }
   },
   beforeDestroy () {

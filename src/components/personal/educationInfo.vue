@@ -47,7 +47,6 @@
               <img :src="val.pc_img" alt="" class="uci-img">
               <div class="uci-detail">
                 <h2 class="ucid-name">{{val.name}}</h2>
-                <p class="ucid-des">{{val.description}}</p>
                 <p class="ucid-learn" v-if="val.video">学习至{{val.video.video_name}}</p>
                 <p class="ucid-learn" v-else>学习至未学习</p>
                 <p class="cpe-status" :class="{'cpe-finish': val.complete == 1}">{{val.complete == 1 ? '已完成' : '未完成'}}</p>
@@ -221,12 +220,13 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   .uc-pakeage-course-list{
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    box-shadow:0px 2px 20px 0px rgba(140,196,255,0.3);
   }
   .uc-item{
-    margin-bottom: 20px;
-    padding-right: 20px;
-    box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
+    margin-bottom: 10px;
+    padding-right: 21px;
+    // box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
     .u-course-my &{
       margin-bottom: 0;
     }
@@ -250,12 +250,23 @@ export default {
       }
     }
     &.uc-item-course{
-      padding: 11px 21px;
-      box-shadow: 0 0 0 0 transparent;
+      padding: 10px 21px 9px 51px;
       border-radius: 0;
       margin-bottom: 0;
       .uci-img{
+        width: 147px;
+        height: 80.7px;
         border-radius: 0
+      }
+      .uci-detail{
+        .ucid-name{
+          font-size: 14px;
+          line-height: 20px;
+        }
+        .ucid-des,.ucid-learn{
+          font-size: 12px;
+          line-height: 17px;
+        }
       }
     }
     .uci-img{
@@ -279,6 +290,7 @@ export default {
       .ucid-des{
         color: $col999;
         line-height: 20px;
+        margin-top: 3px;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         overflow: hidden;
@@ -317,7 +329,7 @@ export default {
       height: 28px;
       background: #1874FD;
       color: $colfff;
-      font-size: 16px;
+      font-size: 14px;
     }
     .uci-learn{
       width: 97px;

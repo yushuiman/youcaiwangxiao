@@ -3,6 +3,7 @@
     v-model="tousuVisible"
     footer-hide
     :width="795"
+    :scrollable="true"
     @on-visible-change="tousuChangeVisible"
     class="iview-modal">
     <div class="ask">

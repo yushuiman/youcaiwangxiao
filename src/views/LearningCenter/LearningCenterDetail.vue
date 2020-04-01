@@ -140,7 +140,7 @@
     <Modal v-model="visible"
       :width="795"
       footer-hide
-      :title=titTxt[addLearnIdx]
+      :title="titTxt[addLearnIdx]"
       class="plan-modal">
       <div class="height-com" v-if="addLearnIdx == 0">
         <div class="com-bg">

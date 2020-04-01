@@ -287,7 +287,9 @@ export default {
         if (res.code === 200) {
           this.quiz_image = []
           this.quiz = ''
+          this.$Message.success('提交成功~')
           this.getAnswerList()
+          this.$emit('updataAnswerall')
         } else {
           this.$Message.error(res.msg)
         }

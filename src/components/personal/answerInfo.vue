@@ -14,6 +14,9 @@
           <ul class="u-othq-list">
             <!-- 提问 -->
             <li class="u-othq-item" v-for="(items, index) in courseAnswerList" :key="index">
+              <div class="answer-source answer-source-course" @click="sourceVidTopic(items[0], 1)">
+                <i></i>来自：{{items[0].video_name}}<span>{{formatSeconds(items[0].video_time)}}</span>
+              </div>
               <div class="u-othq-item-t">
                 <img :src="items[0].head" alt="" class="head-logo">
                 <div class="othq-info">
@@ -134,6 +137,9 @@
           <ul class="u-othq-list">
             <!-- 提问 -->
             <li class="u-othq-item" v-for="(items, index) in questionAnswerList" :key="index">
+              <div class="answer-source answer-source-topic" @click="sourceVidTopic(items[0], 2)">
+                <i></i>来自：{{items[0].topic[0]}}
+              </div>
               <div class="u-othq-item-t">
                 <img :src="items[0].head" alt="" class="head-logo">
                 <div class="othq-info">
@@ -250,8 +256,8 @@
         </div>
       </div>
     </div>
-    <Modal title="图片预览" v-model="visible" :width="795">
-      <img :src="imgUrl" v-if="visible" style="width: 100%;">
+    <Modal title="图片预览" v-model="visible" :width="795" :scrollable="true">
+      <img :src="imgUrl" style="width: 100%;">
     </Modal>
     <zhuiwen :answerVisible.sync="answerVisible" :zhuiwenInfo="zhuiwenInfo" @updateAnswerList="initRes"></zhuiwen>
     <tousu :tousuVisible.sync="tousuVisible" :tousuInfo="tousuInfo"></tousu>
@@ -305,6 +311,7 @@ export default {
     })
   },
   mounted () {
+    // window.open('course', '', 'height=488,width=765,top=0,right=0,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no')
     if (this.isLoadHttpRequest) {
       this.initRes()
     } else {
@@ -333,6 +340,23 @@ export default {
           selIdx: index
         }
       })
+    },
+    // 答疑来源
+    sourceVidTopic (val, type) {
+      if (type === 1) {
+        console.log(val)
+      }
+      if (type === 2) {
+        window.open('course', '', 'height=488,width=765,top=0,left=550,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no')
+      }
+    },
+    formatSeconds (value) {
+      let result = parseInt(value)
+      let h = Math.floor(result / 3600) < 10 ? '0' + Math.floor(result / 3600) : Math.floor(result / 3600)
+      let m = Math.floor((result / 60 % 60)) < 10 ? '0' + Math.floor((result / 60 % 60)) : Math.floor((result / 60 % 60))
+      let s = Math.floor((result % 60)) < 10 ? '0' + Math.floor((result % 60)) : Math.floor((result % 60))
+      result = `${h}:${m}:${s}`
+      return result
     },
     initRes () {
       if (this.selIdx == 0) {
@@ -440,12 +464,34 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
+  .answer-source{
+    height: 55px;
+    line-height: 55px;
+    color: $col666;
+    border-bottom: 1px solid #E6E6E6;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 1;
+    cursor: pointer;
+    i{
+      margin-right: 12px;
+      vertical-align: middle;
+      margin-top: -3px;
+    }
+    &.answer-source-course i{
+      @include bg-img(24, 23, '../../assets/images/user/source-course-icon.png');
+    }
+    &.answer-source-topic i{
+      @include bg-img(19, 22, '../../assets/images/user/source-topic-icon.png');
+    }
+  }
   .u-othq-list-teacher{
     border-top: 1px solid #E6E6E6;
     margin-top: 15px;
   }
   .u-othq-item{
-    padding: 20px;
+    padding: 0 20px 20px;
     margin-bottom: 20px;
     background: $colfff;
     box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.1);
@@ -496,6 +542,7 @@ export default {
   .u-othq-item-t{
     display: flex;
     align-items: center;
+    padding-top: 14px;
     .head-logo{
       @include wh(40, 40);
       border-radius: 100%;
