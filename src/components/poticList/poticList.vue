@@ -263,7 +263,7 @@ export default {
     }
   }
   .topic-top{
-    padding: 12px 0;
+    padding: 10px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -300,7 +300,9 @@ export default {
   }
   .topic-title{
     p{
-      line-height: 22px;
+      font-size: 18px;
+      color: $col333;
+      line-height: 25px;
     }
     img{
       max-width: 100%;
@@ -313,6 +315,8 @@ export default {
       display: flex;
       align-items: center;
       justify-content: flex-start;
+      font-size: 18px;
+      color: $col666;
       .opi-abcd{
         span{
           width: 26px;
@@ -368,16 +372,19 @@ export default {
   }
   .resolve-detail{
     background: #F3F8FF;
-    padding: 16px 24px;
+    padding: 20px 24px;
     p{
       font-size: 16px;
-      line-height: 26px;
+      line-height: 22px;
       &.right-resolve{
         span{
           margin-right: 28px;
+          color: $col333;
+          &:first-child{
+            font-weight: 500;
+          }
           em{
             margin-left: 16px;
-            font-weight: bold;
             &.right{
               color: #0AAB55;
             }

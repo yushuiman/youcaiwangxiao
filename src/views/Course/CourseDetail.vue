@@ -149,7 +149,7 @@ export default {
         query: {
           package_id: this.package_id,
           course_id: this.$route.query.course_id,
-          is_zhengke: this.$route.query.is_zhengke
+          is_zk: this.$route.query.is_zk
         }
       })
     },

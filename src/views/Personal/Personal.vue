@@ -74,7 +74,7 @@ export default {
         },
         {
           type: 'account',
-          tit: '账号',
+          tit: '账户',
           class_name: 'userm-item-06'
         }
       ],

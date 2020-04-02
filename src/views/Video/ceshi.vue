@@ -26,7 +26,7 @@
           v-if="flagKc"
           :courseSections="courseSections"
           :openMenu="openMenu"
-          :is_zhengke="playCourseInfo.is_zhengke"
+          :is_zk="playCourseInfo.is_zk"
           @closeModel="closeModel">
         </course-list> -->
         <!-- <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo"></answer> -->
@@ -74,7 +74,7 @@ export default {
         section_id: this.$route.query.section_id,
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
-        is_zhengke: 0,
+        is_zk: 0,
         userstatus: parseInt(window.sessionStorage.getItem('userstatus')) || 2 // 1购买2未购买
       },
       playCourseInfoNext: {},
@@ -208,7 +208,7 @@ export default {
           this.playCourseInfo.course_id = parseInt(this.$route.query.course_id || this.packageList[0].course_id)
           this.packageList.forEach(v => {
             if (this.playCourseInfo.course_id === v.course_id) {
-              this.playCourseInfo.is_zhengke = v.is_zhengke
+              this.playCourseInfo.is_zk = v.is_zhengke
             }
           })
           this.initSecvCatalog(this.playCourseInfo.course_id)
@@ -334,7 +334,7 @@ export default {
     position: absolute;
     bottom: 0;
     left: 0;
-    top: 70px;
+    top: 60px;
     width: 100%;
     background: #1D1F21;
     overflow: hidden;

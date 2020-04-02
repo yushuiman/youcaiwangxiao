@@ -1,8 +1,8 @@
 /* BEM
  -------------------------- */
 .video-header {
-  height: 70px;
-  line-height: 70px;
+  height: 60px;
+  line-height: 60px;
   padding: 0 31px;
   background: #ffffff;
   box-shadow: 0 4px 8px 0 rgba(28, 31, 33, 0.1);
@@ -94,10 +94,14 @@
 
 .video-main {
   width: 100%;
-  background: #1D1F21;
   overflow: hidden;
   display: flex;
   position: relative;
+  background: #1D1F21;
+}
+
+.video-main.curren {
+  background: #000000;
 }
 
 .video-info-l {
@@ -116,7 +120,6 @@
 
 .video-info-c .course-video-box {
   height: 100%;
-  background: #000000;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -127,20 +130,15 @@
   width: 326px;
   height: 216px;
   right: 0;
-  top: 0px;
+  top: 4px;
   z-index: 102;
 }
 
 .video-info-r {
   position: relative;
-  background: #1c1f21;
   padding: 0;
   right: 0;
   z-index: 1;
-}
-
-.video-info-r.video-info-r-w {
-  width: 495px;
 }
 
 .vinfo-ul {

@@ -2,7 +2,7 @@
   <div class="video-wrap">
     <div class="video-header">
       <div>
-        <router-link :to="{ path: '/course-detail', query: { package_id: this.$route.query.package_id }}">></router-link>
+        <router-link :to="{ path: '/personal', query: { type: 'course'}}">></router-link>
         <span>{{videoCredentials.Title}}</span>
         <!-- <span class="star-collection" @click="courseCollection" v-if="videoCredentials.collect == 2">
           <Icon type="md-star-outline" style="color: #999999; font-size: 22px; margin-top: -4px;" v-if="videoCredentials.collect == 2"/>收藏
@@ -13,12 +13,12 @@
       </div>
       <HeadName :showName="false"></HeadName>
     </div>
-    <div class="video-main" id="box">
+    <div class="video-main" :class="{'curren': fixedVideo}" id="box">
       <div class="video-section-list" :class="{'active': flagCourse}">
         <course-list
           :courseSections="courseSections"
           :openMenu="openMenu"
-          :is_zhengke="playCourseInfo.is_zhengke"
+          :is_zk="playCourseInfo.is_zk"
           @switchVideo="switchVideo">
         </course-list>
       </div>
@@ -29,7 +29,7 @@
             <p class="txt">章节</p>
           </li>
           <!-- 正课且购买 -->
-          <li class="vinfo-item" :class="{'curren': vinfoIdex == 1}" v-if="playCourseInfo.is_zhengke == 1 && playCourseInfo.userstatus == 1" @click="showModel('答疑', 1)">
+          <li class="vinfo-item" :class="{'curren': vinfoIdex == 1}" v-if="playCourseInfo.is_zk == 1 && playCourseInfo.userstatus == 1" @click="showModel('答疑', 1)">
             <i class="vio-icon vio-icon-02"></i>
             <p class="txt">答疑</p>
           </li>
@@ -202,7 +202,7 @@ export default {
         section_id: this.$route.query.section_id,
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id,
-        is_zhengke: this.$route.query.is_zhengke || 2,
+        is_zk: this.$route.query.is_zk || 2,
         userstatus: window.sessionStorage.getItem('userstatus') || 2 // 1购买2未购买
       },
       playCourseInfoNextPrev: {},
@@ -684,7 +684,7 @@ export default {
     //       this.playCourseInfo.course_id = this.$route.query.course_id || this.packageList[0].course_id
     //       this.packageList.forEach(v => {
     //         if (this.playCourseInfo.course_id == v.course_id) {
-    //           this.playCourseInfo.is_zhengke = v.is_zhengke
+    //           this.playCourseInfo.is_zk = v.is_zhengke
     //         }
     //       })
     //       this.initSecvCatalog(this.playCourseInfo.course_id)

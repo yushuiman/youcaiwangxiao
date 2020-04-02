@@ -2,12 +2,12 @@
   <div class="video-wrap">
     <div class="video-header">
       <div>
-        <router-link :to="{ path: '/education-course-detail', query: { package_id: this.$route.query.package_id, type_id: this.$route.query.type_id }}">></router-link>
+        <router-link :to="{ path: '/personal', query: { type: 'education' }}">></router-link>
         <span>{{videoCredentials.Title}}</span>
       </div>
       <HeadName :showName="false"></HeadName>
     </div>
-    <div class="video-main" id="box">
+    <div class="video-main" :class="{'curren': fixedVideo}" id="box">
       <div class="video-section-list" :class="{'active': flagCourse}">
         <course-list
           :courseSections="courseSections"
@@ -27,7 +27,7 @@
           </li>
         </ul>
       </div>
-      <div class="video-info-c" style="padding-top: 34px;" id="left" :style="{ height: screenHeight - 70 + 'px' }">
+      <div class="video-info-c" style="padding-top: 34px;" id="left" :style="{ height: screenHeight - 60 + 'px' }">
         <p style="position:absolute;top:0;color: #F99111;height: 34px;line-height: 34px;">如何获得本课程学分：每个视频学习过程中均会随机弹出签到提示，全部视频都成功签到后才能获得本课程CPE积分。</p>
         <div class="course-video-box" v-if="!fixedVideo">
           <ali-player

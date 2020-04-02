@@ -15,7 +15,9 @@
 .ivu-modal-body{
     padding: 0;
 }
-.iview-modal .ivu-modal-header-inner {
+.iview-modal .ivu-modal-header-inner,
+.ivu-modal-header p,
+.ivu-modal-header-inner {
     font-size: 22px;
     height: auto;
     line-height: 1

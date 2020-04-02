@@ -288,7 +288,7 @@ export default {
     position: absolute;
     width: 100%;
     left: 0;
-    top: 70px;
+    top: 60px;
     bottom: 0;
     right: 0;
     background: #ffffff;

@@ -283,7 +283,7 @@ export default {
       this.sessionPlayInfo.package_id = val.package_id
       this.sessionPlayInfo.course_id = val.course_id
       this.sessionPlayInfo.section_id = val.section_id
-      this.sessionPlayInfo.is_zhengke = v.is_zhengke
+      this.sessionPlayInfo.is_zk = v.is_zhengke
       window.sessionStorage.setItem('userstatus', val.is_purchase) // 是否购买
       this.is_purchase = val.is_purchase // 2未购买
       this.visible = true
@@ -325,7 +325,7 @@ export default {
           course_id: val.video.course_id,
           section_id: val.video.section_id,
           video_id: val.video.video_id,
-          is_zhengke: val.is_zhengke || val.video.is_zhengke
+          is_zk: val.is_zhengke || val.video.is_zhengke
         }
         this.$router.push({ path: '/course-video', query: obj })
         return
@@ -335,7 +335,7 @@ export default {
         query: {
           package_id: item.package_id || val.package_id,
           course_id: val.course_id || val.video.course_id,
-          is_zhengke: val.is_zhengke || val.video.is_zhengke
+          is_zk: val.is_zhengke || val.video.is_zhengke
         }
       })
     },

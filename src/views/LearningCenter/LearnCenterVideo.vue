@@ -2,12 +2,12 @@
   <div class="video-wrap">
     <div class="video-header">
       <div>
-        <router-link :to="{ path: '/learning-center-detail', query: { package_id: playCourseInfo.package_id }}">></router-link>
+        <router-link :to="{ path: '/learning-center-detail', query: { s_c_idx: playCourseInfo.s_c_idx }}">></router-link>
         <span>{{videoCredentials.Title}}</span>
       </div>
       <HeadName :showName="false"></HeadName>
     </div>
-    <div class="video-main" id="box">
+    <div class="video-main" :class="{'curren': fixedVideo}" id="box">
       <div class="video-section-list" :class="{'active': flagCourse}">
         <h1 class="vsc-title">章节目录</h1>
         <ul class="video-list">
@@ -26,7 +26,7 @@
             <p class="txt">章节</p>
           </li>
           <!-- 正课且购买 -->
-          <li class="vinfo-item" :class="{'curren': vinfoIdex == 1}" v-if="playCourseInfo.is_zhengke == 1 && playCourseInfo.userstatus == 1" @click="showModel('答疑', 1)">
+          <li class="vinfo-item" :class="{'curren': vinfoIdex == 1}" v-if="playCourseInfo.is_zk == 1 && playCourseInfo.userstatus == 1" @click="showModel('答疑', 1)">
             <i class="vio-icon vio-icon-02"></i>
             <p class="txt">答疑</p>
           </li>
@@ -156,10 +156,11 @@ export default {
         course_id: this.$route.query.course_id,
         section_id: this.$route.query.section_id,
         video_id: this.$route.query.video_id,
-        is_zhengke: this.$route.query.is_zhengke,
+        is_zk: this.$route.query.is_zk,
         userstatus: window.sessionStorage.getItem('userstatus') || 2, // 1购买2未购买
         days: this.$route.query.days,
-        plan_id: this.$route.query.plan_id
+        plan_id: this.$route.query.plan_id,
+        s_c_idx: this.$route.query.s_c_idx
       },
       playCourseInfoNextPrev: {},
       socketTimer: null,

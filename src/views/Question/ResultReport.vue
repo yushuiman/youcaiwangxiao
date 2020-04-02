@@ -191,7 +191,7 @@ export default {
   .result-wrap{
     position: absolute;
     width: 100%;
-    top: 70px;
+    top: 60px;
     min-height: 100%;
     background: url('../../assets/images/questions/result-bg.png') no-repeat center;
     background-size: cover;

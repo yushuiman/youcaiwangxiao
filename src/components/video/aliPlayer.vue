@@ -1,7 +1,8 @@
 <template>
-  <div class='prism-player' :class="{'prism-player-hide-some': fixedVideo}" :id='playerId'>
+  <div class='prism-player' :class="{'prism-player-hide1': fixedVideo, 'prism-player-hide2': answerVideo}" :id='playerId'>
     <!-- 自定义设置 因为阿里倍速无法记忆，并且清晰度切换造成倍速无法记忆 -->
-    <div class="video-setting" :class="{'hide': fixedVideo}">
+    <!-- 答疑来源小窗口answerVideo，课程、后续教育、学习中心小窗口fixedVideo -->
+    <div class="video-setting" :class="{'hide': fixedVideo || answerVideo}">
       <div class="setting-info">
         <div class="v-switch-item">
           <span @click.stop="switchVideo(3)">上一节</span>|<span @click.stop="switchVideo(4)">下一节</span>
@@ -67,6 +68,10 @@ import Cookies from 'js-cookie'
 export default {
   name: 'Aliplayer',
   props: {
+    answerVideo: {
+      type: Boolean,
+      default: false
+    },
     fixedVideo: {
       type: Boolean,
       default: false
@@ -317,7 +322,7 @@ export default {
       isReload: false,
       instance: null,
       speedTxt: Cookies.get('speedTxt') || '正常',
-      qualityTxt: Cookies.get('qualityTxt') || '高清',
+      qualityTxt: Cookies.get('qualityTxt') || '流畅',
       voiceNum: parseInt(Cookies.get('voicenum')) || 100, // 音量
       voiceNum1: parseInt(Cookies.get('voicenum1')) || 100, // 音量
       speedList: [
@@ -437,13 +442,18 @@ export default {
             this.$emit('ready', _this.instance)
           })
           _this.instance.on('play', () => {
-            _video.removeEventListener('click', this.play)
-            _video.addEventListener('click', this.pause)
+            // 暂停和拖拽冲突了
+            if (!this.answerVideo) {
+              _video.removeEventListener('click', this.play)
+              _video.addEventListener('click', this.pause)
+            }
             this.$emit('play', _this.instance)
           })
           _this.instance.on('pause', () => {
-            _video.removeEventListener('click', this.pause)
-            _video.addEventListener('click', this.play)
+            if (!this.answerVideo) {
+              _video.removeEventListener('click', this.pause)
+              _video.addEventListener('click', this.play)
+            }
             this.$emit('pause', _this.instance)
           })
           _this.instance.on('ended', () => {
@@ -755,13 +765,17 @@ export default {
   .prism-player video{
     padding-bottom: 44px;
   }
+  .prism-player-hide1 video, .prism-player-hide2 video{
+    padding-bottom: 0;
+  }
   /* 设置icon 隐藏 */
   /* .prism-player .prism-fullscreen-btn, */
   .prism-player .prism-volume,.prism-player .prism-cc-btn,.prism-player .prism-setting-btn,.prism-player .prism-volume{
     display: none;
   }
   .prism-player .prism-info-left-bottom{display:none!important;}
-  .prism-player-hide-some .prism-fullscreen-btn {display:none;}
+  .prism-player-hide1 .prism-fullscreen-btn, .prism-player-hide2 .prism-fullscreen-btn {display:none;}
+  /* .prism-player-hide2 .prism-progress, .prism-player-hide2 .prism-time-display, .prism-player-hide2 .prism-fullscreen-btn {display:none;} */
   /* 诊断 隐藏*/
   .prism-player .prism-ErrorMessage .prism-error-operation a.prism-button-orange{
     display: none;

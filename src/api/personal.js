@@ -278,3 +278,10 @@ export const ctimeSub = (data) => { // 设置科目考试时间
     method: 'post'
   })
 }
+export const onlyQuestion = (data) => { // 答疑题干展示
+  return axios.request({
+    url: '/web/Personal/onlyQuestion',
+    data,
+    method: 'post'
+  })
+}

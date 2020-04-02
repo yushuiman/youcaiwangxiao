@@ -66,7 +66,7 @@ export default {
             query: {
               ...this.$route.query,
               course_id: this.courseCatalogInfo[0].course_id,
-              is_zhengke: this.courseCatalogInfo[0].is_zhengke
+              is_zk: this.courseCatalogInfo[0].is_zhengke
             }
           })
           this.courseCatalogInfo.forEach((v, index) => {
@@ -122,7 +122,7 @@ export default {
           course_id: item.course_id,
           section_id: val.section_id,
           video_id: v.video_id,
-          is_zhengke: item.is_zhengke
+          is_zk: item.is_zhengke
         }
       })
     }

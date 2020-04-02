@@ -14,7 +14,7 @@
                   <span class="arow" v-if="selCourseFlag"><Icon type="md-arrow-dropup" style="font-size: 28px;margin-top: -3px;color: #666666;"/></span>
                 </div>
                 <DropdownMenu slot="list" class='drop-list sel-course-list'>
-                  <li class="sel-course-item" v-for="(v, index) in learnList" :key="index" @click="selCourse(v)">{{v.plan_name}}</li>
+                  <li class="sel-course-item" v-for="(v, index) in learnList" :key="index" @click="selCourse(v, index)">{{v.plan_name}}</li>
                   <li class="add-course" @click="planLearn">+添加学习计划</li>
                 </DropdownMenu>
               </Dropdown>
@@ -309,6 +309,7 @@ export default {
       sameday: 0, // 是不是今天 判断学习中，学习结束状态
       course_id: 0, // select默认选择
       package_id: 0, // select默认选择
+      s_c_idx: this.$route.query.s_c_idx || 0,
       selCourseName: '', // select默认选择name
       selCourseFlag: false, // select 显示隐藏
       addlearn: 0, // 是否有学习计划 1有2没有
@@ -410,9 +411,9 @@ export default {
             this.courseListLearn = plan // 没有学习计划 课程列表
           }
           if (learnList && learnList.length) {
-            this.selCourseName = this.learnList[0].plan_name // 初始化学习计划详情name
-            this.course_id = this.learnList[0].course_id // 初始化学习计划详情course_id
-            this.currenLearnInfo = this.learnList[0] // 初始化学习计划详情
+            this.selCourseName = this.learnList[this.s_c_idx].plan_name // 初始化学习计划详情name
+            this.course_id = this.learnList[this.s_c_idx].course_id // 初始化学习计划详情course_id
+            this.currenLearnInfo = this.learnList[this.s_c_idx] // 初始化学习计划详情
             this.currenLearnInfo.percent = (this.currenLearnInfo.schedule / this.currenLearnInfo.plan_days) * 100 // 初始化学习计划圆环进度
             this.getStudyStatus() // 当前学习计划状态
           }
@@ -565,10 +566,18 @@ export default {
       this.selCourseFlag = change
     },
     // 首页切换课程学习计划详情
-    selCourse (v) {
+    selCourse (v, index) {
+      this.s_c_idx = index
       this.currenLearnInfo = v
       this.selCourseName = v.plan_name
       this.selCourseFlag = false
+      this.$router.replace({ path: 'learning-center-detail',
+        query: {
+          ...this.$route.query,
+          s_c_idx: index
+        }
+      })
+      window.location.reload()
     },
     // 切换未完成课程学习计划
     getPackageIdSel (e, val) {
@@ -690,9 +699,10 @@ export default {
         course_id: val.course_id,
         section_id: val.section_id,
         video_id: val.video_id,
-        is_zhengke: val.is_zhengke,
+        is_zk: val.is_zhengke,
         plan_id: this.currenLearnInfo.plan_id, // 计划id
-        days: this.currenLearnInfo.join_days // 第几天
+        days: this.currenLearnInfo.join_days, // 第几天
+        s_c_idx: this.s_c_idx
       }
       if (this.currenLearnInfo.is_exper === 1) { // 0元体验 未购买 去看视频
         val.userstatus = 2 // 当0元体验的时候 2是未购买
@@ -783,7 +793,7 @@ export default {
     position: absolute;
     width: 100%;
     left: 0;
-    top: 70px;
+    top: 60px;
     bottom: 0;
     right: 0;
     background: #ffffff;
