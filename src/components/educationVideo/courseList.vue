@@ -18,7 +18,7 @@
                 <div :class="{'already-see': v.record == 1}">
                   <span class="see-tips">已完成</span>
                   <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
-                  <span class="sl">{{val.section_id + '' + v.video_id}}{{v.video_name}}</span>
+                  <span class="sl">{{v.video_name}}</span>
                   <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1), 'el-dot-see': v.record == 1}"></i>
                 </div>
               </el-menu-item>

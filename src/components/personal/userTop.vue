@@ -2,7 +2,10 @@
   <div class="user-top-wrap">
     <div class="w-wrap">
       <div class="user-info">
-        <img ref="fixedTit" :src="personalInfo.head" alt="头像" class="head-logo" :class="{'headCla': fixedFlag, 'headCla2': fixedFlag2}" @click="setBaseInfo">
+        <div class="user-set" ref="fixedTit" :class="{'headCla': fixedFlag, 'headCla2': fixedFlag2}">
+          <img :src="personalInfo.head" alt="头像" class="head-logo">
+          <span @click="setBaseInfo">个人设置</span>
+        </div>
         <div class="user-flex">
           <div class="user-detail-left">
             <h2>{{personalInfo.username}}</h2>
@@ -254,26 +257,54 @@ export default {
     @include flexJustifyAlignItem;
     margin-left: 186px;
   }
-  .user-info{
-    .head-logo{
-      width: 178px;
-      height: 178px;
-      border: 4px solid $colfff;
-      border-radius: 50%;
-      box-sizing: border-box;
+  .user-set{
+    width: 178px;
+    height: 178px;
+    border: 4px solid $colfff;
+    border-radius: 50%;
+    box-sizing: border-box;
+    position: fixed;
+    top: 74px;
+    z-index: 900;
+    margin-left: -36px;
+    overflow: hidden;
+    &:hover span{
       cursor: pointer;
-      position: fixed;
-      top: 84px;
-      margin-left: -36px;
-      &.headCla{
-        width: 120px;
-        height: 120px;
-        top: 50px;
-        margin-left: 11px;
+      display: block;
+    }
+    &.headCla{
+      width: 120px;
+      height: 120px;
+      top: 50px;
+      margin-left: 11px;
+      span{
+        height: 30px;
+        line-height: 26px;
+        padding-left: 31px;
+        font-size: 12px;
       }
-      &.headCla2{
-        position: absolute;
-      }
+    }
+    &.headCla2{
+      position: absolute;
+    }
+    .head-logo{
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+    span{
+      display: none;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 40px;
+      line-height: 36px;
+      color: #ffffff;
+      font-size: 14px;
+      background: rgba(0, 0, 0, .5);
+      border-radius: 6%/ 100% 100% 0 0;
+      padding-left: 54px;
     }
   }
   .user-detail-left{

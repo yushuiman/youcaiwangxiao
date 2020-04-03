@@ -2,13 +2,15 @@
   <div class="video-wrap">
     <div class="video-header">
       <div>
-        <router-link :to="{ path: '/learning-center-detail', query: { s_c_idx: playCourseInfo.s_c_idx }}">></router-link>
+        <router-link :to="{ path: '/learning-center-detail', query: { s_c_idx: playCourseInfo.s_c_idx }}">
+          <Icon type="ios-arrow-back" style="color:#999999;font-size: 22px;vertical-align: middle;margin-top:-3px;margin-right: 12px;"/>
+        </router-link>
         <span>{{videoCredentials.Title}}</span>
       </div>
       <HeadName :showName="false"></HeadName>
     </div>
     <div class="video-main" :class="{'curren': fixedVideo}" id="box">
-      <div class="video-section-list" :class="{'active': flagCourse}">
+      <div class="video-section-list" :class="{'active': flagCourseSec}">
         <h1 class="vsc-title">章节目录</h1>
         <ul class="video-list">
           <li class="video-item" :class="['video-item' + v.video_id, {'curren': playCourseInfo.video_id == v.video_id}]" v-for="(v, index) in learnVideoList" :key="index" @click="switchVideo(2, v)"
@@ -138,11 +140,11 @@ export default {
       vinfoIdex: 4,
       txtArr: ['答疑', '讲义下载'],
       flagAnswer: false,
-      flagCourse: false,
+      flagCourseSec: false,
       flagJy: true,
       fixedVideo: false,
       flagClosed: false,
-      wImportant: 495,
+      wImportant: 445,
       VideoId: '', // 视频VideoId
       videoCredentials: {
         handouts: '', // 讲义
@@ -288,7 +290,7 @@ export default {
           var moveLen = resize.left + (endX - startX)
           var maxT = box.clientWidth - resize.offsetWidth
           if (moveLen < 680) moveLen = 680
-          if (moveLen > maxT - 495) moveLen = maxT - 495
+          if (moveLen > maxT - 445) moveLen = maxT - 445
           right.style.width = (box.clientWidth - moveLen - 10) + 'px'
         }
         document.onmouseup = function (evt) {
@@ -302,7 +304,7 @@ export default {
     },
     // 1切换视频清晰度，2目录切换视频，3切换上一个视频，4切换下一个视频
     switchVideo (type, v) {
-      this.flagCourse = false
+      this.flagCourseSec = false
       this.chooseIdx = 0
       if (type === 1) {
         this.getVideoPlayback(2)
@@ -321,7 +323,7 @@ export default {
           this.flagAnswer = false
           this.flagJy = true
           this.flagClosed = false
-          this.wImportant = 495
+          this.wImportant = 445
         }
         this.getVideoPlayback(2)
       }
@@ -330,7 +332,7 @@ export default {
           this.flagAnswer = false
           this.flagJy = true
           this.flagClosed = false
-          this.wImportant = 495
+          this.wImportant = 445
         }
         this.computedPrevVid()
       }
@@ -339,7 +341,7 @@ export default {
           this.flagAnswer = false
           this.flagJy = true
           this.flagClosed = false
-          this.wImportant = 495
+          this.wImportant = 445
         }
         this.computedNextVid()
       }
@@ -483,7 +485,7 @@ export default {
     showModel (val, index) {
       this.vinfoIdex = index
       if (val === '章节') {
-        this.flagCourse = !this.flagCourse
+        this.flagCourseSec = !this.flagCourseSec
       }
       if (val === '答疑') {
         this.answerTime = parseInt(this.$refs.aliPlayers.getCurrentTime())
@@ -492,13 +494,13 @@ export default {
           this.flagAnswer = true
           this.flagJy = false
           this.flagClosed = false
-          this.wImportant = 495
+          this.wImportant = 445
           return
         }
         this.flagAnswer = !this.flagAnswer
         this.flagJy = !this.flagAnswer
         this.flagClosed = false
-        this.wImportant = 495
+        this.wImportant = 445
       }
       if (val === '讲义') {
         if (this.fixedVideo) {
@@ -508,7 +510,7 @@ export default {
         if (this.flagJy) {
           this.flagAnswer = false
           this.flagClosed = false
-          this.wImportant = 495
+          this.wImportant = 445
           return
         }
         this.flagAnswer = false
@@ -517,7 +519,7 @@ export default {
       }
     },
     closeModel (msg) {
-      this.flagCourse = false
+      this.flagCourseSec = false
       if (msg === 'jy') {
         if (this.fixedVideo) {
           return
@@ -530,7 +532,7 @@ export default {
         this.flagJy = true
         this.flagClosed = false
         this.flagAnswer = false
-        this.wImportant = 495
+        this.wImportant = 445
       }
     },
     // 切换模式
@@ -544,7 +546,7 @@ export default {
       if (type === 'video') {
         this.fixedVideo = false
         this.flagJy = true
-        this.wImportant = 495
+        this.wImportant = 445
         this.flagClosed = false
       }
     },

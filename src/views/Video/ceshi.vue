@@ -365,7 +365,7 @@ export default {
     right: 0;
     z-index: 1;
     &.video-info-r-w{
-      width: 495px;
+      width: 445px;
     }
   }
   // 讲义

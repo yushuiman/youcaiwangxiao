@@ -26,33 +26,6 @@
             color: #F99111 !important;
         }
     }
-
-    a {
-        margin: 0 8px;
-        color: $col999;
-        display: inline-block;
-        font-family: Consolas, Menlo, Courier, monospace;
-        transform: rotate(180deg);
-    }
-}
-
-.login-r {
-    position: relative;
-
-    img {
-        vertical-align: middle;
-        cursor: pointer;
-
-        &.email-icon {
-            @include wh(18, 14);
-            // margin: 0 31px;
-        }
-
-        &.head-logo {
-            @include wh(30, 30);
-            border-radius: 50%;
-        }
-    }
 }
 
 .vc-title {
@@ -197,7 +170,7 @@
     top: 0;
     left: -386px;
     opacity: 0;
-    bottom: 64px;
+    bottom: 0;
     z-index: 101;
     background: #26292C;
     overflow-y: scroll;

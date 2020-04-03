@@ -29,34 +29,6 @@
   color: #F99111 !important;
 }
 
-.video-header a {
-  margin: 0 8px;
-  color: #999999;
-  display: inline-block;
-  font-family: Consolas, Menlo, Courier, monospace;
-  transform: rotate(180deg);
-}
-
-.login-r {
-  position: relative;
-}
-
-.login-r img {
-  vertical-align: middle;
-  cursor: pointer;
-}
-
-.login-r img.email-icon {
-  width: 18px;
-  height: 14px;
-}
-
-.login-r img.head-logo {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-}
-
 .vc-title {
   padding: 0 20px;
   font-size: 16px;
@@ -231,7 +203,7 @@
   top: 0;
   left: -386px;
   opacity: 0;
-  bottom: 64px;
+  bottom: 0;
   z-index: 101;
   background: #26292C;
   overflow-y: scroll;

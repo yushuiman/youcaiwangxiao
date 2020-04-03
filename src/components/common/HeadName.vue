@@ -1,6 +1,6 @@
 <template>
-  <div class="login-r fr">
-    <img src="../../assets/images/global/email-icon.png" alt="email" class="email-icon" @click="goNews">
+  <div class="login-r">
+    <img src="../../assets/images/global/news-icon.png" alt="news" class="news-icon" @click="goNews">
     <i v-if="is_news == 1" class="new-dot"></i>
     <Dropdown trigger="hover" :transfer="true" @on-visible-change="dropDownVisible">
       <img :src="avatorImgPath" alt="头像" class="head-logo" @click="goPersonalPage('course')">
@@ -124,19 +124,18 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   .login-r{
-    height: 30px;
-    line-height: 30px;
     .out-login{
       color: $blueColor;
     }
     img{
       vertical-align: middle;
       cursor: pointer;
-      &.email-icon{
-        @include wh(18, 14);
+      &.news-icon{
+        width: 16px;
+        height: 21px;
       }
       &.head-logo{
-        @include wh(30, 30);
+        @include wh(40, 40);
         border-radius: 50%;
         margin-left: 31px;
         margin-right: 10px;
@@ -151,7 +150,7 @@ export default {
     width: 254px;
     background:#ffffff;
     border-radius: 6px;
-    margin-top: 14px;
+    margin-top: 10px;
   }
   .mc-list{
     display: flex;

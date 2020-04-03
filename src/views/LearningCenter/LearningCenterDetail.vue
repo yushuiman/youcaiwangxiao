@@ -136,7 +136,7 @@
       </div>
     </div>
     <img v-if="addlearn == 2" class="lc-right-bottom-img" src="../../assets/images/learncenter/right-bottom-img.png" alt="">
-    <!-- 制定学习计划 自定义modal样式 :styles=styles -->
+    <!-- 制定学习计划 自定义modal样式 -->
     <Modal v-model="visible"
       :width="795"
       footer-hide
@@ -187,8 +187,7 @@
     <!-- 您有缺勤的课程 -->
     <Modal v-model="visible2"
       :width="291"
-      :closable=false
-      :styles=styles
+      :closable="false"
       footer-hide
       class="learn-modal-wrap">
       <div class="no-finish-wrap">
@@ -226,8 +225,7 @@
     <!-- 退出学习计划 -->
     <Modal v-model="visible4"
       :width="291"
-      :closable=false
-      :styles=styles
+      :closable="false"
       footer-hide
       class="learn-modal-wrap">
       <div class="outplan-wrap">
@@ -297,10 +295,6 @@ export default {
     return {
       visible: false,
       addLearnIdx: 0, // 添加学习计划div 1选择课程 2考试时间时间 3计划完成
-      styles: {
-        top: '50%',
-        marginTop: '-100px'
-      },
       titTxt: {
         0: '添加学习计划',
         1: '添加学习计划',
@@ -1353,6 +1347,7 @@ export default {
       width: 50%;
       height: 40px;
       font-size: 16px;
+      background: none;
       &:last-child{
         border-left: 1px solid #E6E6E6;
         color: $blueColor;
