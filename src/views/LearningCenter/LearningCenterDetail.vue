@@ -187,8 +187,7 @@
     <!-- 您有缺勤的课程 -->
     <Modal v-model="visible2"
       :width="291"
-      :closable=false
-      :styles=styles
+      :closable="false"
       footer-hide
       class="learn-modal-wrap">
       <div class="no-finish-wrap">
@@ -226,8 +225,7 @@
     <!-- 退出学习计划 -->
     <Modal v-model="visible4"
       :width="291"
-      :closable=false
-      :styles=styles
+      :closable="false"
       footer-hide
       class="learn-modal-wrap">
       <div class="outplan-wrap">
