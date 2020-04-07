@@ -117,7 +117,7 @@ export default {
     return {
       screenTimer: null, // 监听浏览器高度
       screenHeight: document.documentElement.clientHeight || document.body.clientHeight,
-      vinfoIdex: 4,
+      vinfoIdex: 0,
       flagCourseSec: true,
       flagJy: false,
       fixedVideo: false,

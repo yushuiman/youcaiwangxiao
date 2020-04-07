@@ -149,7 +149,7 @@ export default {
       screenTimer: null, // 监听浏览器高度
       screenHeight: document.documentElement.clientHeight || document.body.clientHeight,
       chooseIdx: 0,
-      vinfoIdex: 4,
+      vinfoIdex: 0,
       txtArr: ['答疑', '讲义下载'],
       flagAnswer: false,
       flagCourseSec: true,
