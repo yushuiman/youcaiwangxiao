@@ -10,14 +10,6 @@
       <HeadName :showName="false"></HeadName>
     </div>
     <div class="video-main" :class="{'curren': fixedVideo}" id="box">
-      <div class="video-section-list" :class="{'active': flagCourseSec}">
-        <course-list
-          :courseSections="courseSections"
-          :openMenu="openMenu"
-          :is_zk="playCourseInfo.is_zk"
-          @switchVideo="switchVideo">
-        </course-list>
-      </div>
       <div class="video-info-l">
         <ul class="vinfo-ul">
           <li class="vinfo-item" :class="{'curren': vinfoIdex == 0}" @click="showModel('章节', 0)">
@@ -55,12 +47,26 @@
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="100%"></iframe>
         </div>
       </div>
-      <div id="resize" class="course-drag" :class="{'course-drag-hide': flagClosed}">
+      <!-- :class="{'course-drag-hide': flagClosed}" -->
+      <div id="resize" class="course-drag" v-if="!flagClosed">
         <div class="drag"></div>
       </div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
-        <div class="video-panel-close" v-if="flagClosed" @click="closeModel('closed')">
+        <div class="video-panel-close" v-if="flagClosed" @click="showModel('closed')">
           <Icon type="ios-arrow-round-back" style="font-size: 44px; color:#ffffff;"/>
+        </div>
+        <!-- :class="{'active': !flagCourseSec}" -->
+        <div class="video-section-list" v-if="flagCourseSec">
+          <div class="vc-title">
+            <p>章节目录</p>
+            <Icon type="md-close" style="color:#999999;font-size: 22px;" @click="closeModel('sec')"/>
+          </div>
+          <course-list
+            :courseSections="courseSections"
+            :openMenu="openMenu"
+            :is_zk="playCourseInfo.is_zk"
+            @switchVideo="switchVideo">
+          </course-list>
         </div>
         <div class="course-video-box" :class="{'fix-video': fixedVideo}" v-if="fixedVideo">
           <ali-player
@@ -90,7 +96,13 @@
           </div>
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="100%" ></iframe>
         </div>
-        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials" :answerTime="answerTime" :user_id="user_id" @closeModel="closeModel" @stopVideo="stopVideo" @addKeydown="addKeydown" @updataAnswerall="updataAnswerall"></answer>
+        <div class="answer-box" v-if="flagAnswer">
+          <div class="vc-title">
+            <p>提问题</p>
+            <Icon type="md-close" style="color:#999999;font-size: 22px;" @click="closeModel('answer')"/>
+          </div>
+          <answer :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials" :answerTime="answerTime" :user_id="user_id" :screenHeight="screenHeight" @stopVideo="stopVideo" @addKeydown="addKeydown" @updataAnswerall="updataAnswerall"></answer>
+        </div>
       </div>
     </div>
     <div class="answer-jy-wrap w-wrap clearfix">
@@ -140,8 +152,8 @@ export default {
       vinfoIdex: 4,
       txtArr: ['答疑', '讲义下载'],
       flagAnswer: false,
-      flagCourseSec: false,
-      flagJy: true,
+      flagCourseSec: true,
+      flagJy: false,
       fixedVideo: false,
       flagClosed: false,
       wImportant: 445,
@@ -338,34 +350,29 @@ export default {
     },
     // 1切换视频清晰度，2目录切换视频，3切换上一个视频，4切换下一个视频
     switchVideo (type) {
-      this.flagCourseSec = false
       if (type === 1) {
         this.getVideoPlayback(2)
+        return
       }
+      this.chooseIdx = 0
       if (type === 2) {
-        if (!this.fixedVideo) {
-          this.flagAnswer = false
-          this.flagJy = true
-          this.flagClosed = false
-          this.wImportant = 445
-        }
         this.getVideoPlayback(2)
       }
       if (type == 3) {
-        if (!this.fixedVideo) {
-          this.flagAnswer = false
-          this.flagJy = true
-          this.flagClosed = false
+        if (this.flagCourseSec) {
           this.wImportant = 445
+        } else {
+          this.wImportant = 95
+          this.flagClosed = true
         }
         this.computedPrevVid()
       }
       if (type == 4) {
-        if (!this.fixedVideo) {
-          this.flagAnswer = false
-          this.flagJy = true
-          this.flagClosed = false
+        if (this.flagCourseSec) {
           this.wImportant = 445
+        } else {
+          this.wImportant = 95
+          this.flagClosed = true
         }
         this.computedNextVid()
       }
@@ -373,7 +380,7 @@ export default {
     ended () {
       this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
       this.computedNextVid() // 计算下一个要播放的视频
-      this.videoCredentials.watch_time = parseInt(this.$refs.aliPlayers.getCurrentTime())
+      // this.videoCredentials.watch_time = parseInt(this.$refs.aliPlayers.getCurrentTime())
     },
     // 播放器
     ready (instance) {
@@ -584,68 +591,115 @@ export default {
       this.vinfoIdex = index
       if (val === '章节') {
         this.flagCourseSec = !this.flagCourseSec
+        this.flagAnswer = false
+        this.flagJy = false
+        this.wImportant = 445
+        this.flagClosed = !this.flagClosed
+        if (!this.flagCourseSec) {
+          this.wImportant = 95
+          this.flagClosed = true
+        }
+        if (this.fixedVideo) {
+          this.fixedVideo = !this.fixedVideo
+          this.flagCourseSec = true
+          this.flagClosed = false
+          this.wImportant = 445
+        }
       }
       if (val === '答疑') {
         this.answerTime = parseInt(this.$refs.aliPlayers.getCurrentTime())
+        this.flagAnswer = !this.flagAnswer
+        this.wImportant = 445
+        this.flagJy = false
+        this.flagClosed = false
+        if (!this.flagAnswer) {
+          if (this.flagCourseSec) {
+            this.wImportant = 445
+          } else {
+            this.wImportant = 95
+            this.flagClosed = true
+          }
+        }
         if (this.fixedVideo) {
           this.fixedVideo = !this.fixedVideo
-          this.flagAnswer = true
-          this.flagJy = false
-          this.flagClosed = false
-          this.wImportant = 445
-          return
+          if (this.flagCourseSec) {
+            this.wImportant = 445
+          } else {
+            this.wImportant = 95
+            this.flagClosed = true
+          }
         }
-        this.flagAnswer = !this.flagAnswer
-        this.flagJy = !this.flagAnswer
-        this.flagClosed = false
-        this.wImportant = 445
       }
       if (val === '讲义') {
-        if (this.fixedVideo) {
-          return
-        }
         this.flagJy = !this.flagJy
-        if (this.flagJy) {
-          this.flagAnswer = false
-          this.flagClosed = false
-          this.wImportant = 445
-          return
-        }
+        this.wImportant = 445
         this.flagAnswer = false
-        this.wImportant = 95
-        this.flagClosed = true
+        this.flagClosed = false
+        if (!this.flagJy) {
+          if (this.flagCourseSec) {
+            this.wImportant = 445
+          } else {
+            this.wImportant = 95
+            this.flagClosed = true
+          }
+        }
+        if (this.fixedVideo) {
+          this.fixedVideo = !this.fixedVideo
+          this.flagJy = true
+          this.wImportant = 445
+          this.flagClosed = true
+        }
+      }
+      if (val === 'closed') {
+        this.flagCourseSec = true
+        this.flagClosed = false
+        this.wImportant = 445
       }
     },
     closeModel (msg) {
-      this.flagCourseSec = false
-      if (msg === 'jy') {
-        if (this.fixedVideo) {
-          return
-        }
-        this.flagJy = false
+      if (msg === 'sec') {
+        this.flagCourseSec = false
         this.flagClosed = true
         this.wImportant = 95
+        return
       }
-      if (msg === 'answer' || msg === 'closed') {
-        this.flagJy = true
-        this.flagClosed = false
+      if (msg === 'jy') {
+        this.flagJy = false
+        if (this.flagCourseSec) {
+          this.wImportant = 445
+          this.flagClosed = false
+        } else {
+          this.wImportant = 95
+          this.flagClosed = true
+        }
+      }
+      if (msg === 'answer') {
         this.flagAnswer = false
-        this.wImportant = 445
+        if (this.flagCourseSec) {
+          this.wImportant = 445
+          this.flagClosed = false
+        } else {
+          this.wImportant = 95
+          this.flagClosed = true
+        }
       }
     },
     // 切换模式
     switchScreen (type) {
       if (type === 'jy') {
         this.fixedVideo = true
-        this.flagJy = true
         this.wImportant = 326
         this.flagClosed = true
       }
       if (type === 'video') {
         this.fixedVideo = false
-        this.flagJy = true
-        this.wImportant = 445
-        this.flagClosed = false
+        this.flagJy = false
+        if (this.flagCourseSec) {
+          this.wImportant = 445
+        } else {
+          this.wImportant = 95
+          this.flagClosed = true
+        }
       }
     },
     // setQuality ({ text, type }) {

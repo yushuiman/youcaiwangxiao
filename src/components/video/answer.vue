@@ -1,10 +1,10 @@
 <template>
   <div class="ask-wrap">
     <!--提问-->
-    <div class="vc-title">
+    <!-- <div class="vc-title">
       <p>提问题</p>
       <Icon type="md-close" style="color:#999999;font-size: 22px;" @click="closeModel"/>
-    </div>
+    </div> -->
     <div class="my-ask">
       <textarea v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3" v-on:focus="send" v-on:blur="blurInp"></textarea>
       <div class="submitAnswer clearfix">
@@ -46,7 +46,7 @@
     </div>
     <!--其他问题 :class="{'has-img': quiz_image.length}"-->
     <div class="others" v-if="answerList.length">
-      <div class="vc-title" style="padding: 0;background: #F8FAFC;">相关答疑</div>
+      <div class="vc-title" style="padding: 15px 0;background: #F8FAFC;">相关答疑</div>
       <ul class="othq-list">
         <li class="othq-item" v-for="(item, index) in answerList" :key="index">
           <div class="othq-item-t">
@@ -145,6 +145,9 @@
         </li>
       </ul>
     </div>
+    <div class="see-other-ans">
+      <span @click="seeQa">查看本节更多问答</span>
+    </div>
     <Modal title="图片预览" v-model="visible" :width="795">
       <img :src="imgUrl" v-if="visible" style="width: 100%;">
     </Modal>
@@ -171,6 +174,10 @@ export default {
     },
     answerTime: {
       type: Number
+    },
+    screenHeight: {
+      type: Number,
+      default: document.documentElement.clientHeight || document.body.clientHeight
     }
   },
   data () {
@@ -208,6 +215,10 @@ export default {
     this.getAnswerList()
   },
   methods: {
+    // 查看其他答疑
+    seeQa () {
+      document.documentElement.scrollTop = document.body.scrollTop = this.screenHeight - 67
+    },
     // 暂停播放
     send () {
       this.$emit('stopVideo')
@@ -369,15 +380,33 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .ask-wrap{
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background: #F8FAFC;
+  // .ask-wrap{
+  //   position: absolute;
+  //   top: 0;
+  //   right: 0;
+  //   bottom: 0;
+  //   width: 100%;
+  //   height: 100%;
+  //   overflow: auto;
+  //   background: #F8FAFC;
+  // }
+  .see-other-ans{
+    padding: 30px 0;
+    text-align: center;
+    span{
+      width: 146px;
+      height: 36px;
+      line-height: 36px;
+      color: #5C646E;
+      background:rgba(230,230,230,1);
+      border-radius: 18px;
+      display: inline-block;
+      &:hover{
+        cursor: pointer;
+        color: #262C33;
+        background:rgba(220,220,220,1);
+      }
+    }
   }
   .my-ask {
     padding: 0 20px;
@@ -386,7 +415,7 @@ export default {
   }
   .others{
     width: 100%;
-    padding: 8px 20px 0 20px;
+    padding: 0 20px;
     background: #F8FAFC;
     // position: absolute;
     // top: 252px;
@@ -401,7 +430,7 @@ export default {
   .texta {
     resize: none;
     width: 100%;
-    height: 121px;
+    height: 94px;
     line-height: 18px;
     color: rgba(199, 199, 199, 1);
     padding: 7px 12px;
@@ -412,7 +441,7 @@ export default {
     box-sizing: border-box;
   }
   .submitAnswer{
-    padding: 20px 0;
+    padding: 15px 0;
     position: relative;
     .course_time{
       padding: 0 6px;
@@ -427,12 +456,12 @@ export default {
       width: 72px;
       height: 26px;
       line-height: 26px;
-      background: rgba(249, 145, 17, 1);
+      background: $blueColor;
       border-radius: 20px;
       font-size: 14px;
       color: $colfff;
       &:hover{
-        box-shadow:0px 2px 11px 0px rgba(255,171,68,0.9);
+        box-shadow:0px 2px 11px 0px rgba(2,103,255,0.76);
       }
     }
     .errorTxt{

@@ -50,11 +50,11 @@
           <div class="description">优财网校—打造案例式教学 能考会用</div>
           <div class="tel">
             <img :src="phone" alt="">
-            <input v-model="form2.mobile" placeholder="请输入手机号" maxlength="11">
+            <input v-model.trim="form2.mobile" placeholder="请输入手机号" maxlength="11">
           </div>
           <div class="tel">
             <img :src="code" alt="">
-            <input type="text" v-model="form2.code" placeholder="请输入手机验证码" maxlength="6">
+            <input type="text" v-model.trim="form2.code" placeholder="请输入手机验证码" maxlength="6">
             <button type="primary" class="getCode" v-show="show" @click="getCode">获取验证码</button>
             <button type="primary" class="count" v-show="!show">{{count}} s</button>
           </div>
@@ -170,11 +170,11 @@
           <div class="description">优财网校—打造案例式教学 能考会用</div>
           <div class="tel">
             <img :src="phone" alt="">
-            <input v-model="form4.mobile" placeholder="请输入手机号" maxlength="11"/>
+            <input v-model.trim="form4.mobile" placeholder="请输入手机号" maxlength="11"/>
           </div>
           <div class="tel">
             <img :src="code" alt="">
-            <input type="text" v-model="form4.code" placeholder="请输入手机验证码" maxlength="6" @keyup.enter="quickLogin">
+            <input type="text" v-model.trim="form4.code" placeholder="请输入手机验证码" maxlength="6" @keyup.enter="quickLogin">
             <button type="primary" class="getCode" v-show="show3" @click="getCode3">获取验证码</button>
             <button type="primary" class="count" v-show="!show3">{{count3}} s</button>
           </div>
@@ -211,11 +211,11 @@
         <div class="description2">优财网校—打造案例式教学 能考会用</div>
         <div class="tel">
           <img :src="phone" alt="">
-          <input v-model="form3.mobile" placeholder="请输入手机号" maxlength="11">
+          <input v-model.trim="form3.mobile" placeholder="请输入手机号" maxlength="11">
         </div>
         <div class="tel">
           <img :src="code" alt="">
-          <input v-model="form3.code" placeholder="验证码" maxlength="6">
+          <input v-model.trim="form3.code" placeholder="验证码" maxlength="6">
           <button type="primary" class="getCode" v-show="show2" @click="forgetPaw">获取验证码</button>
           <i-button type="primary" class="count" v-show="!show2">{{count2}} s</i-button>
         </div>

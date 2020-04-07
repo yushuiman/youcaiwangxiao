@@ -29,14 +29,12 @@
 }
 
 .vc-title {
-    padding: 0 20px;
+    padding: 15px 20px;
     font-size: 16px;
-    height: 65px;
-    line-height: 65px;
-    font-size: 16px;
-    font-weight:500;
+    font-weight: 600;
     display: flex;
     align-items: center;
+    color: #262C33;
     background: #ffffff;
 
     p {
@@ -57,11 +55,11 @@
     }
 }
 
-.vsc-title{
-    padding: 33px 20px 20px;
-    font-size: 20px;
-    color: #E6E6E6;
-}
+// .vsc-title{
+//     padding: 33px 20px 20px;
+//     font-size: 20px;
+//     color: #E6E6E6;
+// }
 
 .video-main {
     width: 100%;
@@ -100,8 +98,11 @@
     width: 326px;
     height: 216px;
     right: 0;
-    top: 4px;
+    top: 0;
     z-index: 102;
+    padding-top: 6px;
+    background: #000;
+    box-sizing: border-box;
 }
 
 .video-info-r {
@@ -164,33 +165,40 @@
 }
 
 // 课程包
-.video-section-list {
-    position: absolute;
-    width: 386px;
-    top: 0;
-    left: -386px;
-    opacity: 0;
-    bottom: 0;
-    z-index: 101;
-    background: #26292C;
-    overflow-y: scroll;
-    transition: .3s all linear;
+// .video-section-list {
+    // position: absolute;
+    // right: 0;
+    // top: 0;
+    // bottom: 0;
+    // overflow: scroll;
+    // background: #ffffff;
+    // overflow-x: hidden;
+    // opacity: 1;
+    // transition: .3s all linear;
 
-    &.active {
-        opacity: 1;
-        left: 60px;
-    }
-}
-
-// 讲义
+    // &.active {
+    //     opacity: 0;
+    //     right: -95px;
+    // }
+// }
+// 目录
+.video-section-list,
+.answer-box,
 .jiangyi {
     position: absolute;
-    top: 0;
+    left: 0;
     right: 0;
+    top: 0;
     bottom: 0;
-    width: 100%;
-    overflow: auto;
-    background: $colfff;
+    overflow: scroll;
+    background: #ffffff;
+    &.active {
+        opacity: 0;
+        right: -95px;
+    }
+}
+// 讲义
+.jiangyi {
 
     &.littleScreen {
         top: 216px;
@@ -213,6 +221,15 @@
     }
 }
 
+// 答疑
+.answer-box{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    background: #F8FAFC;
+}
 // .try-watch-dialog{
 //   position: absolute;
 //   left: 0;
@@ -267,6 +284,109 @@
         i{
             cursor: pointer;
         }
+    }
+}
+// 目录
+.el-video-icon {
+    @include wh(14, 14);
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: -3px;
+    vertical-align: middle;
+    @extend %bg-img;
+    background-image: url('../../assets/images/video/stop-gray-icon.png');
+
+    &.play-icon {
+        background-image: url('../../assets/images/video/play-blue-icon.png');
+    }
+}
+
+.el-menu-item {
+    padding-left: 35px !important;
+    padding-right: 22px !important;
+}
+
+.see-tips {
+    display: none;
+}
+
+.already-see {
+    position: relative;
+
+    &:hover {
+        .see-tips {
+            display: block !important;
+            text-align: center;
+            width: 58px;
+            height: 20px;
+            line-height: 20px;
+            background: rgba(153, 153, 153, 1);
+            border-radius: 2px;
+            font-size: 12px;
+            color: #000000;
+            position: absolute;
+            right: 20px;
+            top: -6px;
+        }
+    }
+}
+
+.el-dot-icon {
+    @include wh(10, 10);
+    display: inline-block;
+    border-radius: 100%;
+    margin-top: 13px;
+    border: 2px solid rgba(102, 102, 102, 1);
+    box-sizing: border-box;
+    float: right;
+
+    &.el-dot-now {
+        border: 2px solid $blueColor;
+    }
+
+    &.el-dot-see {
+        border: 2px solid #0AAB55;
+        background: #0AAB55;
+    }
+}
+
+.sec-name {
+    font-size: 14px;
+    color: #262C33;
+    font-weight: 500;
+}
+
+.sl,
+.sec-name {
+    width: 80%;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+// 学习计划目录
+.video-item {
+    padding: 0 20px;
+    line-height: 34px;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        background: rbga(204, 204, 204, 1);
+        cursor: pointer;
+    }
+
+    &.curren {
+        color: #0267FF;
+        .el-dot-icon{
+            border: 2px solid #0267FF;
+        }
+    }
+    .sl{
+        flex: 1;
+    }
+    .el-dot-icon{
+        margin-top: 0;
     }
 }
 
