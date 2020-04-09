@@ -8,14 +8,14 @@
       <div class="u-course-my" v-if="selIdx == 0">
         <div v-if="myCourseList.length">
           <div class="uc-pakeage-course-list" v-for="(item, index) in myCourseList" :key="index">
-            <div class="uc-item" :class="{'uc-item-package': item.flag}">
+            <div class="uc-item" style="cursor: pointer;" :class="{'uc-item-package': item.flag}" @click="openShow(item, index)">
               <img :src="item.pc_img" alt="" class="uci-img">
               <div class="uci-detail">
                 <h2 class="ucid-name">{{item.name}}</h2>
                 <p class="ucid-des">{{item.description}}</p>
                 <p class="ucid-learn" v-if="item.video">学习至{{item.video.video_name}}</p>
               </div>
-              <div class="open-txt" @click="openShow(item, index)">
+              <div class="open-txt">
                 {{item.flag ? '收起':'查看课程'}}
                 <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="!item.flag"/>
                 <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="item.flag"/>

@@ -50,6 +50,7 @@ module.exports = {
   },
 
   chainWebpack: config => {
+    // config.entry('main').add('babel-polyfill')
     // 修复HMR
     config.resolve.symlinks(true)
     // 修复 Lazy loading routes Error

@@ -1,7 +1,7 @@
 <template>
   <div class='prism-player' :class="{'prism-player-hide1': fixedVideo, 'prism-player-hide2': answerVideo}" :id='playerId'>
     <!-- 自定义设置 因为阿里倍速无法记忆，并且清晰度切换造成倍速无法记忆 -->
-    <!-- 答疑来源小窗口answerVideo，课程、后续教育、学习中心小窗口fixedVideo -->
+    <!-- 答疑来源小窗口answerVideo，课程、后续教育、学习计划小窗口fixedVideo -->
     <div class="video-setting" :class="{'hide': fixedVideo || answerVideo}">
       <div class="setting-info">
         <div class="v-switch-item">

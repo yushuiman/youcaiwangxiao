@@ -81,7 +81,7 @@ export default {
         0: '返回做题记录',
         1: '返回错题集',
         2: '返回收藏夹',
-        3: '返回学习中心',
+        3: '返回学习计划',
         10: '查看报告'
       },
       diffRes: parseInt(window.sessionStorage.getItem('diffRes')), // 请求不同的接口
@@ -144,7 +144,7 @@ export default {
         this.getMyCollcsee()
         return
       }
-      // 学习中心查看解析-全部
+      // 学习计划查看解析-全部
       if (this.diffRes === 3) {
         this.getQuestionParsingLearn()
         return
@@ -178,7 +178,7 @@ export default {
           this.getMyCollcsee()
           return
         }
-        // 学习中心查看解析-全部
+        // 学习计划查看解析-全部
         if (this.diffRes === 3) {
           this.getQuestionParsingLearn()
           return
@@ -413,7 +413,7 @@ export default {
         })
         return
       }
-      // 如果是学习中心
+      // 如果是学习计划
       if (this.diffTxt === 3) {
         this.$router.push({ path: '/learning-center-detail' })
         return

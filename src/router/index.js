@@ -294,13 +294,13 @@ const router = new Router({
         showRightSlider: true
       }
     },
-    // 学习中心
+    // 学习计划
     {
       path: '/learning-center',
       name: 'learning-center',
       component: LearningCenter,
       meta: {
-        title: '学习中心',
+        title: '学习计划',
         showHeader: true,
         showFooter: false,
         showRightSlider: true
@@ -311,7 +311,7 @@ const router = new Router({
       name: 'learning-center-detail',
       component: LearningCenterDetail,
       meta: {
-        title: '学习中心',
+        title: '学习计划',
         showHeader: true,
         showFooter: false,
         showRightSlider: true

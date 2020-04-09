@@ -443,7 +443,7 @@ export default {
         video_id: this.playCourseInfo.video_id,
         watch_time: this.videoCredentials.watch_time,
         video_type: 1, // 视频类型 1视频2直播
-        status: 1 // 播放类型 1课程视频播放2学习中心
+        status: 1 // 播放类型 1课程视频播放2学习计划
       }).then((data) => {
       })
     },

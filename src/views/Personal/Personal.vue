@@ -55,7 +55,7 @@ export default {
         // {
         //   type: 'zhibo',
         //   tit: '直播',
-        // class_name: 'userm-item-03'
+        //   class_name: 'userm-item-03'
         // },
         {
           type: 'answer',
@@ -240,7 +240,7 @@ export default {
   }
   .userm-icon{
     width: 20px;
-    height: 18px;
+    height: 20px;
     margin-right: 10px;
     margin-top: -5px;
     vertical-align: middle;

@@ -12,7 +12,7 @@
             </ul>
           </div>
           <div class="login-wrap">
-            <a class="learen-btn" @click="goLearning">学习中心</a>
+            <a class="learen-btn" @click="goLearning">学习计划</a>
             <div class="login-l fl" v-if="!this.token">
               <a @click="goLogin('login')">登录</a>
               <!-- <router-link :to="{path: 'login', query: {type:'login'}}">登录</router-link> -->
@@ -143,7 +143,7 @@ export default {
         }
       })
     },
-    // 学习中心
+    // 学习计划
     goLearning () {
       if (this.token) {
         this.$router.push('/learning-center-detail')
