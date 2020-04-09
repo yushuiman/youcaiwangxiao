@@ -1,5 +1,5 @@
 <template>
-  <div class="course-like-main" :class="{'styw': isW}">
+  <div class="course-like-main">
     <div class="like-title">
       <img src="../../assets/images/course/like.png" alt="">
       <span>猜你喜欢</span>
@@ -18,11 +18,6 @@
 <script>
 import { guessLike } from '@/api/class'
 export default {
-  props: {
-    isW: {
-      type: Boolean
-    }
-  },
   data () {
     return {
       likeArr: []
@@ -57,7 +52,6 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   .course-like-main {
-    width: 278px;
     padding: 0 9px;
     background: $colfff;
     border-radius: 4px;
@@ -72,9 +66,6 @@ export default {
         vertical-align: middle;
         margin-top: -3px;
       }
-    }
-    &.styw{
-      width: 298px;
     }
   }
   .like-list {

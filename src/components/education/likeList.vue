@@ -52,7 +52,6 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   .course-like-main {
-    width: 278px;
     padding: 0 9px;
     background: $colfff;
     border-radius: 4px;

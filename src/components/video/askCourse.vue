@@ -115,10 +115,8 @@
           />
         </div>
       </div>
-      <div style="padding-top: 1px; padding-bottom: 20px; background:#ffffff;border-radius: 0 0 8px 8px;" v-if="noDataFlag">
-        <div class="no-data">
+      <div class="no-data" v-if="noDataFlag">
           暂无答疑
-        </div>
       </div>
     </div>
     <div v-if="selIdx == 1">
@@ -229,10 +227,8 @@
           </li>
         </ul>
       </div>
-      <div style="padding-top: 1px; padding-bottom: 20px; background:#ffffff;border-radius: 0 0 8px 8px;" v-if="noDataFlag">
-        <div class="no-data">
+      <div class="no-data" v-if="noDataFlag">
           暂无答疑
-        </div>
       </div>
     </div>
     <Modal title="图片预览" v-model="visible" :width="795" :scrollable="true">
@@ -383,20 +379,21 @@ export default {
   }
   .ask-tab-list{
     width: 100%;
-    padding: 20px 60px;
+    padding: 10px 41px 20px 41px;
     text-align: center;
     display: flex;
-    border-radius: 8px 8px 0 0;
     background: #ffffff;
     li{
+      width: 49px;
       height: 22px;
       line-height: 22px;
       border-radius: 11px;
-      // margin: 0 10px;
-      margin-right: 40px;
+      margin-right: 24px;
       cursor: pointer;
+      background: #F3F6FF;
+      color: #5C646E;
+      font-size: 12px;
       &.active{
-        width: 49px;
         background: #0267FF;
         color: #ffffff;
       }
@@ -405,37 +402,16 @@ export default {
   .othq-list-teacher{
     margin-top: 15px;
   }
-  .othq-list{
-    // padding: 0 20px;
-    background: #ffffff;
-    border-radius: 0 0 8px 8px;
-    position: relative;
-    &:after{
-      position: absolute;
-      content: "";
-      top: 0;
-      left: 20px;
-      right: 20px;
-      height: 1px;
-      background:#E6E6E6;
-    }
-  }
   .othq-item{
     padding: 20px;
-    // margin: 0 20px;
-    margin-bottom: 10px;
-    // background: $colfff;
-    box-shadow: 0px 2px 8px -4px rgba(0,0,0,0.2);
-    // border-radius: 0 0 8px 8px;
+    margin-bottom: 20px;
+    box-shadow: 0px 2px 20px 0px rgba(153,153,153,0.3);
+    border-radius: 8px;
     &.othq-item-over{
       padding-bottom: 30px!important;
     }
     &.othq-item-zhiwen, &.othq-item-reply, &.othq-item-else{
       padding-bottom: 0px!important;
-    }
-    &:last-child{
-      margin-bottom: 0;
-      border-radius: 8px;
     }
     .othq-txt{
       line-height: 20px;

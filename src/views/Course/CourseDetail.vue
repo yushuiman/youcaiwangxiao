@@ -404,6 +404,7 @@ export default {
     width: 902px;
   }
   .clt-else-info-r{
+    width: 278px;
     padding-top: 49px;
   }
 </style>

@@ -61,7 +61,6 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   .course-main-right {
-    width: 278px;
     padding: 0 9px;
     margin-bottom: 20px;
     background: $colfff;

@@ -133,12 +133,11 @@ export default {
     }
   }
   .bks-detail{
-    padding: 34px 90px 39px;
+    // padding: 34px 90px 39px;
     display: flex;
     align-items: center;
     background: #ffffff;
     border-radius: 6px;
-    margin-bottom: 20px;
     cursor: pointer;
     .bks-img{
       width: 174px;
@@ -196,8 +195,9 @@ export default {
     }
   }
   .bks-tab{
-    font-size: 16px;
+    @include lh(49, 49);
     span{
+      font-size: 16px;
       padding: 0 21px;
       cursor: pointer;
       &.cur{
@@ -208,12 +208,11 @@ export default {
   .books-main{
     display: flex;
     justify-content: space-between;
-    padding: 20px 0;
     .books-lf{
-      width: 873px;
+      width: 902px;
     }
     .books-rt{
-      width: 298px;
+      width: 278px;
     }
   }
 </style>

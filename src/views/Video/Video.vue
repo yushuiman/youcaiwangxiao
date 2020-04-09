@@ -105,15 +105,15 @@
         </div>
       </div>
     </div>
-    <div class="answer-jy-wrap w-wrap clearfix">
-      <div class="aj-list-info-l fl">
-        <ul class="tab-list-all-jx">
-          <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': chooseIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
-        </ul>
-        <div class="aj-main">
-          <ask-course v-if="chooseIdx == 0 && videoCredentials.playAuth" ref="updateAnswerRef" :user_id="user_id" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials"></ask-course>
-          <div class="aj-jy" v-if="chooseIdx == 1">
-            <ul class="jy-ul">
+    <div class="answer-jy-wrap">
+      <ul class="tab-list-all-jx">
+        <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': chooseIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      </ul>
+      <div class="aj-list-info-flex">
+        <div class="aj-list-info-l">
+          <div class="aj-main">
+            <ask-course v-if="chooseIdx == 0 && videoCredentials.playAuth" ref="updateAnswerRef" :user_id="user_id" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials"></ask-course>
+            <ul class="jy-ul" v-if="chooseIdx == 1">
               <li class="jy-item" v-for="(val, index) in courseSections" :key="index">
                 <p>{{val.section_name}}</p>
                 <span @click="jiangyiDown(val.handouts)"><i></i>下载</span>
@@ -121,10 +121,10 @@
             </ul>
           </div>
         </div>
-      </div>
-      <div class="aj-else-info-r fr">
-        <!-- 猜你喜欢 -->
-        <like-list></like-list>
+        <div class="aj-else-info-r">
+          <!-- 猜你喜欢 -->
+          <like-list></like-list>
+        </div>
       </div>
     </div>
   </div>

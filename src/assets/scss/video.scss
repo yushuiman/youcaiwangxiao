@@ -393,23 +393,24 @@
 // 新增
 .answer-jy-wrap {
     padding-bottom: 20px;
+    background: #ffffff;
 
-    .aj-list-info-l {
-        width: 902px;
-    }
 }
 
 .tab-list-all-jx {
     display: flex;
     align-items: center;
     text-align: center;
-    height: 67px;
-    padding: 20px 30px 20px;
+    height: 60px;
+    padding: 0 71px;
     box-sizing: border-box;
+    box-shadow:0px 2px 10px 0px rgba(146, 146, 146, 0.33);
 
     .tab-item {
         font-size: 16px;
-        margin: 0 30px;
+        color: #262C33;
+        margin-right: 66px;
+        font-weight: 600;
         position: relative;
         cursor: pointer;
 
@@ -434,16 +435,22 @@
     }
 }
 
-.aj-jy {
-    width: 902px;
-}
-
-.aj-else-info-r {
-    padding-top: 49px;
+.aj-list-info-flex{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 30px;
+    .aj-list-info-l {
+        flex: 1;
+    }
+    .aj-else-info-r {
+        width: 364px;
+        padding-top: 10px;
+        margin-left: 45px;
+    }
 }
 
 .jy-ul {
-    background: rgba(255, 255, 255, 1);
+    margin-top: 10px;
     box-shadow: 0px 2px 20px 0px rgba(140, 196, 255, 0.3);
     border-radius: 8px;
 }

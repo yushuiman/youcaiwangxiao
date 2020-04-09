@@ -84,8 +84,8 @@
         </div>
       </div>
       <!-- 猜你喜欢 右 -->
-      <div class="fr">
-        <like-list :isW="true"></like-list>
+      <div class="course-like-right fr">
+        <like-list></like-list>
       </div>
     </div>
     <!-- 活动 -->
@@ -224,7 +224,7 @@ export default {
         case '班型':
           this.form.ym = ''
           break
-      } 
+      }
       this.form.page = 1
       this.getCourseList()
     },
@@ -450,6 +450,9 @@ export default {
   }
   .course-main-left{
     width: 900px;
+  }
+  .course-like-right{
+    width: 298px;
   }
   .course-main-con{
     width: 280px;

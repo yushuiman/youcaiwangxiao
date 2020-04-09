@@ -291,6 +291,7 @@ import studentDynamic from '../../components/learning/studentDynamic'
 import answerInfo from '../../components/personal/answerInfo'
 import { mapState, mapActions } from 'vuex'
 export default {
+  inject: ['reload'],
   data () {
     return {
       visible: false,
@@ -385,7 +386,7 @@ export default {
       this.addLearnIdx = index
     },
     // 学习计划首页详情
-    getLearnIndex () {
+    getLearnIndex (type) {
       this.showLoading(true)
       learnIndex({
         user_id: this.user_id
@@ -404,6 +405,7 @@ export default {
           if (addlearn === 2) {
             this.courseListLearn = plan // 没有学习计划 课程列表
           }
+          // let idx = type || 0
           if (learnList && learnList.length) {
             this.selCourseName = this.learnList[this.s_c_idx].plan_name // 初始化学习计划详情name
             this.course_id = this.learnList[this.s_c_idx].course_id // 初始化学习计划详情course_id
@@ -571,7 +573,7 @@ export default {
           s_c_idx: index
         }
       })
-      window.location.reload()
+      this.reload()
     },
     // 切换未完成课程学习计划
     getPackageIdSel (e, val) {
@@ -695,8 +697,8 @@ export default {
         video_id: val.video_id,
         is_zk: val.is_zhengke,
         plan_id: this.currenLearnInfo.plan_id, // 计划id
-        days: this.currenLearnInfo.join_days, // 第几天
-        s_c_idx: this.s_c_idx
+        days: this.currenLearnInfo.join_days // 第几天
+        // s_c_idx: this.s_c_idx
       }
       if (this.currenLearnInfo.is_exper === 1) { // 0元体验 未购买 去看视频
         val.userstatus = 2 // 当0元体验的时候 2是未购买
@@ -756,8 +758,15 @@ export default {
         this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
-          this.getLearnIndex()
+          this.$router.replace({ path: 'learning-center-detail',
+            query: {
+              ...this.$route.query,
+              s_c_idx: ''
+            }
+          })
+          // this.getLearnIndex()
           this.visible4 = false
+          this.reload()
         } else {
           this.$Message.error(res.msg)
         }
