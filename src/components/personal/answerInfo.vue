@@ -285,7 +285,7 @@
           </div>
           <!-- 论述题样式 -->
           <div v-if="onlyQuestionInfo.topicType == 2">
-            <textarea autofocus disabled class="texta-discuss"></textarea>
+            <textarea disabled class="texta-discuss"></textarea>
           </div>
           <!-- 做题ABCD样式 else -->
           <ul class="topic-opition" v-if="onlyQuestionInfo.topicType == 1">

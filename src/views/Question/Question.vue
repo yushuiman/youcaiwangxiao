@@ -322,6 +322,7 @@ export default {
     // 课程对应正确率，做题数，平均分
     getQuestionIndex ({ id, status }, index) {
       this.course_id = id
+      this.plate_id = 0
       window.sessionStorage.setItem('course_id', id)
       this.isSprintXly = status
       if (!this.token) {

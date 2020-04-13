@@ -22,7 +22,7 @@
               @click="playVideo(item, val, v, key, index)">
                 <i class="elt-icon elt-icon-stop"></i>
                 <span>{{v.video_name}}</span>
-                <em v-if="userstatus == 2" class="free-pay">免费试听</em>
+                <!-- <em v-if="userstatus == 2" class="free-pay">免费试听</em> -->
               </el-menu-item>
             </el-submenu>
           </el-submenu>
@@ -113,6 +113,10 @@ export default {
             call_back: 'course-detail'
           }
         })
+        return
+      }
+      if (this.userstatus == 2) {
+        this.$Message.error('请购买课程')
         return
       }
       window.sessionStorage.setItem('userstatus', this.userstatus) // 是否购买

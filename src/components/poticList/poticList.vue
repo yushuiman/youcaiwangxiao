@@ -20,7 +20,7 @@
         </div>
         <!-- 论述题样式 -->
         <div v-if="item.topicType == 2">
-          <textarea autofocus v-model.trim="item.discuss_useranswer" disabled class="texta-discuss"></textarea>
+          <textarea v-model.trim="item.discuss_useranswer" disabled class="texta-discuss"></textarea>
         </div>
         <!-- 做题ABCD样式 else -->
         <ul class="topic-opition" v-if="item.topicType == 1">
@@ -97,7 +97,7 @@
         </ul>
         <!-- 论述题：没有ABCD样式 -->
         <div v-if="item.topicType == 2">
-          <textarea autofocus v-model.trim="item.discuss_useranswer" class="texta-discuss" placeholder="请填写您的答案" v-on:focus="doPoticDiscuss(item, index)" @blur="doPoticDiscuss(item, index)"></textarea>
+          <textarea v-model.trim="item.discuss_useranswer" class="texta-discuss" placeholder="请填写您的答案" v-on:focus="doPoticDiscuss(item, index)" @blur="doPoticDiscuss(item, index)"></textarea>
         </div>
       </div>
       <!-- 练习模式答错才显示解析 12.11号改为答对答错都展示解析-->
