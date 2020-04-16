@@ -285,3 +285,17 @@ export const onlyQuestion = (data) => { // 答疑题干展示
     method: 'post'
   })
 }
+export const putOmoUser = (data) => { // 完善omo信息
+  return axios.request({
+    url: '/web/Personal/putOmoUser',
+    data,
+    method: 'post'
+  })
+}
+export const getOmoUserInfo = (data) => { // OMO学员会员卡信息展示
+  return axios.request({
+    url: '/web/Personal/getOmoUserInfo',
+    data,
+    method: 'post'
+  })
+}

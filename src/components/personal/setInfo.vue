@@ -870,6 +870,7 @@ export default {
     margin: 0 auto;
     margin-top: 20px;
     display: block;
+    border-radius: 30px;
   }
   .set-head-iview{
     position: absolute;

@@ -26,7 +26,7 @@
           暂无数据
         </div>
       </div>
-      <div v-if="selIdx == 2">
+      <div v-if="selIdx == 3">
         <!-- 激活 -->
         <div class="card-activation">
           <div class="cactive-left">
@@ -94,18 +94,37 @@
           </ul>
         </div>
       </div>
+      <div v-if="selIdx == 2" class="omo-info">
+        <div class="omo-wri-a" v-if="personalInfo.is_adj == 2">
+          <a @click="goOmoWri">完善OMO信息</a>
+        </div>
+        <div class="omo-card" v-if="personalInfo.is_adj == 1">
+          <span>{{omoUserInfo.omo_num}}</span>
+          <p><label>姓名：</label>{{omoUserInfo.realname}}</p>
+          <p><label>手机号：</label>{{omoUserInfo.omo_mobile}}</p>
+          <p><label>邮箱：</label>{{omoUserInfo.omo_email}}</p>
+          <p><label>身份证号：</label>{{omoUserInfo.identity_card}}</p>
+        </div>
+        <div class="omo-rules" v-if="personalInfo.is_adj == 1">
+          <h4>VIP会员卡使用须知：</h4>
+          <p>1、本卡每人限办一张，限申请人本人实名制使用，不得转借或转让；</p>
+          <p>2、本卡使用期限为两年，如本卡两年内未使用，本卡将自动失效；</p>
+          <p>3、听课时请学员向签到处提供与本卡绑定的手机号；</p>
+          <p>4、保留修改、变更权利，且不另行个别通知，此卡不得抵用现金使用，最终解释权归优财所有。</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { consumptionRecord, coupons, delcoupon } from '@/api/personal'
+import { consumptionRecord, coupons, delcoupon, getOmoUserInfo } from '@/api/personal'
 import { mapState } from 'vuex'
 export default {
-  props: ['user_id'],
+  props: ['user_id', 'personalInfo'],
   data () {
     return {
-      txtArr: ['消费记录', '优惠券'],
+      txtArr: ['消费记录', '优惠券', 'OMO'],
       selIdx: this.$route.query.selIdx || 0,
       consumptionRecordList: [],
       noDataFlag: false,
@@ -126,7 +145,8 @@ export default {
       },
       num: 0, // 有效个数
       availableList: [], // 有效
-      InvalidList: [] // 失效
+      InvalidList: [], // 失效
+      omoUserInfo: {}
     }
   },
   computed: {
@@ -161,6 +181,18 @@ export default {
       if (this.selIdx == 1) {
         this.getCoupons()
       }
+      if (this.selIdx == 2) {
+        if (this.personalInfo.is_adj == 2) {
+          this.$emit('omoWriShow', true)
+        }
+        if (this.personalInfo.is_adj == 1) {
+          this.getOmoUserInfoFn()
+        }
+      }
+    },
+    // 去完善omo信息
+    goOmoWri () {
+      this.$emit('omoWriShow', true)
     },
     // 消费记录
     getConsumptionRecord () {
@@ -211,6 +243,19 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // omo信息
+    getOmoUserInfoFn () {
+      getOmoUserInfo({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.omoUserInfo = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     }
   }
 }
@@ -255,7 +300,7 @@ export default {
           width: 158px;
         }
         &:nth-child(4){
-          width: 160px;
+          width: 140px;
         }
       }
     }
@@ -319,8 +364,6 @@ export default {
   }
   // 优惠券
   .coupon-com{
-    // height: 470px;
-    // overflow: auto;
     padding: 30px 60px 20px;
     margin-bottom: 20px;
     background:rgba(255,255,255,1);
@@ -414,5 +457,48 @@ export default {
     top: 10px;
     font-size: 22px;
     cursor: pointer;
+  }
+  .omo-info{
+    padding: 20px 30px;
+    background:rgba(255,255,255,1);
+    box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
+    border-radius: 8px;
+  }
+  .omo-card{
+    width: 355px;
+    height: 186px;
+    border-radius: 8px;
+    padding: 45px 0 0 30px;
+    background: url('../../assets/images/user/omo.jpg') no-repeat;
+    background-size: 100% 100%;
+    position: relative;
+    p, span{
+      color: #ffffff;
+      line-height: 30px;
+      label{
+        width: 75px;
+        display: inline-block;
+      }
+    }
+    span{
+      position: absolute;
+      right: 10px;
+      top: 2px;
+      font-weight: bold;
+      font-size: 16px;
+      display: none;
+    }
+  }
+  .omo-rules{
+    padding-top: 15px;
+    line-height: 26px;
+    p{
+      color: $col666;
+    }
+  }
+  .omo-wri-a{
+    a{
+      text-decoration: underline;
+    }
   }
 </style>
