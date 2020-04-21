@@ -486,7 +486,7 @@ export default {
       top: 2px;
       font-weight: bold;
       font-size: 16px;
-      display: none;
+      text-shadow: 0px 1px 1px #056599;
     }
   }
   .omo-rules{
