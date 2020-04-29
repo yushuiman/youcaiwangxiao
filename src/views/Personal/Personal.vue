@@ -30,7 +30,7 @@
         <p><input type="text" placeholder="请输入姓名" v-model.trim="omoName"></p>
         <p><input type="text" disabled placeholder="请输入手机号" v-model="personalInfo.mobile"></p>
         <p><input type="text" placeholder="请输入邮箱" v-model="omoEmail"></p>
-        <p><input type="text" placeholder="请输入身份证号" v-model.trim="omoIdentity"></p>
+        <!-- <p><input type="text" placeholder="请输入身份证号" v-model.trim="omoIdentity"></p> -->
         <div class="omo-submit">
           <button class="btn-com" @click="omoWriSub">提交</button>
         </div>
@@ -219,17 +219,17 @@ export default {
         this.$Message.error('请输入正确的邮箱～')
         return
       }
-      if (this.omoIdentity === '') {
-        this.$Message.error('请输入身份证号～')
-        return
-      }
-      if (!reg.test(this.omoIdentity)) {
-        this.$Message.error('请输入正确的身份证号~')
-        return
-      }
+      // if (this.omoIdentity === '') {
+      //   this.$Message.error('请输入身份证号～')
+      //   return
+      // }
+      // if (!reg.test(this.omoIdentity)) {
+      //   this.$Message.error('请输入正确的身份证号~')
+      //   return
+      // }
       putOmoUser({
         user_id: this.user_id,
-        identity_card: this.omoIdentity,
+        // identity_card: this.omoIdentity,
         realname: this.omoName,
         omo_email: this.omoEmail,
         omo_mobile: this.personalInfo.mobile

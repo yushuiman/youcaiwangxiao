@@ -343,6 +343,7 @@ export default {
   .test-time{
     height: 26px;
     line-height: 26px;
+    cursor: pointer;
     i{
       margin-right: 8px;
       vertical-align: middle;

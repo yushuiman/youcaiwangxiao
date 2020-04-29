@@ -1,7 +1,10 @@
 <template>
   <div class="u-zhibo-wrap">
-    <ul class="tab-list">
+    <ul class="tab-list" v-if="personalInfo.type && personalInfo.type == 2">
       <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+    </ul>
+    <ul class="tab-list" v-else>
+      <li class="tab-item" v-for="(v, index) in txtArr.slice(0, 2)" :class="{'active': selIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
     </ul>
     <div class="zhibo-main">
       <div v-if="selIdx == 0">
@@ -95,17 +98,18 @@
         </div>
       </div>
       <div v-if="selIdx == 2" class="omo-info">
-        <div class="omo-wri-a" v-if="personalInfo.is_adj == 2">
+        <div class="omo-wri-a" v-if="personalInfo.is_adj == 1">
           <a @click="goOmoWri">完善OMO信息</a>
         </div>
-        <div class="omo-card" v-if="personalInfo.is_adj == 1">
+        <div class="omo-card" v-if="personalInfo.is_adj == 2">
+          优财实战课VIP
           <span>{{omoUserInfo.omo_num}}</span>
-          <p><label>姓名：</label>{{omoUserInfo.realname}}</p>
+          <!-- <p><label>姓名：</label>{{omoUserInfo.realname}}</p>
           <p><label>手机号：</label>{{omoUserInfo.omo_mobile}}</p>
           <p><label>邮箱：</label>{{omoUserInfo.omo_email}}</p>
-          <p><label>身份证号：</label>{{omoUserInfo.identity_card}}</p>
+          <p><label>身份证号：</label>{{omoUserInfo.identity_card}}</p> -->
         </div>
-        <div class="omo-rules" v-if="personalInfo.is_adj == 1">
+        <div class="omo-rules" v-if="personalInfo.is_adj == 2">
           <h4>VIP会员卡使用须知：</h4>
           <p>1、本卡每人限办一张，限申请人本人实名制使用，不得转借或转让；</p>
           <p>2、本卡使用期限为两年，如本卡两年内未使用，本卡将自动失效；</p>
@@ -467,13 +471,16 @@ export default {
   .omo-card{
     width: 355px;
     height: 186px;
+    line-height: 186px;
+    text-align: center;
     border-radius: 8px;
-    padding: 45px 0 0 30px;
     background: url('../../assets/images/user/omo.jpg') no-repeat;
     background-size: 100% 100%;
     position: relative;
+    font-size: 24px;
+    color: #ffffff;
+
     p, span{
-      color: #ffffff;
       line-height: 30px;
       label{
         width: 75px;
