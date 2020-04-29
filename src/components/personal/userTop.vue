@@ -31,7 +31,6 @@
             </div>
             <div class="go-on-some">
               <!-- <a class="zhibo"><Icon type="ios-play" />最近直播</a> -->
-              <a class="zhibo" @click="goLearn">学习计划</a>
               <a @click="goStudy">继续学习</a>
               <a @click="goDotopic">继续做题</a>
             </div>

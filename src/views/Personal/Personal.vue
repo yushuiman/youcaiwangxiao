@@ -13,7 +13,6 @@
       </div>
       <div class="userm-right" ref="usermRight">
         <course-info v-if="clkTit == 'course'" :user_id="user_id"></course-info>
-        <education-info v-if="clkTit == 'education'" :user_id="user_id"></education-info>
         <questions-info v-if="clkTit == 'questions'" :user_id="user_id"></questions-info>
         <!-- <zhibo-info v-if="clkTit == 'zhibo'" :user_id="user_id"></zhibo-info> -->
         <answer-info v-if="clkTit == 'answer'" :user_id="user_id"></answer-info>
@@ -46,7 +45,6 @@ import questionsInfo from '../../components/personal/questionsInfo'
 import answerInfo from '../../components/personal/answerInfo'
 import orderInfo from '../../components/personal/orderInfo'
 import accountInfo from '../../components/personal/accountInfo'
-import educationInfo from '../../components/personal/educationInfo'
 import setInfo from '../../components/personal/setInfo'
 import userTop from '../../components/personal/userTop'
 import { getPersonal, putOmoUser } from '@/api/personal'
@@ -75,11 +73,6 @@ export default {
           type: 'answer',
           tit: '答疑',
           class_name: 'userm-item-04'
-        },
-        {
-          type: 'education',
-          tit: '后续教育',
-          class_name: 'userm-item-07'
         },
         {
           type: 'order',
@@ -115,7 +108,6 @@ export default {
     answerInfo,
     orderInfo,
     accountInfo,
-    educationInfo,
     setInfo,
     userTop
   },

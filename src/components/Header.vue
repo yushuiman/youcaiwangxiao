@@ -12,7 +12,6 @@
             </ul>
           </div>
           <div class="login-wrap">
-            <a class="learen-btn" @click="goLearning">学习中心</a>
             <div class="login-l fl" v-if="!this.token">
               <a @click="goLogin('login')">登录</a>
               <!-- <router-link :to="{path: 'login', query: {type:'login'}}">登录</router-link> -->
@@ -47,26 +46,6 @@ export default {
         {
           path: 'question',
           name: '题库'
-        },
-        {
-          path: 'zhibo',
-          name: '直播'
-        },
-        {
-          path: 'zixun',
-          name: '资讯'
-        },
-        {
-          path: 'app',
-          name: 'App'
-        },
-        {
-          path: 'books',
-          name: '优财图书馆'
-        },
-        {
-          path: 'education',
-          name: '后续教育'
         }
       ]
     }
@@ -142,14 +121,6 @@ export default {
           isFlag: type
         }
       })
-    },
-    // 学习计划
-    goLearning () {
-      if (this.token) {
-        this.$router.push('/personal')
-      } else {
-        this.$router.push('/learning-center')
-      }
     }
   }
 }

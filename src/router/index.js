@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import education from '../router/education'
 
 Vue.use(Router)
 const Home = r => require.ensure([], () => r(require('@/views/Home')), 'Home')
@@ -19,22 +18,12 @@ const Analysis = r => require.ensure([], () => r(require('@/views/Question/Analy
 const CapacityAssessment = r => require.ensure([], () => r(require('@/views/Question/CapacityAssessment')), 'CapacityAssessment')
 const CapacityAssessmentApp = r => require.ensure([], () => r(require('@/views/Question/CapacityAssessmentApp')), 'CapacityAssessmentApp')
 const Answer = r => require.ensure([], () => r(require('@/views/Answer/Answer')), 'Answer')
-const Zhibo = r => require.ensure([], () => r(require('@/views/Zhibo/Zhibo')), 'Zhibo')
-const Zixun = r => require.ensure([], () => r(require('@/views/Zixun/Zixun')), 'Zixun')
-const ZixunDetail = r => require.ensure([], () => r(require('@/views/Zixun/ZixunDetail')), 'ZixunDetail')
-const App = r => require.ensure([], () => r(require('@/views/App/App')), 'App')
 const Login = r => require.ensure([], () => r(require('@/views/Login/Login')), 'Login')
 const Personal = r => require.ensure([], () => r(require('@/views/Personal/Personal')), 'Personal')
 const News = r => require.ensure([], () => r(require('@/views/News/News')), 'News')
-const LearningCenter = r => require.ensure([], () => r(require('@/views/LearningCenter/LearningCenter')), 'LearningCenter')
-const LearningCenterDetail = r => require.ensure([], () => r(require('@/views/LearningCenter/LearningCenterDetail')), 'LearningCenterDetail')
-const DoPoticLearn = r => require.ensure([], () => r(require('@/views/LearningCenter/DoPoticLearn')), 'DoPoticLearn')
-const LearnCenterVideo = r => require.ensure([], () => r(require('@/views/LearningCenter/LearnCenterVideo')), 'LearnCenterVideo')
 const OrderConfirm = r => require.ensure([], () => r(require('@/views/Orders/OrderConfirm')), 'OrderConfirm')
 const OrderPay = r => require.ensure([], () => r(require('@/views/Orders/OrderPay')), 'OrderPay')
 const WechatPay = r => require.ensure([], () => r(require('@/views/Orders/WechatPay')), 'WechatPay')
-const Books = r => require.ensure([], () => r(require('@/views/Books/Books')), 'Books')
-const BooksDetail = r => require.ensure([], () => r(require('@/views/Books/BooksDetail')), 'BooksDetail')
 
 const router = new Router({
   mode: 'history',
@@ -216,50 +205,6 @@ const router = new Router({
       }
     },
     {
-      path: '/zhibo',
-      name: 'zhibo',
-      component: Zhibo,
-      meta: {
-        title: '直播',
-        showHeader: true,
-        showFooter: true,
-        showRightSlider: true
-      }
-    },
-    {
-      path: '/zixun',
-      name: 'zixun',
-      component: Zixun,
-      meta: {
-        title: '资讯',
-        showHeader: true,
-        showFooter: true,
-        showRightSlider: true
-      }
-    },
-    {
-      path: '/zixun-detail',
-      name: 'zixun-detail',
-      component: ZixunDetail,
-      meta: {
-        title: '资讯',
-        showHeader: true,
-        showFooter: true,
-        showRightSlider: true
-      }
-    },
-    {
-      path: '/app',
-      name: 'app',
-      component: App,
-      meta: {
-        title: 'App',
-        showHeader: true,
-        showFooter: false,
-        showRightSlider: true
-      }
-    },
-    {
       path: '/login',
       name: 'login',
       component: Login,
@@ -294,51 +239,6 @@ const router = new Router({
         showRightSlider: true
       }
     },
-    // 学习计划
-    {
-      path: '/learning-center',
-      name: 'learning-center',
-      component: LearningCenter,
-      meta: {
-        title: '学习计划',
-        showHeader: true,
-        showFooter: false,
-        showRightSlider: true
-      }
-    },
-    {
-      path: '/learning-center-detail',
-      name: 'learning-center-detail',
-      component: LearningCenterDetail,
-      meta: {
-        title: '学习计划',
-        showHeader: true,
-        showFooter: false,
-        showRightSlider: true
-      }
-    },
-    {
-      path: '/dopotic-learn',
-      name: 'dopotic-learn',
-      component: DoPoticLearn,
-      meta: {
-        title: '题库',
-        showHeader: true,
-        showFooter: false,
-        showRightSlider: true
-      }
-    },
-    {
-      path: '/learn-center-video',
-      name: 'learn-center-video',
-      component: LearnCenterVideo,
-      meta: {
-        title: '课程',
-        showHeader: false,
-        showFooter: false,
-        showRightSlider: false
-      }
-    },
     {
       path: '/order-confirm',
       name: 'order-confirm',
@@ -371,30 +271,7 @@ const router = new Router({
         showFooter: false,
         showRightSlider: true
       }
-    },
-    {
-      path: '/books',
-      name: 'books',
-      component: Books,
-      meta: {
-        title: '优财图书馆',
-        showHeader: true,
-        showFooter: true,
-        showRightSlider: true
-      }
-    },
-    {
-      path: '/books-detail',
-      name: 'books-detail',
-      component: BooksDetail,
-      meta: {
-        title: '优财图书馆',
-        showHeader: true,
-        showFooter: true,
-        showRightSlider: true
-      }
-    },
-    ...education
+    }
   ],
   scrollBehavior (to, from, savedPosition) {
     return {
