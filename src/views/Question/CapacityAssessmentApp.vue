@@ -139,7 +139,7 @@ export default {
         },
         textStyle: {
           fontSize: '1.2rem',
-          color: '#666666' // 主标题文字颜色
+          color: '#999999' // 主标题文字颜色
         },
         radar: [
           {
@@ -266,8 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   .cass-row{
     padding: px2rem(20);
-    margin-top: px2rem(20);
-    background: #ffffff;
+    margin-bottom: px2rem(20);
     text-align: center;
     .cass-title{
       font-size: px2rem(46);
@@ -282,7 +281,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   .cass-row-mtb{
     padding-top: px2rem(40);
-    // padding-bottom: 30px;
   }
   .cass-row-pt{
     padding-top: px2rem(38);
@@ -301,8 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     .yc-record-bt{
-      margin-top: px2rem(34);
-      margin-left: px2rem(-10);
+      margin-top: px2rem(24);
+      margin-left: px2rem(-16);
       font-size: px2rem(32);
       color: $col999;
     }

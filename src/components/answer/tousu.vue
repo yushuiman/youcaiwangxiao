@@ -3,6 +3,7 @@
     v-model="tousuVisible"
     footer-hide
     :width="795"
+    :scrollable="true"
     @on-visible-change="tousuChangeVisible"
     class="iview-modal">
     <div class="ask">
@@ -52,9 +53,7 @@ export default {
   },
   methods: {
     getComplainType () {
-      this.showLoading(true)
       complainType().then((data) => {
-        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.complainTypeList = res.data

@@ -1,10 +1,10 @@
 <template>
   <div class="user-wrap">
     <!-- 用户信息 -->
-    <user-top :personalInfo="personalInfo" :user_id="user_id" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
+    <user-top :personalInfo="personalInfo" :examine="examine" :user_id="user_id" :fixedFlag="fixedFlag" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
     <!-- main -->
     <div class="user-main w-wrap">
-      <div class="userm-left" ref="usermLeft">
+      <div class="userm-left" ref="usermLeft" :class="{'fixedCla': fixedFlag}">
         <ul class="userm-list">
           <li class="userm-item" :class="[v.class_name, {'curren': clkTit == v.type}]" v-for="(v, index) in userArr" :key="index" @click="switchInfo(v, index)">
             <i class="userm-icon"></i>{{v.tit}}
@@ -40,16 +40,12 @@ import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
+      fixedFlag: false,
       userArr: [
         {
           type: 'course',
           tit: '课程',
           class_name: 'userm-item-01'
-        },
-        {
-          type: 'education',
-          tit: '后续教育',
-          class_name: 'userm-item-07'
         },
         {
           type: 'questions',
@@ -59,12 +55,17 @@ export default {
         // {
         //   type: 'zhibo',
         //   tit: '直播',
-        // class_name: 'userm-item-03'
+        //   class_name: 'userm-item-03'
         // },
         {
           type: 'answer',
           tit: '答疑',
           class_name: 'userm-item-04'
+        },
+        {
+          type: 'education',
+          tit: '后续教育',
+          class_name: 'userm-item-07'
         },
         {
           type: 'order',
@@ -73,12 +74,13 @@ export default {
         },
         {
           type: 'account',
-          tit: '账号',
+          tit: '账户',
           class_name: 'userm-item-06'
         }
       ],
       clkTit: this.$route.query.type || 'course',
-      personalInfo: {} // 个人信息
+      personalInfo: {}, // 个人信息
+      examine: {} // 设置课程考试时间
     }
   },
   computed: {
@@ -100,7 +102,6 @@ export default {
     userTop
   },
   mounted () {
-    // this.getUserInfo()
     if (this.isLoadHttpRequest) {
       this.getPersonalInfo()
     } else {
@@ -108,31 +109,20 @@ export default {
         this.getPersonalInfo()
       })
     }
-    // window.addEventListener('scroll', this.scrollToTop)
+    window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
     ...mapActions([
       'getUserInfo'
     ]),
-    // scrollToTop () {
-    //   let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-    //   if (scrollTop > 70) {
-    //     this.$refs.usermLeft.style.position = 'fixed'
-    //     this.$refs.userTop1.style.position = 'fixed'
-    //     this.$refs.userTop1.style.top = 70 + 'px'
-    //     this.$refs.usermLeft.style.top = 120 + 'px'
-    //     this.$refs.usermLeft.style.width = 120 + 'px'
-    //     this.$refs.usermLeft.style.height = 120 + 'px'
-    //     this.$refs.usermRight.style.marginLeft = 229 + 'px'
-    //     if (this.$refs.usermLeft.style) {
-    //     }
-    //   } else {
-    //     if (this.$refs.usermLeft.style && scrollTop > 0) {
-    //       this.$refs.usermLeft.removeAttribute('style')
-    //       this.$refs.usermRight.removeAttribute('style')
-    //     }
-    //   }
-    // },
+    scrollToTop () {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      if (scrollTop > 100) {
+        this.fixedFlag = true
+      } else {
+        this.fixedFlag = false
+      }
+    },
     // 切换tab课程题库答疑直播订单账号
     switchInfo ({ type }, index) {
       this.clkTit = type
@@ -165,6 +155,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.personalInfo = res.data
+          this.examine = res.data.examine
           this.personalInfo.address.forEach(v => {
             v.flag = false
             v.value = '设置默认地址'
@@ -188,11 +179,6 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     // window.sessionStorage.removeItem('type')
-    // window.sessionStorage.removeItem('selIdxCourse')
-    // window.sessionStorage.removeItem('selIdxQuestion')
-    // window.sessionStorage.removeItem('selIdxAnswer')
-    // window.sessionStorage.removeItem('selIdxOrder')
-    // window.sessionStorage.removeItem('selIdxAccount')
     document.body.removeAttribute('style')
     this.visible = false
     next()
@@ -204,14 +190,23 @@ export default {
   @import "../../assets/scss/app";
   @import "../../assets/scss/personal.css";
   .user-main{
-    @include flexJustify;
+    // @include flexJustify;
+    position: relative;
     padding-top: 38px;
+    min-height: 700px;
     .userm-left{
       width: 128px;
       font-size: 18px;
+      position: fixed;
+      &.fixedCla{
+        top: 160px;
+      }
     }
     .userm-right{
       width: 971px;
+      position: absolute;
+      left: 229px;
+      top: 38px;
     }
   }
   .userm-list{
@@ -245,7 +240,7 @@ export default {
   }
   .userm-icon{
     width: 20px;
-    height: 18px;
+    height: 20px;
     margin-right: 10px;
     margin-top: -5px;
     vertical-align: middle;

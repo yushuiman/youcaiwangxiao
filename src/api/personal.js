@@ -257,3 +257,31 @@ export const delcoupon = (data) => { // 删除过期优惠券
     method: 'post'
   })
 }
+export const userCourse = (data) => { // 获取科目
+  return axios.request({
+    url: '/web/Personal/userCourse',
+    data,
+    method: 'post'
+  })
+}
+export const courseTime = (data) => { // 获取科目
+  return axios.request({
+    url: '/web/Personal/courseTime',
+    data,
+    method: 'post'
+  })
+}
+export const ctimeSub = (data) => { // 设置科目考试时间
+  return axios.request({
+    url: '/web/Personal/ctimeSub',
+    data,
+    method: 'post'
+  })
+}
+export const onlyQuestion = (data) => { // 答疑题干展示
+  return axios.request({
+    url: '/web/Personal/onlyQuestion',
+    data,
+    method: 'post'
+  })
+}

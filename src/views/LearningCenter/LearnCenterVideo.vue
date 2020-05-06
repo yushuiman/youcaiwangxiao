@@ -2,71 +2,130 @@
   <div class="video-wrap">
     <div class="video-header">
       <div>
-        <router-link :to="{ path: '/learning-center-detail', query: { package_id: playCourseInfo.package_id }}">></router-link>
+        <router-link :to="{ path: '/learning-center-detail', query: { s_c_idx: playCourseInfo.s_c_idx }}">
+          <Icon type="ios-arrow-back" style="color:#999999;font-size: 22px;vertical-align: middle;margin-top:-3px;margin-right: 12px;"/>
+        </router-link>
         <span>{{videoCredentials.Title}}</span>
-        <span class="star-collection" @click="courseCollection" v-if="videoCredentials.collect == 2">
-          <Icon type="md-star-outline" style="color: #999999; font-size: 22px; margin-top: -4px;" v-if="videoCredentials.collect == 2"/>收藏
-        </span>
-        <span class="star-collection act" @click="courseCollection" v-if="videoCredentials.collect == 1">
-          <Icon type="md-star" style="color: #F99111; font-size: 22px; margin-top: -4px;" v-if="videoCredentials.collect == 1"/>收藏
-        </span>
       </div>
       <HeadName :showName="false"></HeadName>
     </div>
-    <div class="video-main" id="box">
+    <div class="video-main" :class="{'curren': fixedVideo}" id="box">
       <div class="video-info-l">
         <ul class="vinfo-ul">
-          <li class="vinfo-item" @click="showModel('课程<br />切换')">
+          <li class="vinfo-item" :class="{'curren': vinfoIdex == 0}" @click="showModel('章节', 0)">
             <i class="vio-icon vio-icon-01"></i>
-            <p class="txt">课程<br />切换</p>
+            <p class="txt">章节</p>
           </li>
           <!-- 正课且购买 -->
-          <li class="vinfo-item" v-if="playCourseInfo.is_zhengke == 1 && playCourseInfo.userstatus == 1" @click="showModel('答疑')">
+          <li class="vinfo-item" :class="{'curren': vinfoIdex == 1}" v-if="playCourseInfo.is_zk == 1 && playCourseInfo.userstatus == 1" @click="showModel('答疑', 1)">
             <i class="vio-icon vio-icon-02"></i>
             <p class="txt">答疑</p>
           </li>
-          <li class="vinfo-item" @click="showModel('讲义')">
+          <li class="vinfo-item" :class="{'curren': vinfoIdex == 2}" @click="showModel('讲义', 3)">
             <i class="vio-icon vio-icon-03"></i>
             <p class="txt">讲义</p>
           </li>
         </ul>
       </div>
-      <div class="video-info-c" id="left">
-        <ali-player
-          ref="aliPlayers"
-          v-if="videoCredentials.playAuth"
-          :vid="VideoId"
-          :playauth="videoCredentials.playAuth"
-          :user_id="user_id"
-          @ready="ready"
-          @ended="ended">
-        </ali-player>
+      <div class="video-info-c" id="left" :style="{ height: screenHeight - 137 + 'px' }">
+        <div class="course-video-box" v-if="!fixedVideo">
+          <ali-player
+            ref="aliPlayers"
+            v-if="videoCredentials.playAuth"
+            :vid="VideoId"
+            :playauth="videoCredentials.playAuth"
+            :videoCredentials="videoCredentials"
+            :fixedVideo="fixedVideo"
+            :user_id="user_id"
+            @ready="ready"
+            @ended="ended"
+            @switchVideo="switchVideo"
+            @courseCollection="courseCollection">
+          </ali-player>
+        </div>
+        <div class="pdf-iframe" style="height: 100%;overflow-y: auto;" v-if="fixedVideo">
+          <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="100%"></iframe>
+        </div>
       </div>
-      <div id="resize" class="course-drag" :class="{'course-drag-hide': !flagKc && !flagAnswer && !flagJy}">
+      <!--  :class="{'course-drag-hide': flagClosed}" -->
+      <div id="resize" class="course-drag" v-if="!flagClosed">
         <div class="drag"></div>
       </div>
       <div class="video-info-r" :style="{ width: wImportant + 'px' }" id="right">
-        <div class="rightCourseList" v-if="flagKc">
-          <div class="close-box" @click="closeModel">
-            <i class="close-icon"></i>
+        <div class="video-panel-close" v-if="flagClosed" @click="showModel('closed')">
+          <Icon type="ios-arrow-round-back" style="font-size: 44px; color:#ffffff;"/>
+        </div>
+        <!-- :class="{'active': flagCourseSec}" -->
+        <div class="video-section-list" v-if="flagCourseSec">
+          <!-- <h1 class="vsc-title">章节目录</h1> -->
+          <div class="vc-title">
+            <p>章节目录</p>
+            <Icon type="md-close" style="color:#999999;font-size: 22px;" @click="closeModel('sec')"/>
           </div>
-          <h1 class="vc-title" style="color: #E6E6E6;">章节目录</h1>
           <ul class="video-list">
-            <li class="video-item" :class="{'curren': playCourseInfo.video_id == v.video_id}" v-for="(v, index) in learnVideoList" :key="index" @click="playVideo(v)"
-            style="height: 36px;line-height: 36px;">
-              <i class="el-video-icon"></i>
+            <li class="video-item" :class="['video-item' + v.video_id, {'curren': playCourseInfo.video_id == v.video_id}]" v-for="(v, index) in learnVideoList" :key="index" @click="switchVideo(2, v)">
+              <i class="el-video-icon" :class="{'play-icon': playCourseInfo.video_id == v.video_id}"></i>
               <span class="sl">{{v.video_name}}</span>
               <i class="el-dot-icon"></i>
             </li>
           </ul>
         </div>
-        <answer v-if="flagAnswer" :playCourseInfo="playCourseInfo" :user_id="user_id" @closeModel="closeModel"></answer>
-        <div class="jiangyi" v-if="flagJy">
-          <div class="close-box" @click="closeModel">
-            <i class="close-icon"></i>
+        <div class="course-video-box" :class="{'fix-video': fixedVideo}" v-if="fixedVideo">
+          <ali-player
+            ref="aliPlayers"
+            v-if="videoCredentials.playAuth"
+            :vid="VideoId"
+            :playauth="videoCredentials.playAuth"
+            :videoCredentials="videoCredentials"
+            :fixedVideo="fixedVideo"
+            :user_id="user_id"
+            @ready="ready"
+            @ended="ended"
+            @switchVideo="switchVideo"
+            @courseCollection="courseCollection">
+          </ali-player>
+        </div>
+        <div class="jiangyi" v-if="flagJy" :class="{'littleScreen': fixedVideo}">
+          <div class="vc-title" v-if="!fixedVideo">
+            <p>
+              <span class="active">讲义</span>
+              <span @click="switchScreen('jy')" >讲义全屏</span>
+            </p>
+            <Icon type="md-close" style="color:#999999;font-size: 22px;" @click="closeModel('jy')"/>
           </div>
-          <h1 class="vc-title">讲义</h1>
-          <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="88%" style="position:absolute;top: 90px;bottom:0;width:100%;height: 88%;"></iframe>
+          <div class="video-screen" v-if="fixedVideo">
+            <button class="btn-com" @click="switchScreen('video')" >视频全屏</button>
+          </div>
+          <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="100%" ></iframe>
+        </div>
+        <div class="answer-box" v-if="flagAnswer">
+          <div class="vc-title">
+            <p>提问题</p>
+            <Icon type="md-close" style="color:#999999;font-size: 22px;" @click="closeModel('answer')"/>
+          </div>
+          <answer :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials" :answerTime="answerTime" :user_id="user_id" :screenHeight="screenHeight" @stopVideo="stopVideo" @addKeydown="addKeydown" @updataAnswerall="updataAnswerall"></answer>
+        </div>
+      </div>
+    </div>
+    <div class="answer-jy-wrap">
+      <ul class="tab-list-all-jx">
+        <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': chooseIdx == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      </ul>
+      <div class="aj-list-info-flex">
+        <div class="aj-list-info-l">
+          <div class="aj-main">
+            <ask-course v-if="chooseIdx == 0 && videoCredentials.playAuth" ref="updateAnswerRef" :user_id="user_id" :playCourseInfo="playCourseInfo" :videoCredentials="videoCredentials"></ask-course>
+            <ul class="jy-ul" v-if="chooseIdx == 1">
+              <li class="jy-item" v-for="(val, index) in learnVideoList" :key="index">
+                <p>{{val.video_name}}</p>
+                <span @click="jiangyiDown(val.handouts)"><i></i>下载</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="aj-else-info-r">
+          <!-- 猜你喜欢 -->
+          <like-list></like-list>
         </div>
       </div>
     </div>
@@ -74,44 +133,32 @@
 </template>
 <script>
 import aliPlayer from '@/components/video/aliPlayer'
-// import courseList from '@/components/video/courseList'
+import askCourse from '@/components/video/askCourse'
 import answer from '@/components/video/answer'
 import HeadName from '@/components/common/HeadName'
+import likeList from '@/components/class/likeList.vue'
 import { videoCredentials, videoPlayback, collection, firstSocket } from '@/api/class'
-import { getVideo } from '@/api/learncenter'
-import config from '@/config'
+import { getVideo, studyVideo } from '@/api/learncenter'
+// import config from '@/config'
+import Cookies from 'js-cookie'
 import { mapState } from 'vuex'
 
 export default {
   inject: ['reload'],
   data () {
     return {
-      watchRecordsList: {}, // 观看记录头像滑过
-      personalArr: [
-        {
-          type: '我的课程',
-          sign: 'course'
-        },
-        {
-          type: '订单中心',
-          sign: 'order'
-        },
-        {
-          type: '我的答疑',
-          sign: 'answer'
-        },
-        {
-          type: '个人设置',
-          sign: 'set'
-        }
-      ],
-      selMenu: 3,
-      vinfo: ['课程<br />切换', '答疑', '讲义'],
-      flagKc: true,
+      screenTimer: null, // 监听浏览器高度
+      screenHeight: document.documentElement.clientHeight || document.body.clientHeight,
+      chooseIdx: 0,
+      vinfoIdex: 0,
+      txtArr: ['答疑', '讲义下载'],
       flagAnswer: false,
-      flagCourse: false,
+      flagCourseSec: true,
       flagJy: false,
-      wImportant: 382,
+      fixedVideo: false,
+      flagClosed: false,
+      wImportant: 445,
+      VideoId: '', // 视频VideoId
       videoCredentials: {
         handouts: '', // 讲义
         playAuth: '', // 获取视频凭证
@@ -119,29 +166,30 @@ export default {
         watch_time: '', // 观看时间
         Title: '' // name
       },
-      VideoId: '', // 视频VideoId
       playCourseInfo: {
         package_id: this.$route.query.package_id,
         course_id: this.$route.query.course_id,
         section_id: this.$route.query.section_id,
         video_id: this.$route.query.video_id,
-        is_zhengke: this.$route.query.is_zhengke,
-        userstatus: parseInt(window.sessionStorage.getItem('userstatus')) || 2, // 1购买2未购买
+        is_zk: this.$route.query.is_zk,
+        userstatus: window.sessionStorage.getItem('userstatus') || 2, // 1购买2未购买
         days: this.$route.query.days,
-        plan_id: this.$route.query.plan_id
+        plan_id: this.$route.query.plan_id,
+        s_c_idx: this.$route.query.s_c_idx
       },
-      playCourseInfoNext: {},
-      playtime: 0, // 视频上次播放时间
+      playCourseInfoNextPrev: {},
       socketTimer: null,
       learnVideoList: [],
-      isPlay: false
+      isPlay: false, // 视频初始化getStatus获取不准确
+      answerTime: 0 // 答疑提问时间
     }
   },
   components: {
     aliPlayer,
-    // courseList,
     answer,
-    HeadName
+    HeadName,
+    likeList,
+    askCourse
   },
   computed: {
     ...mapState({
@@ -162,18 +210,40 @@ export default {
     this.$nextTick(() => {
       var _this = this
       document.onkeydown = function (e) {
+        e.preventDefault()
         let key = window.event.keyCode
         _this.watchKeydοwn(key)
       }
     })
+    const that = this
+    window.onresize = () => {
+      return (() => {
+        window.screenHeight = document.documentElement.screenHeight || document.body.clientHeight
+        that.screenHeight = window.screenHeight
+      })()
+    }
     // this.initSecvCatalog() // 初始化加载数据-详情页面选择的目录course_id
     // this.getVideoPlayback(this.$route.query.video_id)
+  },
+  watch: {
+    screenHeight (val) {
+      // 为了避免频繁触发resize函数导致页面卡顿，使用定时器
+      if (!this.screenTimer) {
+        // 一旦监听到的screenHeight值改变，就将其重新赋给data里的screenHeight
+        this.screenHeight = val
+        this.screenTimer = true
+        let that = this
+        setTimeout(function () {
+          // 打印screenHeight变化的值
+          that.screenTimer = false
+        }, 300)
+      }
+    }
   },
   methods: {
     watchKeydοwn (keyNum) {
       let player = this.$refs.aliPlayers
       let playStatus = player.getStatus()
-      console.log(keyNum + '' + playStatus + '' + this.isPlay)
       if (keyNum === 32) { // 空格暂停播放
         if (player.getCurrentTime() > 0) {
           this.isPlay = true
@@ -206,21 +276,23 @@ export default {
         // 音量大小 //获得当前音量
         let volume = parseInt(player.getVolume() * 100)
         if (volume < 100) {
-          volume = (volume + 1) / 100
-          player.setVolume(volume)
+          volume = (volume + 1)
+          Cookies.set('voicenum', volume)
+          player.keySetVoice()
         }
       }
       if (keyNum === 40) { // 加音量
         let volume = parseInt(player.getVolume() * 100)
         if (volume > 0) {
-          volume = (volume - 1) / 100
-          player.setVolume(volume)
+          volume = (volume - 1)
+          Cookies.set('voicenum', volume)
+          player.keySetVoice()
         }
       }
     },
     dragControllerDiv () {
       var resize = document.getElementById('resize')
-      var left = document.getElementById('left')
+      // var left = document.getElementById('left')
       var right = document.getElementById('right')
       var box = document.getElementById('box')
       resize.onmousedown = function (e) {
@@ -230,11 +302,8 @@ export default {
           var endX = e.clientX
           var moveLen = resize.left + (endX - startX)
           var maxT = box.clientWidth - resize.offsetWidth
-          if (moveLen < 600) moveLen = 600
-          if (moveLen > maxT - 382) moveLen = maxT - 382
-
-          resize.style.left = moveLen
-          left.style.width = moveLen + 'px'
+          if (moveLen < 680) moveLen = 680
+          if (moveLen > maxT - 445) moveLen = maxT - 445
           right.style.width = (box.clientWidth - moveLen - 10) + 'px'
         }
         document.onmouseup = function (evt) {
@@ -246,34 +315,81 @@ export default {
         return false
       }
     },
+    // 1切换视频清晰度，2目录切换视频，3切换上一个视频，4切换下一个视频
+    switchVideo (type, v) {
+      if (type === 1) {
+        this.getVideoPlayback(2)
+        return
+      }
+      this.chooseIdx = 0
+      if (type === 2) {
+        this.$router.replace({ path: '/learn-center-video',
+          query: {
+            ...this.$route.query,
+            package_id: v.package_id,
+            course_id: v.course_id,
+            section_id: v.section_id,
+            video_id: v.video_id
+          }
+        })
+        this.getVideoPlayback(2)
+      }
+      if (type == 3) {
+        if (this.flagCourseSec) {
+          this.wImportant = 445
+        } else {
+          this.wImportant = 95
+          this.flagClosed = true
+        }
+        this.computedPrevVid()
+      }
+      if (type == 4) {
+        if (this.flagCourseSec) {
+          this.wImportant = 445
+        } else {
+          this.wImportant = 95
+          this.flagClosed = true
+        }
+        this.computedNextVid()
+      }
+    },
     ended () {
-      // this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
+      this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
       this.computedNextVid() // 计算下一个要播放的视频
-      this.reload()
-      // window.location.reload()
-      // await this.initSecvCatalog(this.playCourseInfoNext.course_id)
-      // this.$refs.aliPlayers.ended()
+      // this.videoCredentials.watch_time = parseInt(this.$refs.aliPlayers.getCurrentTime())
     },
     // 播放器
     ready (instance) {
+      clearInterval(this.socketTimer)
+      this.socketTimer = null
+      // 倍速设置
+      let speednum = Cookies.get('speednum') || 1
+      instance.setSpeed(speednum)
+      // 音量设置
+      let voicenum = Cookies.get('voicenum') || 100
+      instance.setVolume(voicenum / 100)
       // 跳转到上次播放时间
-      instance.seek(this.playtime - 5)
+      if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
+        instance.seek(0)
+      } else {
+        instance.seek(this.videoCredentials.watch_time)
+      }
+      // 列表位置记忆
+      let anchor = document.querySelector('.video-item' + this.playCourseInfo.video_id).offsetTop
+      document.querySelector('.video-section-list').scrollTop = anchor
       // 初始化监听一次socket io
-      if (this.playCourseInfo.userstatus === 1) {
-        if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
+      if (this.playCourseInfo.userstatus == 1) {
+        if (this.user_id != '' && this.playCourseInfo.package_id != '' && this.playCourseInfo.course_id != '' && this.playCourseInfo.section_id != '' && this.playCourseInfo.video_id != '') {
           // this.socketIo()
           this.subFirstSocket()
         }
       }
       // 30秒监听一次socket
       this.socketTimer = setInterval(() => {
-        this.playtime = parseInt(instance.getCurrentTime())
         // 视频播放时间大于0 socket
-        if (this.playCourseInfo.userstatus === 1) {
-          if (this.user_id !== '' && this.playCourseInfo.package_id !== '' && this.playCourseInfo.course_id !== '' && this.playCourseInfo.section_id !== '' && this.playCourseInfo.video_id !== '') {
-            // if (instance.getStatus() === 'playing') {
-            // }
-            // this.socketIo()
+        if (this.playCourseInfo.userstatus == 1) {
+          if (instance.getStatus() == 'playing' && this.user_id != '' && this.playCourseInfo.package_id != '' && this.playCourseInfo.course_id != '' && this.playCourseInfo.section_id != '' && this.playCourseInfo.video_id != '') {
+            this.socketIo()
           }
         }
       }, 30000)
@@ -286,9 +402,9 @@ export default {
         course_id: this.playCourseInfo.course_id,
         section_id: this.playCourseInfo.section_id,
         video_id: this.playCourseInfo.video_id,
-        watch_time: this.playtime,
+        watch_time: this.videoCredentials.watch_time,
         video_type: 1, // 视频类型 1视频2直播
-        status: 2, // 播放类型 1课程视频播放2学习中心
+        status: 2, // 播放类型 1课程视频播放2学习计划
         days: this.playCourseInfo.days,
         plan_id: this.playCourseInfo.plan_id
       }).then((data) => {
@@ -296,114 +412,209 @@ export default {
     },
     // 每30秒一次
     socketIo () {
-      this.playtime = parseInt(this.$refs.aliPlayers.getCurrentTime())
+      this.videoCredentials.watch_time = parseInt(this.$refs.aliPlayers.getCurrentTime())
       var message = {
         user_id: this.user_id,
         package_id: this.$route.query.package_id,
         course_id: this.playCourseInfo.course_id,
         section_id: this.playCourseInfo.section_id,
         video_id: this.playCourseInfo.video_id,
-        watch_time: this.playtime,
-        video_type: 1, // 视频类型 1视频2直播
-        type: 2, // 播放类型 1课程视频播放2学习中心
+        watch_time: this.videoCredentials.watch_time,
+        // video_type: 1, // 视频类型 1视频2直播
         days: this.playCourseInfo.days,
         plan_id: this.playCourseInfo.plan_id
       }
-      console.log(message)
-      var _this = this
-      var socket
-      if (process.env.NODE_ENV === 'production') {
-        socket = io(config.baseUrl.pro)
-      } else {
-        socket = io('https://dest.youcaiwx.cn')
-      }
-      socket.on('connect', function () {
-        socket.emit('success', { username: _this.user_id })
-        console.log('learn-video连接成功')
-      })
-      // 公开聊天
-      socket.on('sendMsg', function (msg) {
-        let json = JSON.parse(msg)
-        console.log(json)
-      })
-      socket.emit('sendMsg', {
-        'username': _this.user_id,
-        'msg': message
+      // console.log(message)
+      studyVideo(message).then(data => {
       })
     },
+    // 下一个视频
     computedNextVid () {
-      this.playCourseInfoNext = Object.assign({}, this.playCourseInfo)
+      this.playCourseInfoNextPrev = Object.assign({}, this.playCourseInfo)
       var profiles = this.learnVideoList
       var currentProfile = {
         video_id: this.playCourseInfo.video_id
       }
-      var currentProfileIndex = (profiles || []).findIndex((profile) => profile.video_id + '' === currentProfile.video_id + '')
-      if (currentProfileIndex === profiles.length - 1) {
-        this.playCourseInfoNext.video_id = this.learnVideoList[0].video_id
+      var currentProfileIndex = (profiles || []).findIndex((profile) => profile.video_id == currentProfile.video_id)
+      if (currentProfileIndex == profiles.length - 1) {
+        this.$Message.error('已经是最后一节')
+        return
       } else {
         ++currentProfileIndex
-        this.playCourseInfoNext.video_id = this.learnVideoList[currentProfileIndex].video_id
+        this.playCourseInfoNextPrev.video_id = this.learnVideoList[currentProfileIndex].video_id
       }
       this.$router.replace({ path: '/learn-center-video',
         query: {
           ...this.$route.query,
-          video_id: this.playCourseInfoNext.video_id
+          video_id: this.playCourseInfoNextPrev.video_id
         }
       })
+      this.getVideoPlayback(2)
+    },
+    // 上一个视频
+    computedPrevVid () {
+      this.playCourseInfoNextPrev = Object.assign({}, this.playCourseInfo)
+      var profiles = this.learnVideoList
+      var currentProfile = {
+        video_id: this.playCourseInfo.video_id
+      }
+      var currentProfileIndex = (profiles || []).findIndex((profile) => profile.video_id == currentProfile.video_id)
+      if (currentProfileIndex == 0) {
+        this.$Message.error('已经是第一节')
+        return
+      } else {
+        --currentProfileIndex
+        this.playCourseInfoNextPrev.video_id = this.learnVideoList[currentProfileIndex].video_id
+      }
+      this.$router.replace({ path: '/learn-center-video',
+        query: {
+          ...this.$route.query,
+          video_id: this.playCourseInfoNextPrev.video_id
+        }
+      })
+      this.getVideoPlayback(2)
+    },
+    // 提问的时候停止播放
+    stopVideo () {
+      this.$refs.aliPlayers.pause()
+      // window.sessionStorage.setItem('pauseWatchTime', parseInt(this.$refs.aliPlayers.getCurrentTime()))
+    },
+    // 提问鼠标离开
+    addKeydown () {
+      var _this = this
+      document.onkeydown = function (e) {
+        e.preventDefault()
+        let key = window.event.keyCode
+        _this.watchKeydοwn(key)
+      }
     },
     // tab 显示关闭课程，答疑，讲义
     showModel (val, index) {
-      // this.selMenu = index
-      if (val === '课程<br />切换') {
-        // this.flagCourse = !this.flagCourse
-        this.flagKc = !this.flagKc
+      this.vinfoIdex = index
+      if (val === '章节') {
+        this.flagCourseSec = !this.flagCourseSec
         this.flagAnswer = false
         this.flagJy = false
-        this.wImportant = 0
-        if (this.flagKc) {
-          this.wImportant = 382
+        this.wImportant = 445
+        this.flagClosed = !this.flagClosed
+        if (!this.flagCourseSec) {
+          this.wImportant = 95
+          this.flagClosed = true
+        }
+        if (this.fixedVideo) {
+          this.fixedVideo = !this.fixedVideo
+          this.flagCourseSec = true
+          this.flagClosed = false
+          this.wImportant = 445
         }
       }
       if (val === '答疑') {
+        this.answerTime = parseInt(this.$refs.aliPlayers.getCurrentTime())
         this.flagAnswer = !this.flagAnswer
+        this.wImportant = 445
         this.flagJy = false
-        if (this.flagAnswer) {
-          this.wImportant = 495
-        } else {
-          if (this.flagKc) {
-            this.wImportant = 382
+        this.flagClosed = false
+        if (!this.flagAnswer) {
+          if (this.flagCourseSec) {
+            this.wImportant = 445
           } else {
-            this.wImportant = 0
+            this.wImportant = 95
+            this.flagClosed = true
+          }
+        }
+        if (this.fixedVideo) {
+          this.fixedVideo = !this.fixedVideo
+          if (this.flagCourseSec) {
+            this.wImportant = 445
+          } else {
+            this.wImportant = 95
+            this.flagClosed = true
           }
         }
       }
       if (val === '讲义') {
         this.flagJy = !this.flagJy
+        this.wImportant = 445
         this.flagAnswer = false
-        if (this.flagJy) {
-          this.wImportant = 495
-        } else {
-          if (this.flagKc) {
-            this.wImportant = 382
+        this.flagClosed = false
+        if (!this.flagJy) {
+          if (this.flagCourseSec) {
+            this.wImportant = 445
           } else {
-            this.wImportant = 0
+            this.wImportant = 95
+            this.flagClosed = true
           }
         }
+        if (this.fixedVideo) {
+          this.fixedVideo = !this.fixedVideo
+          this.flagJy = true
+          this.wImportant = 445
+          this.flagClosed = true
+        }
+      }
+      if (val === 'closed') {
+        this.flagCourseSec = true
+        this.flagClosed = false
+        this.wImportant = 445
       }
     },
     closeModel (msg) {
-      this.flagKc = false
-      this.flagAnswer = false
-      this.flagJy = false
-      this.wImportant = 0
-      if (this.flagKc) {
-        this.wImportant = 382
+      if (msg === 'sec') {
+        this.flagCourseSec = false
+        this.flagClosed = true
+        this.wImportant = 95
+        return
       }
+      if (msg === 'jy') {
+        this.flagJy = false
+        if (this.flagCourseSec) {
+          this.wImportant = 445
+          this.flagClosed = false
+        } else {
+          this.wImportant = 95
+          this.flagClosed = true
+        }
+      }
+      if (msg === 'answer') {
+        this.flagAnswer = false
+        if (this.flagCourseSec) {
+          this.wImportant = 445
+          this.flagClosed = false
+        } else {
+          this.wImportant = 95
+          this.flagClosed = true
+        }
+      }
+    },
+    // 切换模式
+    switchScreen (type) {
+      if (type === 'jy') {
+        this.fixedVideo = true
+        this.wImportant = 326
+        this.flagClosed = true
+      }
+      if (type === 'video') {
+        this.fixedVideo = false
+        this.flagJy = false
+        if (this.flagCourseSec) {
+          this.wImportant = 445
+        } else {
+          this.wImportant = 95
+          this.flagClosed = true
+        }
+      }
+    },
+    jiangyiDown (url) {
+      if (!url) {
+        this.$Message.error('串讲不支持下载')
+        return
+      }
+      window.location.href = url
     },
     // 视频列表
     goLearnVideo () {
       let types = 2
-      if (this.playCourseInfo.userstatus === 2) { // 0元体验 userstatus==2未购买
+      if (this.playCourseInfo.userstatus == 2) { // 0元体验 userstatus==2未购买
         types = 1
       }
       this.showLoading(true)
@@ -419,60 +630,53 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.learnVideoList = res.data.video
-          this.learnVideoList.forEach(v => {
-            if (parseInt(this.playCourseInfo.video_id) === v.video_id) {
-              this.playtime = v.watch_time
-            }
-          })
-          this.getVideoPlayback(this.playCourseInfo.video_id)
+          this.getVideoPlayback()
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
-    // 获取视频凭证
-    getVideoPlayback (id) {
+    // 获取视频VideoId，然后获取playAuth，type 2自动播放下一个视频
+    getVideoPlayback (type) {
+      this.playCourseInfo.video_id = this.$route.query.video_id
+      this.learnVideoList.forEach(v => {
+        if (this.playCourseInfo.video_id == v.video_id) {
+          this.videoCredentials.watch_time = v.watch_time
+        }
+      })
       videoPlayback({
-        video_id: id
+        video_id: this.playCourseInfo.video_id
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          this.VideoId = res.data.VideoId
-          // 获取视频凭证
-          videoCredentials({
-            VideoId: res.data.VideoId,
-            user_id: this.user_id,
-            package_id: this.playCourseInfo.package_id,
-            course_id: this.playCourseInfo.course_id,
-            section_id: this.playCourseInfo.section_id,
-            video_id: this.playCourseInfo.video_id
-          }).then(data => {
-            let res = data.data
-            this.videoCredentials = res.data
-            this.playtime = this.videoCredentials.watch_time
-          })
+          this.getVideoCredentials(res.data.VideoId, type)
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
-    playVideo (v) {
-      this.$router.replace({ path: '/learn-center-video',
-        query: {
-          ...this.$route.query,
-          package_id: v.package_id,
-          course_id: v.course_id,
-          section_id: v.section_id,
-          video_id: v.video_id
+    getVideoCredentials (VideoId, type) {
+      // 获取视频凭证
+      videoCredentials({
+        VideoId: VideoId,
+        user_id: this.user_id,
+        package_id: this.playCourseInfo.package_id,
+        course_id: this.playCourseInfo.course_id,
+        section_id: this.playCourseInfo.section_id,
+        video_id: this.playCourseInfo.video_id
+      }).then(data => {
+        let res = data.data
+        this.VideoId = VideoId
+        this.videoCredentials = res.data
+      }).then(() => {
+        if (type == 2) {
+          this.$refs.aliPlayers.ended(this.VideoId, this.videoCredentials.playAuth)
+          this.$refs.updateAnswerRef.initRes()
         }
       })
-      this.goLearnVideo()
-      // window.location.reload()
-      this.reload()
-      this.playtime = v.watch_time
     },
     courseCollection (collectId) { // 1收藏2取消收藏
-      if (this.videoCredentials.collect === 2) {
+      if (this.videoCredentials.collect == 2) {
         this.videoCredentials.collect = 1
       } else {
         this.videoCredentials.collect = 2
@@ -487,25 +691,42 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          if (this.videoCredentials.collect === 1) {
-            this.$Message.success('收藏成功')
+          if (this.videoCredentials.collect == 1) {
+            this.$Message.success('收藏成功~')
           } else {
-            this.$Message.success('取消成功')
+            this.$Message.success('取消成功~')
           }
         } else {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // tab切换 (答疑 讲义下载)
+    tabClk (type, index) {
+      this.chooseIdx = index
+    },
+    // 答疑提问成功
+    updataAnswerall () {
+      this.$refs.updateAnswerRef.initRes()
     }
   },
   beforeDestroy () {
     clearInterval(this.socketTimer)
+    this.socketTimer = null
     if (this.$refs.aliPlayers) {
       this.$refs.aliPlayers.dispose()
     }
   },
   beforeRouteLeave (to, from, next) {
     console.log('remove aliplayer')
+    clearInterval(this.socketTimer)
+    this.socketTimer = null
+    document.onkeydown = undefined
+    clearTimeout(this.screenTimer)
+    Cookies.remove('speedTxt')
+    Cookies.remove('speednum')
+    Cookies.remove('voicenum')
+    Cookies.remove('voicenum1')
     next()
   }
 }
@@ -513,218 +734,51 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .video-header{
-    @include lh(70, 70);
-    padding: 0 31px;
-    background: $colfff;
-    box-shadow: 0 4px 8px 0 rgba(28,31,33,.1);
-    position: relative;
-    z-index: 101;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    span{
-      font-size: 16px;
-      font-weight:500;
-      &.star-collection{
-        cursor: pointer;
-        font-size: 14px;
-        margin-left: 24px;
-        color: $col999;
-      }
-      &.act{
-        color: #F99111!important;
-      }
-    }
-    a{
-      margin: 0 8px;
-      color: $col999;
-      display: inline-block;
-      font-family: Consolas,Menlo,Courier,monospace;
-      transform: rotate(180deg);
-    }
-  }
-  .login-r{
-    position: relative;
-    img{
-      vertical-align: middle;
-      cursor: pointer;
-      &.email-icon{
-        @include wh(18, 14);
-        margin: 0 31px;
-      }
-      &.head-logo{
-        @include wh(30, 30);
-        border-radius: 50%;
-      }
-    }
-  }
-
-  .vc-title{
-    padding-top: 18px;
-    padding-bottom: 30px;
-    padding-left: 30px;
-    font-size: 20px;
-    color: $col333;
-  }
-
-  .video-main{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    top: 70px;
-    width: 100%;
-    background: #1D1F21;
-    overflow: hidden;
-    display: flex;
-    justify-content: space-between;
-  }
-  .video-info-l{
-    background: #1c1f21;
-    width: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-  }
-  .video-info-c{
-    position: relative;
-    flex: 1;
-    background: #000000;
-    border-radius: 10px;
-    margin: 20px 0;
-    overflow: hidden;
-  }
-  .video-info-r{
-    position: relative;
-    background: #1c1f21;
-    // width: 384px;
-    padding: 0;
-    right: 0;
-    z-index: 1;
-    &.video-info-r-w{
-      width: 495px;
-    }
-  }
-  // 左边菜单
-  .vinfo-ul{
-    width: 100%;
-  }
-  .vinfo-item{
-    padding: 30px 0;
-    text-align: center;
-    cursor: pointer;
-    &:hover, &.curren{
-      background: #26292C;
-      .vio-icon-01{
-        @include bg_img(22, 18, '../../assets/images/video/class-active-icon.png');
-      }
-      .vio-icon-02{
-        @include bg_img(26, 24, '../../assets/images/video/answer-active-icon.png');
-      }
-      .vio-icon-03{
-        @include bg_img(26, 25, '../../assets/images/video/jiangyi-active-icon.png');
-      }
-    }
-    .txt{
-      color: $col999;
-      line-height: 18px;
-      margin-top: 5px;
-    }
-  }
-  .vio-icon{
-    &.vio-icon-01{
-      @include bg_img(22, 18, '../../assets/images/video/class-icon.png');
-    }
-    &.vio-icon-02{
-      @include bg_img(26, 24, '../../assets/images/video/answer-icon.png');
-    }
-    &.vio-icon-03{
-      @include bg_img(26, 25, '../../assets/images/video/jiangyi-icon.png');
-    }
-  }
-  // 讲义
-  .jiangyi{
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    overflow: auto;
-    background: $colfff;
-  }
-  .close-box{
-    text-align: right;
-    padding-top: 25px;
-    padding-right: 20px;
-    .close-icon{
-      @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
-    }
-  }
-  .course-drag {
-    position: relative;
-    width: 10px;
-    height: 100%;
-    cursor: col-resize;
-    z-index: 2;
-    &.course-drag-hide{
-      visibility: hidden;
-    }
-  }
-  .drag {
-    position: absolute;
-    top: 50%;
-    margin-top: -20px;
-    left: 3px;
-    width: 4px;
-    height: 40px;
-    border: 1px solid #626972;
-    border-width: 0 1px 0 1px;
-  }
-  // 菜单
-  .video-item{
-    padding: 0 35px;
-    line-height: 50px;
-    color: $col999;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    &:hover{
-      cursor: pointer;
-    }
-    &.curren{
-      color: #F99111;
-    }
-  }
-  .el-video-icon{
-    @include wh(14, 14);
-    margin-right: 10px;
-    @extend %bg-img;
-    background-image: url('../../assets/images/video/stop-icon.png');
-    .video-item.curren &{
-      background-image: url('../../assets/images/video/play-icon.png');
-    }
-  }
-  .el-dot-icon{
-    @include wh(10, 10);
-    border-radius: 100%;
-    border: 2px solid rgba(102,102,102,1);
-    box-sizing: border-box;
-    float: right;
-    &.el-dot-see{
-      border: 0;
-      background: rgba(249,145,17,1);
-    }
-    .video-item.curren &{
-      border: 0;
-      border:2px solid rgba(249,145,17,1);
-    }
-  }
-  .sl{
-    width: 80%;
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
+  @import "../../assets/scss/video.css";
+  @import "../../assets/scss/slider.css";
+  // 目录
+  // .video-item{
+  //   padding: 0 20px;
+  //   line-height: 29px;
+  //   display: flex;
+  //   align-items: center;
+  //   &:hover{
+  //     background: #000000;
+  //     cursor: pointer;
+  //   }
+  //   &.curren{
+  //     color: #0267FF;
+  //   }
+  // }
+  // .el-video-icon{
+  //   @include wh(14, 14);
+  //   margin-right: 10px;
+  //   @extend %bg-img;
+  //   background-image: url('../../assets/images/video/stop-icon.png');
+  //   .video-item.curren &{
+  //     background-image: url('../../assets/images/video/play-icon.png');
+  //   }
+  // }
+  // .el-dot-icon{
+  //   @include wh(10, 10);
+  //   border-radius: 100%;
+  //   border: 2px solid rgba(102,102,102,1);
+  //   box-sizing: border-box;
+  //   float: right;
+    // &.el-dot-see{
+    //   border: 0;
+    //   background: rgba(249,145,17,1);
+    // }
+    // .video-item.curren &{
+    //   border: 0;
+    //   border:2px solid rgba(249,145,17,1);
+    // }
+  // }
+  // .sl{
+  //   width: 80%;
+  //   display: inline-block;
+  //   overflow: hidden;
+  //   white-space: nowrap;
+  //   text-overflow: ellipsis;
+  // }
 </style>

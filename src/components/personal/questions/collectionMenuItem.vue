@@ -12,14 +12,14 @@
           <template slot="title">
             <div class="menu-section-title">
               {{item.know_section_name}}
-              <span>（收藏<em>{{item.sectioncoun}}</em>道题）</span>
+              <span style="color:#999999;">（<em style="color:#999999;">{{item.sectioncoun}}</em>道题）</span>
             </div>
           </template>
           <div class="error-menu-er" v-for="(val, key) in item.knob" :key="key" style="padding: 10px 40px;">
             <div class="menu-jie-title">
               <div>
                 {{val.knob_name}}
-                <span>（收藏<em style="color:#f00;">{{val.knobcoun}}</em>道题）</span>
+                <span style="color:#999999;">（<em style="color:#999999;">{{val.knobcoun}}</em>道题）</span>
               </div>
               <button class="btn-zsd" @click="getKnow(item, val, key)">选择知识点</button>
             </div>

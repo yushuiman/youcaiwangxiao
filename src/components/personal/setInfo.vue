@@ -107,7 +107,7 @@
                <input class="detalis_address" type="text" maxlength="100" v-model="addAddres" placeholder="详细地址：省市区、道路、门牌号、小区、楼栋号、单元室等">
              </div>
            </div>
-           <!--原有收获地址-->
+           <!--原有收货地址-->
            <div v-if="personalInfo.address && personalInfo.address.length">
              <div v-for="(v, index) in personalInfo.address" :key="index" :ref="'inputDisabled' + index" :id="'inputDisabled' + index">
                <div class="goods edixBtn">

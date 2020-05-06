@@ -2,7 +2,7 @@
   <div class="order-confirm-wrap w-wrap">
     <h1 class="order-tit">确认订单</h1>
     <div class="order-confirm-com user-addess">
-      <h2>收获地址</h2>
+      <h2>收货地址</h2>
       <div class="edit-address">
         <ul class="address-list">
           <li class="address-item" :class="{'cur': originBillInfo.address_id == item.address_id}" v-for="(item, index) in addressList" :key="index" @click="changeAdrs(item, index)">
@@ -360,7 +360,7 @@ export default {
       this.visibleAddress = true
       this.curAddressInfo = v
     },
-    // 新增收获地址
+    // 新增收货地址
     addNewAdress () {
       if (!this.checkForm()) {
         return
@@ -642,13 +642,13 @@ export default {
     border-radius: 6px;
     box-sizing: border-box;
     &:hover{
-      border: 1px solid #0267FF;
+      border: 1px solid $blueColor;
       & .adr-change{
         display: block;
       }
     }
     &.cur{
-      border: 1px solid #0267FF;
+      border: 1px solid $blueColor;
     }
     .adr-name{
       display: flex;

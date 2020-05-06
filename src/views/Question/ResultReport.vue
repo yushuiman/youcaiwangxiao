@@ -78,7 +78,7 @@ export default {
   mounted () {
     if (this.isLoadHttpRequest) {
       // 0元体验做题成绩统计
-      if (parseInt(this.$route.query.plate_id) === 8) {
+      if (this.$route.query.plate_id == 8) {
         this.experienceStatiInfo()
         return
       }
@@ -92,7 +92,7 @@ export default {
     } else {
       this.$watch('isLoadHttpRequest', function (val, oldVal) {
         // 0元体验做题成绩统计
-        if (parseInt(this.$route.query.plate_id) === 8) {
+        if (this.$route.query.plate_id == 8) {
           this.experienceStatiInfo()
           return
         }
@@ -191,7 +191,7 @@ export default {
   .result-wrap{
     position: absolute;
     width: 100%;
-    top: 70px;
+    top: 60px;
     min-height: 100%;
     background: url('../../assets/images/questions/result-bg.png') no-repeat center;
     background-size: cover;

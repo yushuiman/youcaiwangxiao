@@ -7,17 +7,6 @@
         <div class="learn-detail-top">
           <div class="learn-course-info">
             <div class="selmoni-course">
-              <!-- <div class="sel-course-name" @click="selCourseList">
-                <em>{{selCourseName}}</em>
-                <span class="arow" v-if="!selCourseFlag"><Icon type="md-arrow-dropdown" style="font-size: 28px;margin-top: -3px;color: #666666;"/></span>
-                <span class="arow" v-if="selCourseFlag"><Icon type="md-arrow-dropup" style="font-size: 28px;margin-top: -3px;color: #666666;"/></span>
-              </div>
-              <transition name="fade">
-                <ul class="sel-course-list" ref="selCourseRef" v-if="selCourseFlag">
-                  <li class="sel-course-item" v-for="(v, index) in learnList" :key="index" @click="selCourse(v)">{{v.plan_name}}</li>
-                  <li class="add-course" @click="planLearn">+添加学习计划</li>
-                </ul>
-              </transition> -->
               <Dropdown trigger="click" placement="top-start" :transfer="true" @on-visible-change="dropDownVisible">
                 <div class="sel-course-name">
                   <em>{{selCourseName}}</em>
@@ -25,14 +14,14 @@
                   <span class="arow" v-if="selCourseFlag"><Icon type="md-arrow-dropup" style="font-size: 28px;margin-top: -3px;color: #666666;"/></span>
                 </div>
                 <DropdownMenu slot="list" class='drop-list sel-course-list'>
-                  <li class="sel-course-item" v-for="(v, index) in learnList" :key="index" @click="selCourse(v)">{{v.plan_name}}</li>
+                  <li class="sel-course-item" v-for="(v, index) in learnList" :key="index" @click="selCourse(v, index)">{{v.plan_name}}</li>
                   <li class="add-course" @click="planLearn">+添加学习计划</li>
                 </DropdownMenu>
               </Dropdown>
             </div>
-            <div class="ewm-box">
+            <!-- <div class="ewm-box">
               <i class="ewm-icon"></i>
-            </div>
+            </div> -->
             <span class="learn-status" :class="{'gray': sameday == 2}">{{ sameday == 1 ? '学习中' : '已结束' }}</span>
             <span class="surplus-day"><i></i>离考试还有{{currenLearnInfo.number}}<em>天</em></span>
           </div>
@@ -70,7 +59,7 @@
                 <p v-if="currenLearnInfo.newVideo && currenLearnInfo.newVideo.video_name">{{currenLearnInfo.newVideo.video_name}}</p>
                 <p v-else>无</p>
               </li>
-              <li class="learnvideo">
+              <li class="learnbtn">
                 <button class="btn-com" :class="{'gray': sameday == 2}" @click="goLearnVideo">开始学习</button>
               </li>
             </ul>
@@ -96,18 +85,18 @@
                   </template>
                   <ul class="days-list">
                     <!-- 今天课程已结束哦～ 继续学习吧～ 还没有开课哦～ 今天是周末哦～ -->
-                    <li class="days-item" :class="{'days-item-blue': v.beforeDate == 1, 'days-item-orange': v.currDate == 1 && v.is_rest != 2, 'days-item-gray': v.afterDate == 1 && v.is_rest != 2, 'days-item-rest': v.is_rest == 2}"
+                    <li class="days-item" :class="{'days-item-rest': v.is_rest == 2, 'days-item-blue': v.beforeDate == 1, 'days-item-orange': v.currDate == 1 && v.is_rest != 2, 'days-item-gray': v.afterDate == 1 && v.is_rest != 2}"
                       v-for="(v, index) in everydayList" :key="index" @click="getLearnVideo(v)">
                       <i class="status-icon"></i>
                       <p>{{v.date}}</p>
+                      <div class="tips-item" v-if="v.is_rest == 2">今天休息啦～</div>
                       <div class="tips-item" v-if="v.beforeDate == 1">今天课程已结束哦～</div>
                       <div class="tips-item" v-if="v.afterDate == 1 && v.is_rest != 2">还没有开课哦～</div>
                       <div class="tips-item" v-if="v.currDate == 1 && v.is_rest != 2">继续学习吧～</div>
-                      <div class="tips-item" v-if="v.is_rest == 2">今天休息啦～</div>
                     </li>
                   </ul>
-              </Submenu>
-            </Menu>
+                </Submenu>
+              </Menu>
             </div>
             <div class="answer-box" v-if="tabIdx == 1">
               <answer-info :user_id="user_id" :answerType="answerType"></answer-info>
@@ -147,11 +136,11 @@
       </div>
     </div>
     <img v-if="addlearn == 2" class="lc-right-bottom-img" src="../../assets/images/learncenter/right-bottom-img.png" alt="">
-    <!-- 制定学习计划 自定义modal样式 :styles=styles -->
+    <!-- 制定学习计划 自定义modal样式 -->
     <Modal v-model="visible"
       :width="795"
       footer-hide
-      :title=titTxt[addLearnIdx]
+      :title="titTxt[addLearnIdx]"
       class="plan-modal">
       <div class="height-com" v-if="addLearnIdx == 0">
         <div class="com-bg">
@@ -198,8 +187,7 @@
     <!-- 您有缺勤的课程 -->
     <Modal v-model="visible2"
       :width="291"
-      :closable=false
-      :styles=styles
+      :closable="false"
       footer-hide
       class="learn-modal-wrap">
       <div class="no-finish-wrap">
@@ -237,8 +225,7 @@
     <!-- 退出学习计划 -->
     <Modal v-model="visible4"
       :width="291"
-      :closable=false
-      :styles=styles
+      :closable="false"
       footer-hide
       class="learn-modal-wrap">
       <div class="outplan-wrap">
@@ -304,14 +291,11 @@ import studentDynamic from '../../components/learning/studentDynamic'
 import answerInfo from '../../components/personal/answerInfo'
 import { mapState, mapActions } from 'vuex'
 export default {
+  inject: ['reload'],
   data () {
     return {
       visible: false,
       addLearnIdx: 0, // 添加学习计划div 1选择课程 2考试时间时间 3计划完成
-      styles: {
-        top: '50%',
-        marginTop: '-100px'
-      },
       titTxt: {
         0: '添加学习计划',
         1: '添加学习计划',
@@ -320,6 +304,7 @@ export default {
       sameday: 0, // 是不是今天 判断学习中，学习结束状态
       course_id: 0, // select默认选择
       package_id: 0, // select默认选择
+      s_c_idx: this.$route.query.s_c_idx || 0,
       selCourseName: '', // select默认选择name
       selCourseFlag: false, // select 显示隐藏
       addlearn: 0, // 是否有学习计划 1有2没有
@@ -401,7 +386,7 @@ export default {
       this.addLearnIdx = index
     },
     // 学习计划首页详情
-    getLearnIndex () {
+    getLearnIndex (type) {
       this.showLoading(true)
       learnIndex({
         user_id: this.user_id
@@ -420,10 +405,11 @@ export default {
           if (addlearn === 2) {
             this.courseListLearn = plan // 没有学习计划 课程列表
           }
+          // let idx = type || 0
           if (learnList && learnList.length) {
-            this.selCourseName = this.learnList[0].plan_name // 初始化学习计划详情name
-            this.course_id = this.learnList[0].course_id // 初始化学习计划详情course_id
-            this.currenLearnInfo = this.learnList[0] // 初始化学习计划详情
+            this.selCourseName = this.learnList[this.s_c_idx].plan_name // 初始化学习计划详情name
+            this.course_id = this.learnList[this.s_c_idx].course_id // 初始化学习计划详情course_id
+            this.currenLearnInfo = this.learnList[this.s_c_idx] // 初始化学习计划详情
             this.currenLearnInfo.percent = (this.currenLearnInfo.schedule / this.currenLearnInfo.plan_days) * 100 // 初始化学习计划圆环进度
             this.getStudyStatus() // 当前学习计划状态
           }
@@ -576,10 +562,18 @@ export default {
       this.selCourseFlag = change
     },
     // 首页切换课程学习计划详情
-    selCourse (v) {
+    selCourse (v, index) {
+      this.s_c_idx = index
       this.currenLearnInfo = v
       this.selCourseName = v.plan_name
       this.selCourseFlag = false
+      this.$router.replace({ path: 'learning-center-detail',
+        query: {
+          ...this.$route.query,
+          s_c_idx: index
+        }
+      })
+      this.reload()
     },
     // 切换未完成课程学习计划
     getPackageIdSel (e, val) {
@@ -609,14 +603,12 @@ export default {
     // 月份获取日
     getEveryday (v) {
       this.everydayList = []
-      // this.showLoading(true)
       everyday({
         user_id: this.user_id,
         plan_id: this.currenLearnInfo.plan_id,
         month: v,
         is_exper: this.currenLearnInfo.is_exper // 1为0元体验 2为购买课程
       }).then(data => {
-        // this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.everydayList = res.data.date
@@ -634,7 +626,9 @@ export default {
             } else {
               if (v.monthNum < this.currMonth) {
                 v.beforeDate = 1
-              } else {
+              } else if (v.monthNum > this.currMonth) {
+                v.afterDate = 1
+              } else if (v.monthNum === this.currMonth) {
                 if (v.dayNum === this.currDay) {
                   v.currDate = 1
                 }
@@ -680,13 +674,15 @@ export default {
       }).then(data => {
         this.showLoading(false)
         const res = data.data
-        this.learnVideoList = res.data.video
+        if (res.data.video && res.data.video.length) {
+          this.learnVideoList = res.data.video
+          this.learnVideoList.forEach(val => {
+            val.beforeDate = v.beforeDate
+            val.afterDate = v.afterDate
+            val.currDate = v.currDate
+          })
+        }
         this.isDrawer = true
-        this.learnVideoList.forEach(val => {
-          val.beforeDate = v.beforeDate
-          val.afterDate = v.afterDate
-          val.currDate = v.currDate
-        })
       })
     },
     // 学习视频 看视频
@@ -699,9 +695,10 @@ export default {
         course_id: val.course_id,
         section_id: val.section_id,
         video_id: val.video_id,
-        is_zhengke: val.is_zhengke,
+        is_zk: val.is_zhengke,
         plan_id: this.currenLearnInfo.plan_id, // 计划id
         days: this.currenLearnInfo.join_days // 第几天
+        // s_c_idx: this.s_c_idx
       }
       if (this.currenLearnInfo.is_exper === 1) { // 0元体验 未购买 去看视频
         val.userstatus = 2 // 当0元体验的时候 2是未购买
@@ -761,8 +758,15 @@ export default {
         this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
-          this.getLearnIndex()
+          this.$router.replace({ path: 'learning-center-detail',
+            query: {
+              ...this.$route.query,
+              s_c_idx: ''
+            }
+          })
+          // this.getLearnIndex()
           this.visible4 = false
+          this.reload()
         } else {
           this.$Message.error(res.msg)
         }
@@ -792,7 +796,7 @@ export default {
     position: absolute;
     width: 100%;
     left: 0;
-    top: 70px;
+    top: 60px;
     bottom: 0;
     right: 0;
     background: #ffffff;
@@ -1069,20 +1073,21 @@ export default {
     border-radius: 20px;
     text-align: center;
     display: inline-block;
+    margin: 0 14px;
     &.gray{
       @include bg-linear-gradient($btnGredientGray, to left);
     }
   }
-  .ewm-box{
-    margin: 0 22px;
-    .ewm-icon{
-      vertical-align: middle;
-      @include bg-img(28, 28, '../../assets/images/learncenter/ewm.png');
-    }
-  }
+  // .ewm-box{
+  //   margin: 0 22px;
+  //   .ewm-icon{
+  //     vertical-align: middle;
+  //     @include bg-img(28, 28, '../../assets/images/learncenter/ewm.png');
+  //   }
+  // }
   .surplus-day{
     padding: 0 12px;
-    margin-left: 14px;
+    // margin-left: 14px;
     height: 30px;
     line-height: 30px;
     background:rgba(232,67,66,.1);
@@ -1171,6 +1176,7 @@ export default {
         background: #E6E6E6;
       }
       &.learnvideo{
+        max-width: 500px;
         &:after{
           width: 0;
         }
@@ -1245,14 +1251,14 @@ export default {
     &:hover .tips-item{
       display: block;
     }
-    &.days-item-blue:hover .status-icon{
-      box-shadow: 0 5px 12px 2px rgba(78,174,253,.5);
-    }
     &.days-item-orange:hover .status-icon{
       box-shadow: 0 5px 12px 2px rgba(251,172,120,.5);
     }
     &.days-item-gray:hover .status-icon, &.days-item-rest:hover .status-icon{
       box-shadow: 0 5px 12px 2px rgba(199,199,199,.5);
+    }
+    &.days-item-blue:hover .status-icon{
+      box-shadow: 0 5px 12px 2px rgba(78,174,253,.5);
     }
   }
 
@@ -1276,13 +1282,6 @@ export default {
       border-left: 8px solid transparent;
       border-right: 8px solid transparent;
     }
-    .days-item-blue &{
-      width: 140px;
-      @include bg-linear-gradient($btnGredientBlue, to left);
-      &:before{
-        border-bottom: 8px solid #39BBFD;
-      }
-    }
     .days-item-orange &{
       width: 100px;
       @include bg-linear-gradient($btnGredientOrange, to left);
@@ -1300,19 +1299,29 @@ export default {
     .days-item-rest &{
       width: 100px;
     }
+    .days-item-blue &{
+      width: 140px;
+      @include bg-linear-gradient($btnGredientBlue, to left);
+      &:before{
+        border-bottom: 8px solid #39BBFD;
+      }
+    }
   }
   .status-icon{
     display: inline-block;
     border-radius: 50%;
     @include bg-img(61, 61, '../../assets/images/learncenter/days-gray-icon.png');
-    .days-item-blue &{
-      @include bg-img(61, 61, '../../assets/images/learncenter/days-blue-icon.png');
-    }
     .days-item-orange &{
       @include bg-img(61, 61, '../../assets/images/learncenter/days-orange-icon.png');
     }
+    .days-item-gray &{
+      @include bg-img(61, 61, '../../assets/images/learncenter/days-gray-icon.png');
+    }
     .days-item-rest &{
       @include bg-img(61, 61, '../../assets/images/learncenter/days-rest-icon.png');
+    }
+    .days-item-blue &{
+      @include bg-img(61, 61, '../../assets/images/learncenter/days-blue-icon.png');
     }
   }
   // 公告学员动态
@@ -1347,6 +1356,7 @@ export default {
       width: 50%;
       height: 40px;
       font-size: 16px;
+      background: none;
       &:last-child{
         border-left: 1px solid #E6E6E6;
         color: $blueColor;
@@ -1424,6 +1434,7 @@ export default {
     button{
       width: 50%;
       height: 46px;
+      background: #ffffff;
       &.potic-btn{
         border-left: 1px solid #E6E6E6;
       }

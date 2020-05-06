@@ -5,7 +5,7 @@
     <div class="lc-login-wrap">
       <div class="lc-login-left">
         <div class="yc-detail">
-          <h1 class="yc-welcome">欢迎体验<span>优财CMA课程学习中心</span></h1>
+          <h1 class="yc-welcome">欢迎体验<span>优财CMA课程学习计划</span></h1>
           <div class="yc-logo">
             <img src="../../assets/images/learncenter/logo.png" alt="">
             <em></em>
@@ -288,7 +288,7 @@ export default {
     position: absolute;
     width: 100%;
     left: 0;
-    top: 70px;
+    top: 60px;
     bottom: 0;
     right: 0;
     background: #ffffff;

@@ -22,7 +22,7 @@
               @click="playVideo(item, val, v, key, index)">
                 <i class="elt-icon elt-icon-stop"></i>
                 <span>{{v.video_name}}</span>
-                <em v-if="userstatus == 2" class="free-pay">免费试听</em>
+                <!-- <em v-if="userstatus == 2" class="free-pay">免费试听</em> -->
               </el-menu-item>
             </el-submenu>
           </el-submenu>
@@ -35,14 +35,7 @@
 import { courseCatalog, secvCatalog } from '@/api/class'
 import { mapState } from 'vuex'
 export default {
-  props: {
-    package_id: {
-      type: Number
-    },
-    userstatus: {
-      type: Number
-    }
-  },
+  props: ['package_id', 'userstatus'],
   data () {
     return {
       courseCatalogInfo: [], // 课程大纲（目录）
@@ -69,6 +62,13 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.courseCatalogInfo = res.data
+          this.$router.replace({ path: 'course-detail',
+            query: {
+              ...this.$route.query,
+              course_id: this.courseCatalogInfo[0].course_id,
+              is_zk: this.courseCatalogInfo[0].is_zhengke
+            }
+          })
           this.courseCatalogInfo.forEach((v, index) => {
             v.index = index + 1 + ''
           })
@@ -81,7 +81,7 @@ export default {
     getSecvCatalog (item, index) {
       let obj = this.secvCatalogList
       for (let i in obj) {
-        if (item.course_id === parseInt(i)) {
+        if (item.course_id == i) {
           return
         }
       }
@@ -115,13 +115,18 @@ export default {
         })
         return
       }
+      if (this.userstatus == 2) {
+        this.$Message.error('请购买课程')
+        return
+      }
       window.sessionStorage.setItem('userstatus', this.userstatus) // 是否购买
       this.$router.push({ path: '/course-video',
         query: {
           package_id: this.package_id,
           course_id: item.course_id,
           section_id: val.section_id,
-          video_id: v.video_id
+          video_id: v.video_id,
+          is_zk: item.is_zhengke
         }
       })
     }

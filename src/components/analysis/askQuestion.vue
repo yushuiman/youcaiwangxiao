@@ -59,7 +59,7 @@
               </template>
             </div>
           </div>
-          <div class="open-txt" @click="openShow(item, index)">
+          <div class="open-txt" @click="openShow(item, index)" v-if="item.reply_status == 1">
             {{item.openFlag ? '收起':'展开'}}
           </div>
           <!-- 老师回复以及追问-->
@@ -72,7 +72,7 @@
                   <h3>{{replyList[item.Id][0].username}}<span class="teacher-light">老师</span></h3>
                   <p>{{replyList[item.Id][0].creates_time}}</p>
                 </div>
-                <span class="tousu" v-if="item.user_self == 1" @click="tousuAnswer(item)">投诉</span>
+                <span class="tousu" v-if="item.user_self == 1 && item.is_complain == 2" @click="tousuAnswer(item)">投诉</span>
               </div>
               <p class="othq-txt">{{replyList[item.Id][0].quiz}}</p>
               <div class="quiz-image-list course_img">
@@ -118,7 +118,7 @@
                   <h3>{{replyList[item.Id][2].username}}<span class="teacher-light">老师</span></h3>
                   <p>{{replyList[item.Id][2].creates_time}}</p>
                 </div>
-                <span class="tousu" v-if="item.user_self == 1" @click="tousuAnswer(item)">投诉</span>
+                <span class="tousu" v-if="item.user_self == 1 && item.is_complain == 2" @click="tousuAnswer(item)">投诉</span>
               </div>
               <p class="othq-txt">{{replyList[item.Id][2].quiz}}</p>
               <div class="quiz-image-list course_img">
@@ -136,7 +136,7 @@
         </li>
       </ul>
     </div>
-    <Modal title="图片预览" v-model="visible" :width="795">
+    <Modal title="图片预览" v-model="visible" :width="795" :scrollable="true">
       <img :src="imgUrl" v-if="visible" style="width: 100%;">
     </Modal>
     <zhuiwen :answerVisible.sync="answerVisible" :zhuiwenInfo="zhuiwenInfo" @updateAnswerList="questionallAnswerList"></zhuiwen>
@@ -257,7 +257,7 @@ export default {
         if (res.code === 200) {
           this.quiz = ''
           this.quiz_image = []
-          this.$Message.success('提交成功')
+          this.$Message.success('提交成功~')
           this.questionallAnswerList()
           this.$emit('modalShow', false)
         } else {
@@ -405,7 +405,6 @@ export default {
     }
     .open-txt{
       cursor: pointer;
-      font-size: 13px;
       color: $blueColor;
       text-align: right;
     }
@@ -437,11 +436,14 @@ export default {
     padding-bottom: 5px;
     display: flex;
     align-items: center;
-    line-height: 26px;
     .head-logo{
       @include wh(40, 40);
       border-radius: 100%;
       margin-right: 10px;
+    }
+    h3{
+      line-height: 26px;
+      font-weight: 500;
     }
     p{
       font-size: 12px;

@@ -1,6 +1,6 @@
 <template>
-  <div class="login-r fr">
-    <img src="../../assets/images/global/email-icon.png" alt="email" class="email-icon" @click="goNews">
+  <div class="login-r">
+    <img src="../../assets/images/global/news-icon.png" alt="news" class="news-icon" @click="goNews">
     <i v-if="is_news == 1" class="new-dot"></i>
     <Dropdown trigger="hover" :transfer="true" @on-visible-change="dropDownVisible">
       <img :src="avatorImgPath" alt="头像" class="head-logo" @click="goPersonalPage('course')">
@@ -103,7 +103,7 @@ export default {
     },
     // 继续观看
     goonWatch () {
-      if (this.watchRecordsList.is_purchase === 2) {
+      if (this.watchRecordsList.is_purchase == 2) {
         this.$Message.error('请购买课程')
         return
       }
@@ -111,7 +111,8 @@ export default {
         package_id: this.watchRecordsList.package_id,
         course_id: this.watchRecordsList.video.course_id,
         section_id: this.watchRecordsList.video.section_id,
-        video_id: this.watchRecordsList.video.video_id
+        video_id: this.watchRecordsList.video.video_id,
+        is_zk: this.watchRecordsList.video.is_zhengke
       }
       window.sessionStorage.setItem('userstatus', this.watchRecordsList.is_purchase) // 是否购买
       window.sessionStorage.setItem('playtime', this.watchRecordsList.video.watch_time) // 获取当前播放时间
@@ -123,19 +124,18 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
   .login-r{
-    height: 30px;
-    line-height: 30px;
     .out-login{
-      color: #0267FF;
+      color: $blueColor;
     }
     img{
       vertical-align: middle;
       cursor: pointer;
-      &.email-icon{
-        @include wh(18, 14);
+      &.news-icon{
+        width: 16px;
+        height: 21px;
       }
       &.head-logo{
-        @include wh(30, 30);
+        @include wh(40, 40);
         border-radius: 50%;
         margin-left: 31px;
         margin-right: 10px;
@@ -150,7 +150,7 @@ export default {
     width: 254px;
     background:#ffffff;
     border-radius: 6px;
-    margin-top: 19px;
+    margin-top: 10px;
   }
   .mc-list{
     display: flex;

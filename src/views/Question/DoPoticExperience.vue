@@ -44,8 +44,9 @@
       </div>
       <Modal v-model="visible"
         :width="447"
-        :mask-closable=false
-        :closable=false
+        :mask-closable="false"
+        :closable="false"
+        :scrollable="true"
         footer-hide
         class="dopic-modal">
         <div class="stop-box" v-if="txtShow == '暂停'">
@@ -82,6 +83,7 @@
 import { zExperience, experienceStati } from '@/api/questions'
 import poticList from '../../components/poticList/poticList'
 import countUp from '../../components/common/countUp'
+import $ from 'jquery'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -156,7 +158,7 @@ export default {
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
         if (scrollTop > 100) {
           this.$refs.fixedTit.style.position = 'fixed'
-          this.$refs.fixedTit.style.top = 70 + 'px'
+          this.$refs.fixedTit.style.top = 60 + 'px'
           this.$refs.fixedTit.style.width = 895 + 'px'
         } else {
           this.$refs.fixedTit.style = ''
@@ -165,9 +167,9 @@ export default {
     },
     goAnchor (selector) {
       var anchor = this.$el.querySelector(selector)
-      setTimeout(() => {
-        document.documentElement.scrollTop = document.body.scrollTop = anchor.offsetTop - 150
-      }, 300)
+      $('html, body').stop().animate({
+        scrollTop: anchor.offsetTop - 150
+      }, 500)
     },
     // 已做题数量 右边进度条用
     doPoticInfo (num = 0, index = 0) {
@@ -190,7 +192,7 @@ export default {
         if (res.code === 200) {
           let { topics, total, title } = res.data
           this.topics = topics
-          this.total = parseInt(total)
+          this.total = total
           this.title = title
           this.answer_time = res.data.answer_time // 0元体验没有用到
           if (topics && topics.length) {
@@ -264,7 +266,11 @@ export default {
     }
   },
   beforeDestroy () {
+    document.oncontextmenu = undefined
+    document.onkeydown = undefined
     window.removeEventListener('scroll', this.scrollToTop)
+    document.oncontextmenu = undefined
+    document.onkeydown = undefined
   }
 }
 </script>

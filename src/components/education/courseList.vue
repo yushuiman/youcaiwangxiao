@@ -34,17 +34,7 @@
 import { courseCatalog, secvCatalog } from '@/api/education'
 import { mapState } from 'vuex'
 export default {
-  props: {
-    type_id: {
-      type: Number
-    },
-    package_id: {
-      type: Number
-    },
-    userstatus: {
-      type: Number
-    }
-  },
+  props: ['type_id', 'package_id', 'userstatus'],
   data () {
     return {
       courseCatalogInfo: [], // 课程大纲（目录）
@@ -71,6 +61,12 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.courseCatalogInfo = res.data
+          this.$router.replace({ path: 'education-course-detail',
+            query: {
+              ...this.$route.query,
+              course_id: this.courseCatalogInfo[0].course_id
+            }
+          })
           this.courseCatalogInfo.forEach((v, index) => {
             v.index = index + 1
           })
@@ -83,7 +79,7 @@ export default {
     getSecvCatalog (item, index) {
       let obj = this.secvCatalogList
       for (let i in obj) {
-        if (item.course_id === parseInt(i)) {
+        if (item.course_id == i) {
           return
         }
       }
@@ -117,7 +113,7 @@ export default {
         })
         return
       }
-      if (this.userstatus === 2) {
+      if (this.userstatus == 2) {
         this.$Message.error('请购买课程')
         return
       }

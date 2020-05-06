@@ -1,0 +1,24 @@
+.ivu-slider-wrap{
+    margin: 0;
+}
+.ivu-slider-bar{
+    background: #F99111;
+}
+.ivu-slider-button-wrap{
+    width: 10px;
+    height: 10px;
+    top: -6px;
+}
+.ivu-slider-button{
+    width: 10px;
+    height: 10px;
+    border: 0;
+    background: #ffffff;
+}
+.ivu-tooltip-popper{
+    display: none!important;
+}
+.ivu-slider-button:hover{
+    transform: scale(1);
+    cursor: pointer;
+}

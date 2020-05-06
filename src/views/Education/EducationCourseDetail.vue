@@ -129,6 +129,7 @@ export default {
       this.$router.push({ path: '/education-video',
         query: {
           package_id: this.package_id,
+          course_id: this.$route.query.course_id,
           type_id: this.type_id
         }
       })
@@ -273,7 +274,7 @@ export default {
     }
   }
   .clt-tab{
-    @include lh(49, 49);
+    @include lh(56, 56);
     span{
       font-size: 16px;
       padding: 0 21px;
@@ -288,6 +289,7 @@ export default {
     width: 902px;
   }
   .clt-else-info-r{
-    padding-top: 49px;
+    width: 278px;
+    padding-top: 56px;
   }
 </style>

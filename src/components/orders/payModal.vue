@@ -1,8 +1,8 @@
 <template>
   <Modal v-model="visible"
     :width="490"
-    :mask-closable=false
-    :closable=false
+    :mask-closable="false"
+    :closable="false"
     @on-visible-change="payModalVisible"
     footer-hide
     >
@@ -35,7 +35,7 @@ export default {
   data () {
     return {
       // visible: true,
-      is_live: parseInt(this.$route.query.is_live), // 1直播订单、2课程订单、3图书订单4积分订单
+      is_live: this.$route.query.is_live, // 1直播订单、2课程订单、3图书订单4积分订单
       btnTxt: '已完成支付',
       finishSts: false,
       consultInfo: JSON.parse(window.sessionStorage.getItem('consultInfo')) || {} // 在线咨询
@@ -60,10 +60,10 @@ export default {
             this.$emit('update:visible', false)
             document.body.removeAttribute('style')
             this.$Message.success('支付成功')
-            if (this.is_live === 2) {
+            if (this.is_live == 2) {
               this.$router.push({ path: 'course' })
             }
-            if (this.is_live === 3) {
+            if (this.is_live == 3) {
               this.$router.push({ path: 'books' })
             }
           }

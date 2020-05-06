@@ -8,15 +8,15 @@
               <span class="menu-title">{{title}}</span>
             </Col>
             <Col span="4">
-              <div class="answer-time" v-if="this.getQuestion.plate_id == 6">
-                <count-down ref="reduceCountTime" @countdownend="countdownend" :time="answer_time">
-                  <template slot-scope="props">
-                    0{{ props.totalHours }}:
-                    {{ props.minutes }}:
-                    {{ props.seconds }}
-                  </template>
-                </count-down>
-              </div>
+              <!-- 其他板块正计时 -->
+              <count-down v-if="getQuestion.plate_id == 6" ref="reduceCountTime" @countdownend="countdownend" :time="answer_time">
+                <template slot-scope="props">
+                  0{{ props.totalHours }}:
+                  {{ props.minutes }}:
+                  {{ props.seconds }}
+                </template>
+              </count-down>
+              <!-- 组卷模考倒计时 -->
               <count-up ref="addCountTime" v-else></count-up>
             </Col>
           </Row>
@@ -56,8 +56,9 @@
       </div>
       <Modal v-model="visible"
         :width="447"
-        :mask-closable=false
-        :closable=false
+        :mask-closable="false"
+        :closable="false"
+        :scrollable="true"
         footer-hide
         class="dopic-modal">
         <div class="stop-box" v-if="txtShow == '暂停'">
@@ -94,6 +95,7 @@
         title="纠错"
         v-model="visibleError"
         footer-hide
+        :scrollable="true"
         :width="795"
         class="iview-modal">
         <error-correction v-if="visibleError" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
@@ -111,6 +113,7 @@ import poticList from '../../components/poticList/poticList'
 import countDown from '../../components/count'
 import countUp from '../../components/common/countUp'
 import errorCorrection from '../../components/common/errorCorrection'
+import $ from 'jquery'
 import { mapState, mapActions } from 'vuex'
 export default {
   data () {
@@ -209,7 +212,7 @@ export default {
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
         if (scrollTop > 50) {
           this.$refs.fixedTit.style.position = 'fixed'
-          this.$refs.fixedTit.style.top = 70 + 'px'
+          this.$refs.fixedTit.style.top = 60 + 'px'
           this.$refs.fixedTit.style.width = 895 + 'px'
         } else {
           this.$refs.fixedTit.style = ''
@@ -218,9 +221,9 @@ export default {
     },
     goAnchor (selector) {
       var anchor = this.$el.querySelector(selector)
-      setTimeout(() => {
-        document.documentElement.scrollTop = document.body.scrollTop = anchor.offsetTop - 150
-      }, 300)
+      $('html, body').stop().animate({
+        scrollTop: anchor.offsetTop - 150
+      }, 500)
     },
     // 已做题数量 右边进度条用
     doPoticInfo (num = 0, index) {
@@ -244,7 +247,7 @@ export default {
         if (res.code === 200) {
           let { topics, total, title } = res.data
           this.topics = topics
-          this.total = parseInt(total)
+          this.total = total
           this.title = title
           this.answer_time = parseInt(res.data.answer_time) * 1000
           if (topics && topics.length) {
@@ -259,7 +262,7 @@ export default {
               })
             })
             // 拿到题，开始倒计时
-            if (parseInt(this.getQuestion.plate_id) === 6) {
+            if (this.getQuestion.plate_id == 6) {
               this.timerDown()
             }
           }
@@ -279,7 +282,7 @@ export default {
       this.visible = true
       this.txtShow = v
       if (v === '暂停') {
-        if (parseInt(this.getQuestion.plate_id) === 6) { // 组卷模考 为倒计时 其他为正计时
+        if (this.getQuestion.plate_id == 6) { // 组卷模考 为倒计时 其他为正计时
           this.$refs.reduceCountTime.pause()
           clearInterval(this.timers)
           return
@@ -291,7 +294,7 @@ export default {
     goOnDopic (type) {
       this.visible = false
       if (type === 'time') {
-        if (parseInt(this.getQuestion.plate_id) === 6) { // 组卷模考 为倒计时 其他为正计时
+        if (this.getQuestion.plate_id == 6) { // 组卷模考 为倒计时 其他为正计时
           this.$refs.reduceCountTime.start()
           this.timerDown()
           return
@@ -316,7 +319,7 @@ export default {
         })
       }
       this.subTopics.user_id = this.user_id
-      if (parseInt(this.getQuestion.plate_id) === 6) {
+      if (this.getQuestion.plate_id == 6) {
         this.subTopics.used_time = this.user_s
       } else {
         this.subTopics.used_time = this.$refs.addCountTime.userAnswerTime
@@ -340,7 +343,7 @@ export default {
             return
           }
           // 论述题板块paper_type 直接跳转到解析页面
-          if (parseInt(this.getQuestion.paper_type) === 2) {
+          if (this.getQuestion.paper_type == 2) {
             this.$router.push({ path: '/analysis',
               query: {
                 course_id: this.$route.query.course_id,
@@ -352,7 +355,7 @@ export default {
             })
           }
           // 其他板块paper_type 跳转到结果页面
-          if (parseInt(this.getQuestion.paper_type) === 1) {
+          if (this.getQuestion.paper_type == 1) {
             this.$router.push({ path: '/result-report',
               query: {
                 paper_id: res.data.paper_id,
@@ -363,6 +366,9 @@ export default {
         } else {
           this.$Message.error(res.msg)
         }
+      }, () => {
+        this.$Message.error('网络不给力，请重新尝试')
+        this.showLoading(false)
       })
     },
     // 纠错显示
@@ -372,7 +378,11 @@ export default {
     }
   },
   beforeDestroy () {
+    document.oncontextmenu = undefined
+    document.onkeydown = undefined
     window.removeEventListener('scroll', this.scrollToTop)
+    document.oncontextmenu = undefined
+    document.onkeydown = undefined
     if (this.timers) {
       clearInterval(this.timers)
     }

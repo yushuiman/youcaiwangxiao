@@ -24,7 +24,7 @@ export default {
       package_id: this.$route.query.package_id,
       order_num: this.$route.query.trade_number,
       pay_price: Decrypt(this.$route.query.pay_price),
-      is_live: parseInt(this.$route.query.is_live), // 1直播订单、2课程订单、3图书订单4积分订单
+      is_live: this.$route.query.is_live, // 1直播订单、2课程订单、3图书订单4积分订单
       timer: null
     }
   },
@@ -59,10 +59,10 @@ export default {
         if (res.code === 200) {
           if (res.data.status === 1) {
             this.$Message.success('支付成功')
-            if (this.is_live === 2) {
+            if (this.is_live == 2) {
               this.$router.push({ path: 'course' })
             }
-            if (this.is_live === 3) {
+            if (this.is_live == 3) {
               this.$router.push({ path: 'books' })
             }
           }

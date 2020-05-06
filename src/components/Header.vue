@@ -20,7 +20,7 @@
               <a @click="goLogin('reg')">注册</a>
               <!-- <router-link :to="{path: 'login', query: {type:'reg'}}">注册</router-link> -->
             </div>
-            <HeadName v-if="this.token"></HeadName>
+            <HeadName v-if="token"></HeadName>
           </div>
         </div>
       </div>
@@ -143,10 +143,10 @@ export default {
         }
       })
     },
-    // 学习中心
+    // 学习计划
     goLearning () {
       if (this.token) {
-        this.$router.push('/learning-center-detail')
+        this.$router.push('/personal')
       } else {
         this.$router.push('/learning-center')
       }
@@ -160,8 +160,8 @@ export default {
     width: 100%;
     position: fixed;
     background: $colfff;
-    z-index: 100;
-    height: 70px;
+    z-index: 901;
+    height: 60px;
     .head-w {
       width: 1300px;
       display: flex;
@@ -171,20 +171,24 @@ export default {
       position: relative;
     }
   }
+  .head-list{
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
   .fixed-head{
-    height: 70px;
+    height: 60px;
   }
   .yc-logo{
     @include wh(130, 34);
-    margin: 18px 0;
     cursor: pointer;
   }
   .item-list{
     padding-left: 39px;
+    display: flex;
     li{
-      line-height: 70px;
+      line-height: 60px;
       font-size: 14px;
-      float: left;
       box-sizing: border-box;
       a{
         padding: 0 21px;
@@ -202,7 +206,7 @@ export default {
         }
       }
       &:hover{
-        height: 69px;
+        height: 59px;
         box-shadow:0px 0px 9px 1px rgba(193,193,193,0.54);
         border-top: 1px solid $blueColor;
         border-top-left-radius: 1px;

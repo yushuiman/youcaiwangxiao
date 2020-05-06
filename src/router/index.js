@@ -5,8 +5,10 @@ import education from '../router/education'
 Vue.use(Router)
 const Home = r => require.ensure([], () => r(require('@/views/Home')), 'Home')
 const Course = r => require.ensure([], () => r(require('@/views/Course/Course')), 'Course')
+const CourseJd = r => require.ensure([], () => r(require('@/views/CourseJd/Course')), 'Course')
 const courseDetail = r => require.ensure([], () => r(require('@/views/Course/CourseDetail')), 'courseDetail')
 const courseVideo = r => require.ensure([], () => r(require('@/views/Video/Video')), 'courseVideo')
+const ceshi = r => require.ensure([], () => r(require('@/views/Video/ceshi')), 'ceshi')
 const Question = r => require.ensure([], () => r(require('@/views/Question/Question')), 'Question')
 const DoPotic = r => require.ensure([], () => r(require('@/views/Question/DoPotic')), 'DoPotic')
 const DoPoticExperience = r => require.ensure([], () => r(require('@/views/Question/DoPoticExperience')), 'DoPoticExperience')
@@ -60,6 +62,17 @@ const router = new Router({
       }
     },
     {
+      path: '/course-jd',
+      name: 'CourseJd',
+      component: CourseJd,
+      meta: {
+        title: '课程',
+        showHeader: true,
+        showFooter: true,
+        showRightSlider: true
+      }
+    },
+    {
       path: '/course-detail',
       name: 'course-detail',
       component: courseDetail,
@@ -74,6 +87,17 @@ const router = new Router({
       path: '/course-video',
       name: 'course-video',
       component: courseVideo,
+      meta: {
+        title: '课程',
+        showHeader: false,
+        showFooter: false,
+        showRightSlider: false
+      }
+    },
+    {
+      path: '/ceshi',
+      name: 'ceshi',
+      component: ceshi,
       meta: {
         title: '课程',
         showHeader: false,
@@ -270,13 +294,13 @@ const router = new Router({
         showRightSlider: true
       }
     },
-    // 学习中心
+    // 学习计划
     {
       path: '/learning-center',
       name: 'learning-center',
       component: LearningCenter,
       meta: {
-        title: '学习中心',
+        title: '学习计划',
         showHeader: true,
         showFooter: false,
         showRightSlider: true
@@ -287,7 +311,7 @@ const router = new Router({
       name: 'learning-center-detail',
       component: LearningCenterDetail,
       meta: {
-        title: '学习中心',
+        title: '学习计划',
         showHeader: true,
         showFooter: false,
         showRightSlider: true

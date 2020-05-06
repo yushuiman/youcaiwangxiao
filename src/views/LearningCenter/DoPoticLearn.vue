@@ -102,6 +102,7 @@ import { withTopic, getPaper } from '@/api/learncenter'
 import poticList from '../../components/poticList/poticList'
 import countUp from '../../components/common/countUp'
 import errorCorrection from '../../components/common/errorCorrection'
+import $ from 'jquery'
 import { mapState } from 'vuex'
 export default {
   data () {
@@ -178,7 +179,7 @@ export default {
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
         if (scrollTop > 100) {
           this.$refs.fixedTit.style.position = 'fixed'
-          this.$refs.fixedTit.style.top = 70 + 'px'
+          this.$refs.fixedTit.style.top = 60 + 'px'
           this.$refs.fixedTit.style.width = 895 + 'px'
         } else {
           this.$refs.fixedTit.style = ''
@@ -187,9 +188,9 @@ export default {
     },
     goAnchor (selector) {
       var anchor = this.$el.querySelector(selector)
-      setTimeout(() => {
-        document.documentElement.scrollTop = document.body.scrollTop = anchor.offsetTop - 150
-      }, 300)
+      $('html, body').stop().animate({
+        scrollTop: anchor.offsetTop - 150
+      }, 500)
     },
     // 已做题数量 右边进度条用
     doPoticInfo (num = 0, index) {
@@ -214,7 +215,7 @@ export default {
         if (res.code === 200) {
           let { topics, total, title } = res.data
           this.topics = topics
-          this.total = parseInt(total)
+          this.total = total
           this.title = title
           this.answer_time = parseInt(res.data.answer_time) * 1000
           if (this.topics.length === 0) {
@@ -313,7 +314,11 @@ export default {
     }
   },
   beforeDestroy () {
+    document.oncontextmenu = undefined
+    document.onkeydown = undefined
     window.removeEventListener('scroll', this.scrollToTop)
+    document.oncontextmenu = undefined
+    document.onkeydown = undefined
   }
 }
 </script>

@@ -12,6 +12,13 @@ export const courseList = (data) => { // 课程列表
     method: 'post'
   })
 }
+export const jdCourseList = (data) => { // 京东课程列表
+  return axios.request({
+    url: '/web/Course/jdCourseList',
+    data,
+    method: 'post'
+  })
+}
 export const guessLike = (data) => { // 猜你喜欢
   return axios.request({
     url: '/web/Course/guessLike',
@@ -106,6 +113,13 @@ export const thickness = (data) => { // 活动弹窗
 export const firstSocket = (data) => { // socket首次
   return axios.request({
     url: '/apps/Course/firstSocket',
+    data,
+    method: 'post'
+  })
+}
+export const courseVideo = (data) => { // socket首次
+  return axios.request({
+    url: '/web/Course/courseVideo',
     data,
     method: 'post'
   })

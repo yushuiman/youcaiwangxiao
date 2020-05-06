@@ -7,15 +7,32 @@
       <!-- 课程 -->
       <div class="u-course-my" v-if="selIdx == 0">
         <div v-if="myCourseList.length">
-          <div class="uc-item" v-for="(val, key) in myCourseList" :key="key">
-            <img :src="val.pc_img" alt="" class="uci-img">
-            <div class="uci-detail">
-              <h2 class="ucid-name">{{val.name}}</h2>
-              <p class="ucid-des">{{val.description}}</p>
-              <!-- {{val.video.course_id}}-{{val.video.section_id}} -->
-              <p class="ucid-learn" v-if="val.video">学习至{{val.video.video_name}}</p>
+          <div class="uc-pakeage-course-list" v-for="(item, index) in myCourseList" :key="index">
+            <div class="uc-item" style="cursor: pointer;" :class="{'uc-item-package': item.flag}" @click="openShow(item, index)">
+              <img :src="item.pc_img" alt="" class="uci-img">
+              <div class="uci-detail">
+                <h2 class="ucid-name">{{item.name}}</h2>
+                <p class="ucid-des">{{item.description}}</p>
+                <p class="ucid-learn" v-if="item.video">学习至{{item.video.video_name}}</p>
+              </div>
+              <div class="open-txt">
+                {{item.flag ? '收起':'查看课程'}}
+                <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="!item.flag"/>
+                <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="item.flag"/>
+              </div>
             </div>
-            <button class="btn-com" @click="courseLearnVideo(val, 1)">去学习</button>
+            <ul v-if="item.flag && item.course.length">
+              <li class="uc-item uc-item-course" v-for="(val, key) in item.course" :key="key">
+                <img :src="val.pc_img" alt="" class="uci-img">
+                <div class="uci-detail">
+                  <h2 class="ucid-name">{{val.course_name}}</h2>
+                  <p class="ucid-des">{{val.description}}</p>
+                  <p class="ucid-learn" v-if="val.video">学习至{{val.video.video_name}}</p>
+                  <p class="ucid-learn" v-else>学习至未学习</p>
+                </div>
+                <button class="btn-com" @click="courseLearnVideo(item, val, 1)">去学习</button>
+              </li>
+            </ul>
           </div>
         </div>
         <div class="no-data no-data-course" v-if="noDataFlag">
@@ -23,8 +40,8 @@
         </div>
       </div>
       <!-- 播放记录 -->
-      <div v-if="selIdx == 1">
-        <div class="u-course-record" v-if="watchRecordsList && watchRecordsList.length">
+      <div class="u-course-record" v-if="selIdx == 1">
+        <div v-if="watchRecordsList && watchRecordsList.length">
           <div class="ucr-item" v-for="(item, index) in watchRecordsList" :key="index">
             <p class="time"><i class="dot"></i>{{item.time}}</p>
             <div class="uc-item" v-for="(val, key) in item.list" :key="key">
@@ -32,11 +49,10 @@
               <div class="uci-detail">
                 <h2 class="ucid-name">{{val.name}}</h2>
                 <p class="ucid-des">{{val.description}}</p>
-                <!-- {{val.video.course_id}}-{{val.video.section_id}} -->
                 <p class="ucid-learn" v-if="val.video">学习至{{val.video.video_name}}</p>
                 <p class="ucid-learn" v-else>学习至未学习</p>
               </div>
-              <button class="btn-com uci-learn" @click="courseLearnVideo(val, 2)">继续学习</button>
+              <button class="btn-com uci-learn" @click="courseLearnVideo(item, val, 2)">继续学习</button>
             </div>
           </div>
         </div>
@@ -45,7 +61,7 @@
         </div>
       </div>
       <!-- 收藏课程 -->
-      <div v-if="selIdx == 2">
+      <div class="u-course-coll" v-if="selIdx == 2">
         <div v-if="myCollpackageList.length">
           <Menu accordion width="100%">
             <Submenu :name="index+1" class="myCollpackageMenu" v-for="(val, index) in myCollpackageList" :key="index" style="padding:0px;">
@@ -55,8 +71,6 @@
                   <div class="uci-detail">
                     <h2 class="ucid-name">{{val.name}}</h2>
                     <p class="ucid-des">{{val.description}}</p>
-                    <!-- <p class="ucid-learn" v-if="val.video">学习至{{val.video.course_id}}-{{val.video.section_id}}（{{val.video.video_id}}）{{val.video.video_name}}</p>
-                    <p class="ucid-learn" v-else>学习至未学习</p> -->
                   </div>
                 </div>
               </template>
@@ -73,7 +87,8 @@
             <Modal v-model="visible"
               :width="795"
               footer-hide
-              title="收藏章节">
+              title="收藏章节"
+              class="practiceModal">
               <div class="height-com">
                 <div class="com-bg">请选择需要学习的视频</div>
                 <Menu accordion width="100%">
@@ -170,15 +185,20 @@ export default {
     },
     initRes () {
       this.noDataFlag = false
-      if (parseInt(this.selIdx) === 0) {
+      if (this.selIdx == 0) {
         this.getMyCourse()
       }
-      if (parseInt(this.selIdx) === 1) {
+      if (this.selIdx == 1) {
         this.getWatchRecords()
       }
-      if (parseInt(this.selIdx) === 2) {
+      if (this.selIdx == 2) {
         this.getMyCollpackage()
       }
+    },
+    // 展开收起
+    openShow (item, index) {
+      this.myCourseList[index].flag = !item.flag
+      this.$forceUpdate()
     },
     // 我的课程
     getMyCourse () {
@@ -190,6 +210,11 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.myCourseList = res.data
+          if (this.myCourseList && this.myCourseList.length) {
+            this.myCourseList.forEach(v => {
+              v.flag = false
+            })
+          }
           if (this.myCourseList.length === 0) {
             this.noDataFlag = true
           }
@@ -258,6 +283,7 @@ export default {
       this.sessionPlayInfo.package_id = val.package_id
       this.sessionPlayInfo.course_id = val.course_id
       this.sessionPlayInfo.section_id = val.section_id
+      this.sessionPlayInfo.is_zk = v.is_zhengke
       window.sessionStorage.setItem('userstatus', val.is_purchase) // 是否购买
       this.is_purchase = val.is_purchase // 2未购买
       this.visible = true
@@ -280,25 +306,26 @@ export default {
       })
     },
     // 课程去学习 播放记录去学习
-    // async courseLearnVideo (val, type) {
-    courseLearnVideo (val, type) {
-      // await this.getUserInfo()
-      if (val.is_purchase && val.is_purchase === 2) {
-        this.$Message.error('请购买课程')
-        return
-      }
+    async courseLearnVideo (item, val, type) {
+    // courseLearnVideo (item, val, type) {
+      await this.getUserInfo()
       if (type === 1) {
         window.sessionStorage.setItem('userstatus', 1) // 我的课程一定是已购买
       } else {
         window.sessionStorage.setItem('userstatus', val.is_purchase) // 播放记录是否购买
       }
+      if (val.is_purchase && val.is_purchase == 2) {
+        this.$Message.error('请购买课程')
+        return
+      }
       // 如果有看过的记录，继续学习
       if (val.video) {
         let obj = {
-          package_id: val.package_id,
+          package_id: item.package_id || val.package_id,
           course_id: val.video.course_id,
           section_id: val.video.section_id,
-          video_id: val.video.video_id
+          video_id: val.video.video_id,
+          is_zk: val.is_zhengke || val.video.is_zhengke
         }
         this.$router.push({ path: '/course-video', query: obj })
         return
@@ -306,7 +333,9 @@ export default {
       // 否则去课程列表页面
       this.$router.push({ path: '/course-video',
         query: {
-          package_id: val.package_id
+          package_id: item.package_id || val.package_id,
+          course_id: val.course_id || val.video.course_id,
+          is_zk: val.is_zhengke || val.video.is_zhengke
         }
       })
     },
@@ -314,7 +343,7 @@ export default {
     // async collectionLearnVideo (item, val) {
     collectionLearnVideo (item, val) {
       // await this.getUserInfo()
-      if (this.is_purchase === 2) {
+      if (this.is_purchase == 2) {
         this.$Message.error('请购买课程')
         return
       }
@@ -327,14 +356,21 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
+  .uc-pakeage-course-list{
+    margin-bottom: 10px;
+    box-shadow:0px 2px 20px 0px rgba(140,196,255,0.3);
+  }
   .uc-item{
-    margin-bottom: 20px;
-    padding-right: 20px;
-    box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
+    margin-bottom: 10px;
+    padding-right: 21px;
+    // box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
+    .u-course-my &{
+      margin-bottom: 0;
+    }
   }
   .ivu-menu-opened{
     .uc-item-coll{
-      img{
+      .uci-img{
         border-radius: 8px 0 0 0;
       }
     }
@@ -344,6 +380,32 @@ export default {
     align-items: center;
     background: #ffffff;
     border-radius: 8px;
+    &.uc-item-package{
+      border-radius: 8px 8px 0 0;
+      .uci-img{
+        border-radius: 8px 0 0 0px;
+      }
+    }
+    &.uc-item-course{
+      padding: 10px 21px 9px 51px;
+      border-radius: 0;
+      margin-bottom: 0;
+      .uci-img{
+        width: 147px;
+        height: 80.7px;
+        border-radius: 0
+      }
+      .uci-detail{
+        .ucid-name{
+          font-size: 14px;
+          line-height: 20px;
+        }
+        .ucid-des,.ucid-learn{
+          font-size: 12px;
+          line-height: 17px;
+        }
+      }
+    }
     .uci-img{
       width: 198px;
       height: 109px;
@@ -353,13 +415,14 @@ export default {
       flex: 1;
       padding: 0 20px;
       h2{
-        font-size: 18px;
-        line-height: 26px;
+        font-size: 16px;
+        line-height: 22px;
         color: $col333;
       }
       .ucid-des{
         color: $col999;
         line-height: 20px;
+        margin-top: 3px;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         overflow: hidden;
@@ -367,18 +430,30 @@ export default {
         width: 95%;
       }
       .ucid-learn{
+        font-size: 12px;
         color: $blueColor;
-        margin-top: 13px;
+        margin-top: 15px;
       }
     }
     .btn-com{
+      width: 64px;
+      height: 28px;
       background: #1874FD;
       color: $colfff;
-      font-size: 16px;
+      font-size: 14px;
     }
     .uci-learn{
       width: 97px;
     }
+  }
+  .uc-item-course{
+    &:nth-child(odd){
+      background: #F3F6FF;
+    }
+  }
+  .open-txt{
+    cursor: pointer;
+    color: #0267FF;
   }
   // 观看记录
   .ucr-item{

@@ -1,52 +1,110 @@
 <template>
   <div class="user-top-wrap">
     <div class="w-wrap">
-      <div class="integral-signin">{{personalInfo.integral}}积分
-        <span :class="{'gray': personalInfo.is_card == 1}" @click="getLearnClock">{{personalInfo.is_card == 1 ? '已签到' : '签到'}}</span>
-      </div>
-      <div class="user-flex">
-        <div class="user-info">
-          <img ref="fixedTit" :src="personalInfo.head" alt="头像" class="head-logo" @click="setBaseInfo">
-          <div class="user-name-instr">
-            <h2>{{personalInfo.username}}</h2>
-            <p>您已入学<span>{{personalInfo.day}}</span>天啦！</p>
-          </div>
+      <div class="user-info">
+        <div class="user-set" ref="fixedTit" :class="{'headCla': fixedFlag, 'headCla2': fixedFlag2}">
+          <img :src="personalInfo.head" alt="头像" class="head-logo">
+          <span @click="setBaseInfo">个人设置</span>
         </div>
-        <div class="go-on-some">
-          <a class="zhibo"><Icon type="ios-play" />最近直播</a>
-          <a @click="goStudy">继续学习</a>
-          <a @click="goDotopic">继续做题</a>
+        <div class="user-flex">
+          <div class="user-detail-left">
+            <h2>{{personalInfo.username}}</h2>
+            <div class="days-num">
+              <p>加入优财<span><i>{{personalInfo.day}}</i>天</span></p>
+              <em></em>
+              <p>累计做题<span><i>{{personalInfo.total_num}}</i>道</span></p>
+            </div>
+            <!-- 1进行中2过期3未设置 -->
+            <div class="test-time" v-if="examine.status == 1">
+              <i @click="setTestTime"></i>距离考试还有<span>{{days.substring(0,1)}}</span><span>{{days.substring(1,2)}}</span><span>{{days.substring(2,3)}}</span>天啦！
+            </div>
+            <div class="test-time" v-if="examine.status == 2" @click="setTestTime">
+              <i></i><a>考试已结束，请重新选择您的课程～</a>
+            </div>
+            <div class="test-time" v-if="examine.status == 3" @click="setTestTime">
+              <i></i><a>请输入考试日期～</a>
+            </div>
+          </div>
+          <div class="user-detail-right">
+            <div class="integral-signin">{{personalInfo.integral}}积分
+              <span :class="{'gray': personalInfo.is_card == 1}" @click="getLearnClock">{{personalInfo.is_card == 1 ? '已签到' : '签到'}}</span>
+            </div>
+            <div class="go-on-some">
+              <!-- <a class="zhibo"><Icon type="ios-play" />最近直播</a> -->
+              <a class="zhibo" @click="goLearn">学习计划</a>
+              <a @click="goStudy">继续学习</a>
+              <a @click="goDotopic">继续做题</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    <Modal title="设置考试时间"
+      v-model="visible"
+      footer-hide
+      :width="401"
+      @on-visible-change="testVisible"
+      class="iview-modal">
+      <div class="set-test-time-modal">
+        <ul class="set-test-time">
+          <li class="st-item">
+            <label>考试科目</label>
+            <select name="public-choice" v-model="courseId" @change="getCourseSelected">
+              <option :value="item.course_id" v-for="item in userCourseList" :key="item.course_id">{{item.name}}</option>
+            </select>
+          </li>
+          <li class="st-item">
+            <label>考试时间</label>
+            <select name="public-choice" v-model="examineId" @change="getTimeSelected">
+              <option :value="item.examine_id" v-for="item in courseTimeList" :key="item.course_id">{{item.examine_time}}</option>
+            </select>
+          </li>
+        </ul>
+        <div class="test-time-save">
+          <button class="btn-com test-btn" @click="saveTestTime">保存</button>
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
-import { learnClock } from '@/api/personal'
+import { learnClock, userCourse, courseTime, ctimeSub } from '@/api/personal'
 import { mapActions, mapState } from 'vuex'
 export default {
-  props: {
-    personalInfo: {
-      type: Object
-    },
-    user_id: {
-      type: Number
-    }
-  },
+  // 个人中心fixedFlag 消息中心fixedFlag2
+  props: ['personalInfo', 'user_id', 'fixedFlag', 'fixedFlag2', 'examine'],
   data () {
     return {
-      learnClockInfo: {} // 签到打卡
+      learnClockInfo: {}, // 签到打卡
+      visible: false,
+      examineId: '', /// 当前选中
+      courseId: '', // 当前选中
+      userCourseList: [], // 科目
+      courseTimeList: [] // 时间
     }
   },
   computed: {
     ...mapState({
       token: state => state.user.token,
       watchRecordsList: state => state.user.watchRecordsList
-    })
+    }),
+    days () {
+      let arr = this.examine.day.toString().split('')
+      let num
+      if (arr.length == 1) {
+        num = '00' + this.examine.day
+      }
+      if (arr.length == 2) {
+        num = '0' + this.examine.day
+      }
+      if (arr.length == 3) {
+        num = '' + this.examine.day
+      }
+      return num
+    }
   },
   mounted () {
-
   },
   methods: {
     ...mapActions([
@@ -73,6 +131,9 @@ export default {
         }
       })
     },
+    goLearn () {
+      this.$router.push('/learning-center-detail')
+    },
     // 继续学习
     goStudy () {
       this.getWatchRecords({ userId: this.user_id }).then(() => {
@@ -94,7 +155,8 @@ export default {
         package_id: this.watchRecordsList.package_id,
         course_id: this.watchRecordsList.video.course_id,
         section_id: this.watchRecordsList.video.section_id,
-        video_id: this.watchRecordsList.video.video_id
+        video_id: this.watchRecordsList.video.video_id,
+        is_zk: this.watchRecordsList.video.is_zhengke
       }
       window.sessionStorage.setItem('userstatus', this.watchRecordsList.is_purchase) // 是否购买
       window.sessionStorage.setItem('playtime', this.watchRecordsList.video.watch_time) // 获取当前播放时间
@@ -107,6 +169,78 @@ export default {
     // 点击头像
     setBaseInfo () {
       this.$emit('setBaseInfo', 'set')
+    },
+    // 设置科目考试时间
+    setTestTime () {
+      this.getUserCourse()
+      // this.getCourseTime()
+      this.visible = true
+    },
+    testVisible (val) {
+      // console.log(val)
+    },
+    getUserCourse () {
+      userCourse({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.userCourseList = res.data // 科目
+          this.courseId = res.data[0].course_id
+          // examine.status：1进行中2过期3未设置
+          if (this.examine.status == 1) {
+            this.userCourseList.forEach(val => {
+              if (val.course_id == this.examine.course_id) {
+                this.courseId = val.course_id
+              }
+            })
+          }
+          this.getCourseTime()
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    getCourseTime () {
+      courseTime({
+        course_id: this.courseId
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.courseTimeList = res.data // 时间
+          // examine.status：1进行中2过期3未设置
+          this.examineId = res.data[0].examine_id
+          if (this.examine.status == 1) {
+            this.courseTimeList.forEach(val => {
+              if (val.examine_id == this.examine.examine_id) {
+                this.examineId = val.examine_id
+              }
+            })
+          }
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    saveTestTime () {
+      ctimeSub({
+        user_id: this.user_id,
+        examine_id: this.examineId
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.visible = false
+          this.$emit('getPersonalInfo')
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    getCourseSelected (e) {
+      this.getCourseTime()
+    },
+    getTimeSelected (e) {
+      console.log(this.examineId)
     }
   }
 }
@@ -114,16 +248,126 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
+  $btnGredientYellow: #FFE17A,#FFD338;
   .user-top-wrap{
     font-size: 18px;
-    height: 206px;
     background: #112441 url('../../assets/images/user/user-top-bg.jpg') repeat center;
     background-size: 349px 167px;
     color: #ffffff;
-    padding-top: 30px;
-    padding-bottom: 24px;
-    .w-wrap{
-      position: relative;
+    padding: 14px 0;
+  }
+  .user-flex{
+    height: 178px;
+    @include flexJustifyAlignItem;
+    margin-left: 186px;
+  }
+  .user-set{
+    width: 178px;
+    height: 178px;
+    border: 4px solid $colfff;
+    border-radius: 50%;
+    box-sizing: border-box;
+    position: fixed;
+    top: 74px;
+    z-index: 900;
+    margin-left: -36px;
+    overflow: hidden;
+    &:hover span{
+      cursor: pointer;
+      display: block;
+    }
+    &.headCla{
+      width: 120px;
+      height: 120px;
+      top: 50px;
+      margin-left: 11px;
+      span{
+        height: 30px;
+        line-height: 26px;
+        padding-left: 31px;
+        font-size: 12px;
+      }
+    }
+    &.headCla2{
+      position: absolute;
+    }
+    .head-logo{
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+    span{
+      display: none;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 40px;
+      line-height: 36px;
+      color: #ffffff;
+      font-size: 14px;
+      background: rgba(0, 0, 0, .5);
+      border-radius: 6%/ 100% 100% 0 0;
+      padding-left: 54px;
+    }
+  }
+  .user-detail-left{
+    font-size: 16px;
+    h2{
+      font-size: 22px;
+    }
+  }
+  .days-num{
+    display: flex;
+    align-items: center;
+    margin-top: 13px;
+    margin-bottom: 35px;
+    em{
+      margin: 0 20px;
+      width: 1px;
+      height: 32px;
+      background: #979797;
+    }
+    p{
+      line-height: 22px;
+      text-align: center;
+      span{
+        display: block;
+        i{
+          color: #FFDF70;
+          font-style: normal;
+        }
+      }
+    }
+  }
+  .test-time{
+    height: 26px;
+    line-height: 26px;
+    i{
+      margin-right: 8px;
+      vertical-align: middle;
+      margin-top: -4px;
+      @include bg-img(23, 21, '../../assets/images/user/calendar-icon.png');
+    }
+    a{
+      text-decoration: underline;
+      color: #ffffff;
+      &:hover{
+        color: #8EBBFF;
+      }
+    }
+    span{
+      width: 26px;
+      height: 26px;
+      line-height: 26px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      color: #1F314C;
+      margin: 0 2px;
+      display: inline-block;
+      @include bg-linear-gradient($btnGredientYellow, to bottom);
+      border-radius: 4px;
     }
   }
   .integral-signin{
@@ -145,40 +389,8 @@ export default {
       }
     }
   }
-  .user-flex{
-    @include flexJustifyAlignItem;
-    position: absolute;
-    width: 100%;
-    top: 60px;
-  }
-  .user-info{
-    @include flexJustifyAlignItem;
-    .head-logo{
-      width: 142px;
-      height: 142px;
-      border: 4px solid $colfff;
-      border-radius: 50%;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
-  }
-  .user-name-instr{
-    // position: absolute;
-    // left: 142px;
-    margin-left: 28px;
-    h2{
-      font-size: 28px;
-    }
-    p{
-      font-size: 16px;
-      line-height: 40px;
-      span{
-        font-size: 24px;
-        margin: 0 4px;
-      }
-    }
-  }
   .go-on-some{
+    margin-top: 84px;
     a{
       padding: 0 16px;
       height: 35px;
@@ -198,5 +410,35 @@ export default {
         }
       }
     }
+  }
+  .set-test-time{
+    padding: 15px 28px;
+    border-top: 1px solid #E6E6E6;
+    border-bottom: 1px solid #E6E6E6;
+  }
+  .st-item{
+    margin: 20px 0;
+    color: $col999;
+    font-size: 16px;
+    label{
+      margin-right: 20px;
+      color: $col333;
+    }
+    select{
+      width: 257px;
+      height: 45px;
+      background: #E6E6E6;
+      border-radius: 4px;
+      border: 1px solid #E6E6E6;
+      color: $col999;
+    }
+  }
+  .test-time-save{
+    padding: 20px 0;
+    text-align: center;
+  }
+  .test-btn{
+    background: $blueColor;
+    color: #ffffff;
   }
 </style>

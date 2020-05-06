@@ -20,11 +20,16 @@ html * {
 html,
 body {
   height: 100%;
-  font-family: "微软雅黑", "Microsoft YaHei", Helvetica, STHeiTi, Arial, sans-serif;
+  font: 14px/1 "PingFang SC",
+  "微软雅黑",
+  "Microsoft YaHei",
+  Helvetica,
+  "Helvetica Neue",
+  Tahoma,
+  Arial,
+  sans-serif;
   min-height: 100%;
-  line-height: 1;
   color: #333333;
-  font-size: 14px;
 }
 
 body,
@@ -76,6 +81,8 @@ input,
 select,
 textarea {
   font-size: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
 }
 table {
   border-collapse: collapse;

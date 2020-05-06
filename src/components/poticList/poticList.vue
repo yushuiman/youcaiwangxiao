@@ -20,7 +20,7 @@
         </div>
         <!-- 论述题样式 -->
         <div v-if="item.topicType == 2">
-          <textarea autofocus v-model.trim="item.discuss_useranswer" disabled class="texta-discuss"></textarea>
+          <textarea v-model.trim="item.discuss_useranswer" disabled class="texta-discuss"></textarea>
         </div>
         <!-- 做题ABCD样式 else -->
         <ul class="topic-opition" v-if="item.topicType == 1">
@@ -36,16 +36,16 @@
       <div class="resolving">
         <span class="resolve-tit" @click="resolveToggle(item.flag, index)">{{item.flag ? '收起' : '解析'}}<Icon type="ios-arrow-down" :class="{'shouqi': item.flag}"/></span>
         <div class="resolve-detail" v-show="item.flag">
-          <!-- 非论述题，另外5个板块解析 -->
+          <!-- 非论述题，展示正确答案，用户答案 -->
           <p class="right-resolve" v-if="item.topicType == 1 && getQuestion.sc != 1">
             <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
             <span v-if="item.options[0].userOption">我的答案<em>{{item.options[0].userOption}}</em></span>
             <span v-else>我的答案<em>未作答</em></span>
           </p>
-          <!-- 收藏不展示用户答案 -->
-          <!-- <p class="right-resolve" v-if="getQuestion.sc == 1">
+          <!-- 非论述题，收藏不展示用户答案 -->
+          <p class="right-resolve" v-if="item.topicType == 1 && getQuestion.sc == 1">
             <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
-          </p> -->
+          </p>
           <div class="instr-resolve instr-resolve-tw">
             <span>解析：</span>
             <div class="twtw">
@@ -59,7 +59,7 @@
       </div>
     </div>
   </div>
-  <!-- 二、真题/练习页面 做题-->
+  <!-- 二、真题/练习模式 做题-->
   <div class="topic-main" v-else>
     <div class="topic-list" :class="{'topic-list-pb': item.flag}" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
       <div class="topic-top">
@@ -77,7 +77,7 @@
           <img v-if="item.topic[3]" :src="item.topic[3]" alt="">
           <p v-if="item.topic[4]">{{item.topic[4]}}</p>
         </div>
-        <!-- 练习模式：有解析答对答错状态-->
+        <!-- 练习模式：有解析、答对、答错状态-->
         <ul class="topic-opition" v-if="getQuestion.paper_mode == 1 && item.topicType == 1">
           <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPoticPractice(item, v, index, key)">
             <div class="opi-abcd">
@@ -86,7 +86,7 @@
             <p>{{v.topic}}</p>
           </li>
         </ul>
-        <!-- 真题模式：正常，无解析答对答错状态-->
+        <!-- 真题模式：正常，无解析、答对、答错状态-->
         <ul class="topic-opition" v-if="getQuestion.paper_mode != 1 && item.topicType == 1">
           <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPotic(item, v, index, key)">
             <div class="opi-abcd">
@@ -97,7 +97,7 @@
         </ul>
         <!-- 论述题：没有ABCD样式 -->
         <div v-if="item.topicType == 2">
-          <textarea autofocus v-model.trim="item.discuss_useranswer" class="texta-discuss" placeholder="请填写您的答案" v-on:focus="doPoticDiscuss(item, index)" @blur="doPoticDiscuss(item, index)"></textarea>
+          <textarea v-model.trim="item.discuss_useranswer" class="texta-discuss" placeholder="请填写您的答案" v-on:focus="doPoticDiscuss(item, index)" @blur="doPoticDiscuss(item, index)"></textarea>
         </div>
       </div>
       <!-- 练习模式答错才显示解析 12.11号改为答对答错都展示解析-->
@@ -120,20 +120,21 @@
 import { questionCollection } from '@/api/questions'
 import { mapState } from 'vuex'
 export default {
-  props: {
-    topics: {
-      type: Array
-    },
-    getQuestion: {
-      type: Object
-    },
-    total: {
-      type: Number
-    },
-    ID: {
-      type: String
-    }
-  },
+  props: ['topics', 'getQuestion', 'total', 'ID'],
+  // props: {
+  //   topics: {
+  //     type: Array
+  //   },
+  //   getQuestion: {
+  //     type: Object
+  //   },
+  //   total: {
+  //     type: Number
+  //   },
+  //   ID: {
+  //     type: String
+  //   }
+  // },
   data () {
     return {
     }
@@ -215,7 +216,7 @@ export default {
     // 收藏
     qtCollection (item) {
       let { ID, collection } = item
-      if (parseInt(collection) === 1) {
+      if (collection == 1) {
         item.collection = 0
       } else {
         item.collection = 1
@@ -227,6 +228,7 @@ export default {
         type: item.collection
       }).then(data => {
         if (data.data.code === 200) {
+          this.$Message.success('收藏成功~')
         } else {
           this.$Message.error(data.data.msg)
         }
@@ -261,7 +263,7 @@ export default {
     }
   }
   .topic-top{
-    padding: 12px 0;
+    padding: 10px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -298,7 +300,9 @@ export default {
   }
   .topic-title{
     p{
-      line-height: 22px;
+      font-size: 18px;
+      color: $col333;
+      line-height: 25px;
     }
     img{
       max-width: 100%;
@@ -311,6 +315,8 @@ export default {
       display: flex;
       align-items: center;
       justify-content: flex-start;
+      font-size: 18px;
+      color: $col666;
       .opi-abcd{
         span{
           width: 26px;
@@ -366,16 +372,19 @@ export default {
   }
   .resolve-detail{
     background: #F3F8FF;
-    padding: 16px 24px;
+    padding: 20px 24px;
     p{
       font-size: 16px;
-      line-height: 26px;
+      line-height: 22px;
       &.right-resolve{
         span{
           margin-right: 28px;
+          color: $col333;
+          &:first-child{
+            font-weight: 500;
+          }
           em{
             margin-left: 16px;
-            font-weight: bold;
             &.right{
               color: #0AAB55;
             }

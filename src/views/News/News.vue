@@ -1,7 +1,7 @@
 <template>
   <div class="user-wrap">
     <!-- 用户信息 -->
-    <user-top :user_id="user_id" :personalInfo="personalInfo" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
+    <user-top :personalInfo="personalInfo" :examine="examine" :user_id="user_id" :fixedFlag2="fixedFlag2" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
     <!-- main -->
     <div class="u-news-wrap w-wrap">
       <ul class="tab-list">
@@ -50,9 +50,7 @@
                 <a class="prev-item" @click="changeItem(2)">下一条 &gt;&gt;</a>
               </div>
             </div>
-            <div class="news-info">
-              {{newsDetail.message.content}}
-            </div>
+            <div class="news-info" v-html="newsDetail.message.content"></div>
           </div>
         </div>
         <div class="no-data" v-if="noDataFlag">暂无消息</div>
@@ -70,6 +68,7 @@ export default {
   data () {
     return {
       personalInfo: {}, // 个人信息
+      fixedFlag2: true,
       txtArr: ['网校公告', '系统消息'],
       selIdxNews: 0,
       limit: 10,
@@ -85,7 +84,8 @@ export default {
         6: '课程'
       },
       newsDetail: {},
-      newsFlag: true
+      newsFlag: true,
+      examine: {} // 设置课程考试时间
     }
   },
   computed: {
@@ -124,6 +124,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.personalInfo = res.data
+          this.examine = res.data.examine
         } else {
           this.$Message.error(res.msg)
         }

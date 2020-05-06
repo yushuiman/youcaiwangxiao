@@ -49,10 +49,10 @@
 /* 题库答疑 上传图片 */
 .course_img .demo-upload-list {
     display: inline-block;
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     text-align: center;
-    line-height: 80px;
+    line-height: 70px;
     border-radius: 4px;
     overflow: hidden;
     background: #fff;
@@ -91,7 +91,7 @@
     height: 18px;
     position: absolute;
     right: 90px;
-    top: 26px;
+    top: 25px;
 }
 
 .ivu-upload-drag,
@@ -108,8 +108,8 @@
 }
 
 .icon-upload {
-    width: 23px;
-    height: 18px;
+    width: 21px;
+    height: 17px;
     background: url('../../assets/images/video/upload-img-icon.png') no-repeat center;
     background-size: contain;
 }
@@ -230,7 +230,7 @@
 .error-menu-er:nth-child(even) {
     background: #F3F6FF;
 }
-/* 学习中心 */
+/* 学习计划 */
 .month-answer-left .ivu-menu-vertical .ivu-menu-submenu-title-icon {
     display: none;
 }
@@ -284,7 +284,12 @@
     height: 50px;
     line-height: 50px;
 }
-
 .munu-active .el-menu-item.is-active {
-    color: #F99111!important;
+    color: #0267FF!important;
+}
+.el-submenu__title .el-submenu__icon-arrow{
+    font-size: 18px;
+    right: 18px;
+    font-weight: bold;
+    color: #999999;
 }

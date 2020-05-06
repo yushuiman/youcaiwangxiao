@@ -51,9 +51,9 @@
           <span @click="screenCourse('综合')" :class="{'curren': form.multiple == 2}">综合</span>
           <span @click="screenCourse('人气')">人气<i :class="[form.popularity == 1 ? 'hot-top-icon' : 'hot-down-icon']"></i></span>
           <span @click="screenCourse('价格')">价格<i class="price-icon" :class="{'price-top-icon': form.pricesort==1, 'price-down-icon': form.pricesort==2}"></i></span>
-          <input type="number" name="" placeholder="¥" v-model.number="priceStart">
+          <input type="number" name="" placeholder="¥" v-model.number="form.price_start">
           <span class="lianjie-icon">-</span>
-          <input type="number" name="" placeholder="¥" v-model.number="priceEnd">
+          <input type="number" name="" placeholder="¥" v-model.number="form.price_end">
           <button type="button" name="button" class="sure-btn" @click="screenCourse('确认价格')">确认</button>
           <button type="button" name="button" class="clear-btn" @click="screenCourse('清空价格')">清空</button>
         </div>
@@ -84,8 +84,8 @@
         </div>
       </div>
       <!-- 猜你喜欢 右 -->
-      <div class="fr">
-        <like-list :isW="true"></like-list>
+      <div class="course-like-right fr">
+        <like-list></like-list>
       </div>
     </div>
     <!-- 活动 -->
@@ -116,12 +116,12 @@ export default {
         multiple: 2,
         popularity: '',
         pricesort: '',
+        price_start: '',
+        price_end: '',
         limit: 6,
         page: 1
         // ym: '' // 班型
       }, // 课程列表 默认第一页 显示6个
-      priceStart: '', // 价格筛选
-      priceEnd: '', // 价格筛选
       // typeInfo: [
       //   {
       //     freePay: '收费',
@@ -206,13 +206,10 @@ export default {
         return
       }
       if (type === '清空价格') {
-        this.priceStart = ''
-        this.priceEnd = ''
+        this.form.price_start = ''
+        this.form.price_end = ''
       }
-      if (type === '确认价格' || type === '清空价格') {
-        this.form.price_start = this.priceStart
-        this.form.price_end = this.priceEnd
-      }
+      this.form.page = 1
       this.getCourseList()
     },
     // 条件删除
@@ -228,6 +225,7 @@ export default {
           this.form.ym = ''
           break
       }
+      this.form.page = 1
       this.getCourseList()
     },
     // 跳转到课程详情页
@@ -452,6 +450,9 @@ export default {
   }
   .course-main-left{
     width: 900px;
+  }
+  .course-like-right{
+    width: 298px;
   }
   .course-main-con{
     width: 280px;

@@ -135,7 +135,7 @@ export default {
     },
     getMyOrder () {
       this.pay_status = this.selIdx
-      if (parseInt(this.selIdx) === 0) {
+      if (this.selIdx == 0) {
         this.pay_status = 3
       }
       this.showLoading(true)
@@ -151,10 +151,10 @@ export default {
           this.orderList = res.data.data
           this.total = res.data.total
           // this.orderAlearyPayList = res.data.data.filter(v => {
-          //   return v.pay_status === 1
+          //   return v.pay_status == 1
           // })
           // this.orderNoPayList = res.data.data.filter(v => {
-          //   return v.pay_status === 2
+          //   return v.pay_status == 2
           // })
           // this.initRes()
         } else {
@@ -164,13 +164,13 @@ export default {
     },
     initRes () {
       this.noDataFlag = false
-      if (parseInt(this.selIdx) === 0) {
+      if (this.selIdx == 0) {
         this.orderList = this.orderAllList
       }
-      if (parseInt(this.selIdx) === 1) {
+      if (this.selIdx == 1) {
         this.orderList = this.orderAlearyPayList
       }
-      if (parseInt(this.selIdx) === 2) {
+      if (this.selIdx == 2) {
         this.orderList = this.orderNoPayList
       }
       if (this.orderList.length === 0) {

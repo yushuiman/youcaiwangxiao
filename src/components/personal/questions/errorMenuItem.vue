@@ -42,8 +42,8 @@
           <li v-for="(val, key) in knowList" :key="key">
             <span>{{val.know_name}}</span>
             <div class="error-btn">
-              <button class="" @click="goToPic(val, '1')">查看解析</button>
-              <button class="btn-com" @click="goToPic(val, '2')">去做题</button>
+              <button class="" @click="goToPic(val, 1)">查看解析</button>
+              <button class="btn-com" @click="goToPic(val, 2)">去做题</button>
             </div>
           </li>
         </ul>
@@ -149,13 +149,13 @@ export default {
       this.getPoticData.know_id = v.know_id
       window.sessionStorage.setItem('subTopics', JSON.stringify(this.getPoticData))
       // 查看解析
-      if (type === '1') {
+      if (type === 1) {
         window.sessionStorage.setItem('diffRes', 1) // 区分不同的接口请求
         window.sessionStorage.setItem('diffTxt', 1) // 区分查看报告按钮，返回个人中心
         this.$router.push({ path: '/analysis', query: this.getPoticData })
       }
       // 去做题
-      if (type === '2') {
+      if (type === 2) {
         window.sessionStorage.setItem('diffTxt', 10) // 区分查看报告按钮，返回个人中心
         window.sessionStorage.setItem('diffRes', 11) // 区分不同的接口请求，错题解析分为两个接口，全部，错题不能共用一个
         this.$router.push({ path: '/dopotic-error', query: this.getPoticData })

@@ -290,17 +290,25 @@ export default {
         if (res.code === 200) {
           // 非0元体验
           if (res.data && res.data.length) {
+            this.experience = false
             this.projectArr = res.data
-            this.projectArr.forEach(val => {
-              if (val.id === (this.course_id || res.data[0].id)) {
-                this.isSprintXly = val.status
+            let array = this.projectArr
+            for (let index = 0; index < array.length; index++) {
+              if (array[index].id == this.course_id) {
+                this.isSprintXly = array[index].status
+                this.getQuestionIndex({
+                  id: this.course_id,
+                  status: this.isSprintXly
+                })
+                return
               }
-            })
+            }
+            this.course_id = this.projectArr[0].id
+            this.isSprintXly = this.projectArr[0].status
             this.getQuestionIndex({
-              id: this.course_id || res.data[0].id,
+              id: this.course_id,
               status: this.isSprintXly
             })
-            this.experience = false
           }
           // 0元体验
           if (this.experience) {
@@ -313,6 +321,10 @@ export default {
     },
     // 课程对应正确率，做题数，平均分
     getQuestionIndex ({ id, status }, index) {
+      this.course_id = id
+      this.plate_id = 0
+      window.sessionStorage.setItem('course_id', id)
+      this.isSprintXly = status
       if (!this.token) {
         this.$router.push({ path: '/login',
           query: {
@@ -321,9 +333,6 @@ export default {
         })
         return
       }
-      this.course_id = id
-      this.isSprintXly = status
-      window.sessionStorage.setItem('course_id', id)
       this.showLoading(true)
       questionIndex({
         user_id: this.user_id,
@@ -341,6 +350,7 @@ export default {
     },
     // 去做题 展示对应模块题库
     async doQuestions ({ id, title }) {
+    // doQuestions ({ id, title }) {
       await this.getUserInfo()
       this.plateTitle = title
       this.plate_id = id
