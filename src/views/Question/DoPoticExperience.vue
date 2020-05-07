@@ -175,7 +175,7 @@ export default {
     doPoticInfo (num = 0, index = 0) {
       this.percentNum = num
       this.percent = this.percentNum / this.total * 100
-      if (this.total === index) {
+      if (this.total == index) {
         return
       }
       this.goAnchor('#anchor-' + index)
