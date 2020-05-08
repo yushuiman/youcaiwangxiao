@@ -152,6 +152,7 @@ export default {
       if (item.currenOption) { // 练习模式：当前题选择以后不能再选
         return
       }
+      console.log(87654)
       item.currenOption = true // 练习模式：当前题选择以后不能再选
       item.userOption = val.option // 交卷用户答案
       item.options.forEach((v, index) => {
@@ -191,7 +192,7 @@ export default {
       let num = this.topics.filter((v) => { // 已做题数
         return v.currenOption
       })
-      // this.$forceUpdate()
+      this.$forceUpdate()
       this.$emit('doPoticInfo', num.length, index + 1)
     },
     // 论述题
@@ -205,7 +206,7 @@ export default {
       let num = this.topics.filter((v) => { // 已做题数
         return v.currenOption
       })
-      // this.$forceUpdate()
+      this.$forceUpdate()
       this.$emit('doPoticInfo', num.length, 0) // 论述题不要scroll
     },
     // 解析展开收起
@@ -223,7 +224,7 @@ export default {
       this.topics[index].flag = !flag
       // this.$set(item, 'flag', !item.flag)
       // this.num += 1
-      // this.$forceUpdate()
+      this.$forceUpdate()
     },
     // 收藏
     qtCollection (item) {

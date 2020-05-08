@@ -169,6 +169,7 @@ export default {
               if (countTime < 1) {
                 this.tsSucc = false
                 clearInterval(this.timer)
+                this.timer = null
               }
             }, 1000)
           }

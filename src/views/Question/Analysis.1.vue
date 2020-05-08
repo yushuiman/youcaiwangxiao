@@ -19,32 +19,7 @@
           <button class="btn-com" @click="goResult" v-else>{{txtSts[diffTxt]}}</button>
         </div>
         <div class="right-bottom-wrap">
-          <div class="answer-card" v-if="getQuestion.paper_type == 2">
-            <div class="title-com">
-              <h2>答题卡</h2>
-              <!-- 论述题 -->
-              <div class="anscard-sts">
-                <i class="blue-bg"></i>已做
-                <i class="white-bg"></i>未做
-              </div>
-            </div>
-            <ul class="anscard-list clearfix">
-              <li :class="{'blue-bg': v.discuss_useranswer}" v-for="(v, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">{{index+1}}</li>
-            </ul>
-          </div>
-          <div class="answer-card" v-else>
-            <!-- 其他板块 -->
-            <div class="title-com">
-              <h2>答题卡</h2>
-              <div class="anscard-sts">
-                <i class="green-bg"></i>已掌握
-                <i class="red-bg"></i>未掌握
-              </div>
-            </div>
-            <ul class="anscard-list clearfix">
-              <li :class="{'red-bg': v.redCurren, 'green-bg': v.rightCurren}" v-for="(v, index) in topics" :key="index" @click="goAnchor('#anchor-'+index)">{{index+1}}</li>
-            </ul>
-          </div>
+          fdsfs
         </div>
       </div>
     </div>
@@ -240,11 +215,11 @@ export default {
         this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
-          // this.topics = res.data.topics
+          this.topics = res.data.topics
           this.title = res.data.title
-          this.answerSts(res.data.topics)
+          this.answerSts(this.topics)
         } else if (res.code === 405) {
-          this.answerSts(res.data.topics)
+          this.answerSts(this.topics)
         } else {
           this.$Message.error(res.msg)
         }
@@ -385,33 +360,31 @@ export default {
         this.noDataFlag = true
         return
       }
-      var topicsData = topics
-      topicsData.map((val, index) => {
+      topics.map((val, index) => {
         val.flag = false // 解析展开收起交互
-        if (this.getQuestion.paper_type === 2) { // 论述题解析不需要下面的逻辑
-          return
-        }
-        let userOptions = val.options[0].userOption || val.discuss_useranswer // 用户答案
-        let trueOptions = val.options[0].right // 正确答案
-        if (userOptions !== '' && userOptions === trueOptions) {
-          val.rightCurren = true
-        }
-        if (userOptions !== '' && userOptions !== trueOptions) {
-          val.redCurren = true
-        }
-        val.options.forEach((v, index) => {
-          if (val.eprone.indexOf(v.option) > -1) {
-            v.eprone = true // 易错答案
-          }
-          if (v.option.indexOf(userOptions) > -1 && userOptions !== '') {
-            v.errorRed = true // 用户答案 答错选项红色
-          }
-          if (v.option === v.right) {
-            v.rightGreen = true // 正确答案 选项添加绿色
-          }
-        })
+        // if (this.getQuestion.paper_type === 2) { // 论述题解析不需要下面的逻辑
+        //   return
+        // }
+        // let userOptions = val.options[0].userOption || val.discuss_useranswer // 用户答案
+        // let trueOptions = val.options[0].right // 正确答案
+        // if (userOptions !== '' && userOptions === trueOptions) {
+        //   val.rightCurren = true
+        // }
+        // if (userOptions !== '' && userOptions !== trueOptions) {
+        //   val.redCurren = true
+        // }
+        // val.options.forEach((v, index) => {
+        //   if (val.eprone.indexOf(v.option) > -1) {
+        //     v.eprone = true // 易错答案
+        //   }
+        //   if (v.option.indexOf(userOptions) > -1 && userOptions !== '') {
+        //     v.errorRed = true // 用户答案 答错选项红色
+        //   }
+        //   if (v.option === v.right) {
+        //     v.rightGreen = true // 正确答案 选项添加绿色
+        //   }
+        // })
       })
-      this.topics = topicsData
     },
     goResult () {
       // 如果是错题中心，查看报告

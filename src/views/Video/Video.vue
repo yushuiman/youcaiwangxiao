@@ -157,46 +157,6 @@ export default {
       fixedVideo: false,
       flagClosed: false,
       wImportant: 445,
-      // speednum: 1, // 倍速默认1正常
-      // speedTxt: Cookies.get('speedTxt') || '正常',
-      // qualityTxt: Cookies.get('qualityTxt') || '高清',
-      // voiceNum: 100, // 音量
-      // speedList: [
-      //   {
-      //     text: '0.5X',
-      //     speednum: 0.5
-      //   },
-      //   {
-      //     text: '正常',
-      //     speednum: 1
-      //   },
-      //   {
-      //     text: '1.25X',
-      //     speednum: 1.25
-      //   },
-      //   {
-      //     text: '1.5X',
-      //     speednum: 1.5
-      //   },
-      //   {
-      //     text: '2X',
-      //     speednum: 2
-      //   }
-      // ],
-      // qualityList: [
-      //   {
-      //     text: '流畅',
-      //     type: 'FD'
-      //   },
-      //   {
-      //     text: '标清',
-      //     type: 'LD'
-      //   },
-      //   {
-      //     text: '高清',
-      //     type: 'SD'
-      //   }
-      // ],
       VideoId: '', // 视频VideoId
       videoCredentials: {
         handouts: '', // 讲义
@@ -844,16 +804,12 @@ export default {
   beforeDestroy () {
     clearInterval(this.socketTimer)
     this.socketTimer = null
-    // clearInterval(this.tryWatchTimer)
     if (this.$refs.aliPlayers) {
       this.$refs.aliPlayers.dispose()
     }
   },
   beforeRouteLeave (to, from, next) {
-    clearInterval(this.socketTimer)
-    this.socketTimer = null
     document.onkeydown = undefined
-    clearTimeout(this.screenTimer)
     Cookies.remove('speedTxt')
     Cookies.remove('speednum')
     Cookies.remove('voicenum')

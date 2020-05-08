@@ -98,10 +98,10 @@
         </div>
       </div>
       <div v-if="selIdx == 2" class="omo-info">
-        <div class="omo-wri-a" v-if="personalInfo.is_adj == 1">
+        <div class="omo-wri-a" v-if="personalInfo.is_adj == 2">
           <a @click="goOmoWri">完善OMO信息</a>
         </div>
-        <div class="omo-card" v-if="personalInfo.is_adj == 2">
+        <div class="omo-card" v-if="personalInfo.is_adj == 1">
           优财实战课VIP
           <span>{{omoUserInfo.omo_num}}</span>
           <!-- <p><label>姓名：</label>{{omoUserInfo.realname}}</p>
@@ -109,7 +109,7 @@
           <p><label>邮箱：</label>{{omoUserInfo.omo_email}}</p>
           <p><label>身份证号：</label>{{omoUserInfo.identity_card}}</p> -->
         </div>
-        <div class="omo-rules" v-if="personalInfo.is_adj == 2">
+        <div class="omo-rules" v-if="personalInfo.is_adj == 1">
           <h4>VIP会员卡使用须知：</h4>
           <p>1、本卡每人限办一张，限申请人本人实名制使用，不得转借或转让；</p>
           <p>2、本卡使用期限为两年，如本卡两年内未使用，本卡将自动失效；</p>

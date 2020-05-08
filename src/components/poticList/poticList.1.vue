@@ -1,7 +1,8 @@
 <template>
   <!-- 一、解析页面 纯展示-->
   <div class="topic-main" v-if="getQuestion.jiexi == 1">
-    <div class="topic-list" :class="{'topic-list-pb': item.flag}" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
+    <!-- :class="{'topic-list-pb': item.flag}" -->
+    <div class="topic-list" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
       <div class="topic-top">
         <span class="topic-num"><em>{{index+1}}</em>/{{topics.length}}</span>
         <ul class="topic-error-sc" v-if="getQuestion.plate_id != 8">
@@ -34,7 +35,7 @@
         </ul>
       </div>
       <div class="resolving">
-        <span class="resolve-tit" @click="resolveToggle(item.flag, index)">{{item.flag ? '收起' : '解析'}}<Icon type="ios-arrow-down" :class="{'shouqi': item.flag}"/></span>
+        <span class="resolve-tit" @click="resolveToggle(item.flag, index)">{{num}}{{item.flag ? '收起' : '解析'}}<Icon type="ios-arrow-down" :class="{'shouqi': item.flag}"/></span>
         <div class="resolve-detail" v-show="item.flag">
           <!-- 非论述题，展示正确答案，用户答案 -->
           <p class="right-resolve" v-if="item.topicType == 1 && getQuestion.sc != 1">
@@ -137,6 +138,7 @@ export default {
   // },
   data () {
     return {
+      num: 0
     }
   },
   computed: {
@@ -191,7 +193,7 @@ export default {
       let num = this.topics.filter((v) => { // 已做题数
         return v.currenOption
       })
-      // this.$forceUpdate()
+      this.$forceUpdate()
       this.$emit('doPoticInfo', num.length, index + 1)
     },
     // 论述题
@@ -205,24 +207,14 @@ export default {
       let num = this.topics.filter((v) => { // 已做题数
         return v.currenOption
       })
-      // this.$forceUpdate()
+      this.$forceUpdate()
       this.$emit('doPoticInfo', num.length, 0) // 论述题不要scroll
     },
     // 解析展开收起
-    resolveToggle (flag, index) {
-      // var that = this
-      // var listData = that.topics
-      // var flag = that.topics[index].flag // 先用一个变量接收一个原来的状态值
-      // listData.forEach((item) => { // 循环已经把所有的状态值清空了
-      //   item.flag = false
-      // })
-      // // (比如我当前点击的这个是打开的状态，他是true，点击的方法开始先把这个true存下来，然后接下来的循环是把所有的状态值设为false，如果你不存下来的话，你    ！状态值永远为true)
-      // listData[index].flag = !flag
-      // that.topics = listData
-      // console.log(listData[index].flag)
-      this.topics[index].flag = !flag
-      // this.$set(item, 'flag', !item.flag)
-      // this.num += 1
+    resolveToggle (currentFlag, index) {
+      this.topics[index].flag = !currentFlag
+      this.num += 1
+      console.log(1)
       // this.$forceUpdate()
     },
     // 收藏
@@ -385,6 +377,9 @@ export default {
   .resolve-detail{
     background: #F3F8FF;
     padding: 20px 24px;
+    &.opa{
+      opacity: 0.3;
+    }
     p{
       font-size: 16px;
       line-height: 22px;

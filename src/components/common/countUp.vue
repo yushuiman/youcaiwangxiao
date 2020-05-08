@@ -89,6 +89,7 @@ export default {
   },
   beforeDestroy () {
     clearInterval(this.time)
+    this.time = null
   }
 
 }

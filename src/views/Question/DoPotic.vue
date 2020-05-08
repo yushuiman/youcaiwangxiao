@@ -114,6 +114,7 @@ import countDown from '../../components/count'
 import countUp from '../../components/common/countUp'
 import errorCorrection from '../../components/common/errorCorrection'
 import $ from 'jquery'
+import lodash from 'lodash'
 import { mapState, mapActions } from 'vuex'
 export default {
   data () {
@@ -188,7 +189,7 @@ export default {
         this.getTopicList()
       })
     }
-    window.addEventListener('scroll', this.scrollToTop)
+    window.addEventListener('scroll', this.scrollthrottle)
   },
   methods: {
     ...mapActions([
@@ -207,6 +208,14 @@ export default {
         }
       }
     },
+    /* 滑动节流 */
+    scrollthrottle: lodash.throttle(
+      function () {
+        this.scrollToTop()
+      },
+      3000,
+      { leading: false } // 第一次不触发
+    ),
     scrollToTop () {
       if (this.$refs.fixedTit) {
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
@@ -232,7 +241,10 @@ export default {
       if (this.total == index) {
         return
       }
-      this.goAnchor('#anchor-' + index)
+      // 论述题不要scroll
+      if (index > 0) {
+        this.goAnchor('#anchor-' + index)
+      }
     },
     // 拿题
     getTopicList () {
@@ -244,13 +256,13 @@ export default {
         const res = data.data
         if (res.code === 200) {
           let { topics, total, title } = res.data
-          this.topics = topics
+          // this.topics = topics
           this.total = total
           this.title = title
           this.answer_time = parseInt(res.data.answer_time) * 1000
           if (topics && topics.length) {
             this.noDataFlag = false
-            this.topics.map((val, index) => {
+            topics.map((val, index) => {
               val.showAnalysis = false // 解析默认false，只有做错题的时候true(练习模式)
               val.flag = false // 解析展开收起交互(练习模式)
               val.currenOption = false // 点击当前题，不能重复选择(练习模式)
@@ -259,6 +271,7 @@ export default {
                 v.selOption = false // 选择当前选项变蓝色，其他默认颜色，可以重复选择(除了练习模式，都是这个逻辑)
               })
             })
+            this.topics = topics
             // 拿到题，开始倒计时
             if (this.getQuestion.plate_id == 6) {
               this.timerDown()
@@ -378,12 +391,10 @@ export default {
   beforeDestroy () {
     document.oncontextmenu = undefined
     document.onkeydown = undefined
-    window.removeEventListener('scroll', this.scrollToTop)
+    window.removeEventListener('scroll', this.scrollthrottle)
     document.oncontextmenu = undefined
     document.onkeydown = undefined
-    if (this.timers) {
-      clearInterval(this.timers)
-    }
+    clearInterval(this.timers)
   }
 }
 </script>

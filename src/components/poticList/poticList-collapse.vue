@@ -1,7 +1,7 @@
 <template>
   <!-- 一、解析页面 纯展示-->
   <div class="topic-main" v-if="getQuestion.jiexi == 1">
-    <div class="topic-list" :class="{'topic-list-pb': item.flag}" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
+    <Collapse class="topic-list" v-for="(item, index) in topics" :key="index">
       <div class="topic-top">
         <span class="topic-num"><em>{{index+1}}</em>/{{topics.length}}</span>
         <ul class="topic-error-sc" v-if="getQuestion.plate_id != 8">
@@ -33,31 +33,33 @@
           </li>
         </ul>
       </div>
-      <div class="resolving">
-        <span class="resolve-tit" @click="resolveToggle(item.flag, index)">{{item.flag ? '收起' : '解析'}}<Icon type="ios-arrow-down" :class="{'shouqi': item.flag}"/></span>
-        <div class="resolve-detail" v-show="item.flag">
-          <!-- 非论述题，展示正确答案，用户答案 -->
-          <p class="right-resolve" v-if="item.topicType == 1 && getQuestion.sc != 1">
-            <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
-            <span v-if="item.options[0].userOption">我的答案<em>{{item.options[0].userOption}}</em></span>
-            <span v-else>我的答案<em>未作答</em></span>
-          </p>
-          <!-- 非论述题，收藏不展示用户答案 -->
-          <p class="right-resolve" v-if="item.topicType == 1 && getQuestion.sc == 1">
-            <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
-          </p>
-          <div class="instr-resolve instr-resolve-tw">
-            <span>解析：</span>
-            <div class="twtw">
-              <p v-if="item.analysis">{{item.analysis}}</p>
-              <img v-if="item.analysisPic" :src="item.analysisPic" alt="">
-              <p v-if="item.analysis_one">{{item.analysis_one}}</p>
-              <img v-if="item.analysis_img_one" :src="item.analysis_img_one" alt="">
+      <Panel name="1">
+        <span class="resolve-tit">展开</span>
+        <div class="resolving" slot="content">
+          <div class="resolve-detail">
+            <!-- 非论述题，展示正确答案，用户答案 -->
+            <p class="right-resolve" v-if="item.topicType == 1 && getQuestion.sc != 1">
+              <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
+              <span v-if="item.options[0].userOption">我的答案<em>{{item.options[0].userOption}}</em></span>
+              <span v-else>我的答案<em>未作答</em></span>
+            </p>
+            <!-- 非论述题，收藏不展示用户答案 -->
+            <p class="right-resolve" v-if="item.topicType == 1 && getQuestion.sc == 1">
+              <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
+            </p>
+            <div class="instr-resolve instr-resolve-tw">
+              <span>解析：</span>
+              <div class="twtw">
+                <p v-if="item.analysis">{{item.analysis}}</p>
+                <img v-if="item.analysisPic" :src="item.analysisPic" alt="">
+                <p v-if="item.analysis_one">{{item.analysis_one}}</p>
+                <img v-if="item.analysis_img_one" :src="item.analysis_img_one" alt="">
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </Panel>
+    </Collapse>
   </div>
   <!-- 二、真题/练习模式 做题-->
   <div class="topic-main" v-else>
@@ -137,6 +139,7 @@ export default {
   // },
   data () {
     return {
+      num: 0
     }
   },
   computed: {
@@ -191,7 +194,7 @@ export default {
       let num = this.topics.filter((v) => { // 已做题数
         return v.currenOption
       })
-      // this.$forceUpdate()
+      this.$forceUpdate()
       this.$emit('doPoticInfo', num.length, index + 1)
     },
     // 论述题
@@ -205,11 +208,11 @@ export default {
       let num = this.topics.filter((v) => { // 已做题数
         return v.currenOption
       })
-      // this.$forceUpdate()
+      this.$forceUpdate()
       this.$emit('doPoticInfo', num.length, 0) // 论述题不要scroll
     },
     // 解析展开收起
-    resolveToggle (flag, index) {
+    resolveToggle (item, index) {
       // var that = this
       // var listData = that.topics
       // var flag = that.topics[index].flag // 先用一个变量接收一个原来的状态值
@@ -220,7 +223,7 @@ export default {
       // listData[index].flag = !flag
       // that.topics = listData
       // console.log(listData[index].flag)
-      this.topics[index].flag = !flag
+      this.topics[index].flag = !item.flag
       // this.$set(item, 'flag', !item.flag)
       // this.num += 1
       // this.$forceUpdate()

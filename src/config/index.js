@@ -17,6 +17,8 @@ export default {
     // dev: 'https://api.youcaiwx.cn',
     // pro: 'http://ycapi.youcaiwx.com'
     // pro: 'https://dest.youcaiwx.cn'
+    dest: 'https://dest.youcaiwx.cn',
     pro: 'https://api.youcaiwx.cn'
+    // pro: 'https://api.youcaiwx.cn'
   }
 }

@@ -683,14 +683,15 @@ export default {
   },
   beforeDestroy () {
     clearInterval(this.timer)
+    this.timer = null
     clearInterval(this.timer2)
+    this.timer2 = null
     if (this.$refs.aliPlayers) {
       this.$refs.aliPlayers.dispose()
     }
   },
   beforeRouteLeave (to, from, next) {
     document.onkeydown = undefined
-    clearTimeout(this.screenTimer)
     Cookies.remove('speedTxt')
     Cookies.remove('speednum')
     Cookies.remove('voicenum')

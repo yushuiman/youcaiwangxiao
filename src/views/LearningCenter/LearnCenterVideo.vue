@@ -719,10 +719,7 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     console.log('remove aliplayer')
-    clearInterval(this.socketTimer)
-    this.socketTimer = null
     document.onkeydown = undefined
-    clearTimeout(this.screenTimer)
     Cookies.remove('speedTxt')
     Cookies.remove('speednum')
     Cookies.remove('voicenum')

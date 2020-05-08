@@ -58,6 +58,8 @@ export default {
   beforeDestroy () {
     clearInterval(this.scrollTimer)
     clearTimeout(this.timer)
+    this.scrollTimer = null
+    this.timer = null
   }
 }
 </script>
