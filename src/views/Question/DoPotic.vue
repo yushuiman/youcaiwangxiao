@@ -229,12 +229,10 @@ export default {
     doPoticInfo (num = 0, index) {
       this.percentNum = num
       this.percent = this.percentNum / this.total * 100
-      if (this.total === index) {
+      if (this.total == index) {
         return
       }
-      if (index > 0) {
-        this.goAnchor('#anchor-' + index)
-      }
+      this.goAnchor('#anchor-' + index)
     },
     // 拿题
     getTopicList () {

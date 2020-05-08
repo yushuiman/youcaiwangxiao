@@ -817,6 +817,7 @@ export default {
     margin: 0 auto;
     margin-top: 20px;
     display: block;
+    border-radius: 30px;
   }
   .goods {
     margin-left: 83px;

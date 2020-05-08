@@ -18,10 +18,24 @@
         <!-- <zhibo-info v-if="clkTit == 'zhibo'" :user_id="user_id"></zhibo-info> -->
         <answer-info v-if="clkTit == 'answer'" :user_id="user_id"></answer-info>
         <order-info v-if="clkTit == 'order'" :user_id="user_id"></order-info>
-        <account-info v-if="clkTit == 'account'" :user_id="user_id"></account-info>
+        <account-info v-if="clkTit == 'account'" :user_id="user_id" :personalInfo="personalInfo" @omoWriShow="omoWriShow"></account-info>
         <set-info v-if="clkTit == 'set' && personalInfo.username" :user_id="user_id" :personalInfo="personalInfo" @getPersonalInfo="getPersonalInfo"></set-info>
       </div>
     </div>
+    <Modal v-model="omoVisible"
+      :width="495"
+      footer-hide
+      title="完善OMO信息">
+      <div class="omo-wri">
+        <p><input type="text" placeholder="请输入姓名" v-model.trim="omoName"></p>
+        <p><input type="text" disabled placeholder="请输入手机号" v-model="personalInfo.mobile"></p>
+        <p><input type="text" placeholder="请输入邮箱" v-model="omoEmail"></p>
+        <!-- <p><input type="text" placeholder="请输入身份证号" v-model.trim="omoIdentity"></p> -->
+        <div class="omo-submit">
+          <button class="btn-com" @click="omoWriSub">提交</button>
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -35,7 +49,7 @@ import accountInfo from '../../components/personal/accountInfo'
 import educationInfo from '../../components/personal/educationInfo'
 import setInfo from '../../components/personal/setInfo'
 import userTop from '../../components/personal/userTop'
-import { getPersonal } from '@/api/personal'
+import { getPersonal, putOmoUser } from '@/api/personal'
 import { mapState, mapActions } from 'vuex'
 export default {
   data () {
@@ -80,7 +94,11 @@ export default {
       ],
       clkTit: this.$route.query.type || 'course',
       personalInfo: {}, // 个人信息
-      examine: {} // 设置课程考试时间
+      examine: {}, // 设置课程考试时间
+      omoVisible: false,
+      omoName: '',
+      omoEmail: '',
+      omoIdentity: ''
     }
   },
   computed: {
@@ -155,6 +173,9 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.personalInfo = res.data
+          if (this.personalInfo.is_adj === 2) { // is_adj:OMO用户是否完善了信息 1完善了2 未完善
+            this.omoVisible = true
+          }
           this.examine = res.data.examine
           this.personalInfo.address.forEach(v => {
             v.flag = false
@@ -174,8 +195,55 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // 完善omo信息
+    omoWriShow () {
+      this.omoVisible = true
+    },
+    omoWriSub () {
+      const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+      const regEmail = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/
+      if (this.omoName === '') {
+        this.$Message.error('请输入姓名～')
+        return
+      }
+      if (this.omoName.length < 2 || this.omoName.length > 10) {
+        this.$Message.error('请输入2-10位姓名字符～')
+        return
+      }
+      if (this.omoEmail === '') {
+        this.$Message.error('请输入邮箱～')
+        return
+      }
+      if (!regEmail.test(this.omoEmail)) {
+        this.$Message.error('请输入正确的邮箱～')
+        return
+      }
+      // if (this.omoIdentity === '') {
+      //   this.$Message.error('请输入身份证号～')
+      //   return
+      // }
+      // if (!reg.test(this.omoIdentity)) {
+      //   this.$Message.error('请输入正确的身份证号~')
+      //   return
+      // }
+      putOmoUser({
+        user_id: this.user_id,
+        // identity_card: this.omoIdentity,
+        realname: this.omoName,
+        omo_email: this.omoEmail,
+        omo_mobile: this.personalInfo.mobile
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.omoVisible = false
+          this.$Message.success('提交成功～')
+          this.getPersonalInfo()
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
     }
-
   },
   beforeRouteLeave (to, from, next) {
     // window.sessionStorage.removeItem('type')
@@ -286,6 +354,31 @@ export default {
     }
     .userm-item-07.curren &, .userm-item-07:hover &{
       background-image: url('../../assets/images/user/user-active-icon07.png');
+    }
+  }
+  .omo-wri{
+    text-align: center;
+    padding-bottom: 20px;
+    p{
+      margin-bottom: 20px;
+      input{
+        width: 275px;
+        height: 40px;
+        padding-left: 14px;
+        background: #f5f5f5;
+        border-radius: 4px;
+        border: 1px solid #dcdcdc;
+      }
+    }
+    .btn-com{
+      width: 122px;
+      height: 36px;
+      background: $blueColor;
+      color: #ffffff;
+      margin: 0 auto;
+      margin-top: 20px;
+      display: block;
+      border-radius: 30px;
     }
   }
 </style>

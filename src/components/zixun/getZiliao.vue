@@ -61,7 +61,7 @@ export default {
           this.email = ''
           this.$Message.success('收集成功')
         } else {
-          this.$Message.error(res.data)
+          this.$Message.error(res.msg)
         }
       })
     }

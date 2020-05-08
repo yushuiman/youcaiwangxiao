@@ -210,9 +210,7 @@ export default {
       if (this.total == index) {
         return
       }
-      if (index > 0) {
-        this.goAnchor('#anchor-' + index)
-      }
+      this.goAnchor('#anchor-' + index)
     },
     // 拿题
     getTopicList () {
