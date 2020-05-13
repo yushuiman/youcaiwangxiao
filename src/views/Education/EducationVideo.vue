@@ -309,10 +309,10 @@ export default {
       }
     },
     ended () {
-      // if (this.canSign) {
-      //   this.visible = true
-      // }
-      this.computedNextVid() // 计算下一个要播放的视频
+      if (this.canSign) {
+        this.visible = true
+      }
+      // this.computedNextVid() // 计算下一个要播放的视频
     },
     // 设置是否连续播放
     setLianxuPlay (val) {
@@ -718,8 +718,8 @@ export default {
             this.canSign = false
           }
           if (res.data.status === 2) {
-            // this.canSign = true // 因为没有三次签到，倒计时功能了，所以不用downTime（），直接true
-            this.downTime()
+            this.canSign = true // 因为没有三次签到，倒计时功能了，所以不用downTime（），直接true
+            // this.downTime()
           }
         } else {
           this.$Message.error(res.msg)
@@ -762,11 +762,11 @@ export default {
     }
   },
   beforeDestroy () {
-    clearInterval(this.timer)
-    clearInterval(this.timer2)
+    // clearInterval(this.timer)
+    // clearInterval(this.timer2)
     clearInterval(this.socketTimer)
-    this.timer = null
-    this.timer2 = null
+    // this.timer = null
+    // this.timer2 = null
     this.socketTimer = null
     if (this.$refs.aliPlayers) {
       this.$refs.aliPlayers.dispose()

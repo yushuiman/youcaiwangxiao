@@ -40,23 +40,23 @@
               </div>
             </div>
           </li>
-          <!-- <li class="v-set-item v-set-lianxu" v-if="diffLogic == 2">
+          <li class="v-set-item v-set-lianxu" v-if="diffLogic == 2">
             <span @click="setLianxuPlay" :class="{'is-lianxu': isLianxu == 1}"><Icon type="ios-checkmark" style="color:#F99111;font-weight: bold;margin-top: -3px;" v-if="isLianxu == 1" /></span>连续播放
-          </li> -->
+          </li>
         </ul>
       </div>
     </div>
     <!-- 重播 -->
-    <!-- <div class="set-replay" v-if="diffLogic == 2 && isLianxu == 2 && showReplay">
+    <div class="set-replay" v-if="diffLogic == 2 && isLianxu == 2 && showReplay">
       <div @click="replayVideo"><a><Icon type="ios-refresh" style="font-size: 22px;margin-top: -3px;"/>重新观看</a></div>
-    </div> -->
+    </div>
     <!-- 后续教育签到 -->
     <div class="sign-box" v-if="canSign && visible">
       <div class="opa"></div>
       <div class="sign-cont">
         <p>签到获得本课程CPE积分</p>
         <button class="btn-com" @click="signSub">签到</button>
-        <span>{{jianTime}}秒之后关闭～</span>
+        <!-- <span>{{jianTime}}秒之后关闭～</span> -->
       </div>
     </div>
     <!-- 后续教育禁止拖拽进度条 -->
@@ -842,9 +842,9 @@ export default {
   }
   /* 签到 */
   .sign-box .opa{
-    position: fixed;
-    /* z-index: 1001;
-    position: absolute; */
+    /* position: fixed; */
+    z-index: 1001;
+    position: absolute;
     left: 0;
     top: 0;
     width: 100%;
@@ -852,9 +852,9 @@ export default {
     background: rgba(0,0,0,.6);
   }
   .sign-cont{
-    position: fixed;
-    /* z-index: 1002;
-    position: absolute; */
+    /* position: fixed; */
+    z-index: 1002;
+    position: absolute;
     width: 240px;
     left: 50%;
     top: 50%;
