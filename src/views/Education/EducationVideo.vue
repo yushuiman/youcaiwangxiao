@@ -36,10 +36,14 @@
             :canSign="canSign"
             :visible="visible"
             :jianTime="jianTime"
+            :isLianxu="isLianxu"
+            :showReplay="showReplay"
             :user_id="user_id"
             @ready="ready"
             @ended="ended"
             @signSub="signSub"
+            @setLianxuPlay="setLianxuPlay"
+            @replayVideo="replayVideo"
             @switchVideo="switchVideo">
           </ali-player>
         </div>
@@ -79,10 +83,14 @@
             :canSign="canSign"
             :visible="visible"
             :jianTime="jianTime"
+            :isLianxu="isLianxu"
+            :showReplay="showReplay"
             :user_id="user_id"
             @ready="ready"
             @ended="ended"
             @signSub="signSub"
+            @setLianxuPlay="setLianxuPlay"
+            @replayVideo="replayVideo"
             @switchVideo="switchVideo">
           </ali-player>
         </div>
@@ -107,7 +115,7 @@
 import aliPlayer from '@/components/video/aliPlayer'
 import courseList from '@/components/educationVideo/courseList'
 import HeadName from '@/components/common/HeadName'
-import { videoCredentials, secvCatalog, record, signQuery, sign } from '@/api/education'
+import { videoCredentials, secvCatalog, record, signQuery, sign, eduSocket } from '@/api/education'
 import Cookies from 'js-cookie'
 import { mapState } from 'vuex'
 
@@ -141,11 +149,14 @@ export default {
       courseSections: [],
       openMenu: '1-1', // 默认播放菜单menu-index
       visible: false, // 签到，modal
-      canSign: false, // 视频最后10分钟签到
+      canSign: false, // 未签到：视频最后10分钟签到
       timer: null,
       timer2: null,
       jianTime: 30,
-      isPlay: false // 视频初始化getStatus获取不准确
+      socketTimer: null,
+      isPlay: false, // 视频初始化getStatus获取不准确
+      isLianxu: parseInt(Cookies.get('isLianxu')) || 1, // 是否连续播放
+      showReplay: false // 连续播放按钮
     }
   },
   components: {
@@ -207,6 +218,23 @@ export default {
         }
         if (playStatus === 'pause') {
           player.play()
+        }
+      }
+      if (keyNum === 37) { // 快退
+        let videotimes = player.getDuration()
+        let playnum = player.getCurrentTime()
+        playnum = parseInt(playnum - 5)
+        if (playnum <= (videotimes - 30)) {
+          player.seek(playnum)
+        }
+      }
+      if (keyNum === 39) { // 快进
+        let playnum = player.getCurrentTime()
+        playnum = parseInt(playnum + 5)
+        if (playnum > 15) {
+          player.seek(playnum)
+        } else {
+          player.seek(0)
         }
       }
       if (keyNum === 38) { // 减音量
@@ -281,17 +309,41 @@ export default {
       }
     },
     ended () {
+      // if (this.canSign) {
+      //   this.visible = true
+      // }
       this.computedNextVid() // 计算下一个要播放的视频
     },
+    // 设置是否连续播放
+    setLianxuPlay (val) {
+      this.isLianxu = val
+      Cookies.set('isLianxu', val)
+    },
+    // 重新观看
+    replayVideo () {
+      this.showReplay = false
+      this.$refs.aliPlayers.replay()
+    },
     ready (instance) {
+      // 30秒socket
       clearInterval(this.socketTimer)
       this.socketTimer = null
+      // 签到
+      this.canSign = false
+      this.visible = false
       // 倍速设置
       let speednum = Cookies.get('speednum') || 1
       instance.setSpeed(speednum)
       // 音量设置
       let voicenum = Cookies.get('voicenum') || 100
       instance.setVolume(voicenum / 100)
+      // 跳转到上次播放时间
+      // instance.seek(this.videoCredentials.watch_time)
+      if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
+        instance.seek(0)
+      } else {
+        instance.seek(this.videoCredentials.watch_time)
+      }
       // 列表位置记忆
       let anchor = document.querySelector('#showBox' + this.playCourseInfo.section_id + '' + this.playCourseInfo.video_id)
       let anchortop = document.querySelector('#showBox' + this.playCourseInfo.section_id + '' + this.playCourseInfo.video_id).offsetTop
@@ -302,6 +354,13 @@ export default {
         this.subrecord() // 观看记录入库
         this.isSignQuery() // 查询当前是否签到
       }
+      // 30秒监听一次socket
+      this.socketTimer = setInterval(() => {
+        // 已购买并且视频播放时间大于0 socket
+        if (instance.getStatus() == 'playing' && this.user_id != '' && this.playCourseInfo.package_id != '' && this.playCourseInfo.course_id != '' && this.playCourseInfo.section_id != '' && this.playCourseInfo.video_id != '') {
+          this.socketIo()
+        }
+      }, 30000)
     },
     // 入库观看视频
     subrecord () {
@@ -312,6 +371,20 @@ export default {
         section_id: this.playCourseInfo.section_id,
         video_id: this.playCourseInfo.video_id
       }).then((data) => {
+      })
+    },
+    // 每30秒一次
+    socketIo () {
+      this.videoCredentials.watch_time = parseInt(this.$refs.aliPlayers.getCurrentTime())
+      var message = {
+        user_id: this.user_id,
+        package_id: this.$route.query.package_id,
+        course_id: this.playCourseInfo.course_id,
+        section_id: this.playCourseInfo.section_id,
+        video_id: this.playCourseInfo.video_id,
+        watch_time: this.videoCredentials.watch_time
+      }
+      eduSocket(message).then(data => {
       })
     },
     // 下一个视频
@@ -566,6 +639,10 @@ export default {
       // 获取视频凭证
       videoCredentials({
         VideoId: this.playCourseInfo.VideoId,
+        user_id: this.user_id,
+        package_id: this.playCourseInfo.package_id,
+        course_id: this.playCourseInfo.course_id,
+        section_id: this.playCourseInfo.section_id,
         video_id: this.playCourseInfo.video_id
       }).then(data => {
         let res = data.data
@@ -641,6 +718,7 @@ export default {
             this.canSign = false
           }
           if (res.data.status === 2) {
+            // this.canSign = true // 因为没有三次签到，倒计时功能了，所以不用downTime（），直接true
             this.downTime()
           }
         } else {
@@ -667,6 +745,8 @@ export default {
           }
           if (res.data.status === 2) {
             this.$Message.error('已签到～')
+            this.canSign = false
+            this.visible = false
           }
         } else if (res.code === 402) {
           this.$Message.error('已签到～')
@@ -684,13 +764,16 @@ export default {
   beforeDestroy () {
     clearInterval(this.timer)
     clearInterval(this.timer2)
+    clearInterval(this.socketTimer)
+    this.timer = null
+    this.timer2 = null
+    this.socketTimer = null
     if (this.$refs.aliPlayers) {
       this.$refs.aliPlayers.dispose()
     }
   },
   beforeRouteLeave (to, from, next) {
     document.onkeydown = undefined
-    clearTimeout(this.screenTimer)
     Cookies.remove('speedTxt')
     Cookies.remove('speednum')
     Cookies.remove('voicenum')

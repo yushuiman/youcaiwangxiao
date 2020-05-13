@@ -36,10 +36,14 @@
             :playauth="videoCredentials.playAuth"
             :videoCredentials="videoCredentials"
             :fixedVideo="fixedVideo"
+            :isLianxu="isLianxu"
+            :showReplay="showReplay"
             :user_id="user_id"
             @ready="ready"
             @ended="ended"
             @switchVideo="switchVideo"
+            @setLianxuPlay="setLianxuPlay"
+            @replayVideo="replayVideo"
             @courseCollection="courseCollection">
           </ali-player>
         </div>
@@ -76,10 +80,14 @@
             :playauth="videoCredentials.playAuth"
             :videoCredentials="videoCredentials"
             :fixedVideo="fixedVideo"
+            :isLianxu="isLianxu"
+            :showReplay="showReplay"
             :user_id="user_id"
             @ready="ready"
             @ended="ended"
             @switchVideo="switchVideo"
+            @setLianxuPlay="setLianxuPlay"
+            @replayVideo="replayVideo"
             @courseCollection="courseCollection">
           </ali-player>
         </div>
@@ -157,46 +165,6 @@ export default {
       fixedVideo: false,
       flagClosed: false,
       wImportant: 445,
-      // speednum: 1, // 倍速默认1正常
-      // speedTxt: Cookies.get('speedTxt') || '正常',
-      // qualityTxt: Cookies.get('qualityTxt') || '高清',
-      // voiceNum: 100, // 音量
-      // speedList: [
-      //   {
-      //     text: '0.5X',
-      //     speednum: 0.5
-      //   },
-      //   {
-      //     text: '正常',
-      //     speednum: 1
-      //   },
-      //   {
-      //     text: '1.25X',
-      //     speednum: 1.25
-      //   },
-      //   {
-      //     text: '1.5X',
-      //     speednum: 1.5
-      //   },
-      //   {
-      //     text: '2X',
-      //     speednum: 2
-      //   }
-      // ],
-      // qualityList: [
-      //   {
-      //     text: '流畅',
-      //     type: 'FD'
-      //   },
-      //   {
-      //     text: '标清',
-      //     type: 'LD'
-      //   },
-      //   {
-      //     text: '高清',
-      //     type: 'SD'
-      //   }
-      // ],
       VideoId: '', // 视频VideoId
       videoCredentials: {
         handouts: '', // 讲义
@@ -222,7 +190,9 @@ export default {
       // tryWatchFlag: false,
       // tryQatchNum: 180, // 试看3分钟
       isPlay: false, // 视频初始化getStatus获取不准确
-      answerTime: 0 // 答疑提问时间
+      answerTime: 0, // 答疑提问时间
+      isLianxu: parseInt(Cookies.get('isLianxu')) || 1, // 是否连续播放
+      showReplay: false // 连续播放按钮
     }
   },
   components: {
@@ -379,13 +349,31 @@ export default {
     },
     ended () {
       this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
+      if (this.isLianxu == 2) {
+        this.showReplay = true
+        return
+      }
       this.computedNextVid() // 计算下一个要播放的视频
       // this.videoCredentials.watch_time = parseInt(this.$refs.aliPlayers.getCurrentTime())
     },
+    // 设置是否连续播放
+    setLianxuPlay (val) {
+      this.isLianxu = val
+      Cookies.set('isLianxu', val)
+    },
+    // 重新观看
+    replayVideo () {
+      this.showReplay = false
+      this.$refs.aliPlayers.replay()
+      this.socketIo()
+    },
     // 播放器
     ready (instance) {
+      // 30秒socket
       clearInterval(this.socketTimer)
       this.socketTimer = null
+      // 重新播放
+      this.showReplay = false
       // 倍速设置
       let speednum = Cookies.get('speednum') || 1
       instance.setSpeed(speednum)
@@ -393,6 +381,7 @@ export default {
       let voicenum = Cookies.get('voicenum') || 100
       instance.setVolume(voicenum / 100)
       // 跳转到上次播放时间
+      // instance.seek(this.videoCredentials.watch_time)
       if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
         instance.seek(0)
       } else {
@@ -844,16 +833,12 @@ export default {
   beforeDestroy () {
     clearInterval(this.socketTimer)
     this.socketTimer = null
-    // clearInterval(this.tryWatchTimer)
     if (this.$refs.aliPlayers) {
       this.$refs.aliPlayers.dispose()
     }
   },
   beforeRouteLeave (to, from, next) {
-    clearInterval(this.socketTimer)
-    this.socketTimer = null
     document.onkeydown = undefined
-    clearTimeout(this.screenTimer)
     Cookies.remove('speedTxt')
     Cookies.remove('speednum')
     Cookies.remove('voicenum')

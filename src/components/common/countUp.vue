@@ -1,5 +1,5 @@
 <template>
-  <div class="answer-time">
+  <div>
     {{answer_times}}
   </div>
 

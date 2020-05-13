@@ -117,7 +117,7 @@ export default {
     this.prohibit()
   },
   mounted () {
-    window.addEventListener('scroll', this.scrollToTop)
+    // window.addEventListener('scroll', this.scrollToTop)
     if (this.isLoadHttpRequest) {
       // 0元体验解析
       if (this.getQuestion.plate_id == 8 && this.diffRes !== 3) {

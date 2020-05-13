@@ -87,11 +87,9 @@ export default {
   mounted () {
     if (this.isLoadHttpRequest) {
       this.getAbiAssess()
-      this.initCharts()
     } else {
       this.$watch('isLoadHttpRequest', function (val, oldVal) {
         this.getAbiAssess()
-        this.initCharts()
       })
     }
   },
@@ -283,7 +281,7 @@ export default {
     padding-top: 38px;
   }
   .yc-record{
-    @include bg-img(275, 203, '../../assets/images/questions/yc-record.png');
+    @include bg-img(275, 203, '../../assets/images/questions/yc-record-pc.png');
     .yc-record-top{
       margin-left: -10px;
       margin-top: 85px;

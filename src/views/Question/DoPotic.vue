@@ -7,8 +7,8 @@
             <Col span="20">
               <span class="menu-title">{{title}}</span>
             </Col>
-            <Col span="4">
-              <!-- 其他板块正计时 -->
+            <Col span="4" class="answer-time">
+              <!-- 组卷模考倒计时 -->
               <count-down v-if="getQuestion.plate_id == 6" ref="reduceCountTime" @countdownend="countdownend" :time="answer_time">
                 <template slot-scope="props">
                   0{{ props.totalHours }}:
@@ -16,7 +16,7 @@
                   {{ props.seconds }}
                 </template>
               </count-down>
-              <!-- 组卷模考倒计时 -->
+              <!-- 其他板块正计时 -->
               <count-up ref="addCountTime" v-else></count-up>
             </Col>
           </Row>
@@ -188,7 +188,7 @@ export default {
         this.getTopicList()
       })
     }
-    window.addEventListener('scroll', this.scrollToTop)
+    // window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
     ...mapActions([
@@ -232,7 +232,9 @@ export default {
       if (this.total == index) {
         return
       }
-      this.goAnchor('#anchor-' + index)
+      if (index > 0) {
+        this.goAnchor('#anchor-' + index)
+      }
     },
     // 拿题
     getTopicList () {

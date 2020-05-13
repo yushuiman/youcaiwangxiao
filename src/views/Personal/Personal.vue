@@ -201,7 +201,7 @@ export default {
       this.omoVisible = true
     },
     omoWriSub () {
-      const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+      // const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
       const regEmail = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/
       if (this.omoName === '') {
         this.$Message.error('请输入姓名～')
@@ -248,7 +248,7 @@ export default {
   beforeRouteLeave (to, from, next) {
     // window.sessionStorage.removeItem('type')
     document.body.removeAttribute('style')
-    this.visible = false
+    window.removeEventListener('scroll', this.scrollToTop)
     next()
   }
 }

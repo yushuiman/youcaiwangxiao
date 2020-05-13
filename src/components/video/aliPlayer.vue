@@ -2,6 +2,7 @@
   <div class='prism-player' :class="{'prism-player-hide1': fixedVideo, 'prism-player-hide2': answerVideo}" :id='playerId'>
     <!-- 自定义设置 因为阿里倍速无法记忆，并且清晰度切换造成倍速无法记忆 -->
     <!-- 答疑来源小窗口answerVideo，课程、后续教育、学习计划小窗口fixedVideo -->
+    <!-- diffLogic后续教育2 普通课程1 -->
     <div class="video-setting" :class="{'hide': fixedVideo || answerVideo}">
       <div class="setting-info">
         <div class="v-switch-item">
@@ -39,9 +40,16 @@
               </div>
             </div>
           </li>
+          <!-- <li class="v-set-item v-set-lianxu" v-if="diffLogic == 2">
+            <span @click="setLianxuPlay" :class="{'is-lianxu': isLianxu == 1}"><Icon type="ios-checkmark" style="color:#F99111;font-weight: bold;margin-top: -3px;" v-if="isLianxu == 1" /></span>连续播放
+          </li> -->
         </ul>
       </div>
     </div>
+    <!-- 重播 -->
+    <!-- <div class="set-replay" v-if="diffLogic == 2 && isLianxu == 2 && showReplay">
+      <div @click="replayVideo"><a><Icon type="ios-refresh" style="font-size: 22px;margin-top: -3px;"/>重新观看</a></div>
+    </div> -->
     <!-- 后续教育签到 -->
     <div class="sign-box" v-if="canSign && visible">
       <div class="opa"></div>
@@ -78,6 +86,14 @@ export default {
     },
     videoCredentials: {
       type: Object
+    },
+    isLianxu: {
+      type: Number,
+      default: 1
+    },
+    showReplay: {
+      type: Boolean,
+      default: false
     },
     // 后续教育
     jianTime: {
@@ -323,13 +339,17 @@ export default {
       instance: null,
       speedTxt: Cookies.get('speedTxt') || '正常',
       qualityTxt: Cookies.get('qualityTxt') || '流畅',
-      voiceNum: parseInt(Cookies.get('voicenum')) || 100, // 音量
-      voiceNum1: parseInt(Cookies.get('voicenum1')) || 100, // 音量
+      voiceNum: Cookies.get('voicenum') || 100, // 音量
+      voiceNum1: Cookies.get('voicenum1') || 100, // 音量
       speedList: [
         {
           text: '0.5X',
           speednum: 0.5
         },
+        // {
+        //   text: '0.8X',
+        //   speednum: 0.8
+        // },
         {
           text: '正常',
           speednum: 1
@@ -362,6 +382,8 @@ export default {
         }
       ],
       isMute: 2 // 1静音2正常
+      // isLianxu: Cookies.get('isLianxu') || true, // 是否连续播放
+      // showReplay: false // 连续播放按钮
     }
   },
   mounted () {
@@ -587,11 +609,11 @@ export default {
     },
     // 设置声音
     keySetVoice () {
-      this.voiceNum = parseInt(Cookies.get('voicenum'))
+      this.voiceNum = Cookies.get('voicenum')
     },
     setVoice () {
-      this.voiceNum = parseInt(Cookies.get('voicenum'))
-      this.voiceNum1 = parseInt(Cookies.get('voicenum1'))
+      this.voiceNum = Cookies.get('voicenum')
+      this.voiceNum1 = Cookies.get('voicenum1')
       // 1静音2正常
       if (this.isMute == 1) {
         this.isMute = 2
@@ -640,19 +662,35 @@ export default {
       this.instance.setSpeed(speednum)
       // document.querySelector('.check-set').style.display = 'none'
     },
+    // 收藏
     courseCollection () {
       this.$emit('courseCollection')
+    },
+    // 是否连续播放
+    // checkLianxuChange (val) {
+    //   this.$emit('setLianxuPlay', false)
+    // },
+    setLianxuPlay () {
+      if (Cookies.get('isLianxu') == 1) {
+        this.$emit('setLianxuPlay', 2)
+      } else {
+        this.$emit('setLianxuPlay', 1)
+      }
+    },
+    // 重新观看
+    replayVideo () {
+      this.$emit('replayVideo')
     },
     switchVideo (type) {
       this.$emit('switchVideo', type)
     },
+    // 签到
     signVisible (val) {
       if (!val) {
         this.$emit('update:visible', false)
         this.$emit('update:canSign', false)
       }
     },
-    // 签到
     signSub () {
       this.$emit('signSub', false)
     }
@@ -805,6 +843,8 @@ export default {
   /* 签到 */
   .sign-box .opa{
     position: fixed;
+    /* z-index: 1001;
+    position: absolute; */
     left: 0;
     top: 0;
     width: 100%;
@@ -813,6 +853,8 @@ export default {
   }
   .sign-cont{
     position: fixed;
+    /* z-index: 1002;
+    position: absolute; */
     width: 240px;
     left: 50%;
     top: 50%;

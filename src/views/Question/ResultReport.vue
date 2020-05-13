@@ -9,11 +9,16 @@
         <div class="result-right">
           <h2 class="r-section-title">{{resultsInfo.paper_name}}</h2>
           <div class="r-statistics">
-            <div class="result-water">
+            <!-- <div class="result-water">
               <wave :accuracy="resultsInfo.accuracy" v-if="resultsInfo.accuracy >= 0"></wave>
+              <div>{{resultsInfo.accuracy}}</div>
               <p>正确率(%)</p>
-            </div>
+            </div> -->
             <ul class="right-wrong-list">
+              <li class="rw-item">
+                <p><em>{{resultsInfo.accuracy}}</em>%</p>
+                <span>正确率</span>
+              </li>
               <li class="rw-item">
                 <p><em>{{resultsInfo.true_num}}</em>道</p>
                 <span>做对</span>
@@ -56,7 +61,7 @@
 <script>
 import { resultsStati } from '@/api/questions'
 import { errorStati } from '@/api/personal'
-import wave from '../../components/common/wave'
+// import wave from '../../components/common/wave'
 import { mapState, mapActions } from 'vuex'
 export default {
   data () {
@@ -73,7 +78,7 @@ export default {
     })
   },
   components: {
-    wave
+    // wave
   },
   mounted () {
     if (this.isLoadHttpRequest) {
@@ -252,12 +257,12 @@ export default {
         font-size: 34px;
       }
     }
-    &:nth-child(1){
+    &:nth-child(2){
       p{
         color: #0AAB55;
       }
     }
-    &:nth-child(2){
+    &:nth-child(3){
       p{
         color: #E84342;
       }

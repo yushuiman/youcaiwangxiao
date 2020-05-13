@@ -106,6 +106,13 @@ export const record = (data) => { // 入库观看记录
     method: 'post'
   })
 }
+export const eduSocket = (data) => { // socket观看记录
+  return axios.request({
+    url: '/web/Education/eduSocket',
+    data,
+    method: 'post'
+  })
+}
 export const watchRecords = (data) => { // 观看记录
   return axios.request({
     url: '/web/Education/watchRecords',

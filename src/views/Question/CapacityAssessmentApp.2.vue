@@ -1,26 +1,26 @@
 <template>
-  <div class="capacity-assessment-wrap">
+  <div class="capacity-assessment-wrap w-wrap">
     <div class="cass-row cass-row-top">
       <div class="cass-title">预测分<span>根据您最近十次答题情况评估</span></div>
-      <div class="cass-row-mtb">
-        <div class="yc-record-rb">
-          <!-- <div class="yc-record">
-            <p class="yc-record-top"><em>{{ycfen}}</em>分</p>
-            <p class="yc-record-bt">总分100</p>
-          </div> -->
+      <Row class="cass-row-mtb">
+        <Col span="24" class="yc-record-rb">
           <div class="yc-record">
              <div class="canvasArea">
-              <canvas width="400" height="400" id="mask" style="z-index:9"></canvas>
-              <canvas width="400" height="400" id="circle" style="z-index:10"></canvas>
+              <canvas width="200" height="200" id="mask" style="z-index:9"></canvas>
+              <canvas width="200" height="200" id="circle" style="z-index:10"></canvas>
             </div>
             <div class="yc-num">
               <p class="yc-record-top"><em>{{ycfen}}</em>分</p>
               <p class="yc-record-bt">总分100</p>
             </div>
           </div>
-        </div>
-        <div ref="myEchart" id="myChart" style="width: 100%;height: 220px;"></div>
-      </div>
+        </Col>
+      </Row>
+      <Row class="cass-row-mtb">
+        <Col span="24">
+          <div ref="myEchart" style="width: 400px;height: 240px;margin:0 auto;"></div>
+        </Col>
+      </Row>
     </div>
     <div class="cass-row cass-row-bottom">
       <div class="cass-title">本月统计</div>
@@ -35,7 +35,7 @@
         <Col span="8">
           <div class="answer-status-item answer-status-item02">
             <i class="asi-icon"></i>
-            <p><em>{{monStatistics.used_time || 0}}</em>分钟</p>
+            <p><em>{{(monStatistics.used_time) || 0}}</em>分钟</p>
             <span>答题时长</span>
           </div>
         </Col>
@@ -54,6 +54,8 @@
 <script>
 import { getQueryString } from '../../libs/utils'
 import { abiAssess } from '@/api/questions'
+import { mapState } from 'vuex'
+
 let echarts = require('echarts/lib/echarts')
 // 引入饼状图组件
 require('echarts/lib/chart/radar')
@@ -71,22 +73,23 @@ export default {
       circleid: '#circle',
       x: 100,
       y: 100,
-      radius: 60,
+      radius: 80,
       perV: 0,
       load: 0,
       maskctx: null,
-      circlectx: null
+      circlectx: null,
+      user_id: this.$route.query.user_id || getQueryString('user_id'),
+      course_id: this.$route.query.course_id || getQueryString('course_id')
     }
   },
+  computed: {
+    ...mapState({
+      token: state => state.user.token,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
+    })
+  },
   mounted () {
-    let user = this.$route.query.user_id || getQueryString('user_id')
-    let course = this.$route.query.course_id || getQueryString('course_id')
-    this.user_id = user
-    this.course_id = course
     this.getAbiAssess()
-    window.onresize = () => {
-      echarts.init(this.$refs.myEchart).resize()
-    }
   },
   methods: {
     init () {
@@ -137,7 +140,7 @@ export default {
           extraCssText: 'width:180px'
         },
         textStyle: {
-          fontSize: '1.2rem',
+          fontSize: 16,
           color: '#999999' // 主标题文字颜色
         },
         radar: [
@@ -161,6 +164,7 @@ export default {
               areaStyle: {// 每个分割区域的颜色
                 color: ['#C4D8FB', '#D6E4FE', '#E9F1FE']
               }
+
             },
             radius: 80,
             splitNumber: 3,
@@ -226,14 +230,16 @@ export default {
       })
     },
     getAbiAssess () {
+      this.showLoading(true)
       abiAssess({
         user_id: this.user_id,
         course_id: this.$route.query.course_id
       }).then(data => {
+        this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.ycfen = res.data.ycfen
-          this.perV = 80
+          this.perV = res.data.ycfen
           this.nlpgInfo = res.data.data
           this.monStatistics = res.data.monStatistics
           this.init()
@@ -245,65 +251,46 @@ export default {
     }
   }
 }
-document.addEventListener('DOMContentLoaded', () => {
-  // 获取到页面的宽度，按照10等分平分
-  let fontSize = window.innerWidth / 10
-  // 给fontsize设置最大的字体大小
-  fontSize = fontSize > 50 ? 50 : fontSize
-  // 找到根节点
-  const html = document.querySelector('html')
-  // 给html添加字体样式
-  html.style.fontSize = fontSize + 'px'
-})
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  $ratio:375/10;
-  @function px2rem($px){
-    @return $px/$ratio+rem;
-  }
   .cass-row{
-    padding: px2rem(20);
-    margin-bottom: px2rem(20);
+    padding: 20px;
+    margin-top: 20px;
+    background: #ffffff;
+    border-radius: 8px;
     text-align: center;
     .cass-title{
-      font-size: px2rem(46);
+      font-size: 28px;
       font-weight: 500;
-      text-align: left;
+      text-align-last: left;
       span{
-        font-size: px2rem(36);
+        font-size: 18px;
         color: $col999;
-        margin-left: px2rem(24);
+        margin-left: 14px;
       }
     }
   }
   .cass-row-mtb{
-    padding-top: px2rem(50);
+    padding-top: 40px;
   }
   .cass-row-pt{
-    padding-top: px2rem(38);
+    padding-top: 38px;
   }
   .yc-record{
-    // 395 365
-    // 274+274 225+225
-    // 275 225
-    width: px2rem(540);
-    height: px2rem(450);
-    background: url('../../assets/images/questions/yc-record-pc2.png') no-repeat;
-    background-size: contain;
-    margin: 0 auto;
-    position: relative;
+    @include bg-img(275, 203, '../../assets/images/questions/yc-record-pc.png');
     .yc-record-top{
-      padding-top: px2rem(180);
+      margin-left: -10px;
+      margin-top: 85px;
       em{
-        font-size: px2rem(108);
+        font-size: 54px;
       }
     }
     .yc-record-bt{
-      margin-top: px2rem(24);
-      margin-left: px2rem(-16);
-      font-size: px2rem(32);
+      margin-left: -10px;
+      margin-top: 22px;
+      font-size: 16px;
       color: $col999;
     }
   }
@@ -315,15 +302,26 @@ document.addEventListener('DOMContentLoaded', () => {
     top: 0;
   }
   .answer-status-item,.yc-record-rb{
+    position: relative;
+    &:after{
+      position: absolute;
+      content: "";
+      right: 0;
+      top: 50%;
+      margin-top: -35px;
+      width: 2px;
+      height: 70px;
+      background: #DCDCDC;
+    }
     p{
-      margin-top: px2rem(10);
-      margin-bottom: px2rem(8);
+      margin-top: 10px;
+      margin-bottom: 8px;
       em{
-        font-size: px2rem(52);
+        font-size: 26px;
       }
     }
     span{
-      font-size: px2rem(32);
+      font-size: 16px;
       color: $col999;
     }
   }
@@ -332,13 +330,21 @@ document.addEventListener('DOMContentLoaded', () => {
       width: 0;
     }
   }
+  .yc-record-rb{
+    &:after{
+      height: 112px;
+      margin-bottom: -56px;
+    }
+  }
   .asi-icon{
-    width: px2rem(52);
-    height: px2rem(55);
+    // 52 55
+    // 26 22.5
+    width: 26px;
+    height: 22.5px;
     display: inline-block;
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: center bottom;
+    background-position: center;
     .answer-status-item01 &{
       background-image: url('../../assets/images/questions/statistics-icon01.png');
     }
@@ -349,26 +355,16 @@ document.addEventListener('DOMContentLoaded', () => {
       background-image: url('../../assets/images/questions/statistics-icon03.png');
     }
   }
-  #myChart{
-    margin: 0 auto;
-    @include px2rem(margin-top, 100);
-  }
   .canvasArea {
-    position: absolute;
-    left: 0;
-    top: 0;
-    @include px2rem(width, 820);
-    @include px2rem(height, 800);
-    // @include px2rem(margin-left, 208);
-    // @include px2rem(margin-top, 180);
-    @include px2rem(margin-left, 110);
-    @include px2rem(margin-top, 90);
-    background: rgba(0,0,0, .5);
+    height: 200px;
+    width: 200px;
+    position: relative;
+    margin-left: 31px;
+    margin-top: 25px;
     canvas {
       position: absolute;
       width: 100%;
       height: 100%;
-      // @include px2rem(top, 180);
       top: 0;
       left: 0;
     }

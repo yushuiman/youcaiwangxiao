@@ -7,8 +7,8 @@
             <Col span="20">
               <span class="menu-title">{{title}}</span>
             </Col>
-            <Col span="4">
-              <!-- 其他板块正计时 -->
+            <Col span="4" class="answer-time">
+              <!-- 组卷模考倒计时 -->
               <count-down v-if="getQuestion.plate_id == 6" ref="reduceCountTime" @countdownend="countdownend" :time="answer_time">
                 <template slot-scope="props" >
                     0{{ props.totalHours }}:
@@ -16,7 +16,7 @@
                     {{ props.seconds }}
                   </template>
               </count-down>
-              <!-- 组卷模考倒计时 -->
+              <!-- 其他板块正计时 -->
               <count-up ref="addCountTime" v-else></count-up>
             </Col>
           </Row>
@@ -184,7 +184,7 @@ export default {
         this.getTopicList()
       })
     }
-    window.addEventListener('scroll', this.scrollToTop)
+    // window.addEventListener('scroll', this.scrollToTop)
   },
   methods: {
     prohibit () { // 禁用鼠标右击、F12
@@ -225,7 +225,9 @@ export default {
       if (this.total == index) {
         return
       }
-      this.goAnchor('#anchor-' + index)
+      if (index > 0) {
+        this.goAnchor('#anchor-' + index)
+      }
     },
     // 拿题
     getTopicList () {
@@ -244,7 +246,7 @@ export default {
           this.answer_time = parseInt(res.data.answer_time) * 1000
           window.sessionStorage.setItem('answer_times', parseInt(res.data.answer_time))
           this.topics.map((val, index) => {
-            val.analysis = false // 解析默认false，只有做错题的时候true(练习模式)
+            val.showAnalysis = false // 解析默认false，只有做错题的时候true(练习模式)
             val.flag = false // 解析展开收起交互(练习模式)
             val.currenOption = false // 点击当前题，不能重复选择(练习模式)
             val.userOption = val.discuss_useranswer
@@ -271,7 +273,7 @@ export default {
                   } else {
                     v.errorRed = true // 答错当前选项红色
                     val.currenErrorRed = true // 答错：右边选项卡对应添加红色未掌握状态
-                    val.analysis = true // 答错，解析展示
+                    val.showAnalysis = true // 答错，解析展示
                     this.$forceUpdate()
                   }
                 }
