@@ -47,7 +47,7 @@
       </div>
     </div>
     <!-- 重播 -->
-    <div class="set-replay" v-if="diffLogic == 2 && isLianxu == 2 && showReplay">
+    <div class="set-replay" v-if="isLianxu == 2 && showReplay">
       <div @click="replayVideo"><a><Icon type="ios-refresh" style="font-size: 22px;margin-top: -3px;"/>重新观看</a></div>
     </div>
     <!-- 后续教育签到 -->

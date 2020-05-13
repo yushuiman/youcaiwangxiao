@@ -155,7 +155,7 @@ export default {
       jianTime: 30,
       socketTimer: null,
       isPlay: false, // 视频初始化getStatus获取不准确
-      isLianxu: parseInt(Cookies.get('isLianxu')) || 1, // 是否连续播放
+      isLianxu: 2, // 是否连续播放
       showReplay: false // 连续播放按钮
     }
   },
@@ -166,12 +166,19 @@ export default {
   },
   computed: {
     ...mapState({
-      user_id: state => state.user.user_id
+      user_id: state => state.user.user_id,
+      isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
   mounted () {
     // this.getCourseCatalog() // 课程大纲（目录）
-    this.initSecvCatalog()
+    if (this.isLoadHttpRequest) {
+      this.initSecvCatalog()
+    } else {
+      this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.initSecvCatalog()
+      })
+    }
     this.dragControllerDiv()
     this.$nextTick(() => {
       var _this = this
@@ -309,8 +316,12 @@ export default {
       }
     },
     ended () {
+      this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
       if (this.canSign) {
         this.visible = true
+      }
+      if (!this.canSign) {
+        this.showReplay = true
       }
       // this.computedNextVid() // 计算下一个要播放的视频
     },
@@ -323,14 +334,16 @@ export default {
     replayVideo () {
       this.showReplay = false
       this.$refs.aliPlayers.replay()
+      this.socketIo()
     },
     ready (instance) {
       // 30秒socket
       clearInterval(this.socketTimer)
       this.socketTimer = null
-      // 签到
+      // 签到 重新观看
       this.canSign = false
       this.visible = false
+      this.showReplay = false
       // 倍速设置
       let speednum = Cookies.get('speednum') || 1
       instance.setSpeed(speednum)
@@ -338,12 +351,14 @@ export default {
       let voicenum = Cookies.get('voicenum') || 100
       instance.setVolume(voicenum / 100)
       // 跳转到上次播放时间
-      // instance.seek(this.videoCredentials.watch_time)
-      if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
-        instance.seek(0)
-      } else {
-        instance.seek(this.videoCredentials.watch_time)
-      }
+      instance.seek(this.videoCredentials.watch_time)
+      // if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
+      //   instance.seek(0)
+      //   // instance.seek(1010)
+      // } else {
+      //   instance.seek(this.videoCredentials.watch_time)
+      //   // instance.seek(1010)
+      // }
       // 列表位置记忆
       let anchor = document.querySelector('#showBox' + this.playCourseInfo.section_id + '' + this.playCourseInfo.video_id)
       let anchortop = document.querySelector('#showBox' + this.playCourseInfo.section_id + '' + this.playCourseInfo.video_id).offsetTop
@@ -694,6 +709,7 @@ export default {
     downTime2 () {
       this.canSign = true
       this.visible = true
+      this.showReplay = true
       this.jianTime = 30
       this.timer2 = setInterval(() => {
         this.jianTime--
@@ -713,11 +729,11 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
-          if (res.data.status === 1) {
+          if (res.data.status === 1) { // 已签到
             this.visible = false
             this.canSign = false
           }
-          if (res.data.status === 2) {
+          if (res.data.status === 2) { // 未签到
             this.canSign = true // 因为没有三次签到，倒计时功能了，所以不用downTime（），直接true
             // this.downTime()
           }
@@ -738,23 +754,26 @@ export default {
           if (res.data.status === 1) {
             this.$Message.success('签到成功～')
             this.initSecvCatalog()
-            clearInterval(this.timer)
-            clearInterval(this.timer2)
-            this.canSign = false
-            this.visible = false
+            // clearInterval(this.timer)
+            // clearInterval(this.timer2)
+            this.canSign = false // 签到弹窗
+            this.visible = false // 签到弹窗
+            this.showReplay = true // 视频播放结束签到成功，重新观看显示
           }
           if (res.data.status === 2) {
             this.$Message.error('已签到～')
-            this.canSign = false
-            this.visible = false
+            this.canSign = false // 签到弹窗
+            this.visible = false // 签到弹窗
+            this.showReplay = true // 视频播放结束签到成功，重新观看显示
           }
         } else if (res.code === 402) {
           this.$Message.error('已签到～')
           this.initSecvCatalog()
-          clearInterval(this.timer)
-          clearInterval(this.timer2)
-          this.canSign = false
-          this.visible = false
+          // clearInterval(this.timer)
+          // clearInterval(this.timer2)
+          this.canSign = false // 签到弹窗
+          this.visible = false // 签到弹窗
+          this.showReplay = true // 视频播放结束签到成功，重新观看显示
         } else {
           this.$Message.error(res.msg)
         }
