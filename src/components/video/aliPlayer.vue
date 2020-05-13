@@ -346,10 +346,10 @@ export default {
           text: '0.5X',
           speednum: 0.5
         },
-        // {
-        //   text: '0.8X',
-        //   speednum: 0.8
-        // },
+        {
+          text: '0.8X',
+          speednum: 0.8
+        },
         {
           text: '正常',
           speednum: 1
