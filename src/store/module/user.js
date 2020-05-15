@@ -85,6 +85,8 @@ export default {
     // 获取用户相关信息
     getUserInfo ({ commit }) {
       return new Promise((resolve, reject) => {
+        console.log('localStorage:' + window.localStorage.getItem('YCWXTOKEN'))
+        console.log('vuex:' + this.state.user.token)
         getUserInfo().then(res => {
           const data = res.data
           if (data.code === 200) {
