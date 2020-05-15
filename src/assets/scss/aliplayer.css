@@ -197,16 +197,39 @@
   display: table;
 }
 
-.set-replay div {
+.wish-repaly {
   display: table-cell;
   vertical-align: middle;
-  cursor: pointer;
+  text-align: center;
 }
 
-.set-replay div a {
+.wish-repaly a {
   color: #999999;
+  margin-top: 20px;
+  display: block;
 }
 
-.set-replay div a:hover {
+.wish-repaly a:hover {
   color: #F99111;
+}
+
+.cpe-integral-img {
+  width: 340px;
+  position: relative;
+  margin: 0 auto;
+}
+
+.cpe-integral-img img {
+  width: 340px;
+}
+
+.cpe-integral-img i {
+  position: absolute;
+  color: #0071c1;
+  font-size: 24px;
+  top: 142px;
+  right: 132px;
+  font-weight: bold;
+  width: 45px;
+  text-align: center;
 }

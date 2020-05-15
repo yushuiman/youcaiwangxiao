@@ -38,6 +38,7 @@
             :jianTime="jianTime"
             :isLianxu="isLianxu"
             :showReplay="showReplay"
+            :cpe_integral="cpe_integral"
             :user_id="user_id"
             @ready="ready"
             @ended="ended"
@@ -85,6 +86,7 @@
             :jianTime="jianTime"
             :isLianxu="isLianxu"
             :showReplay="showReplay"
+            :cpe_integral="cpe_integral"
             :user_id="user_id"
             @ready="ready"
             @ended="ended"
@@ -156,7 +158,8 @@ export default {
       socketTimer: null,
       isPlay: false, // 视频初始化getStatus获取不准确
       isLianxu: 2, // 是否连续播放
-      showReplay: false // 连续播放按钮
+      showReplay: false, // 连续播放按钮
+      cpe_integral: 0 // 签到积分
     }
   },
   components: {
@@ -319,6 +322,7 @@ export default {
       this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
       if (this.canSign) {
         this.visible = true
+        // this.gxShow = true
       }
       if (!this.canSign) {
         this.showReplay = true
@@ -333,6 +337,7 @@ export default {
     // 重新观看
     replayVideo () {
       this.showReplay = false
+      this.visible = false
       this.$refs.aliPlayers.replay()
       this.socketIo()
     },
@@ -744,6 +749,8 @@ export default {
     },
     // 签到
     signSub () {
+      // this.showReplay = true
+      // this.canSign = false
       sign({
         user_id: this.user_id,
         course_id: this.playCourseInfo.course_id,
@@ -751,13 +758,14 @@ export default {
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
+          this.cpe_integral = res.data.cpe_integral
           if (res.data.status === 1) {
             this.$Message.success('签到成功～')
             this.initSecvCatalog()
             // clearInterval(this.timer)
             // clearInterval(this.timer2)
             this.canSign = false // 签到弹窗
-            this.visible = false // 签到弹窗
+            // this.visible = true // 签到弹窗 为true控制恭喜
             this.showReplay = true // 视频播放结束签到成功，重新观看显示
           }
           if (res.data.status === 2) {

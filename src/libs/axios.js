@@ -19,7 +19,7 @@ class HttpRequest {
       baseURL: this.baseUrl,
       timeout: 10000,
       headers: {
-        'token': store.state.user.token
+        'token': window.localStorage.getItem('YCWXTOKEN') || ''
         // 'token': getToken()
       }
     }

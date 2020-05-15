@@ -48,7 +48,15 @@
     </div>
     <!-- 重播 -->
     <div class="set-replay" v-if="isLianxu == 2 && showReplay">
-      <div @click="replayVideo"><a><Icon type="ios-refresh" style="font-size: 22px;margin-top: -3px;"/>重新观看</a></div>
+      <div class="wish-repaly" >
+        <div class="cpe-integral-img" v-if="visible">
+          <img v-if="gxNum == 1" src="../../assets/images/education/gx_10.png" alt="">
+          <img v-if="gxNum == 2" src="../../assets/images/education/gx_20.png" alt="">
+          <img v-if="gxNum == 3" src="../../assets/images/education/gx_30.png" alt="">
+          <i>{{cpe_integral}}</i>
+        </div>
+        <a @click="replayVideo"><Icon type="ios-refresh" style="font-size: 22px;margin-top: -3px;"/>重新观看</a>
+      </div>
     </div>
     <!-- 后续教育签到 -->
     <div class="sign-box" v-if="canSign && visible">
@@ -60,7 +68,7 @@
       </div>
     </div>
     <!-- 后续教育禁止拖拽进度条 -->
-    <div class="progress-bar" v-if="diffLogic == 1"></div>
+    <!-- <div class="progress-bar" v-if="diffLogic == 1"></div> -->
     <!-- 视频水印 -->
     <div class="shuiyin-wrap">
       <div class="shuiyin">优财网校{{user_id}}</div>
@@ -94,6 +102,9 @@ export default {
     showReplay: {
       type: Boolean,
       default: false
+    },
+    cpe_integral: {
+      type: Number
     },
     // 后续教育
     jianTime: {
@@ -333,6 +344,7 @@ export default {
   // inject: ['reload'],
   data () {
     return {
+      gxNum: Math.floor(Math.random() * 3) + 1,
       playerId: 'aliplayer_' + Math.floor(Math.random() * 100000000000000000),
       scriptTagStatus: 0,
       isReload: false,
@@ -397,6 +409,7 @@ export default {
     }
   },
   created () {
+    console.log('子:' + this.gxNum)
     if (window.Aliplayer !== undefined) {
       // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
       this.scriptTagStatus = 2

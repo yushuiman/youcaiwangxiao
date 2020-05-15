@@ -188,16 +188,44 @@
     text-align:center;
     background: #000;
     display: table;
-    div{
-        display: table-cell;
-        vertical-align: middle;
-        cursor: pointer;
-        a{
-            color: #999999;
+}
+.wish-repaly {
+    display: table-cell;
+    vertical-align: middle;
+    // position: absolute;
+    // left: 50%;
+    // top: 40%;
+    // transform: translate(-50%, -50%);
+    // display: flex;
+    // align-items: center;
+    text-align: center;
+    // justify-content: center;
 
-            &:hover {
-                color: #F99111;
-            }
+    a {
+        color: #999999;
+        margin-top: 20px;
+        display: block;
+
+        &:hover {
+            color: #F99111;
         }
+    }
+}
+.cpe-integral-img{
+    width: 340px;
+    position: relative;
+    margin: 0 auto;
+    img{
+        width: 340px;
+    }
+    i{
+        position: absolute;
+        color: #0071c1;
+        font-size: 24px;
+        top: 142px;
+        right: 132px;
+        font-weight: bold;
+        width: 45px;
+        text-align: center;
     }
 }
