@@ -10,8 +10,8 @@
           </div> -->
           <div class="yc-record">
              <div class="canvasArea">
-              <canvas width="200" height="200" id="mask" style="z-index:9"></canvas>
-              <canvas width="200" height="200" id="circle" style="z-index:10"></canvas>
+              <canvas width="400" height="400" id="mask" style="z-index:9"></canvas>
+              <canvas width="400" height="400" id="circle" style="z-index:10"></canvas>
             </div>
             <div class="yc-num">
               <p class="yc-record-top"><em>{{ycfen}}</em>分</p>
@@ -233,7 +233,7 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.ycfen = res.data.ycfen
-          this.perV = res.data.ycfen
+          this.perV = 80
           this.nlpgInfo = res.data.data
           this.monStatistics = res.data.monStatistics
           this.init()
@@ -279,50 +279,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   .cass-row-mtb{
-    padding-top: px2rem(40);
+    padding-top: px2rem(50);
   }
   .cass-row-pt{
     padding-top: px2rem(38);
   }
-  // .yc-record{
-  //   @include bg-img(275, 203, '../../assets/images/questions/yc-record-pc.png');
-  //   .yc-record-top{
-  //     margin-left: -10px;
-  //     margin-top: 85px;
-  //     em{
-  //       font-size: 54px;
-  //     }
-  //   }
-  //   .yc-record-bt{
-  //     margin-left: -10px;
-  //     margin-top: 22px;
-  //     font-size: 16px;
-  //     color: $col999;
-  //   }
-  // }
-  // 203 200
-  // 225 221
   .yc-record{
+    // 395 365
+    // 274+274 225+225
     // 275 225
-
-    // 275 203
-    // 200 200
-    width: px2rem(500);
+    width: px2rem(540);
     height: px2rem(450);
-    background: url('../../assets/images/questions/yc-record.png') no-repeat;
+    background: url('../../assets/images/questions/yc-record-pc2.png') no-repeat;
     background-size: contain;
     margin: 0 auto;
     position: relative;
     .yc-record-top{
-      margin-left: px2rem(-20);
-      margin-top: px2rem(170);
+      padding-top: px2rem(180);
       em{
         font-size: px2rem(108);
       }
     }
     .yc-record-bt{
-      margin-left: px2rem(-20);
-      margin-top: px2rem(44);
+      margin-top: px2rem(24);
+      margin-left: px2rem(-16);
       font-size: px2rem(32);
       color: $col999;
     }
@@ -371,38 +351,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   #myChart{
     margin: 0 auto;
-    // @include px2rem(margin-top, 100);
-    margin-top: px2rem(100);
+    @include px2rem(margin-top, 100);
   }
-  // .canvasArea {
-  //   height: 200px;
-  //   width: 200px;
-  //   position: relative;
-  //   margin-left: 31px;
-  //   margin-top: 25px;
-  //   canvas {
-  //     position: absolute;
-  //     width: 100%;
-  //     height: 100%;
-  //     top: 0;
-  //     left: 0;
-  //   }
-  // }
   .canvasArea {
-    position: relative;
-    width: px2rem(400);
-    height: px2rem(400);
-    margin-left: px2rem(30);
-    margin-top: px2rem(25);
-    // @include px2rem(width, 920);
-    // @include px2rem(height, 920);
-    // @include px2rem(margin-left, 16);
+    position: absolute;
+    left: 0;
+    top: 0;
+    @include px2rem(width, 820);
+    @include px2rem(height, 800);
+    // @include px2rem(margin-left, 208);
+    // @include px2rem(margin-top, 180);
+    @include px2rem(margin-left, 110);
+    @include px2rem(margin-top, 90);
+    background: rgba(0,0,0, .5);
     canvas {
       position: absolute;
       width: 100%;
       height: 100%;
+      // @include px2rem(top, 180);
       top: 0;
-      // @include px2rem(top, -14);
       left: 0;
     }
   }
