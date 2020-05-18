@@ -79,10 +79,11 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.courseList = res.data
-          window.sessionStorage.setItem('course_id', this.course_id || this.courseList[0].course_id)
           if (this.courseList.length === 0) {
             this.noDataFlag = true
+            return
           }
+          window.sessionStorage.setItem('course_id', window.sessionStorage.getItem('course_id') || this.courseList[0].course_id || '')
         } else {
           this.$Message.error(res.msg)
         }

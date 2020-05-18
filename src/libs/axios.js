@@ -51,7 +51,7 @@ class HttpRequest {
       if (res.data.code === 401) {
         res.data.msg = '用户信息已过期，请登录~'
       }
-      if (res.data.code === 401 || res.data.code === 403 || res.data.code === 406) {
+      if (res.data.code === 401 || res.data.code === 403) {
         window.localStorage.removeItem('YCWXTOKEN')
         store.commit('setToken', '')
         store.commit('setAvator', '')
