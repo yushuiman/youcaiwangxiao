@@ -98,7 +98,7 @@
                 </Submenu>
               </Menu>
             </div>
-            <div class="answer-box" v-if="tabIdx == 1">
+            <div class="my-answer-box" v-if="tabIdx == 1">
               <answer-info :user_id="user_id" :answerType="answerType"></answer-info>
             </div>
           </div>
