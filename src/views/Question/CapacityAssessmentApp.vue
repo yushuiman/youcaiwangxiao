@@ -4,10 +4,6 @@
       <div class="cass-title">预测分<span>根据您最近十次答题情况评估</span></div>
       <div class="cass-row-mtb">
         <div class="yc-record-rb">
-          <!-- <div class="yc-record">
-            <p class="yc-record-top"><em>{{ycfen}}</em>分</p>
-            <p class="yc-record-bt">总分100</p>
-          </div> -->
           <div class="yc-record">
              <div class="canvasArea">
               <canvas width="200" height="200" id="mask" style="z-index:9"></canvas>
@@ -71,7 +67,7 @@ export default {
       circleid: '#circle',
       x: 100,
       y: 100,
-      radius: 60,
+      radius: 78,
       perV: 0,
       load: 0,
       maskctx: null,
@@ -84,6 +80,7 @@ export default {
     this.user_id = user
     this.course_id = course
     this.getAbiAssess()
+    this.initCharts()
     window.onresize = () => {
       echarts.init(this.$refs.myEchart).resize()
     }
@@ -303,6 +300,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // 203 200
   // 225 221
   .yc-record{
+<<<<<<< HEAD
+=======
+    // 275 203
+>>>>>>> youhua_luanqibazao_20200514
     // 275 225
 
     // 275 203
@@ -371,7 +372,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   #myChart{
     margin: 0 auto;
+<<<<<<< HEAD
     // @include px2rem(margin-top, 100);
+=======
+>>>>>>> youhua_luanqibazao_20200514
     margin-top: px2rem(100);
   }
   // .canvasArea {
@@ -389,6 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
   //   }
   // }
   .canvasArea {
+<<<<<<< HEAD
     position: relative;
     width: px2rem(400);
     height: px2rem(400);
@@ -397,6 +402,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // @include px2rem(width, 920);
     // @include px2rem(height, 920);
     // @include px2rem(margin-left, 16);
+=======
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: px2rem(400);
+    height: px2rem(400);
+    @include px2rem(margin-left, 120);
+    @include px2rem(margin-top, 90);
+    // background: rgba(0,0,0, .5);
+>>>>>>> youhua_luanqibazao_20200514
     canvas {
       position: absolute;
       width: 100%;
