@@ -70,7 +70,7 @@ export default {
       circleid: '#circle',
       x: 100,
       y: 100,
-      radius: 80,
+      radius: 78,
       perV: 0,
       load: 0,
       maskctx: null,

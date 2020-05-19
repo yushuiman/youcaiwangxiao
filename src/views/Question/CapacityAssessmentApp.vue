@@ -4,10 +4,6 @@
       <div class="cass-title">预测分<span>根据您最近十次答题情况评估</span></div>
       <div class="cass-row-mtb">
         <div class="yc-record-rb">
-          <!-- <div class="yc-record">
-            <p class="yc-record-top"><em>{{ycfen}}</em>分</p>
-            <p class="yc-record-bt">总分100</p>
-          </div> -->
           <div class="yc-record">
              <div class="canvasArea">
               <canvas width="200" height="200" id="mask" style="z-index:9"></canvas>
@@ -71,7 +67,7 @@ export default {
       circleid: '#circle',
       x: 100,
       y: 100,
-      radius: 60,
+      radius: 78,
       perV: 0,
       load: 0,
       maskctx: null,
@@ -280,50 +276,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   .cass-row-mtb{
-    padding-top: px2rem(40);
+    padding-top: px2rem(50);
   }
   .cass-row-pt{
     padding-top: px2rem(38);
   }
-  // .yc-record{
-  //   @include bg-img(275, 203, '../../assets/images/questions/yc-record-pc.png');
-  //   .yc-record-top{
-  //     margin-left: -10px;
-  //     margin-top: 85px;
-  //     em{
-  //       font-size: 54px;
-  //     }
-  //   }
-  //   .yc-record-bt{
-  //     margin-left: -10px;
-  //     margin-top: 22px;
-  //     font-size: 16px;
-  //     color: $col999;
-  //   }
-  // }
-  // 203 200
-  // 225 221
   .yc-record{
-    // 275 225
-
     // 275 203
-    // 200 200
-    width: px2rem(500);
+    // 275 225
+    width: px2rem(540);
     height: px2rem(450);
     background: url('../../assets/images/questions/yc-record.png') no-repeat;
     background-size: contain;
     margin: 0 auto;
     position: relative;
     .yc-record-top{
-      margin-left: px2rem(-20);
-      margin-top: px2rem(170);
+      padding-top: px2rem(180);
       em{
         font-size: px2rem(108);
       }
     }
     .yc-record-bt{
-      margin-left: px2rem(-20);
-      margin-top: px2rem(44);
+      margin-top: px2rem(24);
+      margin-left: px2rem(-16);
       font-size: px2rem(32);
       color: $col999;
     }
@@ -372,38 +347,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   #myChart{
     margin: 0 auto;
-    // @include px2rem(margin-top, 100);
     margin-top: px2rem(100);
   }
-  // .canvasArea {
-  //   height: 200px;
-  //   width: 200px;
-  //   position: relative;
-  //   margin-left: 31px;
-  //   margin-top: 25px;
-  //   canvas {
-  //     position: absolute;
-  //     width: 100%;
-  //     height: 100%;
-  //     top: 0;
-  //     left: 0;
-  //   }
-  // }
   .canvasArea {
-    position: relative;
+    position: absolute;
+    left: 0;
+    top: 0;
     width: px2rem(400);
     height: px2rem(400);
-    margin-left: px2rem(30);
-    margin-top: px2rem(25);
-    // @include px2rem(width, 920);
-    // @include px2rem(height, 920);
-    // @include px2rem(margin-left, 16);
+    @include px2rem(margin-left, 120);
+    @include px2rem(margin-top, 90);
+    // background: rgba(0,0,0, .5);
     canvas {
       position: absolute;
       width: 100%;
       height: 100%;
       top: 0;
-      // @include px2rem(top, -14);
       left: 0;
     }
   }

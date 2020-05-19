@@ -349,6 +349,7 @@ export default {
     },
     ended () {
       this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
+      this.isLianxu = parseInt(Cookies.get('isLianxu')) || 1 // 1连续2重播
       if (this.isLianxu == 2) {
         this.showReplay = true
         return
