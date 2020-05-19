@@ -300,10 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // 203 200
   // 225 221
   .yc-record{
-<<<<<<< HEAD
-=======
-    // 275 203
->>>>>>> youhua_luanqibazao_20200514
     // 275 225
 
     // 275 203
@@ -372,10 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   #myChart{
     margin: 0 auto;
-<<<<<<< HEAD
     // @include px2rem(margin-top, 100);
-=======
->>>>>>> youhua_luanqibazao_20200514
     margin-top: px2rem(100);
   }
   // .canvasArea {
@@ -393,7 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
   //   }
   // }
   .canvasArea {
-<<<<<<< HEAD
     position: relative;
     width: px2rem(400);
     height: px2rem(400);
@@ -402,16 +394,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // @include px2rem(width, 920);
     // @include px2rem(height, 920);
     // @include px2rem(margin-left, 16);
-=======
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: px2rem(400);
-    height: px2rem(400);
-    @include px2rem(margin-left, 120);
-    @include px2rem(margin-top, 90);
-    // background: rgba(0,0,0, .5);
->>>>>>> youhua_luanqibazao_20200514
     canvas {
       position: absolute;
       width: 100%;
