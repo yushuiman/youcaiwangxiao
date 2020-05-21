@@ -297,6 +297,9 @@ export default {
         return
       }
       if (type === 2) {
+        this.canSign = false
+        this.showReplay = false
+        this.visile = false
         this.getVideoPlayback(2)
       }
       if (type == 3) {

@@ -409,7 +409,6 @@ export default {
     }
   },
   created () {
-    console.log('子:' + this.gxNum)
     if (window.Aliplayer !== undefined) {
       // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
       this.scriptTagStatus = 2
@@ -880,6 +879,7 @@ export default {
   .sign-cont p{
     font-size: 16px;
   }
+  /* 一天晃荡几百遍 */
   .sign-cont button{
     width: 65px;
     height: 26px;
