@@ -382,12 +382,12 @@ export default {
       let voicenum = Cookies.get('voicenum') || 100
       instance.setVolume(voicenum / 100)
       // 跳转到上次播放时间
-      instance.seek(this.videoCredentials.watch_time)
-      // if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
-      //   instance.seek(0)
-      // } else {
-      //   instance.seek(this.videoCredentials.watch_time)
-      // }
+      // instance.seek(this.videoCredentials.watch_time)
+      if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
+        instance.seek(0)
+      } else {
+        instance.seek(this.videoCredentials.watch_time)
+      }
       // 列表位置记忆
       let anchor = document.querySelector('#showBox' + this.playCourseInfo.section_id + '' + this.playCourseInfo.video_id)
       let anchortop = document.querySelector('#showBox' + this.playCourseInfo.section_id + '' + this.playCourseInfo.video_id).offsetTop

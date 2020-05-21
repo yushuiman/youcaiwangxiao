@@ -23,7 +23,7 @@
         </ul>
       </div>
       <div class="video-info-c" style="padding-top: 34px;" id="left" :style="{ height: screenHeight - 60 + 'px' }">
-        <p style="position:absolute;top:0;color: #F99111;height: 34px;line-height: 34px;">如何获得本课程学分：每个视频学习过程中均会随机弹出签到提示，全部视频都成功签到后才能获得本课程CPE积分。</p>
+        <p style="position:absolute;top:0;color: #F99111;height: 34px;line-height: 34px;">如何获得本课程学分：每个视频结束后点击“签到”成功后，即可获取对应视频的积分。</p>
         <div class="course-video-box" v-if="!fixedVideo">
           <ali-player
             ref="aliPlayers"
@@ -356,14 +356,12 @@ export default {
       let voicenum = Cookies.get('voicenum') || 100
       instance.setVolume(voicenum / 100)
       // 跳转到上次播放时间
-      instance.seek(this.videoCredentials.watch_time)
-      // if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
-      //   instance.seek(0)
-      //   // instance.seek(1010)
-      // } else {
-      //   instance.seek(this.videoCredentials.watch_time)
-      //   // instance.seek(1010)
-      // }
+      // instance.seek(this.videoCredentials.watch_time)
+      if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
+        instance.seek(0)
+      } else {
+        instance.seek(this.videoCredentials.watch_time)
+      }
       // 列表位置记忆
       let anchor = document.querySelector('#showBox' + this.playCourseInfo.section_id + '' + this.playCourseInfo.video_id)
       let anchortop = document.querySelector('#showBox' + this.playCourseInfo.section_id + '' + this.playCourseInfo.video_id).offsetTop
