@@ -10,7 +10,8 @@
           <h1>CMA高清网课全科</h1>
           <p>科学的理念 + 优秀的师资 + 权威的课程</p>
           <div class="btn-box-index">
-            <button type="button" name="button" class="more-btn" @click="jumpWhere(1)">更多</button>
+            <!--  @click="jumpWhere(1)" -->
+            <button type="button" name="button" class="more-btn">更多</button>
           </div>
         </div>
       </li>
