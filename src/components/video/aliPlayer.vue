@@ -452,17 +452,21 @@ export default {
         _this.$nextTick(() => {
           _this.instance = window.Aliplayer({
             id: _this.playerId,
+            // source: _this.playauth,
+            // source: 'https://video.youcaiwx.com/5b614e07acd846f09b8bf273c5bedcfd/2789e14b2d0b419c8561ccffe34f7d46-d21f83fc069d251d30fa70bf9329c887-fd-encrypt-stream.m3u8?MtsHlsUriToken=gdt+Iz+Ze4dR/b7sd6Cdr82ZRUO4ToW+9bf55YxTpa8=',
+            // source: 'http://demo.com/ddf56e501d07402796c468bbea08ec8c/9e712e72879b93f8933d5f9eca4bacaa-fd-encrypt-stream.m3u8?MtsHlsUriToken=NWItZGU5ZWEwODRlMzky',
             autoplay: _this.autoplay,
             isLive: _this.isLive,
             playsinline: _this.playsinline,
-            format: _this.format,
             width: _this.width,
             height: _this.height,
             controlBarVisibility: _this.controlBarVisibility,
             useH5Prism: _this.useH5Prism,
             useFlashPrism: _this.useFlashPrism,
-            vid: _this.vid,
-            playauth: _this.playauth,
+            vid: _this.videoCredentials.VideoId,
+            playauth: _this.videoCredentials.playAuth,
+            format: _this.videoCredentials.format,
+            encryptType: 1,
             cover: _this.cover,
             x5_video_position: _this.x5_video_position,
             x5_type: _this.x5_type,
@@ -519,7 +523,7 @@ export default {
        */
     ended: function () {
       // var _this = this
-      this.instance.replayByVidAndPlayAuth(this.vid, this.playauth)
+      this.instance.replayByVidAndPlayAuth(this.videoCredentials.VideoId, this.videoCredentials.playAuth)
     },
     /**
        * 销毁

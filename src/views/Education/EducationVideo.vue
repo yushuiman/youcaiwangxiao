@@ -28,8 +28,6 @@
           <ali-player
             ref="aliPlayers"
             v-if="videoCredentials.playAuth"
-            :vid="playCourseInfo.VideoId"
-            :playauth="videoCredentials.playAuth"
             :videoCredentials="videoCredentials"
             :fixedVideo="fixedVideo"
             :diffLogic="1"
@@ -76,8 +74,6 @@
           <ali-player
             ref="aliPlayers"
             v-if="videoCredentials.playAuth"
-            :vid="playCourseInfo.VideoId"
-            :playauth="videoCredentials.playAuth"
             :videoCredentials="videoCredentials"
             :fixedVideo="fixedVideo"
             :diffLogic="1"
@@ -134,14 +130,17 @@ export default {
       flagClosed: false,
       wImportant: 445,
       videoCredentials: {
+        VideoId: this.$route.query.VideoId,
         handouts: '', // 讲义
         playAuth: '', // 获取视频凭证
         collect: '', // 收藏
-        Title: '' // name
+        watch_time: '',
+        Title: '', // name
+        format: 'mp4'
       },
       playCourseInfo: {
-        video_id: this.$route.query.video_id,
         VideoId: this.$route.query.VideoId,
+        video_id: this.$route.query.video_id,
         section_id: this.$route.query.section_id,
         course_id: this.$route.query.course_id,
         package_id: this.$route.query.package_id
@@ -667,7 +666,16 @@ export default {
         video_id: this.playCourseInfo.video_id
       }).then(data => {
         let res = data.data
-        this.videoCredentials = res.data
+        let { Title, collect, handouts, playAuth, watch_time, status } = res.data
+        if(status === 1){
+          this.videoCredentials.format = 'm3u8'
+        }
+        this.videoCredentials.VideoId = this.playCourseInfo.VideoId
+        this.videoCredentials.Title = Title
+        this.videoCredentials.collect = collect
+        this.videoCredentials.handouts = handouts
+        this.videoCredentials.playAuth = playAuth
+        this.videoCredentials.watch_time = watch_time
       }).then(() => {
         if (type == 2) {
           this.$refs.aliPlayers.ended(this.playCourseInfo.VideoId, this.videoCredentials.playAuth)
@@ -691,10 +699,10 @@ export default {
       endTime1 = parseInt(durationTime * 0.7) + Math.round(Math.random() * 10)
       endTime2 = parseInt(durationTime * 0.8) + Math.round(Math.random() * 10)
       endTime3 = parseInt(durationTime * 0.9) + Math.round(Math.random() * 10)
-      console.log(durationTime + '/60' + '总时长' + this.formatSeconds(durationTime))
-      console.log(endTime1 + '/60' + '第一次弹:' + this.formatSeconds(endTime1))
-      console.log(endTime2 + '/60' + '第二次弹:' + this.formatSeconds(endTime2))
-      console.log(endTime3 + '/60' + '第三次弹:' + this.formatSeconds(endTime3))
+      // console.log(durationTime + '/60' + '总时长' + this.formatSeconds(durationTime))
+      // console.log(endTime1 + '/60' + '第一次弹:' + this.formatSeconds(endTime1))
+      // console.log(endTime2 + '/60' + '第二次弹:' + this.formatSeconds(endTime2))
+      // console.log(endTime3 + '/60' + '第三次弹:' + this.formatSeconds(endTime3))
       this.timer = setInterval(() => {
         let curVideoTime = parseInt(this.$refs.aliPlayers.getCurrentTime())
         if (curVideoTime === durationTime) {

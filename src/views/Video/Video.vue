@@ -32,8 +32,6 @@
           <ali-player
             ref="aliPlayers"
             v-if="videoCredentials.playAuth"
-            :vid="VideoId"
-            :playauth="videoCredentials.playAuth"
             :videoCredentials="videoCredentials"
             :fixedVideo="fixedVideo"
             :isLianxu="isLianxu"
@@ -76,8 +74,6 @@
           <ali-player
             ref="aliPlayers"
             v-if="videoCredentials.playAuth"
-            :vid="VideoId"
-            :playauth="videoCredentials.playAuth"
             :videoCredentials="videoCredentials"
             :fixedVideo="fixedVideo"
             :isLianxu="isLianxu"
@@ -165,13 +161,14 @@ export default {
       fixedVideo: false,
       flagClosed: false,
       wImportant: 445,
-      VideoId: '', // 视频VideoId
       videoCredentials: {
+        VideoId: '', // 视频VideoId
         handouts: '', // 讲义
         playAuth: '', // 获取视频凭证
         collect: '', // 收藏
         watch_time: 0, // 观看时间,视频上次播放时间
-        Title: '' // name
+        Title: '', // name
+        format: 'mp4'
       },
       playCourseInfo: {
         video_id: this.$route.query.video_id,
@@ -711,28 +708,6 @@ export default {
       }
       window.location.href = url
     },
-    // 课程大纲（目录）
-    // getCourseCatalog () {
-    //   this.showLoading(true)
-    //   courseCatalog({
-    //     package_id: this.$route.query.package_id
-    //   }).then(data => {
-    //     this.showLoading(false)
-    //     const res = data.data
-    //     if (res.code === 200) {
-    //       this.packageList = res.data
-    //       this.playCourseInfo.course_id = this.$route.query.course_id || this.packageList[0].course_id
-    //       this.packageList.forEach(v => {
-    //         if (this.playCourseInfo.course_id == v.course_id) {
-    //           this.playCourseInfo.is_zk = v.is_zhengke
-    //         }
-    //       })
-    //       this.initSecvCatalog(this.playCourseInfo.course_id)
-    //     } else {
-    //       this.$Message.error(res.msg)
-    //     }
-    //   })
-    // },
     // 初始化展示章节
     initSecvCatalog () {
       this.showLoading(true)
@@ -787,11 +762,19 @@ export default {
         video_id: this.playCourseInfo.video_id
       }).then(data => {
         let res = data.data
-        this.VideoId = VideoId
-        this.videoCredentials = res.data
+        let { Title, collect, handouts, playAuth, watch_time, status } = res.data
+        if(status === 1){
+          this.videoCredentials.format = 'm3u8'
+        }
+        this.videoCredentials.VideoId = VideoId
+        this.videoCredentials.Title = Title
+        this.videoCredentials.collect = collect
+        this.videoCredentials.handouts = handouts
+        this.videoCredentials.playAuth = playAuth
+        this.videoCredentials.watch_time = watch_time
       }).then(() => {
         if (type == 2) {
-          this.$refs.aliPlayers.ended(this.VideoId, this.videoCredentials.playAuth)
+          this.$refs.aliPlayers.ended(this.videoCredentials.VideoId, this.videoCredentials.playAuth)
           this.$refs.updateAnswerRef.initRes()
         }
       })
