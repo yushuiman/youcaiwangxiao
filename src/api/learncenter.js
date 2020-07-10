@@ -126,3 +126,17 @@ export const studyVideo = (data) => { // 学习记录 ，30秒一次
     method: 'post'
   })
 }
+export const customPlansec = (data) => { // 自定义计划-章节
+  return axios.request({
+    url: '/web/Plan/customPlansec',
+    data,
+    method: 'post'
+  })
+}
+export const customPlan = (data) => { // 添加自定义计划
+  return axios.request({
+    url: '/web/Plan/customPlan',
+    data,
+    method: 'post'
+  })
+}

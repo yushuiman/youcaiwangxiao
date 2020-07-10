@@ -326,8 +326,7 @@ export default {
     // 1切换视频清晰度，2目录切换视频，3切换上一个视频，4切换下一个视频
     switchVideo (type, v) {
       if (type === 1) {
-        // this.getVideoPlayback(2)
-        this.reload()
+        this.getVideoPlayback(2)
         return
       }
       this.chooseIdx = 0
@@ -341,8 +340,7 @@ export default {
             video_id: v.video_id
           }
         })
-        this.reload()
-        // this.getVideoPlayback(2)
+        this.getVideoPlayback(2)
       }
       if (type == 3) {
         if (this.flagCourseSec) {
@@ -479,8 +477,7 @@ export default {
           video_id: this.playCourseInfoNextPrev.video_id
         }
       })
-      // this.getVideoPlayback(2)
-      this.reload()
+      this.getVideoPlayback(2)
     },
     // 上一个视频
     computedPrevVid () {
@@ -503,8 +500,7 @@ export default {
           video_id: this.playCourseInfoNextPrev.video_id
         }
       })
-      // this.getVideoPlayback(2)
-      this.reload()
+      this.getVideoPlayback(2)
     },
     // 提问的时候停止播放
     stopVideo () {
@@ -712,10 +708,10 @@ export default {
         this.videoCredentials.playAuth = playAuth
         this.videoCredentials.watch_time = watch_time
       }).then(() => {
-        // if (type == 2) {
-        //   this.$refs.aliPlayers.ended(this.videoCredentials.VideoId, this.videoCredentials.playAuth)
-        //   this.$refs.updateAnswerRef.initRes()
-        // }
+        if (type == 2) {
+          this.$refs.aliPlayers.ended(this.videoCredentials.VideoId, this.videoCredentials.playAuth)
+          this.$refs.updateAnswerRef.initRes()
+        }
       })
     },
     courseCollection (collectId) { // 1收藏2取消收藏

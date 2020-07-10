@@ -15,15 +15,12 @@
                 </div>
                 <DropdownMenu slot="list" class='drop-list sel-course-list'>
                   <li class="sel-course-item" v-for="(v, index) in learnList" :key="index" @click="selCourse(v, index)">{{v.plan_name}}</li>
-                  <li class="add-course" @click="planLearn">+添加学习计划</li>
+                  <li class="add-course" @click="planLearn('')">+添加学习计划</li>
                 </DropdownMenu>
               </Dropdown>
             </div>
-            <!-- <div class="ewm-box">
-              <i class="ewm-icon"></i>
-            </div> -->
             <span class="learn-status" :class="{'gray': sameday == 2}">{{ sameday == 1 ? '学习中' : '已结束' }}</span>
-            <span class="surplus-day"><i></i>离考试还有{{currenLearnInfo.number}}<em>天</em></span>
+            <span class="surplus-day" v-if="currenLearnInfo.type == 1"><i></i>离考试还有{{currenLearnInfo.number}}<em>天</em></span>
           </div>
           <div class="outplan" @click="outLearnPlan"><i></i>退出计划</div>
         </div>
@@ -84,15 +81,12 @@
                     </div>
                   </template>
                   <ul class="days-list">
-                    <!-- 今天课程已结束哦～ 继续学习吧～ 还没有开课哦～ 今天是周末哦～ -->
-                    <li class="days-item" :class="{'days-item-rest': v.is_rest == 2, 'days-item-blue': v.beforeDate == 1, 'days-item-orange': v.currDate == 1 && v.is_rest != 2, 'days-item-gray': v.afterDate == 1 && v.is_rest != 2}"
+                    <li class="days-item" :class="{'days-item-rest': v.is_rest == 2, 'days-item-orange': v.sameday == 1}"
                       v-for="(v, index) in everydayList" :key="index" @click="getLearnVideo(v)">
                       <i class="status-icon"></i>
                       <p>{{v.date}}</p>
                       <div class="tips-item" v-if="v.is_rest == 2">今天休息啦～</div>
-                      <div class="tips-item" v-if="v.beforeDate == 1">今天课程已结束哦～</div>
-                      <div class="tips-item" v-if="v.afterDate == 1 && v.is_rest != 2">还没有开课哦～</div>
-                      <div class="tips-item" v-if="v.currDate == 1 && v.is_rest != 2">继续学习吧～</div>
+                      <div class="tips-item" v-else>继续学习吧～</div>
                     </li>
                   </ul>
                 </Submenu>
@@ -128,7 +122,8 @@
           </div>
           <div class="loginSign-wrap">
             <div class="info-bottom">
-              <button class="btn-com" @click="planLearn">立即制定</button>
+              <button class="btn-com" @click="planLearn(1)">自定义计划</button>
+              <button class="btn-com" @click="planLearn(2)">推荐计划</button>
             </div>
           </div>
         </div>
@@ -144,7 +139,11 @@
       class="plan-modal">
       <div class="height-com" v-if="addLearnIdx == 0">
         <div class="com-bg">
-          请选择需要学习的课程
+          <p>请选择需要学习的课程</p>
+          <div class="chose-plan-type">
+            <button class="btn-com" :class="{'curren': planType == 1}" @click="choseplanType(1)">自定义计划</button>
+            <button class="btn-com" :class="{'curren': planType == 2}" @click="choseplanType(2)">推荐计划</button>
+          </div>
         </div>
         <ul class="know-list">
           <li v-for="(val, key) in courseListLearn" :key="key" @click="nextPage(1, val)">
@@ -155,7 +154,8 @@
         </ul>
         <div class="dot"><span class="curren"></span><span></span><span></span></div>
       </div>
-      <div class="height-com" v-if="addLearnIdx == 1">
+      <!-- 推荐计划 -->
+      <div class="height-com" v-if="addLearnIdx == 1 && planType == 2">
         <div class="com-bg">
           <span>请选择考试时间</span>
           <a @click="nextPage(0)">返回上一步</a>
@@ -168,7 +168,61 @@
         </ul>
         <div class="dot"><span></span><span class="curren"></span><span></span></div>
       </div>
-      <div class="height-com" style="height: 575px;" v-if="addLearnIdx == 2">
+      <!-- 自定义计划-天数week -->
+      <div class="height-com" v-if="addLearnIdx == 1 && planType == 1">
+        <div class="com-bg">
+          <span>选择学习周期（建议选择20天以上）</span>
+          <p class="next-page">
+            <a @click="nextPage(0)">返回上一步</a> | 
+            <a @click="nextPage(3)">继续下一步</a>
+          </p>
+        </div>
+        <div class="custom-day-num">
+          <span>学习天数:</span>
+          <input type="number" v-model="customdays" placeholder="请输入您要学习的天数">
+        </div>
+        <div class="com-bg">
+          <span>选择每周训练日（可选3~7天，建议4天）</span>
+        </div>
+        <div class="custom-week">
+          <span v-for="(v, index) in weekList" :key="index" :class="{'active': traindayArr.indexOf(v.num) > -1}" @click="choseTrainday(v, index)">{{v.date}}<i class="is-today" v-if="weekDate.indexOf(v.date) > -1">今</i></span>
+        </div>
+        <div class="dot"><span></span><span class="curren"></span><span></span><span></span></div>
+      </div>
+      <!-- 自定义计划-章节 -->
+      <div class="height-com" v-if="addLearnIdx == 3 && planType == 1">
+        <div class="com-bg">
+          <span>选择章节</span>
+          <p class="next-page">
+            <a @click="nextPage(1)">返回上一步</a> | 
+            <a @click="nextPage(2)">继续下一步</a>
+          </p>
+        </div>
+        <ul class="know-list">
+          <li v-for="(val, key) in customPlansecList" :key="key">
+            <span>{{val.section_name}}</span>
+            <input type="checkbox" :value="val.section_id" v-model="sectionArr">
+          </li>
+        </ul>
+      </div>
+      <!-- 自定义计划成功 -->
+      <div class="height-com" style="height: 575px;" v-if="addLearnIdx == 2 && planType == 1">
+        <div class="star-learning-wrap">
+          <div class="star-learning-left">
+            <h1 class="plan-finish">自定义学习计划完成</h1>
+            <p class="plan-next">接下来，希望通过本次计划顺利通过考试。成为会管理、懂业务、能决策的管理会计！</p>
+            <div class="loginSign-wrap">
+              <div class="info-bottom">
+                <button class="btn-com" @click="starStudy">开始学习之旅</button>
+              </div>
+            </div>
+          </div>
+          <img class="star-learning-right" src="../../assets/images/learncenter/zkz-img2.png" alt="">
+        </div>
+        <div class="dot"><span></span><span></span><span></span><span class="curren"></span></div>
+      </div>
+      <!-- 推荐计划成功 -->
+      <div class="height-com" style="height: 575px;" v-if="addLearnIdx == 2 && planType == 2">
         <div class="star-learning-wrap">
           <div class="star-learning-left">
             <h1 class="plan-finish">自定义学习计划完成</h1>
@@ -246,27 +300,22 @@
       >
       <div class="learn-course-video">
         <div class="drawer-tit">{{drawerTit}}</div>
+        <!-- 休息日learnVideoList=【】 -->
         <ul class="learn-course-ul" v-if="learnVideoList.length">
-          <li class="learn-course-item" :class="{'gray': (item.beforeDate == 1 || item.afterDate == 1)}" v-for="(item, index) in learnVideoList" :key="index">
+          <li class="learn-course-item" :class="{'gray': sameday == 2}" v-for="(item, index) in learnVideoList" :key="index">
             <div class="lci-top" @click="goVideoPage(item)">
               <img :src="item.CoverURL" alt="" class="lci-img">
               <div class="lci-n-t">
                 <h1>{{item.video_name}}</h1>
                 <p>{{item.video_time}}</p>
               </div>
-              <!-- 课程已结束并且完成 -->
-              <div v-if="item.beforeDate == 1">
+              <!-- 学习计划已结束 -->
+              <div v-if="sameday == 2">
                 <i class="lock-icon"></i>
                 <i class="finish-icon" v-if="item.is_watch == 1"></i>
               </div>
-              <!-- 未开始 -->
-              <div v-if="item.afterDate == 1">
-                <i class="lock-icon"></i>
-              </div>
               <!-- 课程正在进行 -->
-              <div v-if="item.currDate == 1">
-                <i class="finish-icon isfinish" v-if="item.is_watch == 1"></i>
-              </div>
+              <i class="finish-icon isfinish" v-if="sameday == 1 && item.is_watch == 1"></i>
             </div>
             <div class="lci-bottom">
               <button class="jy-btn" @click="goJyPage(item)">讲义</button>
@@ -284,7 +333,7 @@
 </template>
 
 <script>
-import { learnIndex, courseList, testTime, addStudy, everyday, outPlan, hangAir, getVideo, studyStatus } from '@/api/learncenter'
+import { learnIndex, courseList, testTime, addStudy, everyday, outPlan, hangAir, getVideo, studyStatus, customPlansec, customPlan } from '@/api/learncenter'
 import learnNotice from '../../components/learning/learnNotice'
 import learnStudent from '../../components/learning/learnStudent'
 import studentDynamic from '../../components/learning/studentDynamic'
@@ -299,9 +348,11 @@ export default {
       titTxt: {
         0: '添加学习计划',
         1: '添加学习计划',
-        2: ''
+        2: '',
+        3: '添加学习计划'
       },
       sameday: 0, // 是不是今天 判断学习中，学习结束状态
+      days: 0, // 第几天
       course_id: 0, // select默认选择
       package_id: 0, // select默认选择
       s_c_idx: this.$route.query.s_c_idx || 0,
@@ -328,7 +379,43 @@ export default {
       learnVideoList: [], // 学习视频
       isDrawer: false, // 学习视频抽屉
       drawerTit: '', // 学习视频抽屉title
-      youhuaInfo: []
+      planType: '', // 推荐/自定义
+      // 以下为自定义计划
+      weekList: [
+        {
+          date: '一',
+          num: 1
+        },
+        {
+          date: '二',
+          num: 2
+        },
+        {
+          date: '三',
+          num: 3
+        },
+        {
+          date: '四',
+          num: 4
+        },
+        {
+          date: '五',
+          num: 5
+        },
+        {
+          date: '六',
+          num: 6
+        },
+        {
+          date: '日',
+          num: 0
+        }
+      ],
+      weekDate: '', // 今天是周几
+      traindayArr: [], // 训练日(0,1,2,3,4,5,6)
+      sectionArr: [], // 章节
+      customdays: '', // 学习天数
+      customPlansecList: [] // 自定义-章节
     }
   },
   computed: {
@@ -358,10 +445,15 @@ export default {
       'getUserInfo'
     ]),
     // 制定学习计划
-    planLearn () {
+    planLearn (type) {
       this.visible = true
       this.selCourseFlag = false
       this.addLearnIdx = 0
+      this.planType = type
+      this.traindayArr = [] // 训练日(0,1,2,3,4,5,6)
+      this.sectionArr = [] // 章节
+      this.customdays = [] // 学习天数
+      this.customPlansecList = [] // 自定义-章节
       if (this.addlearn === 2) { // 没有学习计划 选择课程列表
         return
       }
@@ -372,18 +464,74 @@ export default {
         this.$Message.error('已参加')
         return
       }
-      // this.planChooseInfo = val //暂时用不到 多余
-      if (index === 1) {
+      if (!this.planType) {
+        this.$Message.error('请选择学习计划类型')
+        return
+      }
+      // 推荐计划 选择课程 获取考试时间
+      if (index === 1 && this.planType == 2) {
         this.planChooseInfo.course_id = val.course_id // 选择课程id
-        this.planChooseInfo.is_exper = val.is_exper // 是否0元体验
+        this.planChooseInfo.is_exper = val.is_exper // 1:0元体验 2:购买课程
         this.getTestTime() // 选择考试时间
       }
-      if (index === 2) {
+      // 推荐计划 选择考试时间 计划设置成功
+      if (index === 2 && this.planType == 2) {
         this.planChooseInfo.test_time = val.test_time // 选择考试time
-        this.getAddStudy()
+        this.getAddStudy() // 接口成功this.addLearnIdx = 2
+        return
+      }
+      // 自定义计划 选择课程 设置天数week
+      if (index === 1 && this.planType == 1) {
+        if (val) {
+          this.planChooseInfo.course_id = val.course_id // 选择课程id
+          this.planChooseInfo.is_exper = val.is_exper // 1:0元体验 2:购买课程
+        }
+        this.weekDate = this.getWeekDate()
+      }
+      // 自定义计划 获取章节目录
+      if (index === 3 && this.planType == 1) {
+        if (!this.customdays) {
+          this.$Message.error('请输入学习天数')
+          return
+        }
+        if (this.customdays < 20 || this.customdays > 100) {
+          this.$Message.error('请输入学习天数20-100天')
+          return
+        }
+        if (this.traindayArr.length === 0) {
+          this.$Message.error('请选择训练日')
+          return
+        }
+        this.getCustomPlansec() // 获取章节目录
+      }
+      // 自定义计划 选择章节 计划设置成功
+      if (index === 2 && this.planType == 1) {
+        if (this.sectionArr.length === 0) {
+          this.$Message.error('请选择学习章节')
+          return
+        }
+        this.getCustomPlan() // 接口成功this.addLearnIdx = 2
         return
       }
       this.addLearnIdx = index
+    },
+    choseplanType (type) {
+      this.planType = type
+    },
+    choseTrainday (val, index) {
+      let idIndex = this.traindayArr.indexOf(val.num)
+      if (idIndex >= 0) {
+        this.traindayArr.splice(idIndex, 1)
+      } else {
+        this.traindayArr.push(val.num)
+      }
+    },
+    getWeekDate() {
+       var now = new Date()
+       var day = now.getDay()
+       var weeks = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")
+       var week = weeks[day]
+       return week
     },
     // 学习计划首页详情
     getLearnIndex (type) {
@@ -399,7 +547,7 @@ export default {
           this.systemTime = time
           this.user = user
           this.learnList = learnList
-          if (state === 1) { // state==1有未读2已读
+          if (state === 1) { // state==1有缺勤
             this.visible2 = true
           }
           if (addlearn === 2) {
@@ -424,7 +572,7 @@ export default {
       studyStatus({
         user_id: this.user_id,
         plan_id: this.currenLearnInfo.plan_id,
-        is_exper: this.currenLearnInfo.is_exper // 1为0元体验 2为购买课程
+        is_exper: this.currenLearnInfo.is_exper // 1:0元体验 2:购买课程
       }).then(data => {
         this.showLoading(false)
         const res = data.data
@@ -469,14 +617,14 @@ export default {
         }
       })
     },
-    // 添加学习计划
+    // 添加推荐学习计划
     getAddStudy () {
       this.showLoading(true)
       addStudy({
         user_id: this.user_id,
         course_id: this.planChooseInfo.course_id,
         test_time: this.planChooseInfo.test_time,
-        types: this.planChooseInfo.is_exper || 2 // 1为0元体验 2为购买课程
+        types: this.planChooseInfo.is_exper || 2 // 1:0元体验 2:购买课程
       }).then(data => {
         this.showLoading(false)
         const res = data.data
@@ -488,6 +636,46 @@ export default {
           this.$Message.error(res.msg)
         } else {
           this.visible = false
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 添加自定义学习计划
+    getCustomPlan () {
+      this.showLoading(true)
+      customPlan({
+        user_id: this.user_id,
+        course_id: this.planChooseInfo.course_id,
+        days: this.customdays,
+        trainday_str: this.traindayArr.join(','), // 训练日
+        section_str: this.sectionArr.join(',') // 章节
+      }).then(data => {
+        this.showLoading(false)
+        const res = data.data
+        if (res.code === 200) {
+          this.addLearnIdx = 2
+        } else if (res.code === 405) { // 您已参加过
+          this.$Message.error(res.msg)
+        } else {
+          this.visible = false
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 学习计划-章节
+    getCustomPlansec () {
+      this.customPlansecList = []
+      this.showLoading(true)
+      customPlansec({
+        user_id: this.user_id,
+        course_id: this.planChooseInfo.course_id,
+        types: this.planChooseInfo.is_exper || 2 // 1:0元体验 2:购买课程
+      }).then(data => {
+        this.showLoading(false)
+        const res = data.data
+        if (res.code === 200) {
+          this.customPlansecList = res.data
+        } else {
           this.$Message.error(res.msg)
         }
       })
@@ -516,42 +704,45 @@ export default {
     },
     // 未完成计划去学习/当前正在学习.继续
     goClassDetailLearn () {
-      this.$router.push({ path: '/course-detail',
-        query: {
-          package_id: this.package_id
-        }
-      })
+      this.visible3 = false
+      // this.$router.push({ path: '/course-detail',
+      //   query: {
+      //     package_id: this.package_id
+      //   }
+      // })
     },
-    // 开始学习
+    // 开始学习按钮入口
     goLearnVideo () {
-      if (this.sameday === 2) {
-        this.$Message.error('学习计划已结束')
-        return
-      }
+      this.learnVideoList = []
       this.showLoading(true)
+      this.days = this.currenLearnInfo.join_days
       getVideo({
         user_id: this.user_id,
         course_id: this.currenLearnInfo.course_id,
         plan_id: this.currenLearnInfo.plan_id,
-        types: this.currenLearnInfo.is_exper,
+        types: this.currenLearnInfo.is_exper, // 1:0元体验 2:购买课程
         days: this.currenLearnInfo.join_days,
-        sameday: 1 // 是今天1不是2
+        sameday: this.sameday // 是今天1不是2
       }).then(data => {
         this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
-          this.isDrawer = true
-          if (res.data && res.data.video) {
-            this.drawerTit = this.systemTime + ' 课程进行中'
+          if (res.data && res.data.video.length) { // 非休息日
+            if (this.sameday == 1) { // 非休息日 计划进行中
+              this.drawerTit = this.systemTime + ' 课程进行中'
+            } else { // 非休息日 计划已结束
+              this.drawerTit = this.systemTime + ' 课程已结束'
+            }
             this.learnVideoList = res.data.video
-            this.learnVideoList.forEach(val => {
-              val.beforeDate = 2
-              val.afterDate = 2
-              val.currDate = 1
-            })
-          } else {
+          } else { // 休息日learnVideoList = []
             this.drawerTit = this.systemTime + ' 休息日'
+            // if (this.sameday == 1) { // 休息日 计划进行中
+              // this.drawerTit = this.systemTime + ' 休息日'
+            // } else { // 休息日 计划已结束
+              // this.drawerTit = this.systemTime + ' 课程已结束'
+            // }
           }
+          this.isDrawer = true
         } else {
           this.$Message.error(res.msg)
         }
@@ -607,60 +798,23 @@ export default {
         user_id: this.user_id,
         plan_id: this.currenLearnInfo.plan_id,
         month: v,
-        is_exper: this.currenLearnInfo.is_exper // 1为0元体验 2为购买课程
+        is_exper: this.currenLearnInfo.is_exper // 1:0元体验 2:购买课程
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
           this.everydayList = res.data.date
-          this.currYear = parseInt(res.data.time.split('-')[0])
-          this.currMonth = parseInt(res.data.time.split('-')[1])
-          this.currDay = parseInt(res.data.time.split('-')[2])
-          this.everydayList.forEach(v => {
-            v.monthNum = parseInt(v.date.split('月')[0]) // 月份
-            v.dayNum = parseInt(v.date.split('月')[1]) // 日
-            v.beforeDate = 2
-            v.afterDate = 2
-            v.currDate = 2
-            if (v.year < this.currYear) {
-              v.beforeDate = 1
-            } else {
-              if (v.monthNum < this.currMonth) {
-                v.beforeDate = 1
-              } else if (v.monthNum > this.currMonth) {
-                v.afterDate = 1
-              } else if (v.monthNum === this.currMonth) {
-                if (v.dayNum === this.currDay) {
-                  v.currDate = 1
-                }
-                if (v.dayNum < this.currDay) {
-                  v.beforeDate = 1
-                }
-                if (v.dayNum > this.currDay) {
-                  v.afterDate = 1
-                }
-              }
-            }
-          })
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
-    // 学习视频
+    // 月份日入口学习视频
     getLearnVideo (v) {
       this.learnVideoList = []
-      if (v.beforeDate === 1) {
-        this.drawerTit = v.date + ' 课程已结束'
-      }
-      if (v.afterDate === 1) {
-        this.drawerTit = v.date + ' 课程未开始'
-      }
-      if (v.currDate === 1) {
-        this.drawerTit = v.date + ' 课程进行中'
-      }
-      if (v.is_rest === 2) {
-        this.drawerTit = v.date + ' 休息日'
+      this.days = v.days
+      if (v.is_rest == 2) {
         this.isDrawer = true
+        this.drawerTit = v.date + ' 休息日'
         return
       }
       this.showLoading(true)
@@ -668,26 +822,26 @@ export default {
         user_id: this.user_id,
         course_id: this.currenLearnInfo.course_id,
         plan_id: this.currenLearnInfo.plan_id,
-        types: this.currenLearnInfo.is_exper,
+        types: this.currenLearnInfo.is_exper, // 1:0元体验 2:购买课程
         days: v.days,
         sameday: v.sameday
       }).then(data => {
         this.showLoading(false)
         const res = data.data
-        if (res.data.video && res.data.video.length) {
-          this.learnVideoList = res.data.video
-          this.learnVideoList.forEach(val => {
-            val.beforeDate = v.beforeDate
-            val.afterDate = v.afterDate
-            val.currDate = v.currDate
-          })
+        this.learnVideoList = res.data.video
+        this.drawerTit = v.date + ' 课程进行中'
+        if (this.sameday == 1) {
+          this.drawerTit = v.date + ' 课程进行中'
+        } else {
+          this.drawerTit = v.date + ' 课程已结束'
         }
         this.isDrawer = true
       })
     },
     // 学习视频 看视频
     goVideoPage (val) {
-      if (val.beforeDate === 1 || val.afterDate === 1) {
+      if (this.sameday == 2) { // 学习计划结束
+        this.$Message.error('学习计划已结束')
         return
       }
       let obj = {
@@ -697,7 +851,8 @@ export default {
         video_id: val.video_id,
         is_zk: val.is_zhengke,
         plan_id: this.currenLearnInfo.plan_id, // 计划id
-        days: this.currenLearnInfo.join_days // 第几天
+        days: this.days, // 第几天
+        sameday: val.sameday
         // s_c_idx: this.s_c_idx
       }
       if (this.currenLearnInfo.is_exper === 1) { // 0元体验 未购买 去看视频
@@ -712,7 +867,8 @@ export default {
     },
     // 学习视频 讲义
     goJyPage (val) {
-      if (val.beforeDate === 1 || val.afterDate === 1) {
+      if (this.sameday == 2) { // 学习计划结束
+        this.$Message.error('学习计划已结束')
         return
       }
       this.getUserInfo().then(() => {
@@ -721,7 +877,8 @@ export default {
     },
     // 学习视频 去做题
     goDopicPage (val) {
-      if (val.beforeDate === 1 || val.afterDate === 1) {
+      if (this.sameday == 2) { // 学习计划结束
+        this.$Message.error('学习计划已结束')
         return
       }
       if (!val.know_id) {
@@ -735,7 +892,7 @@ export default {
         know_id: val.know_id,
         video_name: val.video_name
       }
-      if (this.currenLearnInfo.is_exper === 1) {
+      if (this.currenLearnInfo.is_exper === 1) { // 1:0元体验 2:购买课程
         obj.plate_id = 8 // 学习计划的0元体验
       }
       window.sessionStorage.setItem('getQuestion', JSON.stringify(obj))
@@ -753,7 +910,7 @@ export default {
       outPlan({
         user_id: this.user_id,
         plan_id: this.currenLearnInfo.plan_id,
-        types: this.currenLearnInfo.is_exper
+        types: this.currenLearnInfo.is_exper // 1:0元体验 2:购买课程
       }).then(data => {
         this.showLoading(false)
         const res = data.data
@@ -764,7 +921,6 @@ export default {
               s_c_idx: ''
             }
           })
-          // this.getLearnIndex()
           this.visible4 = false
           this.reload()
         } else {
@@ -885,6 +1041,7 @@ export default {
     .btn-com{
       width: 122px;
       height: 36px;
+      margin-right: 20px;
       background:rgba(0,102,255,1);
       border-radius: 18px;
       color: $colfff;
@@ -1078,16 +1235,8 @@ export default {
       @include bg-linear-gradient($btnGredientGray, to left);
     }
   }
-  // .ewm-box{
-  //   margin: 0 22px;
-  //   .ewm-icon{
-  //     vertical-align: middle;
-  //     @include bg-img(28, 28, '../../assets/images/learncenter/ewm.png');
-  //   }
-  // }
   .surplus-day{
     padding: 0 12px;
-    // margin-left: 14px;
     height: 30px;
     line-height: 30px;
     background:rgba(232,67,66,.1);
@@ -1251,26 +1400,27 @@ export default {
     &:hover .tips-item{
       display: block;
     }
+    &:hover .status-icon{
+      box-shadow: 0 5px 12px 2px rgba(78,174,253,.5);
+    }
+    &.days-item-rest:hover .status-icon{
+      box-shadow: 0 5px 12px 2px rgba(199,199,199,.5);
+    }
     &.days-item-orange:hover .status-icon{
       box-shadow: 0 5px 12px 2px rgba(251,172,120,.5);
     }
-    &.days-item-gray:hover .status-icon, &.days-item-rest:hover .status-icon{
-      box-shadow: 0 5px 12px 2px rgba(199,199,199,.5);
-    }
-    &.days-item-blue:hover .status-icon{
-      box-shadow: 0 5px 12px 2px rgba(78,174,253,.5);
-    }
   }
-
   .tips-item{
     position: absolute;
     left: 25px;
     top: 86px;
     z-index: 2;
+  width: 100px;
     height: 30px;
     line-height: 30px;
     border-radius: 6px;
     color: #ffffff;
+    @include bg-linear-gradient($btnGredientBlue, to left);
     display: none;
     &:before{
       position: absolute;
@@ -1279,49 +1429,32 @@ export default {
       left: 20px;
       width: 0;
       height: 0;
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
+      border-bottom: 8px solid #39BBFD;
     }
-    .days-item-orange &{
-      width: 100px;
-      @include bg-linear-gradient($btnGredientOrange, to left);
-      &:before{
-        border-bottom: 8px solid #FBAC78;
-      }
-    }
-    .days-item-gray &,.days-item-rest &{
-      width: 115px;
+    .days-item-rest &{
       @include bg-linear-gradient($btnGredientGray, to left);
       &:before{
         border-bottom: 8px solid #C7C7C7;
       }
     }
-    .days-item-rest &{
-      width: 100px;
-    }
-    .days-item-blue &{
-      width: 140px;
-      @include bg-linear-gradient($btnGredientBlue, to left);
+    .days-item-orange &{
+      @include bg-linear-gradient($btnGredientOrange, to left);
       &:before{
-        border-bottom: 8px solid #39BBFD;
+        border-bottom: 8px solid #FBAC78;
       }
     }
   }
   .status-icon{
     display: inline-block;
     border-radius: 50%;
-    @include bg-img(61, 61, '../../assets/images/learncenter/days-gray-icon.png');
-    .days-item-orange &{
-      @include bg-img(61, 61, '../../assets/images/learncenter/days-orange-icon.png');
-    }
-    .days-item-gray &{
-      @include bg-img(61, 61, '../../assets/images/learncenter/days-gray-icon.png');
+    .days-item & {
+      @include bg-img(61, 61, '../../assets/images/learncenter/days-blue-icon.png');
     }
     .days-item-rest &{
       @include bg-img(61, 61, '../../assets/images/learncenter/days-rest-icon.png');
     }
-    .days-item-blue &{
-      @include bg-img(61, 61, '../../assets/images/learncenter/days-blue-icon.png');
+    .days-item-orange &{
+      @include bg-img(61, 61, '../../assets/images/learncenter/days-orange-icon.png');
     }
   }
   // 公告学员动态
@@ -1368,8 +1501,6 @@ export default {
       background:rgba(232, 67, 66, .08);
       color: #E84342;
     }
-  }
-  .no-finish-list-wrap{
     .btn-com{
       color: #E84342;
       border: 1px solid #E84342;
@@ -1377,6 +1508,9 @@ export default {
       height: 25px;
       width: 80px;
     }
+  }
+  .next-page{
+    color: $blueColor;
   }
   // 学习视频
   .drawer-tit{
@@ -1454,6 +1588,73 @@ export default {
     font-size: 16px;
     img{
       width: 62px;
+    }
+  }
+  .chose-plan-type{
+    .btn-com{
+      width: 98px;
+      height: 25px;
+      margin-left: 20px;
+      &.curren{
+        background: $blueColor;
+        color: $colfff;
+      }
+    }
+  }
+  .custom-day-num{
+    text-align: center;
+    font-size: 18px;
+    padding-top: 30px;
+    padding-bottom: 40px;
+    span{
+      display: inline-block;
+      margin-right: 20px;
+      line-height: 30px;
+    }
+    input{
+      width: 160px;
+      height: 30px;
+      font-size: 14px;
+      border: 1px solid $borderColor;
+      border-radius: 30px;
+      text-indent: 5px;
+    }
+  }
+  .custom-week{
+    width: 355px;
+    margin: 0 auto;
+    padding-top: 20px;
+    padding-bottom: 30px;
+    span{
+      width: 37px;
+      height: 37px;
+      line-height: 37px;
+      font-size: 16px;
+      color: #1874FD;
+      display: inline-block;
+      text-align: center;
+      border: 1px solid #1773FD;
+      border-radius: 50%;
+      margin: 10px 16px;
+      box-sizing: border-box;
+      cursor: pointer;
+      position: relative;
+      &.active{
+        background:#DBEFFF;
+      }
+      .is-today{
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        font-size: 12px;
+        font-style: normal;
+        color: #ffffff;
+        background:#1773FD;
+        border-radius: 50%;
+      }
     }
   }
 </style>

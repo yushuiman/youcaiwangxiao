@@ -291,15 +291,18 @@ export default {
     },
     // 1切换视频清晰度，2目录切换视频，3切换上一个视频，4切换下一个视频
     switchVideo (type) {
+      this.reload()
       if (type === 1) {
-        this.getVideoPlayback(2)
+        // this.getVideoPlayback(2)
+        this.reload()
         return
       }
       if (type === 2) {
         this.canSign = false
         this.showReplay = false
         this.visile = false
-        this.getVideoPlayback(2)
+        // this.getVideoPlayback(2)
+        this.reload()
       }
       if (type == 3) {
         if (this.flagCourseSec) {
@@ -449,7 +452,8 @@ export default {
           VideoId: this.playCourseInfoNextPrev.VideoId
         }
       })
-      this.getVideoPlayback(2)
+      // this.getVideoPlayback(2)
+      this.reload()
     },
     // 上一个视频
     computedPrevVid () {
@@ -494,7 +498,8 @@ export default {
           VideoId: this.playCourseInfoNextPrev.VideoId
         }
       })
-      this.getVideoPlayback(2)
+      // this.getVideoPlayback(2)
+      this.reload()
     },
     // 提问的时候停止播放
     stopVideo () {
@@ -669,6 +674,8 @@ export default {
         let { Title, collect, handouts, playAuth, watch_time, status } = res.data
         if(status === 1){
           this.videoCredentials.format = 'm3u8'
+        } else {
+          this.videoCredentials.format = 'mp4'
         }
         this.videoCredentials.VideoId = this.playCourseInfo.VideoId
         this.videoCredentials.Title = Title
@@ -677,9 +684,9 @@ export default {
         this.videoCredentials.playAuth = playAuth
         this.videoCredentials.watch_time = watch_time
       }).then(() => {
-        if (type == 2) {
-          this.$refs.aliPlayers.ended(this.playCourseInfo.VideoId, this.videoCredentials.playAuth)
-        }
+        // if (type == 2) {
+        //   this.$refs.aliPlayers.ended(this.playCourseInfo.VideoId, this.videoCredentials.playAuth)
+        // }
       })
     },
     // 上线可以删除，控制台提示时间

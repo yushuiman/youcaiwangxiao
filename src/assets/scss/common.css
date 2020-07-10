@@ -163,6 +163,7 @@ ins {
 /*input*/
 button {
   border: none;
+  background: transparent;
 }
 
 button,

@@ -104,7 +104,7 @@
              </div>
              <!--详细地址输入框-->
              <div>
-               <input class="detalis_address" type="text" maxlength="100" v-model="addAddres" placeholder="详细地址：省市区、道路、门牌号、小区、楼栋号、单元室等">
+               <input class="detalis_address" type="text" maxlength="100" v-model="addAddres" placeholder="详细地址：省市区、道路、门牌号、小区、楼栋号、单元室等备注信息">
              </div>
            </div>
            <!--原有收货地址-->
@@ -134,7 +134,7 @@
                <input style="margin-left: 20px" type="text" maxlength="11" v-model="addMobile" placeholder="手机号码">
               </div>
               <div>
-                <input class="detalis_address" type="text" maxlength="100" v-model="addAddres" placeholder="详细地址：省市区、道路、门牌号、小区、楼栋号、单元室等">
+                <input class="detalis_address" type="text" maxlength="100" v-model="addAddres" placeholder="详细地址：省市区、道路、门牌号、小区、楼栋号、单元室等备注信息">
               </div>
               <button class="btn-com btn-edit" @click="editAddress()">修改</button>
             </div>

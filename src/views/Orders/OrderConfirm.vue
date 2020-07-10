@@ -81,7 +81,7 @@
           <input style="margin-left: 20px" type="text" maxlength="11" v-model="curAddressInfo.telephone" placeholder="手机号码">
         </div>
         <div>
-          <input class="detalis_address" type="text" maxlength="100" v-model="curAddressInfo.address" placeholder="详细地址：省市区、道路、门牌号、小区、楼栋号、单元室等">
+          <input class="detalis_address" type="text" maxlength="100" v-model="curAddressInfo.address" placeholder="详细地址：省市区、道路、门牌号、小区、楼栋号、单元室等备注信息">
         </div>
         <button class="btn-com btn-edit" v-if="typeAddres == 1" @click="editAddress">修改</button>
         <button class="btn-com btn-edit" v-if="typeAddres == 2" @click="addNewAdress">确定</button>
