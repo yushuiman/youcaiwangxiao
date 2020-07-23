@@ -133,7 +133,7 @@
         :title="plateTitle"
         class="practiceModal">
         <know-section v-if="plate_id == 1" :course_id="course_id" :user_id="user_id" :plate_id="plate_id" :sectionList="sectionList"></know-section>
-        <jieduan-test v-if="plate_id == 2" :course_id="course_id" :user_id="user_id" :plate_id="plate_id" :courseList="courseList"></jieduan-test>
+        <jieduan-test v-if="plate_id == 2" :course_id="course_id" :user_id="user_id" :plate_id="plate_id" :courseList="courseList" :entrance_type="entrance_type"></jieduan-test>
         <discuss-self v-if="plate_id == 3" :course_id="course_id" :user_id="user_id" :plate_id="plate_id" :courseList="courseList"></discuss-self>
         <error-section v-if="plate_id == 4" :course_id="course_id" :user_id="user_id" :plate_id="plate_id" :errorSecList="errorSecList"></error-section>
         <lianxi-self v-if="plate_id == 5" :course_id="course_id" :user_id="user_id" :plate_id="plate_id" :sectionList="sectionList"></lianxi-self>
@@ -176,11 +176,21 @@
         </div>
       </div>
     </div>
+    <Modal v-model="testStatus"
+        :width="295"
+        footer-hide
+        title="提示">
+        <p class="test-txt" style="text-align:center;">是否参加入学测试？</p>
+        <div class="join-test">
+          <a class="cancel-test" @click="testBtn(1)">跳过</a>
+          <a class="jump-test" @click="testBtn(2)">确定</a>
+        </div>
+      </Modal>
   </div>
 </template>
 
 <script>
-import { getProject, questionIndex, studentsRanking, getSection, getCourse, getErrorsection, volumeList, sprintCourse } from '@/api/questions'
+import { getProject, questionIndex, studentsRanking, getSection, getCourse, getErrorsection, volumeList, sprintCourse, whetherBullet, addEntrance, getEntrance } from '@/api/questions'
 import knowSection from '../../components/questions/knowSection'
 import jieduanTest from '../../components/questions/jieduanTest'
 import discussSelf from '../../components/questions/discussSelf'
@@ -194,6 +204,7 @@ export default {
     return {
       projectArr: [], // 科目
       course_id: parseInt(window.sessionStorage.getItem('course_id')) || '',
+      entrance_type: '',
       isSprintXly: 2, // 1展示2不展示冲刺训练营
       plateList: [
         {
@@ -243,7 +254,8 @@ export default {
       courseList: [], // 2、3板块
       errorSecList: [], // 4板块
       volumeList: [], // 6板块
-      sprintCourseList: [] // 7板块
+      sprintCourseList: [], // 7板块
+      testStatus: false // 入学测试 1false不弹 2true弹
     }
   },
   components: {
@@ -290,6 +302,8 @@ export default {
         if (res.code === 200) {
           // 非0元体验
           if (res.data && res.data.length) {
+            // 是否入学测试
+            this.getWhetherBullet ()
             this.experience = false
             this.projectArr = res.data
             let array = this.projectArr
@@ -470,6 +484,61 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // 是否弹出入学测试
+    getWhetherBullet () {
+      whetherBullet({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          if (res.data.status === 2) {
+            this.testStatus = true
+          }
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 入库入学测试
+    getAddEntrance () {
+      addEntrance({
+        user_id: this.user_id
+      }).then(data => {
+      })
+    },
+    // 入学测试试卷
+    getEntrancePaper () {
+      getEntrance({
+        user_id: this.user_id
+      }).then(data => {
+        const res = data.data
+        if (res.code === 200) {
+          this.visible = true
+          this.plate_id = 2
+          this.plateTitle = '入学测试'
+          this.entrance_type = '1'
+          this.courseList = [
+            {
+              course_id: res.data.course_id,
+              difficulty: res.data.difficulty,
+              paper_id: res.data.paper_id,
+              paper_name: res.data.paper_name,
+            }
+          ]
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    testBtn (type) {
+      this.testStatus = false
+      if(type === 1) {
+        this.getAddEntrance ()
+        return
+      }
+      // 然后入库，并获取试卷
+      this.getEntrancePaper ()
     },
     // 能力评估
     nengLiPingGu () {
@@ -860,6 +929,27 @@ export default {
     .stu-rank-item03 &{
       color: transparent;
       @include bg-img(24, 24, '../../assets/images/questions/rank-icon03.png');
+    }
+  }
+  .test-txt{
+    font-size: 16px;
+    padding: 10px 0;
+  }
+  .join-test{
+    text-align: center;
+    padding: 30px 0;
+    a{
+      margin: 0 30px;
+      font-size: 14px;
+      &:hover{
+        text-decoration: underline;
+      }
+      &.cancel-test{
+        color: $col999;
+      }
+      &.jump-test{
+        color: $blueColor;
+      }
     }
   }
 </style>

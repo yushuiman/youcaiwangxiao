@@ -31,6 +31,10 @@ export default {
     },
     plate_id: {
       type: Number
+    },
+    entrance_type: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -44,7 +48,8 @@ export default {
         mock_id: 0,
         plate_id: this.plate_id,
         num: '', // 默认随机15道
-        paper_type: 1 // 单选1 论述2
+        paper_type: 1, // 单选1 论述2
+        entrance_type: this.entrance_type
       }
     }
   },

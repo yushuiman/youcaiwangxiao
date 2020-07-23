@@ -193,3 +193,24 @@ export const experienceParsing = (data) => { // 0元体验错题解析
     method: 'post'
   })
 }
+export const whetherBullet = (data) => { // 是否弹出入学测试框
+  return axios.request({
+    url: '/web/Question/whetherBullet',
+    data,
+    method: 'post'
+  })
+}
+export const addEntrance = (data) => { // 入库入学测试表
+  return axios.request({
+    url: '/web/Question/addEntrance',
+    data,
+    method: 'post'
+  })
+}
+export const getEntrance = (data) => { // 去入学测试卷子
+  return axios.request({
+    url: '/web/Question/getEntrance',
+    data,
+    method: 'post'
+  })
+}

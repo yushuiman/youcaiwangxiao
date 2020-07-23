@@ -30,7 +30,13 @@
             <Progress :percent="percent" :stroke-width="10" stroke-color="#0267FF" hide-info/>
             <span class="topic-num"><em data-v-680035d5="">{{percentNum}}</em>/{{total}}</span>
           </div>
-          <ul class="dopic-status">
+          <ul class="dopic-status" v-if="subTopics.entrance_type == 1">
+            <li class="dopstu-item" :class="['dopstu-item-0' + (index+1)]" v-for="(v, index) in stsTxtArr2" :key="index" @click="submitAnswers(v)">
+              <span><i class="dopstu-icon"></i></span>
+              <p>{{v}}</p>
+            </li>
+          </ul>
+          <ul class="dopic-status" v-else>
             <li class="dopstu-item" :class="['dopstu-item-0' + (index+1)]" v-for="(v, index) in stsTxtArr" :key="index" @click="submitAnswers(v)">
               <span><i class="dopstu-icon"></i></span>
               <p>{{v}}</p>
@@ -119,6 +125,7 @@ export default {
   data () {
     return {
       stsTxtArr: ['暂停', '保存', '交卷'],
+      stsTxtArr2: ['暂停', '交卷'],
       visible: false,
       visibleError: false, // 纠错show
       txtShow: '',
@@ -141,7 +148,8 @@ export default {
         plate_id: this.$route.query.plate_id, // 板块id(1知识点练习,2阶段测试,3论述题自测,4错题智能练习,5自主练习,6组卷模考)
         num: this.$route.query.num, // 题数(知识点,自助5 10 15 ...30)
         paper_mode: this.$route.query.paper_mode || 2, // 练习1 考试2自己用来区分
-        paper_type: this.$route.query.paper_type // 试题类型1单选2论述题
+        paper_type: this.$route.query.paper_type, // 试题类型1单选2论述题
+        entrance_type: this.$route.query.entrance_type || '' // 入学测试
       },
       subTopics: { // 交卷
         status: 1, // 交卷状态 1交卷 2保存
@@ -160,7 +168,8 @@ export default {
           mock_id: this.$route.query.mock_id || 0,
           paper_id: this.$route.query.paper_id || 0,
           question: []
-        }
+        },
+        entrance_type: this.$route.query.entrance_type || ''
       },
       ID: '#anchor-0'
     }
@@ -327,6 +336,9 @@ export default {
       if (type === 'save') {
         this.subTopics.status = 2
       }
+      if (this.getQuestion.plate_id == 9) {
+        this.subTopics.desc = 1
+      }
       this.subGetPapers(type)
     },
     subGetPapers (type) {
@@ -359,7 +371,8 @@ export default {
             this.$router.push({ path: '/result-report',
               query: {
                 paper_id: res.data.paper_id,
-                course_id: this.getQuestion.course_id
+                course_id: this.getQuestion.course_id,
+                entrance_type: this.getQuestion.entrance_type
               }
             })
           }

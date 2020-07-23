@@ -46,10 +46,20 @@
               <ul class="anscard-list clearfix" v-for="(item, index) in cardList" :key="index">
                 <li :class="{'red-bg': v.redCurren, 'green-bg': v.rightCurren}" v-for="(v, index) in item" :key="index">{{v.num}}</li>
               </ul>
+              <div class="test-txt" v-if="$route.query.entrance_type == 1">
+                <span v-if="resultsInfo.score >= 60">恭喜您完成入学测试，您的基础良好，稍后会为您生成推荐学习计划</span>
+                <span v-else>恭喜您完成入学测试，您的基础有待提升，稍后会为您生成推荐学习计划</span>
+              </div>
             </div>
-            <div class="jiexi-btn">
-              <button class="btn-com error-btn" @click="viewAnalysis('1')">错题解析</button>
-              <button class="btn-com all-btn" @click="viewAnalysis('2')">全部解析</button>
+            <div class="jiexi-footer">
+              <div class="jiexi-btn">
+                <button class="btn-com error-btn" @click="viewAnalysis('1')">错题解析</button>
+                <button class="btn-com all-btn" @click="viewAnalysis('2')">全部解析</button>
+              </div>
+              <!-- <div class="test-txt" v-if="$route.query.entrance_type == 1">
+                <span v-if="resultsInfo.score >= 60">恭喜您完成入学测试，您的基础良好，稍后会为您生成推荐学习计划</span>
+                <span v-else>恭喜您完成入学测试，您的基础有待提升，稍后会为您生成推荐学习计划</span>
+              </div> -->
             </div>
           </div>
         </div>
@@ -231,6 +241,17 @@ export default {
   }
   .r-section-title{
     font-size: 24px;
+    line-height: 24px;
+    display: flex;
+
+    p{
+      
+    }
+    span{
+      font-size: 14px;
+      font-weight: bold;
+      color: #E84342;
+    }
   }
   .r-statistics{
     padding: 29px 24px 50px 24px;
@@ -300,8 +321,8 @@ export default {
   .rsc-list{
     padding: 20px 0;
     margin-left: -8px;
-    height: 410px;
-    overflow: auto;
+    // height: 410px;
+    // overflow: auto;
   }
   .anscard-list{
     li{
@@ -312,7 +333,7 @@ export default {
       text-align: center;
       border: 1px solid $col666;
       border-radius: 100%;
-      margin: 10px 9px;
+      margin: 9px;
       cursor: pointer;
       &:nth-child(5){
         margin-right: 60px;
@@ -332,11 +353,26 @@ export default {
       }
     }
   }
-  .jiexi-btn{
+  .jiexi-footer{
+    // display: flex;
     position: absolute;
-    bottom: 30px;
+    bottom: 15px;
     right: 30px;
     text-align: right;
+  }
+  .test-txt{
+    padding: 100px 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #E84342;
+    text-align: center;
+  }
+  .jiexi-btn{
+    // position: absolute;
+    // bottom: 30px;
+    // right: 30px;
+    // text-align: right;
+    // flex: 1;
     button{
       width: 122px;
       height: 36px;

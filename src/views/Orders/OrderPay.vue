@@ -89,8 +89,6 @@ export default {
           let amount = this.pay_price * 100
           let callback // 京东支付回调url,个人中心我的订单
           let callback2 // 测试和生产接口
-          console.log(window.location.href)
-          console.log(window.location.href.indexOf('deste.youcaiwx.cn') > -1)
           if (window.location.href.indexOf('deste.youcaiwx.cn') > -1) {
             callback = 'https://deste.youcaiwx.cn'
             callback2 = config.baseUrl.dev
