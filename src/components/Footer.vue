@@ -64,10 +64,10 @@
                 <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">开通支付</a>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">快捷支付</a>
+                <router-link to="/course-jd">京东分期</router-link>
               </li>
               <li>
-                <router-link to="/course-jd">京东分期</router-link>
+                <router-link to="/quick-pay">快捷支付</router-link>
               </li>
             </ul>
             <ul class="footer-instru">
@@ -117,7 +117,7 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../assets/scss/app";
   #footer {
-    height: 354px;
+    // height: 354px;
     background: #3B3B3B;
     .footer-wrap{
       padding: 0 3%;
@@ -133,7 +133,7 @@ export default {
    }
    .footer_center {
      padding: 19px 0 16px 0;
-     height: 204px;
+    //  height: 204px;
      border-top: 2px solid $col666;
      border-bottom: 2px solid $col666;
      box-sizing: border-box;

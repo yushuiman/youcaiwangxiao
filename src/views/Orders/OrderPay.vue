@@ -89,13 +89,13 @@ export default {
           let amount = this.pay_price * 100
           let callback // 京东支付回调url,个人中心我的订单
           let callback2 // 测试和生产接口
-          if (window.location.href.indexOf('deste.youcaiwx.cn') > -1) {
-            callback = 'https://deste.youcaiwx.cn'
-            callback2 = config.baseUrl.dev
-          } else {
-            callback = 'https://www.youcaiwx.cn'
-            callback2 = config.baseUrl.pro
-          }
+          if (window.location.host == 'youcaiwx.cn') {
+              callback = 'https://www.youcaiwx.cn'
+              callback2 = config.baseUrl.pro
+            } else {
+              callback = 'https://web.youcaiwx.cn'
+              callback2 = config.baseUrl.dev
+            }
           let obj = Base64.encode(JSON.stringify({
             version: 'V2.0',
             merchant: '111934986001',
@@ -120,8 +120,6 @@ export default {
             specName: '',
             saveUrl: 'https://wepay.jd.com/jdpay/saveOrder'
           }))
-          console.log('回调地址：' + callback)
-          console.log('接口地址：' + callback2)
           window.location.href = callback2 + '/demo/action/ClientOrder.php?list=' + obj
         }
       })

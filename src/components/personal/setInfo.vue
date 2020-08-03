@@ -99,8 +99,9 @@
            <div v-if="addAddresFlag" style="margin-bottom: 40px">
              <div class="goods">
                <input type="text" placeholder="收货人" v-model="addName">
-               <input style="margin-left: 20px" type="text" maxlength="11" v-model="addMobile" placeholder="手机号码">
-               <span class="default_address" style="margin-left: 20px" @click="saveNewAddres(1)">保存地址</span>
+               <input style="margin-left: 22.5px" type="text" maxlength="11" v-model="addMobile" placeholder="手机号码">
+               <input style="margin-left: 22.5px" type="text" placeholder="班主任姓名" v-model="addTeacherName">
+               <span class="default_address" style="margin-left: 22.5px" @click="saveNewAddres(1)">保存地址</span>
              </div>
              <!--详细地址输入框-->
              <div>
@@ -112,7 +113,8 @@
              <div v-for="(v, index) in personalInfo.address" :key="index" :ref="'inputDisabled' + index" :id="'inputDisabled' + index">
                <div class="goods edixBtn">
                 <span class="g-input">{{v.consignee}}</span>
-                <span class="g-input" style="margin-left: 20px">{{v.telephone}}</span>
+                <span class="g-input" style="margin-left: 22.5px">{{v.telephone}}</span>
+                <span class="g-input" style="margin-left: 22.5px">{{v.order_remark}}</span>
                 <span class="default_address" @click="setDefaultAddress(v)">{{v.value}}</span>
                 <span class="del_address" @click="delAddres(v, index)">删除地址</span>
                 <span class="edit_address" @click="saveNewAddres(2, v)">修改</span>
@@ -131,7 +133,8 @@
             <div class="edit-wrap">
               <div class="goods">
                <input type="text" placeholder="收货人" v-model="addName">
-               <input style="margin-left: 20px" type="text" maxlength="11" v-model="addMobile" placeholder="手机号码">
+               <input style="margin-left: 22.5px" type="text" maxlength="11" v-model="addMobile" placeholder="手机号码">
+               <input style="margin-left: 22.5px" type="text" placeholder="班主任姓名" v-model="addTeacherName">
               </div>
               <div>
                 <input class="detalis_address" type="text" maxlength="100" v-model="addAddres" placeholder="详细地址：省市区、道路、门牌号、小区、楼栋号、单元室等备注信息">
@@ -191,6 +194,7 @@ export default {
       addAddres: '',
       addMobile: '',
       address_id: '',
+      addTeacherName: '',
       is_default: 2,
       visibleAddress: false, // 修改地址
       oldpwd: '', // 原密码
@@ -294,13 +298,15 @@ export default {
           consignee: this.addName,
           telephone: this.addMobile,
           address: this.addAddres,
-          is_default: 2 // 新增地址为2 修改地址取已有状态
+          is_default: 2, // 新增地址为2 修改地址取已有状态
+          order_remark: this.addTeacherName || ''
         }).then(data => {
           const res = data.data
           if (res.code === 200) {
             this.addName = ''
             this.addMobile = ''
             this.addAddres = ''
+            this.addTeacherName = ''
             this.$emit('getPersonalInfo')
           }
         })
@@ -311,6 +317,7 @@ export default {
         this.addName = v.consignee
         this.addAddres = v.address
         this.addMobile = v.telephone
+        this.addTeacherName = v.order_remark
         this.is_default = v.is_default
       }
     },
@@ -325,7 +332,8 @@ export default {
         consignee: this.addName,
         telephone: this.addMobile,
         address: this.addAddres,
-        is_default: this.is_default
+        is_default: this.is_default,
+        order_remark: this.addTeacherName || ''
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
@@ -655,12 +663,14 @@ export default {
   .goods {
     margin-left: 83px;
     margin-top: 20px;
+    display: flex;
+    align-items: center;
   }
 
   /*收货人，手机号输入框的样式*/
   .goods input, .goods .g-input {
     display: inline-block;
-    width: 275px;
+    width: 175px;
     height: 40px;
     padding-left: 14px;
     background: rgba(245, 245, 245, 1);
@@ -693,7 +703,7 @@ export default {
   }*/
   /*删除地址按钮*/
   .del_address{
-    margin-left: 20px;
+    margin-left: 22.5px;
     height:22px;
     font-size:16px;
     font-weight:400;

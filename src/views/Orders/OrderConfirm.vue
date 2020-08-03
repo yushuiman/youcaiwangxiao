@@ -11,6 +11,8 @@
               <span class="moren" v-if="item.is_default == 1">默认地址</span>
             </p>
             <p class="adr-mobile">{{item.telephone}}</p>
+            <p class="adr-tacname" v-if="item.order_remark">班主任姓名：{{item.order_remark}}</p>
+            <p class="adr-tacname" v-else></p>
             <p class="adr-detail">{{item.address}}</p>
             <p class="adr-change"><span @click="changeAddress(1, item)">修改</span></p>
           </li>
@@ -78,7 +80,8 @@
       <div class="edit-wrap">
         <div class="goods">
           <input type="text" placeholder="收货人" v-model="curAddressInfo.consignee">
-          <input style="margin-left: 20px" type="text" maxlength="11" v-model="curAddressInfo.telephone" placeholder="手机号码">
+          <input style="margin-left: 22.5px" type="text" maxlength="11" v-model="curAddressInfo.telephone" placeholder="手机号码">
+          <input style="margin-left: 22.5px" type="text" v-model="curAddressInfo.order_remark" placeholder="班主任姓名">
         </div>
         <div>
           <input class="detalis_address" type="text" maxlength="100" v-model="curAddressInfo.address" placeholder="详细地址：省市区、道路、门牌号、小区、楼栋号、单元室等备注信息">
@@ -192,7 +195,8 @@ export default {
       curAddressInfo: {
         consignee: '',
         telephone: '',
-        address: ''
+        address: '',
+        order_remark: '' // 班主任名称
       }, // 地址手机号昵称
       typeAddres: 0, // 修改、新增区分
       rangeSts: {
@@ -371,6 +375,7 @@ export default {
         consignee: this.curAddressInfo.consignee,
         telephone: this.curAddressInfo.telephone,
         address: this.curAddressInfo.address,
+        order_remark: this.curAddressInfo.order_remark || '',
         is_default: 2
       }).then(data => {
         this.showLoading(false)
@@ -380,6 +385,7 @@ export default {
           this.curAddressInfo.consignee = ''
           this.curAddressInfo.telephone = ''
           this.curAddressInfo.address = ''
+          this.curAddressInfo.order_remark = ''
           this.visibleAddress = false
         }
       })
@@ -396,6 +402,7 @@ export default {
         consignee: this.curAddressInfo.consignee,
         telephone: this.curAddressInfo.telephone,
         address: this.curAddressInfo.address,
+        order_remark: this.curAddressInfo.order_remark,
         is_default: this.curAddressInfo.is_default
       }).then(data => {
         this.showLoading(false)
@@ -405,6 +412,7 @@ export default {
           this.curAddressInfo.consignee = ''
           this.curAddressInfo.telephone = ''
           this.curAddressInfo.address = ''
+          this.curAddressInfo.order_remark = ''
           this.visibleAddress = false
         } else {
           this.$Message.error(res.msg)
@@ -669,14 +677,18 @@ export default {
     }
     .adr-mobile{
       margin-top: 2px;
-      margin-bottom: 10px;
     }
-    .adr-mobile,.adr-detail{
+    .adr-tacname{
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    .adr-mobile,.adr-detail,.adr-tacname{
       color: $col666;
+      height: 21px;
       line-height: 21px;
     }
     .adr-detail{
-      height: 63px;
+      height: 42px;
       text-align: justify;
     }
     .adr-change{
@@ -825,7 +837,7 @@ export default {
   }
   .goods input, .goods .g-input {
     display: inline-block;
-    width: 275px;
+    width: 175px;
     height: 40px;
     padding-left: 14px;
     background: rgba(245, 245, 245, 1);

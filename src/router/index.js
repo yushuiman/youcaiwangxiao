@@ -33,6 +33,7 @@ const LearnCenterVideo = r => require.ensure([], () => r(require('@/views/Learni
 const OrderConfirm = r => require.ensure([], () => r(require('@/views/Orders/OrderConfirm')), 'OrderConfirm')
 const OrderPay = r => require.ensure([], () => r(require('@/views/Orders/OrderPay')), 'OrderPay')
 const WechatPay = r => require.ensure([], () => r(require('@/views/Orders/WechatPay')), 'WechatPay')
+const Quickpay = r => require.ensure([], () => r(require('@/views/Orders/Quickpay')), 'Quickpay')
 const Books = r => require.ensure([], () => r(require('@/views/Books/Books')), 'Books')
 const BooksDetail = r => require.ensure([], () => r(require('@/views/Books/BooksDetail')), 'BooksDetail')
 
@@ -367,6 +368,17 @@ const router = new Router({
       component: WechatPay,
       meta: {
         title: '订单支付',
+        showHeader: true,
+        showFooter: false,
+        showRightSlider: true
+      }
+    },
+    {
+      path: '/quick-pay',
+      name: 'quick-pay',
+      component: Quickpay,
+      meta: {
+        title: '快捷支付',
         showHeader: true,
         showFooter: false,
         showRightSlider: true
