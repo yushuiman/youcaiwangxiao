@@ -534,10 +534,11 @@ export default {
     testBtn (type) {
       this.testStatus = false
       if(type === 1) {
+        // 跳过-入库
         this.getAddEntrance ()
         return
       }
-      // 然后入库，并获取试卷
+      // 确定-获取试卷
       this.getEntrancePaper ()
     },
     // 能力评估

@@ -28,7 +28,7 @@
           <h2 class="title-com">做题进度</h2>
           <div class="progress-info">
             <Progress :percent="percent" :stroke-width="10" stroke-color="#0267FF" hide-info/>
-            <span class="topic-num"><em data-v-680035d5="">{{percentNum}}</em>/{{total}}</span>
+            <span class="topic-num"><em>{{percentNum}}</em>/{{total}}</span>
           </div>
           <ul class="dopic-status" v-if="subTopics.entrance_type == 1">
             <li class="dopstu-item" :class="['dopstu-item-0' + (index+1)]" v-for="(v, index) in stsTxtArr2" :key="index" @click="submitAnswers(v)">

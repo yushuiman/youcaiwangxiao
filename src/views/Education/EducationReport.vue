@@ -349,7 +349,7 @@ export default {
       margin-right: 30px;
     }
     .course-name{
-      width: 358px;
+      width: 350px;
     }
     .course-teacher{
       width: 248px;

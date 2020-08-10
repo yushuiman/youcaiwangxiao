@@ -42,17 +42,26 @@
       <div class="u-course-my" v-if="selIdx == 1">
         <div class="u-course-record" v-if="watchRecordsList && watchRecordsList.length">
           <div class="ucr-item" v-for="(item, index) in watchRecordsList" :key="index">
-            <p class="time"><i class="dot"></i>{{item.time}}</p>
-            <div class="uc-item" v-for="(val, key) in item.list" :key="key">
-              <img :src="val.pc_img" alt="" class="uci-img">
+            <!-- <p class="time"><i class="dot"></i>{{item.create_time || '空'}}</p> -->
+            <div class="uc-item">
+              <img :src="item.app_img" alt="" class="uci-img">
               <div class="uci-detail">
-                <h2 class="ucid-name">{{val.name}}</h2>
-                <p class="ucid-learn" v-if="val.video">学习至{{val.video.video_name}}</p>
+                <h2 class="ucid-name">{{item.name}}</h2>
+                <p class="ucid-learn" v-if="item.video_name">学习至{{item.video_name}}</p>
                 <p class="ucid-learn" v-else>学习至未学习</p>
-                <p class="cpe-status" :class="{'cpe-finish': val.complete == 1}">{{val.complete == 1 ? '已完成' : '未完成'}}</p>
+                <p class="cpe-status" :class="{'cpe-finish': item.complete == 1}">{{item.complete == 1 ? '已完成' : '未完成'}}</p>
               </div>
-              <button class="btn-com uci-learn" @click="courseLearnVideo(item, val, 2)">开始学习</button>
+              <button class="btn-com uci-learn" @click="courseLearnVideo(item, item, 2)">开始学习</button>
             </div>
+          </div>
+          <div style="padding: 20px; text-align: center;">
+            <Page
+            :total="total"
+            @on-change="onChange"
+            :current="page"
+            :page-size="limit"
+            size="small"
+            />
           </div>
         </div>
         <div class="no-data no-data-course" v-if="noDataFlag">
@@ -78,6 +87,7 @@ export default {
       selIdx: this.$route.query.selIdx || 0,
       limit: 10,
       page: 1,
+      total: 1,
       myCourseList: [], // 我的课程
       watchRecordsList: [], // 播放记录
       myCollpackageList: [], // 收藏课程包
@@ -127,6 +137,7 @@ export default {
     },
     initRes () {
       this.noDataFlag = false
+      this.page = 1
       if (this.selIdx == 0) {
         this.getMyCourse()
       }
@@ -166,12 +177,15 @@ export default {
     getWatchRecords () {
       this.showLoading(true)
       watchRecords({
-        user_id: this.user_id
+        user_id: this.user_id,
+        page: this.page,
+        limit: this.limit
       }).then(data => {
         this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
-          this.watchRecordsList = res.data
+          this.watchRecordsList = res.data.data
+          this.total = res.data.total
           if (this.watchRecordsList.length === 0) {
             this.noDataFlag = true
           }
@@ -180,38 +194,72 @@ export default {
         }
       })
     },
+    // 分页
+    onChange (val) {
+      this.page = val
+      this.getWatchRecords()
+      window.scrollTo(0, 0)
+    },
     // 课程去学习 播放记录去学习
     async courseLearnVideo (item, val, type) {
       await this.getUserInfo()
       if (type === 1) {
         window.sessionStorage.setItem('userstatus', 1) // 我的课程一定是已购买
+        // 如果有看过的记录，继续学习
+        if (val.video) {
+          let obj = {
+            type_id: item.type_id,
+            package_id: item.package_id,
+            course_id: val.video.course_id,
+            section_id: val.video.section_id,
+            video_id: val.video.video_id
+          }
+          this.$router.push({ path: '/education-video', query: obj })
+          return
+        }
+        // 否则去课程列表页面
+        this.$router.push({ path: '/education-video',
+          query: {
+            package_id: item.package_id,
+            type_id: item.type_id,
+            course_id: val.course_id
+          }
+        })
       } else {
-        window.sessionStorage.setItem('userstatus', val.is_purchase) // 播放记录是否购买
-      }
-      if (val.is_purchase && val.is_purchase == 2) {
-        this.$Message.error('请购买课程')
-        return
-      }
-      // 如果有看过的记录，继续学习
-      if (val.video) {
+        if (item.is_purchase && item.is_purchase == 2) {
+          this.$Message.error('请购买课程')
+          return
+        }
+        window.sessionStorage.setItem('userstatus', item.is_purchase) // 播放记录是否购买
         let obj = {
-          type_id: item.type_id || val.type_id,
-          package_id: item.package_id || val.type_id,
-          course_id: val.video.course_id,
-          section_id: val.video.section_id,
-          video_id: val.video.video_id
+          type_id: item.type_id,
+          package_id: item.package_id,
+          course_id: item.course_id,
+          section_id: item.section_id,
+          video_id: item.video_id
         }
         this.$router.push({ path: '/education-video', query: obj })
-        return
       }
+      // 如果有看过的记录，继续学习
+      // if (val.video) {
+      //   let obj = {
+      //     type_id: item.type_id,
+      //     package_id: item.package_id,
+      //     course_id: val.video.course_id || item.course_id,
+      //     section_id: val.video.section_id || item.section_id,
+      //     video_id: val.video.video_id || item.video_id
+      //   }
+      //   this.$router.push({ path: '/education-video', query: obj })
+      //   return
+      // }
       // 否则去课程列表页面
-      this.$router.push({ path: '/education-video',
-        query: {
-          package_id: item.package_id,
-          type_id: item.type_id,
-          course_id: val.course_id
-        }
-      })
+      // this.$router.push({ path: '/education-video',
+      //   query: {
+      //     package_id: item.package_id,
+      //     type_id: item.type_id,
+      //     course_id: val.course_id
+      //   }
+      // })
     }
   }
 }
@@ -346,21 +394,20 @@ export default {
   }
   // 观看记录
   .ucr-item{
-    &:after{
-      position: absolute;
-      content: "";
-      left: 0;
-      top: 18px;
-      height: 100%;
-      width: 1px;
-      background: $blueColor;
-    }
+    // &:after{
+    //   position: absolute;
+    //   content: "";
+    //   left: 0;
+    //   top: 18px;
+    //   height: 90%;
+    //   width: 1px;
+    //   background: $blueColor;
+    // }
     .uc-item{
-      margin-left: 20px;
+      margin: 10px 0;
     }
     .time{
       font-size: 16px;
-      padding: 10px 0;
       .dot{
         width: 10px;
         height: 10px;
