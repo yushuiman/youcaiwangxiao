@@ -248,7 +248,7 @@
   </div>
 </template>
 <script>
-import logoImg from '@/assets/images/login/logo-yc.png'
+import logoImg from '@/assets/images/global/yc-logo.png'
 import phone from '@/assets/images/login/User.png'
 import password from '@/assets/images/login/mim.png'
 import wx from '@/assets/images/login/wx2.png'
@@ -788,11 +788,11 @@ export default {
     margin-bottom: 20px;
   }
   .span_on {
-    color: #58C7FF !important;
-    border-bottom: 1px solid #58C7FF;
+    color: $blueColor!important;
+    border-bottom: 1px solid $blueColor;
   }
   .login_nav {
-    color: #58C7FF;
+    color: $blueColor;
     height: 75px;
     display: flex;
     align-items: flex-end;
@@ -804,15 +804,18 @@ export default {
     padding-bottom: 5px;
     cursor: pointer;
   }
+  .finish .logo_img{
+    margin-top: 50px;
+  }
   .logo_img {
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 50px;
+    margin-top: 20px;
   }
   .logo_img img{
     width: 200px;
-    height: 53px;
+    // height: 53px;
   }
   .logo_img2 {
     width: 100%;
@@ -821,8 +824,8 @@ export default {
     margin-top: 20px;
   }
   .logo_img2 img{
-    width: 198px;
-    height: 52px;
+    width: 200px;
+    // height: 52px;
   }
   .description {
     color: #999999;
@@ -849,7 +852,7 @@ export default {
   }
   .tel img {
     width: 18px;
-    height: 22px;
+    height: 20px;
   }
   .forget {
     width: 100%;
@@ -858,15 +861,16 @@ export default {
     align-items: center;
     justify-content: flex-end;
     font-size: 14px;
-    color: #58C7FF;
+    color: $blueColor;
     cursor: pointer;
   }
   .log {
     width:320px;
     height:50px;
-    background:rgba(88,199,255,1);
+    background:$blueColor;
     border-radius:25px;
     color: $colfff;
+    font-size: 18px;
     margin: 40px 0px 20px 10px;
   }
   .line {
@@ -929,8 +933,8 @@ export default {
     margin-left: 50px;
     // display: flex;
     // align-items: center;
-    background:rgba(88,199,255,1);
-    border:1px solid rgba(88,199,255,1);
+    background:$blueColor;
+    border:1px solid $blueColor;
     border-radius:12px;
     font-size: 13px;
     color: #FFFFFF;
@@ -948,23 +952,23 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    background:rgba(88,199,255,1);
+    background:$blueColor;
     border-radius:12px;
     font-size: 13px;
     color: #FFFFFF;
   }
   .Agreement {
     display: inline-block;
-    color: #58C7FF;
+    color: $blueColor;
     cursor: pointer;
   }
   .registered {
     width: 320px;
     height: 50px;
-    background:rgba(88,199,255,1);
-    border:1px solid rgba(88,199,255,1);
+    background:$blueColor;
+    border:1px solid $blueColor;
     border-radius:25px;
-    font-size: 24px;
+    font-size: 18px;
     margin: 0 auto;
     margin-top: 22px;
     margin-bottom: 15px;
@@ -972,8 +976,8 @@ export default {
   .confirm {
     width: 100%;
     height: 50px;
-    background:rgba(88,199,255,1);
-    border: 1px solid rgba(88,199,255,1);
+    background:$blueColor;
+    border: 1px solid $blueColor;
     border-radius:25px;
     font-size: 24px;
     margin: 0 auto;

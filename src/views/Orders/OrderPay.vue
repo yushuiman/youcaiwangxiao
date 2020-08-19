@@ -89,13 +89,13 @@ export default {
           let amount = this.pay_price * 100
           let callback // 京东支付回调url,个人中心我的订单
           let callback2 // 测试和生产接口
-          if (window.location.host == 'youcaiwx.cn') {
-              callback = 'https://www.youcaiwx.cn'
-              callback2 = config.baseUrl.pro
-            } else {
-              callback = 'https://web.youcaiwx.cn'
-              callback2 = config.baseUrl.dev
-            }
+          if (window.location.href.indexOf('web.youcaiwx.cn') > -1) {
+            callback = 'https://web.youcaiwx.cn'
+            callback2 = config.baseUrl.dev
+          } else {
+            callback = 'https://www.youcaiwx.cn'
+            callback2 = config.baseUrl.pro
+          }
           let obj = Base64.encode(JSON.stringify({
             version: 'V2.0',
             merchant: '111934986001',

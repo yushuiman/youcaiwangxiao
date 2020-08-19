@@ -379,9 +379,9 @@ const router = new Router({
       component: Quickpay,
       meta: {
         title: '快捷支付',
-        showHeader: true,
+        showHeader: false,
         showFooter: false,
-        showRightSlider: true
+        showRightSlider: false
       }
     },
     {
@@ -389,7 +389,7 @@ const router = new Router({
       name: 'books',
       component: Books,
       meta: {
-        title: '优财图书馆',
+        title: '图书',
         showHeader: true,
         showFooter: true,
         showRightSlider: true
@@ -400,7 +400,7 @@ const router = new Router({
       name: 'books-detail',
       component: BooksDetail,
       meta: {
-        title: '优财图书馆',
+        title: '图书',
         showHeader: true,
         showFooter: true,
         showRightSlider: true

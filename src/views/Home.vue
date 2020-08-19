@@ -10,8 +10,7 @@
           <h1>CMA高清网课全科</h1>
           <p>科学的理念 + 优秀的师资 + 权威的课程</p>
           <div class="btn-box-index">
-            <!--  @click="jumpWhere(1)" -->
-            <button type="button" name="button" class="more-btn">更多</button>
+            <button type="button" name="button" class="more-btn" @click="jumpWhere(1)">更多</button>
           </div>
         </div>
       </li>
@@ -52,7 +51,7 @@
     <img class="cma-title-bg" src="@/assets/images/index/cma-title-bg.png" alt="" width="100%" height="auto">
     <div class="cma-consultation">
       <div class="w-wrap clearfix">
-        <div class="cma-txt-bg fl">CMA咨询</div>
+        <div class="cma-txt-bg fl">常见问题</div>
         <ul class="txt-item fl">
           <li v-for="(item, index) in newInformationList" :key="index" @click="getNewsDetails(item.news_id)">{{item.title}}</li>
         </ul>
@@ -84,7 +83,8 @@ export default {
   methods: {
     jumpWhere (type) {
       if (type === 1) {
-        window.open('http://www.ucfo.com.cn/xczt/', '_blank')
+        this.$router.push('/course')
+        // window.open('http://www.ucfo.com.cn/xczt/', '_blank')
       }
       if (type === 2) {
         window.open('https://youcaiwx.cn/Znten/STK/index.html', '_blank')

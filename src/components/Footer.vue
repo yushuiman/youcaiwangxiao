@@ -67,7 +67,7 @@
                 <router-link to="/course-jd">京东分期</router-link>
               </li>
               <li>
-                <router-link to="/quick-pay">快捷支付</router-link>
+                <router-link to="/quick-pay" target="_blank">快捷支付</router-link>
               </li>
             </ul>
             <ul class="footer-instru">

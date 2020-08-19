@@ -92,6 +92,7 @@
     <div v-if="status == 1">
       <Modal v-model="visible"
         :width="495"
+        :closable="false"
         footer-hide
         class="index-active-modal">
         <img :src="image_url" alt="" @click="freeGet">
@@ -494,5 +495,7 @@ export default {
       }
     }
   }
-
+  .index-active-modal img{
+    width: 100%;
+  }
 </style>

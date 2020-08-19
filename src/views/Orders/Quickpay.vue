@@ -1,95 +1,204 @@
 <template>
-  <div class="quick-pay-wrap w-wrap">
-    <ul class="tab-list">
-      <li class="tab-item" :class="{'active': selIdx == 1}" @click="tabClk(1)">开始支付</li>
-      <li class="tab-item" :class="{'active': selIdx == 2}" @click="tabClk(2)">查询订单</li>
-    </ul>
-    <div class="quick-pay-content">
-      <div class="quick-pay-info" v-if="selIdx == 1">
-        <div class="qp-left">
-          <ul class="payul">
-            <!-- 支付方式1支付宝2微信3京东 -->
-            <li><span>支付方式：</span></li>
-            <li>
-              <input type="radio" value="1" v-model="pay_type">
-              <label for="支付宝">支付宝</label>
-            </li>
-            <li>
-              <input type="radio" value="2" v-model="pay_type">
-              <label for="微信">微信</label>
-            </li>
-            <li>
-              <input type="radio" value="3" v-model="pay_type">
-              <label for="京东">京东</label>
-            </li>
-          </ul>
-          <ul class="payform">
-            <li>
-              <label for="">支付金额：</label>
-              <input type="number" v-model="pay_price">
-              <i>*</i>
-            </li>
-            <li>
-                <label for="">姓名：</label>
-                <input type="text" v-model="user_name">
-                <i>*</i>
-            </li>
-            <li>
-              <label for="">手机号码：</label>
-              <input type="text" v-model="mobile" maxlength="11">
-              <i>*</i>
-            </li>
-            <li>
-              <label for="">课程名称：</label>
-              <input type="text" v-model="course_name">
-              <i>*</i>
-            </li>
-            <li>
-              <label for=""></label>
-              <button class="btn-com quick-btn" @click="payOrder">开始支付</button>
-            </li>
-          </ul>
-        </div>
-        <div class="qp-right">
-          <p>注意：</p>
-          <p>1.客户支付成功后，请点击<span>返回用户</span>，或者<span>详情</span>获取订单号；</p>
-          <p>2.支付成功后，请将订单号和自己的姓名和报班信息发给咨询老师。</p>
-          <div class="ewm-pay" v-if="wxpayFlag">
-            <img :src="ewmPayImg" alt="支付二维码" class="wx-code">
-            <p>请用微信扫描此二维码完成支付</p>
-          </div>
-          <img v-else src="../../assets/images/order/pay2.jpg" alt="" width="100">
-        </div>
+  <div class="quick-pay-wrap" :class="{'h5-quick-pay-wrap': isMobile == 2}">
+    <div class="head-pay">
+      <div class="w-wrap">
+        <img src="../../assets/images/global/yc-logo.png" alt="">
+        <em>｜</em>
+        <span>网上快捷支付通道</span>
       </div>
-      <div class="quick-pay-info quick-order-info" v-if="selIdx == 2">
-        <div class="qp-left">
-          <ul class="payform">
-            <li>
-                <label for="">姓名：</label>
-                <input type="text" v-model="o_user_name">
-            </li>
-            <!-- <li>
-              <label for="">支付单号：</label>
-              <input type="number" v-model="o_order_num">
-              <i>*</i>
-            </li> -->
-            <li>
-              <label for="">手机号码：</label>
-              <input type="text" v-model="o_mobile" maxlength="11">
-              <i>*</i>
-            </li>
-            <li>
-              <label for=""></label>
-              <button class="btn-com quick-btn" @click="orderSeach">查询</button>
-            </li>
-          </ul>
-        </div>
-        <div class="qp-right">
-          <img src="../../assets/images/order/pay2.jpg" alt="" width="100">
-        </div>
-      </div>
-      <Table :columns="columns1" :data="orderList" v-if="selIdx == 2"></Table>
     </div>
+    <div class="quick-main w-wrap">
+      <ul class="tab-list">
+        <li class="tab-item" :class="{'active': selIdx == 1}" @click="tabClk(1)">开始支付</li>
+        <li class="tab-item" :class="{'active': selIdx == 2}" @click="tabClk(2)">查询订单</li>
+      </ul>
+      <div class="quick-pay-content">
+        <div class="quick-pay-info" v-if="selIdx == 1">
+          <div class="qp-left">
+            <ul class="payul">
+              <!-- 支付方式1支付宝2微信3京东 -->
+              <li><span>支付方式：</span></li>
+              <li>
+                <input type="radio" value="1" v-model="pay_type">
+                <label for="支付宝">支付宝</label>
+              </li>
+              <li>
+                <input type="radio" value="2" v-model="pay_type">
+                <label for="微信">微信</label>
+              </li>
+              <li>
+                <input type="radio" value="3" v-model="pay_type">
+                <label for="京东">京东</label>
+              </li>
+            </ul>
+            <ul class="payform">
+              <li>
+                <label for="">支付金额：</label>
+                <p><input type="number" v-model="pay_price"></p>
+                <i>*</i>
+              </li>
+              <li>
+                  <label for="">姓名：</label>
+                  <p><input type="text" v-model="user_name"></p>
+                  <i>*</i>
+              </li>
+              <li>
+                <label for="">手机号码：</label>
+                <p><input type="text" v-model="mobile" maxlength="11"></p>
+                <i>*</i>
+              </li>
+              <li>
+                <label for="">课程名称：</label>
+                <p><input type="text" v-model="course_name"></p>
+                <i>*</i>
+              </li>
+              <li>
+                <label for=""></label>
+                <button class="btn-com quick-btn" @click="payOrder">开始支付</button>
+              </li>
+            </ul>
+          </div>
+          <div class="qp-right">
+            <p>注意：</p>
+            <p>1.客户支付成功后，请点击<span>返回用户</span>，或者<span>详情</span>获取订单号；</p>
+            <p>2.支付成功后，请将订单号和自己的姓名和报班信息发给咨询老师。</p>
+            <div class="ewm-pay" v-if="wxpayFlag">
+              <img :src="ewmPayImg" alt="支付二维码" class="wx-code">
+              <p>请用微信扫描此二维码完成支付</p>
+            </div>
+            <img v-else src="../../assets/images/order/pay2.jpg" alt="" width="100">
+          </div>
+        </div>
+        <div class="quick-pay-info quick-order-info" v-if="selIdx == 2">
+          <div class="qp-left">
+            <ul class="payform">
+              <li>
+                  <label for="">姓名：</label>
+                  <p><input type="text" v-model="o_user_name"></p>
+              </li>
+              <!-- <li>
+                <label for="">支付单号：</label>
+                <input type="number" v-model="o_order_num">
+                <i>*</i>
+              </li> -->
+              <li>
+                <label for="">手机号码：</label>
+                <p><input type="text" v-model="o_mobile" maxlength="11"></p>
+                <i>*</i>
+              </li>
+              <li>
+                <label for=""></label>
+                <button class="btn-com quick-btn" @click="orderSeach">查询</button>
+              </li>
+            </ul>
+          </div>
+          <div class="qp-right">
+            <img src="../../assets/images/order/pay2.jpg" alt="" width="100">
+          </div>
+        </div>
+        <div class="order-search" v-if="selIdx == 2">
+          <Table :columns="columns1" :data="orderList"></Table>
+        </div>
+      </div>
+    </div>
+    <footer id="footer">
+      <div class="footer-wrap">
+        <div class="footer-top w-wrap">
+          <img src="@/assets/images/global/yc-logo-gray.png" alt="logo" class="yc-logo">
+        </div>
+        <div class="footer_center">
+          <div class="w-wrap clearfix">
+            <ul class="footer-instru">
+              <li>
+                <h1>新手指南</h1>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=5&footer_name=报考条件" target="_blank">报考条件</a>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=2&footer_name=考试时间" target="_blank">考试时间</a>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=3&footer_name=考试费用" target="_blank">考试费用</a>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=4&footer_name=报考流程" target="_blank">报考流程</a>
+              </li>
+            </ul>
+            <ul class="footer-instru">
+              <li>
+                <h1>关于优财</h1>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=5&footer_name=关于我们" target="_blank">关于我们</a>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=6&footer_name=联系我们" target="_blank">联系我们</a>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=7&footer_name=师资招聘" target="_blank">师资招聘</a>
+              </li>
+            </ul>
+            <ul class="footer-instru">
+              <li>
+                <h1>学习须知</h1>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=8&footer_name=支付方式" target="_blank">支付方式</a>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=9&footer_name=发票制度" target="_blank">发票制度</a>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=10&footer_name=课程下载" target="_blank">课程下载</a>
+              </li>
+            </ul>
+            <ul class="footer-instru">
+              <li>
+                <h1>支付方式</h1>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">网上支付</a>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">开通支付</a>
+              </li>
+              <li>
+                <router-link to="/course-jd">京东分期</router-link>
+              </li>
+              <li>
+                <router-link to="/quick-pay" target="_blank">快捷支付</router-link>
+              </li>
+            </ul>
+            <ul class="footer-instru">
+              <li>
+                <h1>售后服务</h1>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">发票制度</a>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">忘记密码</a>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">退换课说明</a>
+              </li>
+              <li>
+                <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">问题反馈</a>
+              </li>
+            </ul>
+            <div class="erweima">
+              <img src="@/assets/images/global/ewm-icon.png" alt="">
+              <p>优财网校APP</p>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom w-wrap">
+          <p>客服电话：400-666-5318</p>
+          <p>2014-{{curYear}} 优财智业（北京）科技发展有限公司-美国注册管理会计师CMA认证培训 CMA培训专家 版权所有 京IPC备10036536号-8</p>
+        </div>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -103,6 +212,7 @@ let Base64 = require('js-base64').Base64
 export default {
   data () {
     return {
+      curYear: '2020',
       selIdx: 1,
       ewmPayImg: '', // 二维码支付
       order_num: '',
@@ -172,7 +282,8 @@ export default {
           minWidth: 90,
           align: 'center'
         }
-      ]
+      ],
+      isMobile: 1 // 1浏览器2手机
     }
   },
   computed: {
@@ -189,20 +300,35 @@ export default {
     }
   },
   mounted () {
+    if (this._isMobile()) {
+      this.isMobile = 2 // h5
+    } else {
+      this.isMobile = 1 // pc
+      var myDate = new Date()
+      this.curYear = myDate.getFullYear()
+    }
   },
   methods: {
+    _isMobile() {
+      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+      return flag
+    },
     tabClk (index) {
       this.selIdx = index
     },
     orderSeach () {
-       var re = /^[1]([3-9])[0-9]{9}$/
+      var re = /^[1]([3-9])[0-9]{9}$/
+      if (this.o_mobile == '') {
+        this.$Message.error('请输入手机号~')
+        return
+      } 
       if (!re.test(this.o_mobile)) {
         this.$Message.error('手机号格式错误~')
         return
       } 
       if (this.o_mobile) {
         queryQuickOrder({
-          // order_num: this.o_order_num,
+          o_user_name: this.o_user_name,
           mobile: this.o_mobile,
         }).then((data) => {
           const res = data.data
@@ -213,7 +339,7 @@ export default {
           }
         })
       } else {
-        this.$Message.error('请输入订单号或手机号～')
+        this.$Message.error('请输入或手机号～')
       }
     },
     payOrder () {
@@ -238,24 +364,34 @@ export default {
           this.order_num = res.data.order_num
           let callback // 京东支付回调url,个人中心我的订单
           let callback2 // 测试和生产接口
-          if (window.location.host == 'youcaiwx.cn') {
-            callback = 'https://www.youcaiwx.cn'
-            callback2 = config.baseUrl.pro
-          } else {
+          if (window.location.href.indexOf('web.youcaiwx.cn') > -1) {
             callback = 'https://web.youcaiwx.cn'
             callback2 = config.baseUrl.dev
+          } else {
+            callback = 'https://www.youcaiwx.cn'
+            callback2 = config.baseUrl.pro
           }
           // 支付宝
           if (this.pay_type == 1) {
-            window.open(callback2 + '/alipay/Quickpay/zfbpay?order_num=' + this.order_num + '&name=' + '优财' + '&price=' + this.pay_price + '&body=', "_blank")
+            if (this.isMobile == 1) {
+              window.open(callback2 + '/alipay/Quickpay/zfbpay?order_num=' + this.order_num + '&name=' + '优财' + '&price=' + this.pay_price + '&body=' + '&activity_type=' + this.isMobile, "_blank")
+            }
+            if (this.isMobile == 2) {
+              window.location.href = callback2 + '/alipay/Quickpay/zfbpay?order_num=' + this.order_num + '&name=' + '优财' + '&price=' + this.pay_price + '&body=' + '&activity_type=' + this.isMobile
+            }
           }
           // 微信
           if (this.pay_type == 2) {
-            this.ewmPayImg = callback2 + '/web/Quickpay/setCode?user_id=' + this.user_id + '&order_num=' + this.order_num
-            this.wxpayFlag = true
-            this.timer = setInterval(() => {
-              this.callBackGetGoods()
-            }, 2000)
+            if (this.isMobile == 1) {
+              this.ewmPayImg = callback2 + '/web/Quickpay/setCode?order_num=' + this.order_num + '&activity_type=' + this.isMobile
+              this.wxpayFlag = true
+              this.timer = setInterval(() => {
+                this.callBackGetGoods(this.order_num)
+              }, 2000)
+            }
+            if (this.isMobile == 2) {
+              this.quickSetCode()
+            }
           }
           // 京东
           if (this.pay_type == 3) {
@@ -285,16 +421,37 @@ export default {
               specName: '',
               saveUrl: 'https://wepay.jd.com/jdpay/saveOrder'
             }))
-            window.open(callback2 + '/demo/action/ClientOrder.php?list=' + obj, "_blank")
+            if (this.isMobile == 1) {
+              window.open(callback2 + '/demo/action/ClientOrder.php?list=' + obj, "_blank")
+            }
+            if (this.isMobile == 2) {
+              window.location.href = callback2 + '/demo/action/ClientOrder.php?list=' + obj
+            }
           }
         } else {
           this.$Message.error(res.data)
         }
       })
     },
-    callBackGetGoods () {
+    quickSetCode () {
+      setCode2({
+        order_num: this.order_num,
+        activity_type: this.isMobile
+      }).then((data) => {
+        const res = data.data
+        if (res.code === 200) {
+          window.location.href = res.data.mweb_url
+          this.timer = setInterval(() => {
+            this.callBackGetGoods(this.order_num)
+          }, 2000)
+        } else {
+          this.$Message.error(res.data)
+        }
+      })
+    },
+    callBackGetGoods (ordernum) {
       getGoodsQucik({
-        order_num: this.order_num
+        order_num: ordernum
       }).then((data) => {
         const res = data.data
         if (res.code === 200) {
@@ -335,7 +492,23 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
-  .quick-pay-wrap{
+  .head-pay{
+    height: 60px;
+    line-height: 60px;
+    background: #ffffff;
+    color: $col333;
+    font-size: 18px;
+    img{
+      width: 130px;
+      vertical-align: middle;
+      margin-top: -3px;
+    }
+    em{
+      color: $col999;
+      margin: 0 3px;
+    }
+  }
+  .quick-main{
     padding: 50px 0;
   }
   .quick-pay-content{
@@ -389,28 +562,37 @@ export default {
       }
       label{
         margin-left: 3px;
-        margin-right: 10px;
+        margin-right: 15px;
       }
     }
   }
   .payform{
+    // width: 65%;
     li{
       padding: 15px 0;
+      line-height: 34px;
+      display: flex;
       label{
         width: 100px;
-        line-height: 34px;
         display: inline-block;
       }
       i{
         margin-left: 10px;
         color: red;
       }
-      input{
+      p{
         width: 200px;
+        // flex: 1;
         height: 34px;
         border: 1px solid $borderColor;
         border-radius: 6px;
-        text-indent: 5px;
+        input{
+          width: 100%;
+          line-height: normal;
+          text-indent: 5px;
+          border: none;
+          background: transparent;
+        }
       }
     }
   }
@@ -448,5 +630,200 @@ export default {
       font-weight: bold;
     }
   }
-  // 查询
+  .order-search{
+    margin-top: 30px;
+  }
+  // 移动端
+  .h5-quick-pay-wrap {
+    .head-pay{
+      height: 0.8rem;
+      line-height: 0.8rem;
+      background: #ffffff;
+      color: $col333;
+      font-size: 0.24rem;
+      img{
+        width: 1.733333rem;
+        vertical-align: middle;
+        margin-top: -3px;
+      }
+      em{
+        color: $col999;
+        margin: 0 3px;
+      }
+    }
+    .quick-main{
+      padding: .666667rem 0;
+      width: auto;
+    }
+    .quick-pay-content{
+      padding: .666667rem .4rem;
+      border-radius: .106667rem;
+    }
+    .tab-list {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin-bottom: .266667rem;
+        font-size: .426667rem;
+        .tab-item {
+          margin: 0 .4rem;
+          position: relative;
+          cursor: pointer;
+          &:before {
+            position: absolute;
+            content: "";
+            left: 50%;
+            width: .48rem;
+            height: .026667rem;
+            background: none;
+            margin-top: .533333rem;
+            margin-left: -0.24rem;
+          }
+          &.active {
+            color: #0267FF;
+            &:before {
+              background: #0267FF;
+            }
+          }
+      }
+    }
+    // 支付
+    .quick-pay-info{
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+    }
+    .payul{
+      li{
+        padding: .2rem 0;
+        span{
+          width: 2.4rem;
+        }
+        label{
+          margin-left: .08rem;
+          margin-right: .533333rem;
+        }
+      }
+    }
+    .payform{
+      li{
+        padding: .2rem 0;
+        line-height: .96rem;
+        label{
+          width: 2.4rem;
+        }
+        i{
+          margin-left: .133333rem;
+        }
+        p{
+          width: 60%;
+          // flex: 1;
+          height: .96rem;
+          border: 1px solid $borderColor;
+          border-radius: .08rem;
+          input{
+            width: 100%;
+            text-indent: .066667rem;
+            border: none;
+          }
+        }
+      }
+    }
+    .quick-btn{
+      width: 2.666667rem;
+      height: .853333rem;
+      font-size: .426667rem;
+      border-radius: .106667rem;
+      margin-left: 0;
+      margin-top: .266667rem;
+    }
+    .qp-right{
+      width: 100%;
+      font-size: .373333rem;
+      p{
+        line-height: .533333rem;
+      }
+      img{
+        width: 100%;
+        margin-top: .533333rem;
+        &.wx-code{
+          width: 2.933333rem;
+        }
+      }
+    }
+    .ewm-pay{
+      p{
+        font-size: .48rem;
+      }
+    }
+    .order-search{
+      margin-top: 0.4rem;
+    }
+    #footer{
+      display: none;
+    }
+  }
+  // footer
+  #footer {
+    // height: 354px;
+    background: #3B3B3B;
+    .footer-wrap{
+      padding: 0 3%;
+    }
+   }
+   .footer-top {
+     height: 93px;
+     .yc-logo{
+       width: 144px;
+       height: 38px;
+       margin-top: 29px;
+     }
+   }
+   .footer_center {
+     padding: 19px 0 16px 0;
+    //  height: 204px;
+     border-top: 2px solid $col666;
+     border-bottom: 2px solid $col666;
+     box-sizing: border-box;
+   }
+   .footer-instru {
+     margin-left: 146px;
+     float: left;
+     &:first-child{
+       margin-left: 0px;
+     }
+     li {
+       line-height: 30px;
+       h1 {
+         font-size: 18px;
+         color: #EFEFEF;
+         margin-bottom: 18px;
+       }
+       a{
+         color: $col999;
+       }
+     }
+   }
+   .erweima{
+     float: right;
+     text-align: center;
+     margin-top: 6px;
+     img {
+       width: 119px;
+       height: 119px;
+       margin-bottom: 14px;
+     }
+     p {
+       color: $col999;
+     }
+   }
+  .footer-bottom {
+    height: 55px;
+    @include display_flex(flex);
+    @extend %justify-content;
+    @extend %alignitem_center;
+    p{
+      color: $col999;
+    }
+  }
 </style>

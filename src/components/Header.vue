@@ -48,9 +48,13 @@ export default {
           path: 'question',
           name: '题库'
         },
+        // {
+        //   path: 'zhibo',
+        //   name: '直播'
+        // },
         {
-          path: 'zhibo',
-          name: '直播'
+          path: 'books',
+          name: '图书'
         },
         {
           path: 'zixun',
@@ -59,10 +63,6 @@ export default {
         {
           path: 'app',
           name: 'App'
-        },
-        {
-          path: 'books',
-          name: '优财图书馆'
         },
         {
           path: 'education',
