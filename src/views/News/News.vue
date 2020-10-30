@@ -24,7 +24,7 @@
                 <!-- 3订单 4普通 5链接 6直播 -->
                 <div class="news-center" v-if="item.type == 3 || item.type == 4 || item.type == 5 || item.type == 6">
                   <h3><span>{{item.title}}</span><em>{{item.create_time}}</em></h3>
-                  <p>{{item.content}}</p>
+                  <p v-html="item.content"></p>
                 </div>
               </li>
             </ul>

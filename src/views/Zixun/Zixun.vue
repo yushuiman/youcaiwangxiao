@@ -149,6 +149,7 @@ export default {
         -webkit-line-clamp: 2;
         img{
           width: 100%!important;
+          max-width: 100%!important;
         }
       }
       .source-time{

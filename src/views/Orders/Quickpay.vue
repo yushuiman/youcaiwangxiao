@@ -30,8 +30,17 @@
                 <input type="radio" value="3" v-model="pay_type">
                 <label for="京东">京东</label>
               </li>
+              <li>
+                <input type="radio" value="4" v-model="pay_type">
+                <label for="银联">银联</label>
+              </li>
             </ul>
             <ul class="payform">
+              <li v-if="pay_type == 4">
+                <label for="">银行卡号：</label>
+                <p><input type="text" v-model="accNo" maxlength="19"></p>
+                <i>*</i>
+              </li>
               <li>
                 <label for="">支付金额：</label>
                 <p><input type="number" v-model="pay_price"></p>
@@ -216,6 +225,7 @@ export default {
       selIdx: 1,
       ewmPayImg: '', // 二维码支付
       order_num: '',
+      accNo: '',
       mobile: '',
       course_name: '',
       user_name: '',
@@ -255,7 +265,7 @@ export default {
         },
         {
             title: '支付时间',
-            key: 'pay_times',
+            key: 'pay_time',
             minWidth: 110,
         },
         {
@@ -344,6 +354,7 @@ export default {
     },
     payOrder () {
       var re = /^[1]([3-9])[0-9]{9}$/
+      var regExp = /^([1-9]{1})(\d{15}|\d{18})$/
       if (!this.pay_price || !this.user_name || !this.mobile || !this.course_name) {
         this.$Message.error('请输入必填信息～')
         return
@@ -351,7 +362,17 @@ export default {
       if (!re.test(this.mobile)) {
         this.$Message.error('手机号格式错误~')
         return
-      } 
+      }
+      if(this.pay_type == 4) {
+        if(!this.accNo) {
+          this.$Message.error('请输入必填信息～')
+          return
+        }
+        if (!regExp.test(this.accNo)) {
+          this.$Message.error('银行卡格式错误~')
+          return
+        }
+      }
       addQuickOrder({
         user_name: this.user_name,
         mobile: this.mobile,
@@ -428,6 +449,15 @@ export default {
               window.location.href = callback2 + '/demo/action/ClientOrder.php?list=' + obj
             }
           }
+          // 银联
+          if (this.pay_type == 4) {
+            if (this.isMobile == 1) {
+              window.open(callback2 + '/Unionpay/Unionconsume/unionpay?order_num=' + this.order_num + '&name=' + this.course_name + '&price=' + this.pay_price + '&accNo=' + this.accNo + '&phoneNo=' + this.mobile, "_blank")
+            }
+            if (this.isMobile == 2) {
+              window.location.href = callback2 + '/Unionpay/Unionconsume/unionpay?order_num=' + this.order_num + '&name=' + this.course_name + '&price=' + this.pay_price + '&accNo=' + this.accNo + '&phoneNo=' + this.mobile
+            }
+          }
         } else {
           this.$Message.error(res.data)
         }
@@ -498,6 +528,9 @@ export default {
     background: #ffffff;
     color: $col333;
     font-size: 18px;
+    .w-wrap{
+      width: 100%;
+    }
     img{
       width: 130px;
       vertical-align: middle;

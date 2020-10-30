@@ -6,8 +6,8 @@
         <span :class="{'curren':getPoticData.paper_mode == 2 }" @click="doMode(2)"><i></i>考试模式</span>
       </div>
       <div class="order-sel">
-        <button class="btn-com" :class="{'curren': getPoticData.num == 15}" @click="orderDoNum(15)">随机15道</button>
         <button class="btn-com" :class="{'curren': getPoticData.num == 30}" @click="orderDoNum(30)">顺序做题</button>
+        <button class="btn-com" :class="{'curren': getPoticData.num == 15}" @click="orderDoNum(15)">随机15道</button>
       </div>
     </div>
     <!-- 知识点章节 -->
@@ -81,7 +81,7 @@ export default {
         know_id: 0, // 知识点id
         mock_id: 0,
         plate_id: this.plate_id,
-        num: 15, // 默认随机15道
+        num: 30, // 默认顺序30道
         paper_mode: 1, // 练习模式1 考试模式2
         paper_type: 1 // 单选1 论述2
       },

@@ -96,7 +96,7 @@ export const topicList = (data) => { // 6大板块拿题
 export const questionCollection = (data) => { // 收藏
   return axios.request({
     url: '/web/Question/questionCollection',
-    params: data,
+    data,
     method: 'post'
   })
 }

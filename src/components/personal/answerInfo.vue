@@ -373,7 +373,8 @@ export default {
         playAuth: '', // 获取视频凭证
         collect: '', // 收藏
         watch_time: 0, // 观看时间,视频上次播放时间
-        Title: '' // name
+        Title: '', // name
+        format: 'mp4'
       }
     }
   },
@@ -580,9 +581,20 @@ export default {
         let res = data.data
         if (res.code === 200) {
           this.sourceVisible = true
-          this.videoCredentials = res.data
+          let { Title, collect, handouts, playAuth, watch_time, status } = res.data
+          if(status == 1){
+            this.videoCredentials.format = 'm3u8'
+          } else {
+            this.videoCredentials.format = 'mp4'
+          }
+          this.videoCredentials.Title = Title
+          this.videoCredentials.collect = collect
+          this.videoCredentials.handouts = handouts
+          this.videoCredentials.playAuth = playAuth
+          // 列表取videoid video_time，可以少调一个接口
           this.videoCredentials.watch_time = val.video_time
           this.videoCredentials.VideoId = val.VideoId
+
         } else {
           this.$Message.error(res.msg)
         }
