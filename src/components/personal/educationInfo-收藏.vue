@@ -73,84 +73,63 @@
       </div>
       <!-- CPE学分详情 -->
       <div class="u-course-my" v-if="selIdx == 3">
-        <div class="u-course-buy" v-if="eduDetailsList.length">
-          <div class="uc-pakeage-course-list" v-for="(item, index) in eduDetailsList" :key="index">
-            <div class="uc-item" style="cursor: pointer;" :class="{'uc-item-package': item.flag}" @click="openShow(item, index)">
-              <img :src="item.pc_img" alt="" class="uci-img">
-              <div class="uci-detail">
-                <!-- <h2 class="ucid-name">{{item.name}}<span>CPE学分：{{item.cpe_integral}}分</span></h2> -->
-                <h2 class="ucid-name">{{item.name}}</h2>
-                <p class="ucid-des">{{item.description}}</p>
-              </div>
-              <!-- 面授type: 2 -->
-              <div v-if="item.type == 2" class="open-txt">
-                查看课程<Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;"/>
-              </div>
-              <!-- 线上type: 1 -->
-              <div class="open-txt" v-if="item.type == 1">
-                {{item.flag ? '收起':'查看课程'}}
-                <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="!item.flag"/>
-                <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="item.flag"/>
-              </div>
-            </div>
-            <ul v-if="item.flag && item.course.length">
-              <li class="uc-item uc-item-course" v-for="(val, key) in item.course" :key="key">
-                <img :src="val.pc_img" alt="" class="uci-img">
-                <div class="uci-detail">
-                  <!-- <h2 class="ucid-name">{{val.name}}<span>CPE学分：{{val.cpe_integral}}分</span></h2> -->
-                  <h2 class="ucid-name">{{val.name}}</h2>
-                  <p class="ucid-des">{{val.description}}</p>
-                  <!-- <p class="ucid-learn" v-if="val.video">学习至{{val.video.video_name}}</p>
-                  <p class="ucid-learn" v-else>学习至未学习</p> -->
+        <div v-if="eduDetailsList.length">
+          <Menu accordion width="100%">
+            <Submenu :name="index+1" class="myCollpackageMenu" v-for="(val, index) in eduDetailsList" :key="index" style="padding:0px;">
+              <template slot="title" style="padding:0px;">
+                <div class="uc-item-coll">
+                  <img :src="val.pc_img" alt="" class="uci-img">
+                  <div class="uci-detail">
+                    <h2 class="ucid-name">{{val.name}}</h2>
+                    <p class="ucid-des">{{val.description}}</p>
+                  </div>
                 </div>
-                <button class="btn-com" @click="viewCpeList(item, val)">查看</button>
-              </li>
-            </ul>
+              </template>
+              <div class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(v, key) in val.course" :key="key" style="padding: 10px 40px;">
+                <div class="menu-jie-title" style="font-size: 16px;">
+                  <div>{{v.name}}</div>
+                  <button @click="viewCpeList(val, v)" style="color: #0267FF;" v-if="val.type == 1">查看</button>
+                </div>
+              </div>
+            </Submenu>
+          </Menu>
+          <div class="coll-section-wrap" v-if="visible">
+            <!-- 知识点 -->
+            <Modal v-model="visible"
+              :width="795"
+              footer-hide
+              title="CPE学分章节"
+              class="practiceModal">
+              <div class="height-com">
+                <ul class="cpe-details-list">
+                  <li class="cpe-tit">
+                    <span>课程名称</span>
+                    <span>学分</span>
+                    <span>完成时间</span>
+                  </li>
+                </ul>
+                <Menu accordion width="100%">
+                  <Submenu :name="index+1" v-for="(item, index) in myCpevideoList" :key="index">
+                    <template slot="title">
+                      <div class="menu-section-title">
+                        {{item.name}}
+                      </div>
+                    </template>
+                    <ul class="cpe-details-list">
+                      <li class="cpe-item" v-for="(val, key) in item.video" :key="key">
+                        <span>{{val.video_name}}</span>
+                        <span>{{val.cpe_integral}}</span>
+                        <span>{{val.create_time}}</span>
+                      </li>
+                    </ul>
+                  </Submenu>
+                </Menu>
+              </div>
+            </Modal>
           </div>
         </div>
         <div class="no-data no-data-course" v-if="noDataFlag">
           暂无课程
-        </div>
-        <div class="coll-section-wrap" v-if="visible">
-          <!-- 知识点 -->
-          <Modal v-model="visible"
-            :width="795"
-            footer-hide
-            title="CPE学分章节"
-            class="practiceModal">
-            <div class="height-com">
-              <ul class="cpe-details-list">
-                <li class="cpe-tit">
-                  <span>课程名称</span>
-                  <span>学分</span>
-                  <span>完成时间</span>
-                </li>
-              </ul>
-              <Menu accordion width="100%" v-if="type == 1">
-                <Submenu :name="index+1" v-for="(item, index) in myCpevideoList" :key="index">
-                  <template slot="title">
-                    <div class="menu-section-title">
-                      {{item.name}}
-                    </div>
-                  </template>
-                  <ul class="cpe-details-list">
-                    <li class="cpe-item" v-for="(val, key) in item.video" :key="key">
-                      <span>{{val.video_name}}</span>
-                      <span>{{val.cpe_integral}}</span>
-                      <span>{{val.create_time}}</span>
-                    </li>
-                  </ul>
-                </Submenu>
-              </Menu>
-              <ul class="cpe-details-list" v-if="type == 2">
-                <li class="cpe-item">
-                  <span>{{myCpevideoObj.name}}</span>
-                  <span>{{myCpevideoObj.cpe_integral}}</span>
-                  <span>{{myCpevideoObj.create_time}}</span>
-                </li>
-              </ul>
-            </div>
-          </Modal>
         </div>
       </div>
     </div>
@@ -165,8 +144,7 @@ export default {
   data () {
     return {
       visible: false,
-      // txtArr: ['课程', '播放记录', 'CPE学分报告', 'CPE学分详情'],
-      txtArr: ['课程', '播放记录', 'CPE学分报告'],
+      txtArr: ['课程', '播放记录', 'CPE学分报告', 'CPE学分详情'],
       selIdx: this.$route.query.selIdx || 0,
       limit: 10,
       page: 1,
@@ -174,9 +152,7 @@ export default {
       myCourseList: [], // 我的课程
       watchRecordsList: [], // 播放记录
       eduDetailsList: [], // CPE学分详情列表
-      myCpevideoList: [], // cpe积分详情
-      myCpevideoObj: {}, // cpe积分详情
-      type: 1, //线上，面授
+      myCpevideoList: [], // 收藏课程章节
       noDataFlag: false,
       sessionPlayInfo: {
         package_id: 0,
@@ -234,19 +210,7 @@ export default {
     },
     // 展开收起
     openShow (item, index) {
-      console.log(item);
-      this.type = item.type
-      if (item.type == 2) {
-        this.myCpevideoObj = item
-        this.visible = true
-        return
-      }
-      if (this.selIdx == 0) {
-        this.myCourseList[index].flag = !item.flag
-      }
-      if (this.selIdx == 3) {
-        this.eduDetailsList[index].flag = !item.flag
-      }
+      this.myCourseList[index].flag = !item.flag
       this.$forceUpdate()
     },
     // 我的课程
@@ -365,7 +329,7 @@ export default {
       this.noDataFlag = false
       this.showLoading(true)
       eduDetails({
-        user_id: 3,
+        user_id: this.user_id,
         course_id: this.course_id,
         limit: this.limit,
         page: this.page
@@ -373,12 +337,7 @@ export default {
         this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
-          this.eduDetailsList = res.data
-          if (this.eduDetailsList && this.eduDetailsList.length) {
-            this.eduDetailsList.forEach(v => {
-              v.flag = false
-            })
-          }
+          this.eduDetailsList = res.data          
           if (this.eduDetailsList.length === 0) {
             this.noDataFlag = true
           }
@@ -387,7 +346,7 @@ export default {
         }
       })
     },
-    viewCpeList (item) {
+    viewCpeList (item, val) {
       this.myCpevideoList = item.course
       this.visible = true
     }

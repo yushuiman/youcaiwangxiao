@@ -442,7 +442,7 @@ export default {
     }
     .c-validity{
       line-height: 22px;
-      font-size: 16px;
+      font-size: 14px;
     }
     .c-use{
       padding: 4px;

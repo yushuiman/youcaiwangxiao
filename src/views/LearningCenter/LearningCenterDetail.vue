@@ -68,6 +68,7 @@
         <div class="plan-learn-tab">
           <span :class="{ 'curren': tabIdx == 0 }" @click="planChangeTab(0)">学习路径</span>
           <span :class="{ 'curren': tabIdx == 1 }" @click="planChangeTab(1)">我的答疑</span>
+          <!-- <span :class="{ 'curren': tabIdx == 2 }" @click="planChangeTab(2)">学习记录</span> -->
         </div>
         <div class="tab-main clearfix">
           <div class="month-answer-left fl">
@@ -94,6 +95,35 @@
             </div>
             <div class="my-answer-box" v-if="tabIdx == 1">
               <answer-info :user_id="user_id" :answerType="answerType"></answer-info>
+            </div>
+            <div class="my-watch-box" v-if="tabIdx == 2">
+              <div class="u-course-my">
+                <div class="u-course-record" v-if="planwatchRecordsList && planwatchRecordsList.length">
+                  <div class="ucr-item" v-for="(item, index) in planwatchRecordsList" :key="index">
+                    <div class="uc-item">
+                      <img :src="item.app_img" alt="" class="uci-img">
+                      <div class="uci-detail">
+                        <h2 class="ucid-name">{{item.course_name}}</h2>
+                        <p class="ucid-learn" v-if="item.video_name">学习至{{item.video_name}}</p>
+                        <p class="ucid-learn" v-else>学习至未学习</p>
+                      </div>
+                      <button class="btn-com uci-learn" @click="courseLearnVideo(item)">开始学习</button>
+                    </div>
+                  </div>
+                  <div style="padding: 20px; text-align: center;">
+                    <Page
+                    :total="total"
+                    @on-change="onChange"
+                    :current="page"
+                    :page-size="limit"
+                    size="small"
+                    />
+                  </div>
+                </div>
+                <div class="no-data no-data-course" v-if="noDataFlag">
+                  暂无课程
+                </div>
+              </div>
             </div>
           </div>
           <div class="about-learncenter-right fr">
@@ -333,7 +363,7 @@
 </template>
 
 <script>
-import { learnIndex, courseList, testTime, addStudy, everyday, outPlan, hangAir, getVideo, studyStatus, customPlansec, customPlan } from '@/api/learncenter'
+import { learnIndex, courseList, testTime, addStudy, everyday, outPlan, hangAir, getVideo, studyStatus, customPlansec, customPlan, planwatchRecords } from '@/api/learncenter'
 import learnNotice from '../../components/learning/learnNotice'
 import learnStudent from '../../components/learning/learnStudent'
 import studentDynamic from '../../components/learning/studentDynamic'
@@ -415,7 +445,11 @@ export default {
       traindayArr: [], // 训练日(0,1,2,3,4,5,6)
       sectionArr: [], // 章节
       customdays: '', // 学习天数
-      customPlansecList: [] // 自定义-章节
+      customPlansecList: [], // 自定义-章节
+      planwatchRecordsList: [], // 观看记录
+      noDataFlag: false,
+      page: 1,
+      limit: 10
     }
   },
   computed: {
@@ -790,6 +824,9 @@ export default {
     },
     planChangeTab (index) {
       this.tabIdx = index
+      if (index === 2) {
+        this.getPlanwatchRecords()
+      }
     },
     // 月份获取日
     getEveryday (v) {
@@ -900,6 +937,36 @@ export default {
         this.$router.push('/dopotic-learn')
       })
     },
+    courseLearnVideo (val) {
+      if (this.sameday == 2) { // 学习计划结束
+        this.$Message.error('学习计划已结束')
+        return
+      }
+      let obj = {
+        package_id: val.package_id,
+        course_id: val.course_id,
+        section_id: val.section_id,
+        video_id: val.video_id,
+        is_zk: val.is_zhengke,
+        plan_id: val.plan_id, // 计划id
+        days: val.days, // 第几天
+        sameday: this.sameday
+      }
+      if (val.is_purchase == 2) {
+        this.$Message.error('请购买课程')
+        val.userstatus = val.is_purchase
+        return
+      }
+      if (this.currenLearnInfo.is_exper === 1) { // 0元体验 未购买 去看视频
+        val.userstatus = 2 // 当0元体验的时候 2是未购买
+      }
+      window.sessionStorage.setItem('userstatus', val.userstatus || 1) // 1购买2未购买
+      this.getUserInfo().then(() => {
+        this.$router.push({ path: '/learn-center-video',
+          query: obj
+        })
+      })
+    },
     // 退出学习计划modal
     outLearnPlan () {
       this.visible4 = true
@@ -927,6 +994,33 @@ export default {
           this.$Message.error(res.msg)
         }
       })
+    },
+    // 播放记录
+    getPlanwatchRecords () {
+      this.showLoading(true)
+      planwatchRecords({
+        user_id: 3,
+        page: this.page,
+        limit: this.limit
+      }).then(data => {
+        this.showLoading(false)
+        const res = data.data
+        if (res.code === 200) {
+          this.planwatchRecordsList = res.data
+          this.total = res.data.total
+          if (this.planwatchRecordsList.length === 0) {
+            this.noDataFlag = true
+          }
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 分页
+    onChange (val) {
+      this.page = val
+      this.getPlanwatchRecords()
+      window.scrollTo(0, 0)
     }
   },
   beforeRouteLeave (to, from, next) {
@@ -1654,6 +1748,178 @@ export default {
         color: #ffffff;
         background:#1773FD;
         border-radius: 50%;
+      }
+    }
+  }
+  // 观看记录
+  .uc-item{
+    margin-bottom: 10px;
+    padding-right: 21px;
+    // box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
+    .u-course-my &{
+      margin-bottom: 0;
+    }
+  }
+  .ivu-menu-opened{
+    .uc-item-coll{
+      img{
+        border-radius: 8px 0 0 0;
+      }
+    }
+  }
+  .uc-item,.uc-item-coll{
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 8px;
+    &.uc-item-package{
+      border-radius: 8px 8px 0 0;
+      .uci-img{
+        border-radius: 8px 0 0 0px;
+      }
+    }
+    &.uc-item-course{
+      padding: 10px 21px 9px 51px;
+      border-radius: 0;
+      margin-bottom: 0;
+      .uci-img{
+        width: 147px;
+        height: 80.7px;
+        border-radius: 0
+      }
+      .uci-detail{
+        .ucid-name{
+          font-size: 14px;
+          line-height: 20px;
+        }
+        .ucid-des,.ucid-learn{
+          font-size: 12px;
+          line-height: 17px;
+        }
+      }
+    }
+    .uci-img{
+      width: 198px;
+      height: 109px;
+      border-radius: 8px 0 0 8px;
+    }
+    .uci-detail{
+      flex: 1;
+      padding: 0 20px;
+      .ucid-name{
+        font-size: 16px;
+        line-height: 22px;
+        color: $col333;
+        span{
+          font-size: 14px;
+          margin-left: 16px;
+          color: $blueColor;
+        }
+      }
+      .ucid-des{
+        color: $col999;
+        line-height: 20px;
+        margin-top: 3px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 1;
+        width: 95%;
+      }
+      .ucid-learn{
+        line-height: 20px;
+        color: $blueColor;
+        margin-top: 10px;
+      }
+      .cpe-status{
+        height: 20px;
+        line-height: 20px;
+        margin-top: 8px;
+        padding-left: 20px;
+        color: #E84342;
+        background-image: url('../../assets/images/user/cpe-no.png');
+        background-position: left center;
+        background-repeat: no-repeat;
+        background-size: 15px 15px;
+        &.cpe-finish{
+          color: $blueColor;
+          background-image: url('../../assets/images/user/cpe-finish.png');
+        }
+      }
+      .u-course-record &{
+        .ucid-learn{
+          color: $col666;
+          margin-top: 5px;
+        }
+      }
+    }
+    .btn-com{
+      width: 64px;
+      height: 28px;
+      background: #1874FD;
+      color: $colfff;
+      font-size: 14px;
+    }
+    .uci-learn{
+      width: 97px;
+    }
+  }
+  .uc-item-course{
+    &:nth-child(odd){
+      background: #F3F6FF;
+    }
+  }
+  .open-txt{
+    cursor: pointer;
+    color: #0267FF;
+  }
+  // 观看记录
+  .ucr-item{
+    .uc-item{
+      margin: 10px 0;
+    }
+    .time{
+      font-size: 16px;
+      .dot{
+        width: 10px;
+        height: 10px;
+        border-radius: 10px;
+        background: $blueColor;
+        display: inline-block;
+        margin-left: -4px;
+        margin-right: 20px;
+      }
+    }
+  }
+  .cpe-details-list{
+    li{
+      &.cpe-tit{
+        background: #f3f6ff;
+        color: #666;
+        font-size: 18px;
+        padding: 12px 30px;
+        margin-bottom: 10px;
+      }
+      &.cpe-item{
+        padding: 14px 30px 14px 60px;
+        color: #666666;
+        font-size: 16px;
+        &:nth-child(2n){
+          background: #f3f6ff;
+        }
+      }
+      span{
+        display: inline-block;
+        &:nth-child(1){
+          width: 50%;
+        }
+        &:nth-child(2){
+          width: 20%;
+        }
+        &:nth-child(3){
+          width: 30%;
+          text-align: right;
+        }
       }
     }
   }

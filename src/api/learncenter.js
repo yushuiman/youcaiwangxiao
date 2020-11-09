@@ -140,3 +140,10 @@ export const customPlan = (data) => { // 添加自定义计划
     method: 'post'
   })
 }
+export const planwatchRecords = (data) => { // 观看记录
+  return axios.request({
+    url: '/web/Plan/planwatchRecords',
+    data,
+    method: 'post'
+  })
+}

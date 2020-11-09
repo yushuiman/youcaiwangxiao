@@ -155,7 +155,13 @@ export const generateImg = (data) => { // cpe报告生成
     method: 'post'
   })
 }
-
+export const eduDetails = (data) => { // cpe积分详情
+  return axios.request({
+    url: '/web/Education/eduDetails',
+    data,
+    method: 'post'
+  })
+}
 export const newInformation = (data) => { // 最新资讯
   return axios.request({
     url: '/web/Education/newInformation',
