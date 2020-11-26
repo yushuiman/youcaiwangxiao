@@ -27,8 +27,8 @@
           </li>
         </ul>
       </div>
-      <div class="video-info-c" id="left" :style="{ height: screenHeight - 137 + 'px' }">
-        <div class="course-video-box" v-if="!fixedVideo">
+      <div class="video-info-c" id="left" :class="{'fix-video': fixedVideo}" :style="{ height: screenHeight - 137 + 'px' }">
+        <div class="course-video-box">
           <ali-player
             ref="aliPlayers"
             v-if="videoCredentials.playAuth"
@@ -45,7 +45,10 @@
             @courseCollection="courseCollection">
           </ali-player>
         </div>
-        <div class="pdf-iframe" style="height: 100%;overflow-y: auto;" v-if="fixedVideo">
+      </div>
+      <!-- :class="{'fix-video': fixedVideo}" v-if="fixedVideo" -->
+      <div class="video-info-c" id="left" :style="{ height: screenHeight - 137 + 'px' }" v-if="fixedVideo">
+        <div class="pdf-iframe" style="height: 100%;overflow-y: auto;">
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="100%"></iframe>
         </div>
       </div>
@@ -72,7 +75,7 @@
             </li>
           </ul>
         </div>
-        <div class="course-video-box" :class="{'fix-video': fixedVideo}" v-if="fixedVideo">
+        <!-- <div class="course-video-box" :class="{'fix-video': fixedVideo}" v-if="fixedVideo">
           <ali-player
             ref="aliPlayers"
             v-if="videoCredentials.playAuth"
@@ -88,7 +91,7 @@
             @replayVideo="replayVideo"
             @courseCollection="courseCollection">
           </ali-player>
-        </div>
+        </div> -->
         <div class="jiangyi" v-if="flagJy" :class="{'littleScreen': fixedVideo}">
           <div class="vc-title" v-if="!fixedVideo">
             <p>
@@ -628,6 +631,7 @@ export default {
       if (type === 'video') {
         this.fixedVideo = false
         this.flagJy = false
+        this.flagClosed = false
         if (this.flagCourseSec) {
           this.wImportant = 445
         } else {

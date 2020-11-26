@@ -68,7 +68,7 @@
         <div class="plan-learn-tab">
           <span :class="{ 'curren': tabIdx == 0 }" @click="planChangeTab(0)">学习路径</span>
           <span :class="{ 'curren': tabIdx == 1 }" @click="planChangeTab(1)">我的答疑</span>
-          <!-- <span :class="{ 'curren': tabIdx == 2 }" @click="planChangeTab(2)">学习记录</span> -->
+          <span :class="{ 'curren': tabIdx == 2 }" @click="planChangeTab(2)">学习记录</span>
         </div>
         <div class="tab-main clearfix">
           <div class="month-answer-left fl">

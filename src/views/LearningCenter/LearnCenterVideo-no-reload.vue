@@ -623,14 +623,21 @@ export default {
       }
       if (type === 'video') {
         this.fixedVideo = false
-        this.flagJy = false
-        if (this.flagCourseSec) {
-          this.wImportant = 445
-        } else {
-          this.wImportant = 95
-          this.flagClosed = true
-        }
+        this.flagJy = true
+        this.wImportant = 445
+        this.flagClosed = false
       }
+      // if (type === 'video') {
+      //   this.fixedVideo = false
+      //   this.flagJy = false
+      //   this.flagClosed = false
+      //   if (this.flagCourseSec) {
+      //     this.wImportant = 445
+      //   } else {
+      //     this.wImportant = 95
+      //     this.flagClosed = true
+      //   }
+      // }
     },
     jiangyiDown (url) {
       if (!url) {

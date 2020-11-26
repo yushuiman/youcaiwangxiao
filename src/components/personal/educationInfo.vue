@@ -165,8 +165,8 @@ export default {
   data () {
     return {
       visible: false,
-      // txtArr: ['课程', '播放记录', 'CPE学分报告', 'CPE学分详情'],
-      txtArr: ['课程', '播放记录', 'CPE学分报告'],
+      txtArr: ['课程', '播放记录', 'CPE学分报告', 'CPE学分详情'],
+      // txtArr: ['课程', '播放记录', 'CPE学分报告'],
       selIdx: this.$route.query.selIdx || 0,
       limit: 10,
       page: 1,
@@ -365,7 +365,7 @@ export default {
       this.noDataFlag = false
       this.showLoading(true)
       eduDetails({
-        user_id: 3,
+        user_id: this.user_id,
         course_id: this.course_id,
         limit: this.limit,
         page: this.page

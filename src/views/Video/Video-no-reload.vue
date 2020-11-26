@@ -681,6 +681,7 @@ export default {
       if (type === 'video') {
         this.fixedVideo = false
         this.flagJy = false
+        this.flagClosed = false
         if (this.flagCourseSec) {
           this.wImportant = 445
         } else {

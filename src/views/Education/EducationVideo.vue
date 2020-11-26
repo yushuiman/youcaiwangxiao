@@ -22,9 +22,9 @@
           </li>
         </ul>
       </div>
-      <div class="video-info-c" style="padding-top: 34px;" id="left" :style="{ height: screenHeight - 60 + 'px' }">
-        <p style="position:absolute;top:0;color: #F99111;height: 34px;line-height: 34px;">如何获得本课程学分：每个视频结束后点击“签到”成功后，即可获取对应视频的积分。</p>
-        <div class="course-video-box" v-if="!fixedVideo">
+      <div class="video-info-c" style="padding-top: 34px;" id="left" :class="{'fix-video': fixedVideo}" :style="{ height: screenHeight - 60 + 'px' }">
+        <p class="cpe-txt">如何获得本课程学分：每个视频结束后点击“签到”成功后，即可获取对应视频的积分。</p>
+        <div class="course-video-box">
           <ali-player
             ref="aliPlayers"
             v-if="videoCredentials.playAuth"
@@ -46,7 +46,10 @@
             @switchVideo="switchVideo">
           </ali-player>
         </div>
-        <div class="pdf-iframe" style="height: 100%;overflow-y: auto;" v-if="fixedVideo">
+      </div>
+      <div class="video-info-c" style="padding-top: 34px;" id="left" :style="{ height: screenHeight - 60 + 'px' }" v-if="fixedVideo">
+        <p class="cpe-txt">如何获得本课程学分：每个视频结束后点击“签到”成功后，即可获取对应视频的积分。</p>
+        <div class="pdf-iframe" style="height: 100%;overflow-y: auto;">
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="100%"></iframe>
         </div>
       </div>
@@ -70,7 +73,7 @@
             @switchVideo="switchVideo">
           </course-list>
         </div>
-        <div class="course-video-box" :class="{'fix-video': fixedVideo}" v-if="fixedVideo">
+        <!-- <div class="course-video-box" :class="{'fix-video': fixedVideo}" v-if="fixedVideo">
           <ali-player
             ref="aliPlayers"
             v-if="videoCredentials.playAuth"
@@ -91,7 +94,7 @@
             @replayVideo="replayVideo"
             @switchVideo="switchVideo">
           </ali-player>
-        </div>
+        </div> -->
         <div class="jiangyi" v-if="flagJy" :class="{'littleScreen': fixedVideo}">
           <div class="vc-title" v-if="!fixedVideo">
             <p>
@@ -592,6 +595,17 @@ export default {
         this.wImportant = 445
         this.flagClosed = false
       }
+      // if (type === 'video') {
+      //   this.fixedVideo = false
+      //   this.flagJy = false
+      //   this.flagClosed = false
+      //   if (this.flagCourseSec) {
+      //     this.wImportant = 445
+      //   } else {
+      //     this.wImportant = 95
+      //     this.flagClosed = true
+      //   }
+      // }
     },
     jiangyiDown (url) {
       if (!url) {
