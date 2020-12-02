@@ -60,7 +60,11 @@
     box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
     margin-right: 10px;
 }
-
+.course_img .demo-upload-list-small{
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+}
 .course_img .demo-upload-list img {
     width: 100%;
 }
@@ -91,7 +95,7 @@
     height: 18px;
     position: absolute;
     right: 90px;
-    top: 20px;
+    top: 26px;
 }
 
 .ivu-upload-drag,

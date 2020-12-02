@@ -9,8 +9,8 @@
     <!--提问题-->
     <div class="ask">
       <textarea autofocus v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"></textarea>
-      <div class="submitAnswer clearfix">
-        <div class="course_img fl">
+      <div class="submitAnswer">
+        <div class="course_img">
           <div class="demo-upload-list" v-for="(item, index) in quiz_image" :key="index">
             <template>
               <img :src="item">
@@ -35,7 +35,7 @@
               <div class="icon-upload"></div>
           </Upload>
         </div>
-        <div class="fr">
+        <div>
           <span class="errorTxt">{{errorTs}}</span>
           <button class="submit" @click="questionSubmit">提交</button>
         </div>
@@ -49,6 +49,7 @@
 
 <script>
 import { answerClose } from '@/api/answer'
+import { bookAnswersub } from '@/api/personal'
 import { mapState } from 'vuex'
 import config from '@/config'
 export default {
@@ -138,12 +139,33 @@ export default {
       this.errorTs = ''
       let quizImage = this.quiz_image.join(',')
       this.showLoading(true)
+      if (this.zhuiwenInfo.answer_type == 3) {
+        bookAnswersub({
+          user_id: this.user_id,
+          course_id: 1,
+          answer_id: this.zhuiwenInfo.id,
+          quiz: this.quiz,
+          quiz_image: quizImage
+        }).then(data => {
+          this.showLoading(false)
+          const res = data.data
+          if (res.code === 200) {
+            this.quiz = ''
+            this.quiz_image = []
+            this.$emit('updateAnswerList')
+            this.$emit('update:answerVisible', false)
+          } else {
+            this.$Message.error(res.msg)
+          }
+        })
+        return
+      }
       answerClose({
         answer_id: this.zhuiwenInfo.id,
         z_quiz: this.quiz,
         user_id: this.user_id,
         z_quiz_image: quizImage,
-        answer_type: this.zhuiwenInfo.answer_type // 追问类型1课程2题库
+        answer_type: this.zhuiwenInfo.answer_type // 追问类型1课程2题库3图书
       }).then(data => {
         this.showLoading(false)
         const res = data.data
@@ -188,6 +210,11 @@ export default {
   .submitAnswer{
     padding: 20px 0;
     position: relative;
+    display: flex;
+    justify-content: flex-end;
+    .course_img{
+      margin-right: 60px;
+    }
     .submit {
       width: 77px;
       height: 30px;

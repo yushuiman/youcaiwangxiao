@@ -8,13 +8,13 @@
     class="iview-modal">
     <div class="ask">
       <textarea autofocus v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"></textarea>
-      <div class="submitAnswer clearfix">
-        <div class="tousu-type fl">
+      <div class="submitAnswer">
+        <div class="tousu-type">
           <span v-for="item in complainTypeList" :class="{'cur': complain_id == item.id}" :key="item.id" @click="changeTousuType(item)">
             {{item.complain_name}}
           </span>
         </div>
-        <div class="fr">
+        <div>
           <span class="errorTxt">{{errorTs}}</span>
           <button class="submit" :class="{'cur': complain_id != ''}" @click="questionSubmit">提交</button>
         </div>
@@ -89,7 +89,7 @@ export default {
         user_id: this.user_id,
         answer_id: this.tousuInfo.id,
         complain_id: this.complain_id,
-        answer_type: this.tousuInfo.answer_type, // 追问类型1课程2题库
+        answer_type: this.tousuInfo.answer_type, // 追问类型1课程2题库3图书答疑
         content: this.quiz
       }).then(data => {
         this.showLoading(false)
@@ -134,6 +134,11 @@ export default {
   .submitAnswer{
     padding: 20px 0;
     position: relative;
+    display: flex;
+    justify-content: flex-end;
+    .course_img{
+      margin-right: 60px;
+    }
     .submit {
       width: 77px;
       height: 30px;

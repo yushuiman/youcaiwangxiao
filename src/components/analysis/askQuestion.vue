@@ -3,8 +3,8 @@
     <!--提问题-->
     <div class="ask">
       <textarea autofocus v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"></textarea>
-      <div class="submitAnswer clearfix">
-        <div class="course_img fl">
+      <div class="submitAnswer">
+        <div class="course_img">
           <div class="demo-upload-list" v-for="(item, index) in quiz_image" :key="index">
             <template>
               <img :src="item">
@@ -29,7 +29,7 @@
               <div class="icon-upload"></div>
           </Upload>
         </div>
-        <div class="fr">
+        <div>
           <span class="errorTxt">{{errorTs}}</span>
           <button class="submit" @click="questionSubmit">提交</button>
         </div>
@@ -354,6 +354,11 @@ export default {
   .submitAnswer{
     padding: 20px 0;
     position: relative;
+    display: flex;
+    justify-content: flex-end;
+    .course_img{
+      margin-right: 60px;
+    }
     .submit {
       width: 77px;
       height: 30px;

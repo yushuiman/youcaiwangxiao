@@ -299,3 +299,24 @@ export const getOmoUserInfo = (data) => { // OMO学员会员卡信息展示
     method: 'post'
   })
 }
+export const booksAnswerlist = (data) => { // 图书答疑列表
+  return axios.request({
+    url: '/web/Booksanswer/booksAnswerlist',
+    data,
+    method: 'post'
+  })
+}
+export const bookAnswersub = (data) => { // 图书答疑提问
+  return axios.request({
+    url: '/web/Booksanswer/bookAnswersub',
+    data,
+    method: 'post'
+  })
+}
+export const bookskAnswerdetails = (data) => { // 图书答疑详情
+  return axios.request({
+    url: '/web/Booksanswer/bookskAnswerdetails',
+    data,
+    method: 'post'
+  })
+}

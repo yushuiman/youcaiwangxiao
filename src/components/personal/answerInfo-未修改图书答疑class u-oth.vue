@@ -260,50 +260,50 @@
       <!-- 图书答疑 -->
       <div v-if="selIdx == 2">
         <div class="mybooks-ask-wrap">
-          <div class="mybooks-ask-form" v-if="courseList && courseList.length">
-            <div class="mybooks-ask-tit">
-              <h1>提问题</h1>
-              <select class="com-sel1" v-model="course_id">
-                <option class="com-opt" :value="v.id" v-for="(v, index) in courseList" :key="index">{{v.name}}</option>
-              </select>
-            </div>
-            <textarea v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"></textarea>
-            <div class="submitAnswerBooks">
-              <div class="course_img">
-                <div class="demo-upload-list" v-for="(item, index) in quiz_image" :key="index">
-                  <template>
-                    <img :src="item">
-                    <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemove(index)"></Icon>
-                    </div>
-                  </template>
+          <div style="background: #ffffff; padding: 15px 20px;margin-bottom: 20px;border-radius: 8px;" v-if="courseList && courseList.length">
+            <h1 class="mybooks-ask-tit">提问题<select class="com-sel1" v-model="course_id" @change="getCourseIdSel($event)" style="margin-bottom: 10px;border: solid 1px #666666;margin-top: 6px;border-radius: 4px;height: 30px;line-height: 30px; float: right;">
+                <option class="com-opt" :value="v.course_id" v-for="(v, index) in courseList" :key="index">{{v.name}}</option>
+              </select></h1>
+            <div class="mybooks-ask-form" style="margin-top: 20px;">
+              <textarea v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3"></textarea>
+              <div class="submitAnswerBooks">
+                <div class="course_img">
+                  <div class="demo-upload-list" v-for="(item, index) in quiz_image" :key="index">
+                    <template>
+                      <img :src="item">
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
+                        <Icon type="ios-trash-outline" @click.native="handleRemove(index)"></Icon>
+                      </div>
+                    </template>
+                  </div>
+                  <Upload ref="upload"
+                      :show-upload-list="false"
+                      :before-upload="handleBeforeUpload"
+                      :on-success="handleSuccess"
+                      :on-format-error="handleFormatError"
+                      :on-exceeded-size="handleMaxSize"
+                      :format="['jpg','jpeg','png']"
+                      :max-size="2048"
+                      type="drag"
+                      :action="apiPath"
+                      name="image"
+                      class="uploadSty">
+                      <div class="icon-upload"></div>
+                  </Upload>
                 </div>
-                <Upload ref="upload"
-                    :show-upload-list="false"
-                    :before-upload="handleBeforeUpload"
-                    :on-success="handleSuccess"
-                    :on-format-error="handleFormatError"
-                    :on-exceeded-size="handleMaxSize"
-                    :format="['jpg','jpeg','png']"
-                    :max-size="2048"
-                    type="drag"
-                    :action="apiPath"
-                    name="image"
-                    class="uploadSty">
-                    <div class="icon-upload"></div>
-                </Upload>
-              </div>
-              <div>
-                <span class="errorTxt">{{errorTs}}</span>
-                <button class="submit" @click="bookAnswerSubmit">提交</button>
+                <div>
+                  <span class="errorTxt">{{errorTs}}</span>
+                  <button class="submit" @click="bookAnswerSubmit">提交</button>
+                </div>
               </div>
             </div>
           </div>
           <div class="others" v-if="booksAnswerlistInfo.length">
-            <ul class="u-othq-list">
-              <li class="u-othq-item" v-for="(item, index) in booksAnswerlistInfo" :key="index">
-                <div class="u-othq-item-t">
+            <!-- <h1 class="mybooks-ask-tit">我的提问</h1> -->
+            <ul class="othq-list">
+              <li class="othq-item" v-for="(item, index) in booksAnswerlistInfo" :key="index">
+                <div class="othq-item-t">
                   <img :src="item.head" alt="" class="head-logo">
                   <div class="othq-info">
                     <h3>{{item.username}}</h3>
@@ -322,32 +322,24 @@
                     </template>
                   </div>
                 </div>
-                <!-- <div class="open-txt" @click="openShow(item, index, 2)" v-if="item.reply_status == 1">
+                <div class="open-txt" @click="openShow(item, index, 2)" v-if="item.reply_status == 1">
                   {{item.openFlag ? '收起':'展开'}}
-                </div> -->
-                <div class="u-othq-item-b">
-                  <div class="ans-know-name"></div>
-                  <div class="open-txt" @click="openShow(item, index, 2)" v-if="item.reply_status == 1">
-                    {{item.openFlag ? '收起':'展开'}}
-                    <Icon type="md-arrow-dropdown" style="font-size: 20px;margin-top: -3px;" v-if="!item.openFlag"/>
-                    <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="item.openFlag"/>
-                  </div>
                 </div>
                 <!-- 老师回复以及追问-->
-                <ul class="u-othq-list-teacher" v-if="replyList[item.id] && item.openFlag">
+                <ul class="othq-list-teacher" v-if="replyList[item.id] && item.openFlag">
                   <!-- 1老师回复 -->
-                  <li class="u-othq-item" :class="{'othq-item-over': replyList[item.id][0].is_close == 1}" v-if="replyList[item.id][0]">
-                    <div class="u-othq-item-t">
-                      <img :src="replyList[item.id][0].head_image" alt="" class="head-logo">
+                  <li class="othq-item" :class="{'othq-item-over': replyList[item.id][1].is_close == 1}" v-if="replyList[item.id][1]">
+                    <div class="othq-item-t">
+                      <img :src="replyList[item.id][1].head_image" alt="" class="head-logo">
                       <div class="othq-info">
-                        <h3>{{replyList[item.id][0].username}}<span class="teacher-light">老师</span></h3>
-                        <p>{{replyList[item.id][0].creates_time}}</p>
+                        <h3>{{replyList[item.id][1].username}}<span class="teacher-light">老师</span></h3>
+                        <p>{{replyList[item.id][1].creates_time}}</p>
                       </div>
-                      <span class="othq-huifu tousu" v-if="item.is_complain == 2" @click="tousuAnswer(item.id, item.course_id)">投诉</span>
+                      <span class="tousu" v-if="item.is_complain == 2" @click="tousuAnswer(item.id, item.course_id)">投诉</span>
                     </div>
-                    <p class="othq-txt">{{replyList[item.id][0].quiz}}</p>
+                    <p class="othq-txt">{{replyList[item.id][1].quiz}}</p>
                     <div class="quiz-image-list course_img">
-                      <div class="demo-upload-list" v-for="(v, index) in replyList[item.id][0].quiz_image" :key="index">
+                      <div class="demo-upload-list" v-for="(v, index) in replyList[item.id][1].quiz_image" :key="index">
                         <template>
                           <img :src="v" alt="">
                           <div class="demo-upload-list-cover">
@@ -357,21 +349,21 @@
                       </div>
                     </div>
                     <!-- 是自己的提问并且老师有过第一次回复 -->
-                    <button class="zhuiwen" v-if="replyList[item.id][0].is_close == 1" @click="zhuiwen(item.id, item.course_id)">追问</button>
+                    <button class="zhuiwen" v-if="replyList[item.id][1].is_close == 1" @click="zhuiwen(item.id, item.course_id)">追问</button>
                   </li>
                   <!-- 2学员追问 -->
-                  <li class="u-othq-item" :class="{'othq-item-zhuiwen': replyList[item.id][1].reply_status == 2}" v-if="replyList[item.id][1] && replyList[item.id][1].quiz">
-                    <div class="u-othq-item-t">
-                      <img :src="replyList[item.id][1].head_image" alt="" class="head-logo">
+                  <li class="othq-item" :class="{'othq-item-zhuiwen': replyList[item.id][2].reply_status == 2}" v-if="replyList[item.id][2] && replyList[item.id][2].quiz">
+                    <div class="othq-item-t">
+                      <img :src="replyList[item.id][2].head_image" alt="" class="head-logo">
                       <div class="othq-info">
-                        <h3>{{replyList[item.id][1].username}}</h3>
-                        <p>{{replyList[item.id][1].creates_time}}</p>
+                        <h3>{{replyList[item.id][2].username}}</h3>
+                        <p>{{replyList[item.id][2].creates_time}}</p>
                       </div>
-                      <span class="othq-huifu" v-if="replyList[item.id][0].reply_status == 1">老师已回复</span>
+                      <span class="othq-huifu" v-if="replyList[item.id][1].reply_status == 1">老师已回复</span>
                     </div>
-                    <p class="othq-txt">{{replyList[item.id][1].quiz}}</p>
+                    <p class="othq-txt">{{replyList[item.id][2].quiz}}</p>
                     <div class="quiz-image-list course_img">
-                      <div class="demo-upload-list" v-for="(val, index) in replyList[item.id][1].quiz_image" :key="index">
+                      <div class="demo-upload-list" v-for="(val, index) in replyList[item.id][2].quiz_image" :key="index">
                         <template>
                           <img :src="val">
                           <div class="demo-upload-list-cover">
@@ -382,18 +374,18 @@
                     </div>
                   </li>
                   <!-- 3追问老师回复 -->
-                  <li class="u-othq-item othq-item-reply" v-if="replyList[item.id][2] && replyList[item.id][2].quiz">
-                    <div class="u-othq-item-t">
-                      <img :src="replyList[item.id][2].head_image" alt="" class="head-logo">
+                  <li class="othq-item othq-item-reply" v-if="replyList[item.id][3] && replyList[item.id][3].quiz">
+                    <div class="othq-item-t">
+                      <img :src="replyList[item.id][3].head_image" alt="" class="head-logo">
                       <div class="othq-info">
-                        <h3>{{replyList[item.id][2].username}}<span class="teacher-light">老师</span></h3>
-                        <p>{{replyList[item.id][2].creates_time}}</p>
+                        <h3>{{replyList[item.id][3].username}}<span class="teacher-light">老师</span></h3>
+                        <p>{{replyList[item.id][3].creates_time}}</p>
                       </div>
-                      <span class="othq-huifu tousu" v-if="item.is_complain == 2" @click="tousuAnswer(item.id, item.course_id)">投诉</span>
+                      <span class="tousu" v-if="item.is_complain == 2" @click="tousuAnswer(item.id, item.course_id)">投诉</span>
                     </div>
-                    <p class="othq-txt">{{replyList[item.id][2].quiz}}</p>
+                    <p class="othq-txt">{{replyList[item.id][3].quiz}}</p>
                     <div class="quiz-image-list course_img">
-                      <div class="demo-upload-list" v-for="(v, index) in replyList[item.id][2].quiz_image" :key="index">
+                      <div class="demo-upload-list" v-for="(v, index) in replyList[item.id][3].quiz_image" :key="index">
                         <template>
                           <img :src="v" alt="">
                           <div class="demo-upload-list-cover">
@@ -786,7 +778,6 @@ export default {
     closeSource (type) {
       this.sourceVisible = false
     },
-    // 视频播放信息
     getVideoCredentials (val) {
       videoCredentials({
         VideoId: val.VideoId,
@@ -845,7 +836,7 @@ export default {
         if (res.code === 200) {
           this.courseList = res.data
           if (this.courseList.length > 0) {
-            this.course_id = this.courseList[0].id
+            this.course_id = this.courseList[0].course_id
           }
           if (this.courseList.length === 0) {
             this.noDataFlag = true
@@ -856,9 +847,9 @@ export default {
         }
       })
     },
-    // getCourseIdSel (e) {
+    getCourseIdSel (e) {
       // this.getBooksAnswerlist()
-    // },
+    },
     // 播放器
     ready (instance) {
       // 倍速设置
@@ -908,10 +899,10 @@ export default {
       }
     },
     // 图书答疑
-    // handleView (url) {
-    //   this.imgUrl = url
-    //   this.visible = true
-    // },
+    handleView (url) {
+      this.imgUrl = url
+      this.visible = true
+    },
     handleBeforeUpload () {
       const check = this.quiz_image.length < 3
       if (!check) {
@@ -1019,7 +1010,19 @@ export default {
           this.$Message.error(res.msg)
         }
       })
-    }
+    },
+    // // 追问
+    // zhuiwen (val) {
+    //   this.zhuiwenInfo.id = val.Id
+    //   this.zhuiwenInfo.answer_type = 2
+    //   this.answerVisible = true
+    // },
+    // // 投诉
+    // tousuAnswer (val) {
+    //   this.tousuInfo.id = val.Id
+    //   this.tousuInfo.answer_type = 2
+    //   this.tousuVisible = true
+    // }
   },
   beforeDestroy () {
     if (this.$refs.aliPlayers) {
@@ -1066,9 +1069,6 @@ export default {
     border-bottom: 1px solid #E6E6E6;
     border-radius: 8px;
     position: relative;
-    &.othq-item-zhuiwen, &.othq-item-reply{
-      padding-bottom: 0px!important;
-    }
     .othq-txt{
       line-height: 20px;
       margin-top: 5px;
@@ -1114,9 +1114,6 @@ export default {
     display: flex;
     align-items: center;
     padding-top: 14px;
-    .u-othq-list-teacher &{
-      padding-top: 0;
-    }
     .head-logo{
       @include wh(40, 40);
       border-radius: 100%;
@@ -1354,30 +1351,30 @@ export default {
     box-sizing: border-box;
   }
   // 图书答疑
-  .mybooks-ask-form{
-    background: #ffffff; 
-    padding: 15px 20px 0;
-    margin-bottom: 20px;
-    border-radius: 8px;
+  .btn-answer-box{
+    text-align: right;
+    .btn-com{
+      background: $blueColor;
+      color: #ffffff;
+    }
+  }
+  .ask{
+    padding: 0 30px;
   }
   .mybooks-ask-tit{
-    margin-bottom: 15px;
-    display: flex;
-    justify-content: space-between;
-    h1{
-      font-size: 20px;
-      color: $col333;
-    }
-    .com-sel1{
-      border: solid 1px #666666;
-      margin-top: 6px;
-      border-radius: 4px;
-      height: 30px;
-      line-height: 30px; 
-    }
+    font-size: 20px;
+    color: $col333;
   }
   .othq-list{
     margin-top: 20px;
+  }
+
+  .close-box{
+    text-align: right;
+    padding-top: 25px;
+    .close-icon{
+      @include bg_img(15, 15, '../../assets/images/video/close-icon.png');
+    }
   }
   .texta {
     resize: none;
@@ -1413,5 +1410,118 @@ export default {
       left: 0px;
       color: #E84342;
     }
+  }
+  .others{
+    // padding: 0 26px;
+    // min-height: 320px;
+    // max-height: 380px;
+    // overflow: auto;
+  }
+  .othq-list-teacher{
+    // border-top: 1px solid #E6E6E6;
+    margin-top: 15px;
+  }
+  .othq-item{
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    background: $colfff;
+    box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    &.othq-item-over{
+      padding-bottom: 30px!important;
+    }
+    &.othq-item-zhuiwen, &.othq-item-reply{
+      padding-bottom: 0px!important;
+    }
+    .othq-txt{
+      line-height: 20px;
+      color: #4A4A4A;
+      word-wrap: break-word;
+      &.sl{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
+      }
+    }
+    .open-txt{
+      cursor: pointer;
+      color: $blueColor;
+      text-align: right;
+    }
+    .othq-list-teacher &{
+      padding: 20px 0;
+      margin-bottom: 0;
+      box-shadow: 0px 0px 0px rgba(0,0,0,0);
+      background: none;
+      border-top: 1px solid #E6E6E6;
+      border-radius: 0px;
+      position: relative;
+    }
+    .zhuiwen{
+      position: absolute;
+      right: 0px;
+      bottom: 0px;
+      width: 60px;
+      height: 24px;
+      border-radius: 16px;
+      border: 1px solid $blueColor;
+      color: $blueColor;
+      &:hover{
+        background: $blueColor;
+        color: $colfff;
+      }
+    }
+  }
+  .othq-item-t{
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+    .head-logo{
+      @include wh(40, 40);
+      border-radius: 100%;
+      margin-right: 10px;
+    }
+    h3{
+      line-height: 26px;
+      font-weight: 500;
+    }
+    p{
+      font-size: 12px;
+      color: $col999;
+    }
+    .othq-huifu, .tousu{
+      flex: 1;
+      text-align: right;
+      color: #F99111;
+    }
+    .tousu{
+      color: $col999;
+      cursor: pointer;
+    }
+  }
+  .teacher-light{
+    width: 46px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    color:#F99111;
+    background:rgba(249,145,17,.15);
+    border-radius: 18px;
+    display: inline-block;
+    text-align: center;
+    margin-left: 10px;
+  }
+  .quiz-image-list, .teacher-answer{
+    img{
+      width: 80px;
+      height: 80px;
+      margin-right: 10px;
+      display: inline-block;
+    }
+  }
+  .teacher-answer{
+    padding: 10px 20px;
+    background: #999999;
   }
 </style>

@@ -7,14 +7,14 @@
     </div> -->
     <div class="my-ask">
       <textarea v-model.trim="quiz" class="texta" placeholder="请一句话说明你的问题" cols="3" rows="3" v-on:focus="send" v-on:blur="blurInp"></textarea>
-      <div class="submitAnswer clearfix">
+      <div class="submitAnswer submitAnswerC clearfix">
         <div class="course_time fl">
           <Icon type="ios-play" style="color:#999999;font-size: 16px;vertical-align:center;margin-right:5px;margin-top: -3px;"/>
           <span>{{formatSeconds(answerTime)}}</span>
           <!-- <span>{{answerTime}}</span> -->
         </div>
         <div class="course_img fl">
-          <div class="demo-upload-list" v-for="(item, index) in quiz_image" :key="index">
+          <div class="demo-upload-list demo-upload-list-small" v-for="(item, index) in quiz_image" :key="index">
             <template>
               <img :src="item">
               <div class="demo-upload-list-cover">
@@ -187,10 +187,6 @@ export default {
       answerList: [],
       quiz: '', // 提问文案
       quiz_image: [], // 提问图片 以,号分割
-      isopen: false,
-      dialogImageUrl: '',
-      dialogVisible: false,
-      imageUrl: '',
       visible: false,
       imgUrl: '',
       errorTs: '',
@@ -443,6 +439,13 @@ export default {
   .submitAnswer{
     padding: 15px 0;
     position: relative;
+    &.submitAnswerC{
+      .uploadSty{
+        position: absolute;
+        right: 90px;
+        top: 20px;
+      }
+    }
     .course_time{
       padding: 0 6px;
       height: 26px;

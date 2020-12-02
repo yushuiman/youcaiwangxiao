@@ -17,7 +17,7 @@ class HttpRequest {
   getInsideConfig () {
     const config = {
       baseURL: this.baseUrl,
-      timeout: 10000,
+      timeout: 60000,
       headers: {
         // 'token': store.state.user.token
         'token': window.localStorage.getItem('YCWXTOKEN') || ''
