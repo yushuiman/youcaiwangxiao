@@ -68,7 +68,7 @@
         <div class="plan-learn-tab">
           <span :class="{ 'curren': tabIdx == 0 }" @click="planChangeTab(0)">学习路径</span>
           <span :class="{ 'curren': tabIdx == 1 }" @click="planChangeTab(1)">我的答疑</span>
-          <!-- <span :class="{ 'curren': tabIdx == 2 }" @click="planChangeTab(2)">学习记录</span> -->
+          <span :class="{ 'curren': tabIdx == 2 }" @click="planChangeTab(2)">学习记录</span>
         </div>
         <div class="tab-main clearfix">
           <div class="month-answer-left fl">
@@ -999,7 +999,7 @@ export default {
     getPlanwatchRecords () {
       this.showLoading(true)
       planwatchRecords({
-        user_id: 3,
+        user_id: this.user_id,
         page: this.page,
         limit: this.limit
       }).then(data => {
@@ -1481,6 +1481,7 @@ export default {
     border-bottom: 1px solid #E6E6E6;
   }
   .days-item{
+    width: 80px;
     margin: 15px 26px;
     text-align: center;
     position: relative;

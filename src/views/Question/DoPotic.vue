@@ -21,7 +21,7 @@
             </Col>
           </Row>
         </div>
-        <potic-list ref="poticWrap" :topics="topics" :total="total" :getQuestion="getQuestion" @doPoticInfo="doPoticInfo" @modalShow="modalShow" :ID="ID"></potic-list>
+        <potic-list ref="poticWrap" :topics="topics" :total="total" :getQuestion="getQuestion" @doPoticInfo="doPoticInfo"></potic-list>
       </div>
       <div class="dptic-wrap-r fr">
         <div class="right-top-wrap">
@@ -97,7 +97,7 @@
           </div>
         </div>
       </Modal>
-      <Modal
+      <!-- <Modal
         title="纠错"
         v-model="visibleError"
         footer-hide
@@ -105,7 +105,18 @@
         :width="795"
         class="iview-modal">
         <error-correction v-if="visibleError" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
-      </Modal>
+      </Modal> -->
+      <!-- <Modal
+        :title="typeShow == 'dy' ? '提问题':'纠错'"
+        v-model="visibleError"
+        footer-hide
+        :width="795"
+        :scrollable="true"
+        @on-visible-change="modalQueVisible"
+        class="iview-modal">
+        <upload-img v-if="typeShow == 'dy'" :getQuestion="getQuestion" @modalShow="modalShow"></upload-img>
+        <error-correction v-if="typeShow == 'jc'" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
+      </Modal> -->
     </div>
     <div class="no-data" v-if="noDataFlag">
       暂无数据
@@ -118,6 +129,7 @@ import { topicList, getPapers } from '@/api/questions'
 import poticList from '../../components/poticList/poticList'
 import countDown from '../../components/count'
 import countUp from '../../components/common/countUp'
+import uploadImg from '../../components/analysis/askQuestion'
 import errorCorrection from '../../components/common/errorCorrection'
 import $ from 'jquery'
 import { mapState, mapActions } from 'vuex'
@@ -171,7 +183,7 @@ export default {
         },
         entrance_type: this.$route.query.entrance_type || ''
       },
-      ID: '#anchor-0'
+      typeShow: '' // 答疑dy，纠错jc
     }
   },
   computed: {
@@ -184,6 +196,7 @@ export default {
     poticList,
     countDown,
     countUp,
+    uploadImg,
     errorCorrection
   },
   created () {
@@ -385,10 +398,22 @@ export default {
       })
     },
     // 纠错显示
-    modalShow (flag, qId) {
-      this.visibleError = flag
-      this.getQuestion.question_id = qId
-    }
+    // modalShow (flag, qId) {
+    //   this.visibleError = flag
+    //   this.getQuestion.question_id = qId
+    // },
+    // modalShow (flag, qId, type) {
+    //   this.visibleError = flag
+    //   this.typeShow = type
+    //   this.getQuestion.question_id = qId
+    // },
+    // modalQueVisible (val) {
+    //   document.body.removeAttribute('style')
+    //   if (!val) {
+    //     this.visibleError = false
+    //     this.typeShow = ''
+    //   }
+    // }
   },
   beforeDestroy () {
     document.oncontextmenu = undefined

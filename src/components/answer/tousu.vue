@@ -98,6 +98,7 @@ export default {
           this.quiz = ''
           this.complain_id = ''
           this.$emit('update:tousuVisible', false)
+          this.$emit('updateAnswerList')
         } else {
           this.$Message.error(res.msg)
         }

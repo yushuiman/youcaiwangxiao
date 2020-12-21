@@ -140,7 +140,7 @@
       <img :src="imgUrl" v-if="visible" style="width: 100%;">
     </Modal>
     <zhuiwen :answerVisible.sync="answerVisible" :zhuiwenInfo="zhuiwenInfo" @updateAnswerList="questionallAnswerList"></zhuiwen>
-    <tousu :tousuVisible.sync="tousuVisible" :tousuInfo="tousuInfo"></tousu>
+    <tousu :tousuVisible.sync="tousuVisible" :tousuInfo="tousuInfo" @updateAnswerList="questionallAnswerList"></tousu>
   </div>
 </template>
 
@@ -258,8 +258,9 @@ export default {
           this.quiz = ''
           this.quiz_image = []
           this.$Message.success('提交成功~')
+          this.$emit('modalShowUpdate', false)
           this.questionallAnswerList()
-          this.$emit('modalShow', false)
+          // this.$emit('update:visibleErrorAns', false)
         } else {
           this.$Message.error(res.msg)
         }

@@ -12,7 +12,7 @@
             </Col>
           </Row>
         </div>
-        <potic-list ref="poticWrap" :topics="topics" :total="total" :getQuestion="getQuestion" @doPoticInfo="doPoticInfo" @modalShow="modalShow" :ID="ID"></potic-list>
+        <potic-list ref="poticWrap" :topics="topics" :total="total" :getQuestion="getQuestion" @doPoticInfo="doPoticInfo"></potic-list>
       </div>
       <div class="dptic-wrap-r fr">
         <div class="right-top-wrap">
@@ -82,14 +82,25 @@
           </div>
         </div>
       </Modal>
-      <Modal
+      <!-- <Modal
         title="纠错"
         v-model="visibleError"
         footer-hide
         :width="795"
         class="iview-modal">
         <error-correction v-if="visibleError" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
-      </Modal>
+      </Modal> -->
+      <!-- <Modal
+        :title="typeShow == 'dy' ? '提问题':'纠错'"
+        v-model="visibleError"
+        footer-hide
+        :width="795"
+        :scrollable="true"
+        @on-visible-change="modalQueVisible"
+        class="iview-modal">
+        <upload-img v-if="typeShow == 'dy'" :getQuestion="getQuestion" @modalShow="modalShow"></upload-img>
+        <error-correction v-if="typeShow == 'jc'" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
+      </Modal> -->
     </div>
     <div class="no-data" v-if="noDataFlag">
       暂无数据
@@ -132,8 +143,7 @@ export default {
           question: []
         },
         video_name: ''
-      },
-      ID: '#anchor-0'
+      }
     }
   },
   computed: {
@@ -310,10 +320,22 @@ export default {
       })
     },
     // 纠错显示
-    modalShow (flag, qId) {
-      this.visibleError = flag
-      this.getQuestion.question_id = qId
-    }
+    // modalShow (flag, qId) {
+    //   this.visibleError = flag
+    //   this.getQuestion.question_id = qId
+    // },
+    // modalShow (flag, qId, type) {
+    //   this.visibleError = flag
+    //   this.typeShow = type
+    //   this.getQuestion.question_id = qId
+    // },
+    // modalQueVisible (val) {
+    //   document.body.removeAttribute('style')
+    //   if (!val) {
+    //     this.visibleError = false
+    //     this.typeShow = ''
+    //   }
+    // }
   },
   beforeDestroy () {
     document.oncontextmenu = undefined

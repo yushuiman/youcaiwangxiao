@@ -9,7 +9,7 @@
             </Col>
           </Row>
         </div>
-        <potic-list ref="poticWrap" :topics="topics" :getQuestion="getQuestion" @modalShow="modalShow"></potic-list>
+        <potic-list ref="poticWrap" :topics="topics" :getQuestion="getQuestion"></potic-list>
       </div>
       <div class="dptic-wrap-r fr">
         <div class="go-result-box">
@@ -51,8 +51,8 @@
     <div class="no-data" v-if="noDataFlag">
       暂无数据
     </div>
-    <Modal
-      :title="typeShow=='dy'? '提问题':'纠错'"
+    <!-- <Modal
+      :title="typeShow == 'dy' ? '提问题':'纠错'"
       v-model="visible"
       footer-hide
       :width="795"
@@ -61,7 +61,7 @@
       class="iview-modal">
       <upload-img v-if="typeShow == 'dy'" :getQuestion="getQuestion" @modalShow="modalShow"></upload-img>
       <error-correction v-if="typeShow == 'jc'" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
-    </Modal>
+    </Modal> -->
   </div>
 </template>
 
@@ -435,22 +435,18 @@ export default {
         }
       })
     },
-    modalShow (flag, qId, type) {
-      this.visible = flag
-      if (this.visible) {
-        this.typeShow = type
-      } else {
-        this.typeShow = ''
-      }
-      this.getQuestion.question_id = qId
-    },
-    modalQueVisible (val) {
-      document.body.removeAttribute('style')
-      if (!val) {
-        this.visible = false
-        this.typeShow = ''
-      }
-    }
+    // modalShow (flag, qId, type) {
+    //   this.visible = flag
+    //   this.typeShow = type
+    //   this.getQuestion.question_id = qId
+    // },
+    // modalQueVisible (val) {
+    //   document.body.removeAttribute('style')
+    //   if (!val) {
+    //     this.visible = false
+    //     this.typeShow = ''
+    //   }
+    // }
   },
   beforeDestroy () {
     document.oncontextmenu = undefined

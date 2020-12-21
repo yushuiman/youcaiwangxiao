@@ -11,7 +11,7 @@
           </Col>
         </Row>
       </div>
-      <potic-list ref="poticWrap" :topics="topics" :total="total" :getQuestion="getQuestion" @doPoticInfo="doPoticInfo" @modalShow="modalShow" :ID="ID"></potic-list>
+      <potic-list ref="poticWrap" :topics="topics" :total="total" :getQuestion="getQuestion" @doPoticInfo="doPoticInfo"></potic-list>
     </div>
     <div class="dptic-wrap-r fr">
       <div class="right-top-wrap">
@@ -81,7 +81,7 @@
         </div>
       </div>
     </Modal>
-    <Modal
+    <!-- <Modal
       title="纠错"
       v-model="visibleError"
       footer-hide
@@ -90,7 +90,7 @@
       :width="795"
       class="iview-modal">
       <error-correction v-if="visibleError" :getQuestion="getQuestion" @modalShow="modalShow"></error-correction>
-    </Modal>
+    </Modal> -->
   </div>
 </template>
 
@@ -143,8 +143,7 @@ export default {
           paper_id: this.$route.query.paper_id || 0,
           question: []
         }
-      },
-      ID: '#anchor-0'
+      }
     }
   },
   computed: {
@@ -312,10 +311,10 @@ export default {
       })
     },
     // 纠错显示
-    modalShow (flag, qId) {
-      this.visibleError = flag
-      this.getQuestion.question_id = qId
-    }
+    // modalShow (flag, qId) {
+    //   this.visibleError = flag
+    //   this.getQuestion.question_id = qId
+    // }
   },
   beforeDestroy () {
     document.oncontextmenu = undefined

@@ -6,6 +6,9 @@
           <div class="head-list">
             <img src="../assets/images/global/yc-logo.png" alt="logo" class="yc-logo fl" @click="goIndex">
             <ul class="item-list fl">
+              <!-- <li :class="{'on_change': metaTitle === '首页'}">
+                <a href="https://deste.youcaiwx.cn/">首页</a>
+              </li> -->
               <li :class="{'on_change': metaTitle === v.name}" v-for="(v, index) in navArr" :key="index">
                 <router-link :to="v.path">{{v.name}}</router-link>
               </li>

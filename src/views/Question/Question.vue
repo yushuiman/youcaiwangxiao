@@ -210,12 +210,12 @@ export default {
         {
           id: 1,
           title: '知识点练习',
-          describe: '小节知识点训练'
+          describe: '以知识点为单位训练'
         },
         {
           id: 2,
           title: '阶段测试',
-          describe: '章节重点知识测试'
+          describe: '以小节为单位检测'
         },
         {
           id: 3,
@@ -240,7 +240,7 @@ export default {
         {
           id: 6,
           title: '组卷模考',
-          describe: '经典试卷随机抽取'
+          describe: '以章节为单位突破'
         }
       ],
       personalTxtArr: ['答题记录', '我的错题', '收藏夹'],

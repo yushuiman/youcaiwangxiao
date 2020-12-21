@@ -235,7 +235,7 @@
       <img :src="imgUrl" v-if="visible" style="width: 100%;">
     </Modal>
     <zhuiwen :answerVisible.sync="answerVisible" :zhuiwenInfo="zhuiwenInfo" @updateAnswerList="getAnswerList"></zhuiwen>
-    <tousu :tousuVisible.sync="tousuVisible" :tousuInfo="tousuInfo"></tousu>
+    <tousu :tousuVisible.sync="tousuVisible" :tousuInfo="tousuInfo" @updateAnswerList="getAnswerList"></tousu>
   </div>
 </template>
 

@@ -58,7 +58,8 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.$Message.success('提交成功')
-          this.$emit('modalShow', false)
+          // this.$emit('update:visibleErrorAns', false)
+          this.$emit('modalShowUpdate', false)
         } else {
           this.$Message.error(res.msg)
         }

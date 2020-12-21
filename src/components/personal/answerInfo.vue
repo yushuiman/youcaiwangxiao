@@ -506,7 +506,7 @@
     <!-- 答疑追问 -->
     <zhuiwen :answerVisible.sync="answerVisible" :zhuiwenInfo="zhuiwenInfo" @updateAnswerList="initRes"></zhuiwen>
     <!-- 答疑投诉 -->
-    <tousu :tousuVisible.sync="tousuVisible" :tousuInfo="tousuInfo"></tousu>
+    <tousu :tousuVisible.sync="tousuVisible" :tousuInfo="tousuInfo" @updateAnswerList="initRes"></tousu>
   </div>
 </template>
 

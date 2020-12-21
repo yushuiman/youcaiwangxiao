@@ -12,7 +12,7 @@
             </Col>
           </Row>
         </div>
-        <potic-list ref="poticWrap" :topics="topics" :getQuestion="getQuestion" :total="total" @doPoticInfo="doPoticInfo" :ID="ID"></potic-list>
+        <potic-list ref="poticWrap" :topics="topics" :getQuestion="getQuestion" :total="total" @doPoticInfo="doPoticInfo"></potic-list>
       </div>
       <div class="dptic-wrap-r fr">
         <div class="right-top-wrap">
@@ -112,8 +112,7 @@ export default {
       experienceTopics: {
         used_time: 0,
         question_content: [] // 交卷信息
-      },
-      ID: '#anchor-0'
+      }
     }
   },
   computed: {
