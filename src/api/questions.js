@@ -109,7 +109,7 @@ export const getPapers = (data) => { // 交卷
 }
 export const resultsStati = (data) => { // 成绩统计
   return axios.request({
-    url: '/web/Question/resultsStati ',
+    url: '/web/Question/resultsStati',
     data,
     method: 'post'
   })

@@ -28,6 +28,13 @@ export const courseList = (data) => { // 学习计划课程列表
     method: 'post'
   })
 }
+export const buyCourse = (data) => { // 学习计划是否买过课
+  return axios.request({
+    url: '/web/Plan/buyCourse',
+    data,
+    method: 'post'
+  })
+}
 export const testTime = (data) => { // 学习计划考试时间列表
   return axios.request({
     url: '/web/Plan/testTime',

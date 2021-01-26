@@ -8,7 +8,6 @@ const Course = r => require.ensure([], () => r(require('@/views/Course/Course'))
 const CourseJd = r => require.ensure([], () => r(require('@/views/CourseJd/Course')), 'Course')
 const courseDetail = r => require.ensure([], () => r(require('@/views/Course/CourseDetail')), 'courseDetail')
 const courseVideo = r => require.ensure([], () => r(require('@/views/Video/Video')), 'courseVideo')
-const ceshi = r => require.ensure([], () => r(require('@/views/Video/ceshi')), 'ceshi')
 const Question = r => require.ensure([], () => r(require('@/views/Question/Question')), 'Question')
 const DoPotic = r => require.ensure([], () => r(require('@/views/Question/DoPotic')), 'DoPotic')
 const DoPoticExperience = r => require.ensure([], () => r(require('@/views/Question/DoPoticExperience')), 'DoPoticExperience')
@@ -88,17 +87,6 @@ const router = new Router({
       path: '/course-video',
       name: 'course-video',
       component: courseVideo,
-      meta: {
-        title: '课程',
-        showHeader: false,
-        showFooter: false,
-        showRightSlider: false
-      }
-    },
-    {
-      path: '/ceshi',
-      name: 'ceshi',
-      component: ceshi,
       meta: {
         title: '课程',
         showHeader: false,

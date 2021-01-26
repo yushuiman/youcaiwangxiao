@@ -6,14 +6,14 @@
           :unique-opened="true"
           default-active="2"
           class="el-menu-vertical-demo">
-          <el-submenu :index="item.index" v-for="item in courseCatalogInfo" :key="item.course_id" style="margin-bottom: 10px;border:0;">
+          <el-submenu :index="item.index + ''" v-for="item in courseCatalogInfo" :key="item.course_id" style="margin-bottom: 10px;border:0;">
             <template slot="title" >
               <div class="title-cpe" @click="getSecvCatalog(item, index)">
                 <span><i class="elt-icon elt-icon-01"></i>{{item.name}}</span>
                 <span>{{item.cpe_integral}}积分</span>
               </div>
             </template>
-            <el-submenu :index="item.index+'-'+val.index" v-for="val in secvCatalogList[item.course_id]" :key="val.section_id">
+            <el-submenu :index="item.index + '-' + val.index" v-for="val in secvCatalogList[item.course_id]" :key="val.section_id">
               <template slot="title">
                 <i class="elt-icon elt-icon-02"></i>
                 <span>{{val.section_name}}</span>

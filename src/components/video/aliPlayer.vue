@@ -128,7 +128,7 @@ export default {
     },
     aliplayerSdkPath: {
       type: String,
-      default: 'https://g.alicdn.com/de/prismplayer/2.8.2/aliplayer-min.js'
+      default: 'https://g.alicdn.com/de/prismplayer/2.9.1/aliplayer-min.js'
     },
     autoplay: {
       type: Boolean,
@@ -393,12 +393,14 @@ export default {
           type: 'SD'
         }
       ],
-      isMute: 2 // 1静音2正常
+      isMute: 2, // 1静音2正常
       // isLianxu: Cookies.get('isLianxu') || true, // 是否连续播放
       // showReplay: false // 连续播放按钮
+      animationTimer: null
     }
   },
   mounted () {
+    this.animationTimerSet()
     if (window.Aliplayer !== undefined) {
       // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
       this.scriptTagStatus = 2
@@ -421,6 +423,28 @@ export default {
     }
   },
   methods: {
+    animationTimerSet () {
+      this.animationTimer = setInterval(() => {
+        var oDiv = document.createElement('div')
+        var yDiv = document.querySelector('.prism-player')
+        oDiv.className = "animation-box animate"
+        oDiv.innerHTML = '优财网校' + this.user_id
+        yDiv.appendChild(oDiv)
+        // 页面载入时，给它执行一次
+        // 监听动画是否结束 animation: mymove 5s;
+        setTimeout (() => {
+          yDiv.removeChild(oDiv)
+        }, 5000)
+        // yDiv.addEventListener ('animationend', function () {
+        //   // 动画结束，移除动画的样式类
+        //   console.log(yDiv)
+        //   setTimeout (() => {
+        //     yDiv.removeChild(oDiv)
+        //     console.log('removeChild')
+        //   }, 10)
+        // })
+      }, 300000)
+    },
     insertScriptTag () {
       const _this = this
       let playerScriptTag = document.getElementById('playerScriptTag')
@@ -710,12 +734,16 @@ export default {
     signSub () {
       this.$emit('signSub', false)
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.animationTimer)
+    this.animationTimer = null
   }
 }
 </script>
 
 <style>
-  @import url('https://g.alicdn.com/de/prismplayer/2.8.2/skins/default/aliplayer-min.css');
+  @import url('https://g.alicdn.com/de/prismplayer/2.9.1/skins/default/aliplayer-min.css');
   @import "../../assets/scss/aliplayer.css";
   .prism-player .prism-progress .prism-progress-played{
     background: #F99111!important;
@@ -904,5 +932,33 @@ export default {
     width: 100%;
     height: 12px;
     z-index: 11;
+  }
+  /* 5分钟一次跑马灯 */
+  .slide-fade-enter-active {
+    animation: mymove 5s;
+  }
+  .slide-fade-leave-active {
+    animation: mymove 5s reverse;
+  }
+  .animation-box {
+    color: rgba(200, 200, 200, 0.5);
+    font-weight: bold;
+    position: absolute;
+  }
+  .animation-box.animate{
+    animation: mymove 5s;
+    -webkit-animation: mymove 5s; /*Safari and Chrome*/
+    /* transform: rotate(15deg); */
+  }
+  @keyframes mymove
+  {
+  from {left:0px;top: 0;}
+  to {left:90%;top: 100%;}
+  }
+
+  @-webkit-keyframes mymove /*Safari and Chrome*/
+  {
+  from {left:0px;top: 0;}
+  to {left:90%;top:100%;}
   }
 </style>

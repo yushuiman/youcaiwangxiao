@@ -176,7 +176,7 @@
           </div>
         </div>
         <ul class="know-list">
-          <li v-for="(val, key) in courseListLearn" :key="key" @click="nextPage(1, val)">
+          <li v-for="(val, key) in courseListLearn" :key="key" @click="nextPage(1, val, 1)">
             <span v-if="addlearn === 1">{{val.course_name}}<i class="is-join" v-if="val.state == 1">已参加</i></span>
             <span v-if="addlearn === 2">{{val.plan_name}}</span>
             <Icon type="ios-arrow-forward" style="color: #999999;"/>
@@ -363,7 +363,7 @@
 </template>
 
 <script>
-import { learnIndex, courseList, testTime, addStudy, everyday, outPlan, hangAir, getVideo, studyStatus, customPlansec, customPlan, planwatchRecords } from '@/api/learncenter'
+import { learnIndex, courseList, testTime, addStudy, everyday, outPlan, hangAir, getVideo, studyStatus, customPlansec, customPlan, planwatchRecords, buyCourse } from '@/api/learncenter'
 import learnNotice from '../../components/learning/learnNotice'
 import learnStudent from '../../components/learning/learnStudent'
 import studentDynamic from '../../components/learning/studentDynamic'
@@ -493,7 +493,39 @@ export default {
       }
       this.getCourseList() // 有学习计划 选择课程列表
     },
-    nextPage (index, val) {
+    // 是否买过课
+    isBuyCourse (index, val) {
+      this.showLoading(true)
+      buyCourse({
+        user_id: this.user_id,
+        course_id: val.course_id
+      }).then(data => {
+        this.showLoading(false)
+        const res = data.data
+        if (res.code === 200) {
+          if (res.data.status === 2) {
+            this.addLearnIdx = 0
+            this.$Message.error('您未购买')
+            return
+          }
+          // 推荐计划 选择课程 获取考试时间
+          if (index === 1 && this.planType == 2) {
+            this.planChooseInfo.course_id = val.course_id // 选择课程id
+            this.planChooseInfo.is_exper = val.is_exper // 1:0元体验 2:购买课程
+            this.getTestTime() // 选择考试时间
+          }
+          // 自定义计划 选择课程 设置天数week
+          if (index === 1 && this.planType == 1) {
+            this.planChooseInfo.course_id = val.course_id // 选择课程id
+            this.planChooseInfo.is_exper = val.is_exper // 1:0元体验 2:购买课程
+            this.weekDate = this.getWeekDate()
+          }
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    nextPage (index, val, isBuy) {
       if (val && val.state === 1) { // 已参加计划
         this.$Message.error('已参加')
         return
@@ -502,25 +534,14 @@ export default {
         this.$Message.error('请选择学习计划类型')
         return
       }
-      // 推荐计划 选择课程 获取考试时间
-      if (index === 1 && this.planType == 2) {
-        this.planChooseInfo.course_id = val.course_id // 选择课程id
-        this.planChooseInfo.is_exper = val.is_exper // 1:0元体验 2:购买课程
-        this.getTestTime() // 选择考试时间
+      if (isBuy === 1) {
+        this.isBuyCourse(index, val)
       }
       // 推荐计划 选择考试时间 计划设置成功
       if (index === 2 && this.planType == 2) {
         this.planChooseInfo.test_time = val.test_time // 选择考试time
         this.getAddStudy() // 接口成功this.addLearnIdx = 2
         return
-      }
-      // 自定义计划 选择课程 设置天数week
-      if (index === 1 && this.planType == 1) {
-        if (val) {
-          this.planChooseInfo.course_id = val.course_id // 选择课程id
-          this.planChooseInfo.is_exper = val.is_exper // 1:0元体验 2:购买课程
-        }
-        this.weekDate = this.getWeekDate()
       }
       // 自定义计划 获取章节目录
       if (index === 3 && this.planType == 1) {

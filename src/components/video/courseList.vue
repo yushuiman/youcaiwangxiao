@@ -17,7 +17,8 @@
             @click="playVideo(val, v, key, index)" :id="'showBox'+ val.section_id + '' + v.video_id" style="height: 34px;line-height: 34px;">
               <i class="el-video-icon" :class="{'play-icon': openMenu == (key+1) + '-' + (index+1)}"></i>
               <span class="sl">{{v.video_name}}</span>
-              <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1)}"></i>
+              <!-- <i style="color:#0AAB55;font-style:normal;font-size:12px;">({{v.percentage}}%)</i> -->
+              <i class="el-dot-icon" :class="{'el-dot-now': openMenu == (key+1) + '-' + (index+1), 'el-dot-see': v.status == 1}"></i>
             </el-menu-item>
           </el-submenu>
         </el-menu>

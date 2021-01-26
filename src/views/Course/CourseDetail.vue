@@ -18,15 +18,15 @@
             </div>
           </div>
           <div v-if="videoflag" class="video-object">
-            <!-- <video style="position:absolute;left:0;top:0;z-index:999;" autoplay="autoplay" controls="controls" src="https://p.bokecc.com/flash/single/8E7175958932B212_FBBCC178D6FB98CC9C33DC5901307461_false_0CCEB0A89A516E59_1/player.swf" width="650" height="364">
-              <source src="https://p.bokecc.com/flash/single/8E7175958932B212_FBBCC178D6FB98CC9C33DC5901307461_false_0CCEB0A89A516E59_1/player.swf" type="video/ogg" />
-            </video> -->
-            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="650" height="364" id="cc_FBBCC178D6FB98CC9C33DC5901307461">
+            <video src="https://video.youcaiwx.com/1d0e88c44f5b4e0fa5345c330c40dcd0/6c42e7069bf346b28bef71c133b3d0a6-f25f346eebd78e796eef18c5a1ba8711-ld.mp4" style="position:absolute;left:0;top:0;z-index:999;" autoplay="autoplay" controls="controls" width="650" height="364">
+              您的浏览器不支持 video 标签。
+            </video>
+            <!-- <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" width="650" height="364" id="cc_FBBCC178D6FB98CC9C33DC5901307461">
               <param name="movie" value="https://p.bokecc.com/flash/single/8E7175958932B212_FBBCC178D6FB98CC9C33DC5901307461_false_0CCEB0A89A516E59_1/player.swf" />
               <param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" />
               <param value="transparent" name="wmode" />
               <embed src="https://p.bokecc.com/flash/single/8E7175958932B212_FBBCC178D6FB98CC9C33DC5901307461_false_0CCEB0A89A516E59_1/player.swf" width="650" height="364" name="cc_FBBCC178D6FB98CC9C33DC5901307461" allowFullScreen="true" wmode="transparent" allowScriptAccess="always" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash"/>
-            </object>
+            </object> -->
           </div>
         </div>
         <div class="cdi-special">

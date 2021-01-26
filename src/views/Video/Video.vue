@@ -44,6 +44,7 @@
             @replayVideo="replayVideo"
             @courseCollection="courseCollection">
           </ali-player>
+          <p class="guanggao-txt" v-if="activityVisible">当前视频已播放完成，{{activityTimerNum}}s后即将进入下一个视频</p>
         </div>
       </div>
       <div class="video-info-c" id="left" :style="{ height: screenHeight - 137 + 'px' }" v-if="fixedVideo">
@@ -191,7 +192,10 @@ export default {
       isPlay: false, // 视频初始化getStatus获取不准确
       answerTime: 0, // 答疑提问时间
       isLianxu: parseInt(Cookies.get('isLianxu')) || 1, // 是否连续播放
-      showReplay: false // 连续播放按钮
+      showReplay: false, // 连续播放按钮
+      activityTimer: null, // 连续播放:10秒后播放下一个
+      activityTimerNum: 10,
+      activityVisible: false
     }
   },
   components: {
@@ -267,8 +271,13 @@ export default {
       }
       if (keyNum === 39) { // 快进
         let playnum = player.getCurrentTime()
+        let totalPlaynum = player.getDuration()
         playnum = parseInt(playnum + 5)
         if (playnum > 15) {
+          if (playnum > totalPlaynum) {
+            player.seek(totalPlaynum)
+            return
+          }
           player.seek(playnum)
         } else {
           player.seek(0)
@@ -324,6 +333,10 @@ export default {
         this.reload()
         return
       }
+      clearInterval(this.socketTimer)
+      clearInterval(this.activityTimer)
+      this.socketTimer = null
+      this.activityTimer = null
       this.chooseIdx = 0
       if (type === 2) {
         this.reload()
@@ -356,6 +369,7 @@ export default {
         return
       }
       this.computedNextVid() // 计算下一个要播放的视频
+      // this.activityDown() // 10秒后进入下一个视频
       // this.videoCredentials.watch_time = parseInt(this.$refs.aliPlayers.getCurrentTime())
     },
     // 设置是否连续播放
@@ -373,7 +387,9 @@ export default {
     ready (instance) {
       // 30秒socket
       clearInterval(this.socketTimer)
+      clearInterval(this.activityTimer)
       this.socketTimer = null
+      this.activityTimer = null
       // 重新播放
       this.showReplay = false
       // 倍速设置
@@ -410,7 +426,7 @@ export default {
           }
         }
       }, 30000)
-      // 未购买试看3分钟
+      // 未购买试看3分钟 没有试看需求了
       // if (this.playCourseInfo.userstatus == 2) {
       //   this.tryWatchTimer = setInterval(() => {
       //     let playtime = parseInt(instance.getCurrentTime())
@@ -452,6 +468,26 @@ export default {
       }
       courseVideo(message).then(data => {
       })
+    },
+    activityDown () {
+      this.activityVisible = true
+      this.activityTimerNum = 10
+      this.activityTimer = setInterval(() => {
+        let a = parseInt(this.$refs.aliPlayers.getDuration())
+        let b = parseInt(this.$refs.aliPlayers.getCurrentTime())
+        this.activityTimerNum--
+        if (b < a) {
+          clearInterval(this.activityTimer)
+          this.activityVisible = false
+          this.$refs.aliPlayers.play()
+          return
+        }
+        if(this.activityTimerNum < 1){
+          clearInterval(this.activityTimer)
+          this.activityVisible = false
+          this.computedNextVid() // 计算下一个要播放的视频
+        }
+      }, 1000)
     },
     // 下一个视频
     computedNextVid () {
@@ -725,6 +761,7 @@ export default {
     initSecvCatalog () {
       this.showLoading(true)
       secvCatalog({
+        user_id: this.user_id,
         course_id: this.playCourseInfo.course_id
       }).then(data => {
         this.showLoading(false)
