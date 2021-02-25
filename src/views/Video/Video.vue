@@ -29,12 +29,12 @@
       </div>
       <div class="video-info-c" id="left" :class="{'fix-video': fixedVideo}" :style="{ height: screenHeight - 137 + 'px' }">
         <div class="course-video-box">
+            <!-- :isLianxu="isLianxu" -->
           <ali-player
             ref="aliPlayers"
             v-if="videoCredentials.playAuth"
             :videoCredentials="videoCredentials"
             :fixedVideo="fixedVideo"
-            :isLianxu="isLianxu"
             :showReplay="showReplay"
             :user_id="user_id"
             @ready="ready"
@@ -397,7 +397,7 @@ export default {
       instance.setSpeed(speednum)
       // 音量设置
       let voicenum = Cookies.get('voicenum') || 100
-      instance.setVolume(voicenum / 100)
+      instance.setVolume(parseInt(voicenum / 100))
       // 跳转到上次播放时间
       // instance.seek(this.videoCredentials.watch_time)
       if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
