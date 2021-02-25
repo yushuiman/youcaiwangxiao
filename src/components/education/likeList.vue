@@ -56,6 +56,7 @@ export default {
     background: $colfff;
     border-radius: 4px;
     box-sizing: border-box;
+    margin-bottom: 20px;
     .like-title{
       @include lh(39, 39);
       color: $col666;

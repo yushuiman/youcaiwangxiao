@@ -70,6 +70,10 @@ export default {
         {
           path: 'education',
           name: '后续教育'
+        },
+        {
+          path: 'course-alsj',
+          name: '案例实践'
         }
       ]
     }

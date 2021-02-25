@@ -113,15 +113,14 @@ export default {
       total: 1,
       form: {
         class_id: '',
-        billing_status: '',
-        multiple: 2,
-        popularity: '',
-        pricesort: '',
-        price_start: '',
-        price_end: '',
+        billing_status: '', // 计费方式
+        multiple: 2, // 综合1
+        popularity: '', // 人气1
+        pricesort: '', // 价格1升序2降序
+        price_start: '', // 起始价格
+        price_end: '', // 结束价格
         limit: 6,
         page: 1
-        // ym: '' // 班型
       }, // 课程列表 默认第一页 显示6个
       // typeInfo: [
       //   {

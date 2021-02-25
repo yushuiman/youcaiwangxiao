@@ -65,8 +65,8 @@ export default {
         // class_id: '',
         // billing_status: '',
         type_id: this.$route.query.type_id, // 课程类型id
-        multiple: 2, // 综合1升序2降序
-        popularity: 2, // 人气1升序2降序
+        multiple: 2, // 综合1
+        popularity: '', // 人气1
         pricesort: '', // 价格1升序2降序
         price_start: '', // 起始价格
         price_end: '', // 结束价格

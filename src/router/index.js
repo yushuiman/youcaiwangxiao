@@ -7,6 +7,7 @@ const Home = r => require.ensure([], () => r(require('@/views/Home')), 'Home')
 const Course = r => require.ensure([], () => r(require('@/views/Course/Course')), 'Course')
 const CourseJd = r => require.ensure([], () => r(require('@/views/CourseJd/Course')), 'Course')
 const courseDetail = r => require.ensure([], () => r(require('@/views/Course/CourseDetail')), 'courseDetail')
+const CourseAlsj = r => require.ensure([], () => r(require('@/views/Course/CourseAlsj')), 'CourseAlsj')
 const courseVideo = r => require.ensure([], () => r(require('@/views/Video/Video')), 'courseVideo')
 const Question = r => require.ensure([], () => r(require('@/views/Question/Question')), 'Question')
 const DoPotic = r => require.ensure([], () => r(require('@/views/Question/DoPotic')), 'DoPotic')
@@ -35,7 +36,6 @@ const WechatPay = r => require.ensure([], () => r(require('@/views/Orders/Wechat
 const Quickpay = r => require.ensure([], () => r(require('@/views/Orders/Quickpay')), 'Quickpay')
 const Books = r => require.ensure([], () => r(require('@/views/Books/Books')), 'Books')
 const BooksDetail = r => require.ensure([], () => r(require('@/views/Books/BooksDetail')), 'BooksDetail')
-
 const router = new Router({
   mode: 'history',
   routes: [
@@ -92,6 +92,17 @@ const router = new Router({
         showHeader: false,
         showFooter: false,
         showRightSlider: false
+      }
+    },
+    {
+      path: '/course-alsj',
+      name: 'course-alsj',
+      component: CourseAlsj,
+      meta: {
+        title: '案例实践',
+        showHeader: true,
+        showFooter: true,
+        showRightSlider: true
       }
     },
     {

@@ -44,6 +44,7 @@ export default {
     padding: 0 10px;
     background: #ffffff;
     border-radius: 8px;
+    margin-bottom: 20px;
   }
   .com-title{
     padding-left: 22px;
@@ -57,7 +58,6 @@ export default {
     height: 170px;
     padding: 10px 4px;
     box-sizing: border-box;
-    margin-bottom: 20px;
     overflow: auto;
     .student-head{
       width: 40px;

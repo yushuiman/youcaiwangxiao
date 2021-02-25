@@ -368,8 +368,8 @@ export default {
         this.showReplay = true
         return
       }
-      this.computedNextVid() // 计算下一个要播放的视频
-      // this.activityDown() // 10秒后进入下一个视频
+      // this.computedNextVid() // 计算下一个要播放的视频
+      this.activityDown() // 10秒后进入下一个视频
       // this.videoCredentials.watch_time = parseInt(this.$refs.aliPlayers.getCurrentTime())
     },
     // 设置是否连续播放

@@ -55,6 +55,7 @@ export default {
     padding: 0 10px;
     background: #ffffff;
     border-radius: 8px;
+    margin-bottom: 20px;
   }
   .com-title{
     padding-left: 22px;
@@ -66,7 +67,6 @@ export default {
   }
   .com-list{
     padding: 10px 0;
-    margin-bottom: 20px;
     .com-item{
       height: 20px;
       line-height: 20px;

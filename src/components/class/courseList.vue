@@ -56,7 +56,8 @@ export default {
     getCourseCatalog () {
       this.showLoading(true)
       courseCatalog({
-        package_id: this.package_id
+        package_id: this.package_id,
+        user_id: this.user_id
       }).then(data => {
         this.showLoading(false)
         const res = data.data

@@ -47,7 +47,8 @@
       </div>
     </div>
     <!-- 重播 -->
-    <div class="set-replay" v-if="isLianxu == 2 && showReplay">
+    <!-- <div class="set-replay" v-if="isLianxu == 2 && showReplay"> -->
+    <div class="set-replay" v-if="showReplay">
       <div class="wish-repaly">
         <div class="cpe-integral-img" v-if="visible">
           <img v-if="gxNum == 1" src="../../assets/images/education/gx_10.png" alt="">

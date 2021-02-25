@@ -12,6 +12,13 @@ export const courseList = (data) => { // 课程列表
     method: 'post'
   })
 }
+export const pcourseList = (data) => { // 骗钱的课程列表
+  return axios.request({
+    url: '/web/Course/pcourseList',
+    data,
+    method: 'post'
+  })
+}
 export const jdCourseList = (data) => { // 京东课程列表
   return axios.request({
     url: '/web/Course/jdCourseList',

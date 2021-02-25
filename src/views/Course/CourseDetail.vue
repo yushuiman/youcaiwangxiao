@@ -2,7 +2,8 @@
   <div class="class-detail-wrap w-wrap">
     <div class="nav-title">
       <router-link to="/">首页</router-link><i>></i>
-      <router-link to="/course">课程</router-link><i>></i>
+      <router-link to="/course" v-if="$route.query.from == 1">课程</router-link>
+      <router-link to="/course-alsj" v-else>课程</router-link><i>></i>
       <span class="curren">{{isntroduction.name}}</span>
     </div>
     <div class="class-detail-info clearfix">
