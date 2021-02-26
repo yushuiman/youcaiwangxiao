@@ -352,8 +352,8 @@ export default {
       instance: null,
       speedTxt: Cookies.get('speedTxt') || '正常',
       qualityTxt: Cookies.get('qualityTxt') || '流畅',
-      voiceNum: Cookies.get('voicenum') || 100, // 音量
-      voiceNum1: Cookies.get('voicenum1') || 100, // 音量
+      voiceNum: parseInt(Cookies.get('voicenum')) || 100, // 音量
+      voiceNum1: parseInt(Cookies.get('voicenum1')) || 100, // 音量
       speedList: [
         {
           text: '0.5X',
@@ -712,7 +712,7 @@ export default {
     //   this.$emit('setLianxuPlay', false)
     // },
     setLianxuPlay () {
-      if (Cookies.get('isLianxu') == 1) {
+      if (this.isLianxu == 1) {
         this.$emit('setLianxuPlay', 2)
       } else {
         this.$emit('setLianxuPlay', 1)

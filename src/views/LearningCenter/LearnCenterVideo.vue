@@ -382,10 +382,10 @@ export default {
     ended () {
       this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
       this.isLianxu = parseInt(Cookies.get('isLianxu')) || 1 // 1连续2重播
-      if (this.isLianxu == 2) {
-        this.showReplay = true
-        return
-      }
+      // if (this.isLianxu == 2) {
+      //   this.showReplay = true
+      //   return
+      // }
       // this.computedNextVid() // 计算下一个要播放的视频
       this.activityDown() // 10秒后进入下一个视频
       // this.videoCredentials.watch_time = parseInt(this.$refs.aliPlayers.getCurrentTime())
@@ -398,7 +398,9 @@ export default {
     // 重新观看
     replayVideo () {
       this.showReplay = false
+      this.activityVisible = false
       this.$refs.aliPlayers.replay()
+      clearInterval(this.activityTimer)
       this.socketIo()
     },
     // 播放器
@@ -408,14 +410,15 @@ export default {
       clearInterval(this.activityTimer)
       this.socketTimer = null
       this.activityTimer = null
-      // 重新播放
+      // 重新播放 广告
+      this.activityVisible = false
       this.showReplay = false
       // 倍速设置
       let speednum = Cookies.get('speednum') || 1
       instance.setSpeed(speednum)
       // 音量设置
       let voicenum = Cookies.get('voicenum') || 100
-      instance.setVolume(voicenum / 100)
+      instance.setVolume(parseInt(voicenum / 100))
       // 跳转到上次播放时间
       // instance.seek(this.videoCredentials.watch_time)
       if (this.videoCredentials.watch_time == parseInt(instance.getDuration())) {
@@ -478,7 +481,11 @@ export default {
       })
     },
     activityDown () {
-      this.activityVisible = true
+      this.showReplay = true
+      if (this.isLianxu == 2) {
+         this.activityVisible = true
+        return
+      }
       this.activityTimerNum = 10
       this.activityTimer = setInterval(() => {
         let a = parseInt(this.$refs.aliPlayers.getDuration())

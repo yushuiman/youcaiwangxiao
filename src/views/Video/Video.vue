@@ -29,12 +29,12 @@
       </div>
       <div class="video-info-c" id="left" :class="{'fix-video': fixedVideo}" :style="{ height: screenHeight - 137 + 'px' }">
         <div class="course-video-box">
-            <!-- :isLianxu="isLianxu" -->
           <ali-player
             ref="aliPlayers"
             v-if="videoCredentials.playAuth"
             :videoCredentials="videoCredentials"
             :fixedVideo="fixedVideo"
+            :isLianxu="isLianxu"
             :showReplay="showReplay"
             :user_id="user_id"
             @ready="ready"
@@ -364,10 +364,10 @@ export default {
     ended () {
       this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
       this.isLianxu = parseInt(Cookies.get('isLianxu')) || 1 // 1连续2重播
-      if (this.isLianxu == 2) {
-        this.showReplay = true
-        return
-      }
+      // if (this.isLianxu == 2) {
+      //   this.showReplay = true
+      //   return
+      // }
       // this.computedNextVid() // 计算下一个要播放的视频
       this.activityDown() // 10秒后进入下一个视频
       // this.videoCredentials.watch_time = parseInt(this.$refs.aliPlayers.getCurrentTime())
@@ -380,7 +380,11 @@ export default {
     // 重新观看
     replayVideo () {
       this.showReplay = false
+      this.activityVisible = false
       this.$refs.aliPlayers.replay()
+      // this.$refs.aliPlayers.seek(0)
+      // this.$refs.aliPlayers.play()
+      clearInterval(this.activityTimer)
       this.socketIo()
     },
     // 播放器
@@ -390,8 +394,9 @@ export default {
       clearInterval(this.activityTimer)
       this.socketTimer = null
       this.activityTimer = null
-      // 重新播放
+      // 重新播放 广告
       this.showReplay = false
+      this.activityVisible = false
       // 倍速设置
       let speednum = Cookies.get('speednum') || 1
       instance.setSpeed(speednum)
@@ -470,7 +475,11 @@ export default {
       })
     },
     activityDown () {
-      this.activityVisible = true
+      this.showReplay = true
+      if (this.isLianxu == 2) {
+         this.activityVisible = true
+        return
+      }
       this.activityTimerNum = 10
       this.activityTimer = setInterval(() => {
         let a = parseInt(this.$refs.aliPlayers.getDuration())
@@ -557,7 +566,6 @@ export default {
         if (currentProfileIndex2 == 0) {
           // this.playCourseInfoNextPrev.section_id = this.courseSections[currentProfileIndex].section_id
           // this.playCourseInfoNextPrev.video_id = this.courseSections[currentProfileIndex].videos[currentProfileIndex2].video_id
-          // console.log(this.playCourseInfoNextPrev)
           this.$Message.error('已经是第一节')
           return
         } else {
