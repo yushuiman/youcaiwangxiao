@@ -14,7 +14,7 @@
           </li>
           <li class="v-set-item v-set-voice">
             <i class="set-icon voice-icon" :class="{'voice-mute-icon': isMute == 1}" @click="setVoice"></i>
-            <Slider v-model="voiceNum" @on-input="onInput" style="width: 80px;height: 4px;background:#f00;"></Slider>
+            <Slider v-model="voiceNum" @on-input="onInput" style="width: 80px;height: 4px;"></Slider>
           </li>
           <li class="v-set-item v-set-quality">
             <i class="set-icon quality-icon">{{qualityTxt}}</i>
@@ -352,8 +352,8 @@ export default {
       instance: null,
       speedTxt: Cookies.get('speedTxt') || '正常',
       qualityTxt: Cookies.get('qualityTxt') || '流畅',
-      voiceNum: Cookies.get('voicenum') || 100, // 音量
-      voiceNum1: Cookies.get('voicenum1') || 100, // 音量
+      voiceNum: parseInt(Cookies.get('voicenum')) || 100, // 音量
+      voiceNum1: parseInt(Cookies.get('voicenum1')) || 100, // 音量
       speedList: [
         {
           text: '0.5X',
