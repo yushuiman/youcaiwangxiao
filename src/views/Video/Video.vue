@@ -194,7 +194,7 @@ export default {
       isLianxu: parseInt(Cookies.get('isLianxu')) || 1, // 是否连续播放
       showReplay: false, // 连续播放按钮
       activityTimer: null, // 连续播放:10秒后播放下一个
-      activityTimerNum: 10,
+      activityTimerNum: 5,
       activityVisible: false
     }
   },
@@ -470,20 +470,24 @@ export default {
       })
     },
     activityDown () {
+      clearInterval(this.activityTimer)
+      this.activityTimer = null
       this.activityVisible = true
-      this.activityTimerNum = 10
+      this.activityTimerNum = 5
       this.activityTimer = setInterval(() => {
         let a = parseInt(this.$refs.aliPlayers.getDuration())
         let b = parseInt(this.$refs.aliPlayers.getCurrentTime())
         this.activityTimerNum--
         if (b < a) {
           clearInterval(this.activityTimer)
+          this.activityTimer = null
           this.activityVisible = false
           this.$refs.aliPlayers.play()
           return
         }
-        if(this.activityTimerNum < 1){
+        if (this.activityTimerNum < 1) {
           clearInterval(this.activityTimer)
+          this.activityTimer = null
           this.activityVisible = false
           this.computedNextVid() // 计算下一个要播放的视频
         }
