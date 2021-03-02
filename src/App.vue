@@ -59,6 +59,10 @@ export default {
 }
 </script>
 <style lang="scss">
+  body{
+    margin: 0!important;
+    padding: 0!important;
+  }
   .yc-loading{
     position: fixed;
     top: 0;
