@@ -23,17 +23,17 @@
           </div>
           <div class="forget" @click="forgetPasw('forget')">忘记密码 ?</div>
           <i-button type="primary" class="log" @click="accountLogin">登录</i-button>
-          <div class="line">
+          <!-- <div class="line">
             <span class="line-lr"></span>
             <span>or</span>
             <span class="line-lr"></span>
-          </div>
+          </div> -->
           <div class="Third">
-            <div class="Third-left">
+            <!-- <div class="Third-left">
               <img :src="wx" v-if="is_show == 2" @mouseenter="onMouseOver" @mouseleave="onMouseOut"/>
               <img :src="wx2" v-if="is_show == 1" @mouseenter="onMouseOver" @mouseleave="onMouseOut" @click="wx_login"/>
               <p>微信</p>
-            </div>
+            </div> -->
             <div class="Third-right">
               <img :src="dx" v-if="is_show2 == 2" @mouseenter="onMouseOver2" @mouseleave="onMouseOut2"/>
               <img :src="dx2" v-if="is_show2 == 1" @click="tabLogin('fast_login')" @mouseenter="onMouseOver2" @mouseleave="onMouseOut2"/>
@@ -183,17 +183,17 @@
             <span @click="voice2">语音验证码</span>
           </div>
           <i-button type="primary" shape="circle" class="log"  style="width:320px;height:50px;cursor: pointer;color:#fff;outline:none;border:none;border-radius:25px;font-size:24px;" @click="quickLogin">登录</i-button>
-          <div class="line">
+          <!-- <div class="line">
             <span class="line-lr"></span>
             <span>or</span>
             <span class="line-lr"></span>
-          </div>
+          </div> -->
           <div class="Third">
-            <div class="Third-left">
+            <!-- <div class="Third-left">
               <img :src="wx" v-if="is_show == 2" @mouseenter="onMouseOver" @mouseleave="onMouseOut"/>
               <img :src="wx2" v-if="is_show == 1" @mouseenter="onMouseOver" @mouseleave="onMouseOut" @click="wx_login"/>
               <p>微信</p>
-            </div>
+            </div> -->
             <div class="Third-right">
               <img :src="icon" v-if="is_show2 == 2" @mouseenter="onMouseOver2" @mouseleave="onMouseOut2"/>
               <img :src="icon2" v-if="is_show2 == 1" @click="tabLogin('login')" @mouseenter="onMouseOver2" @mouseleave="onMouseOut2"/>

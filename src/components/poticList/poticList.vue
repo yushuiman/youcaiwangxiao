@@ -80,7 +80,7 @@
             <p v-if="item.topic[4]">{{item.topic[4]}}</p>
           </div>
           <!-- 练习模式：有解析、答对、答错状态-->
-          <ul class="topic-opition" v-if="getQuestion.paper_mode == 1 && item.topicType == 1">
+          <ul class="topic-opition" v-if="item.topicType == 1 && getQuestion.paper_mode == 1">
             <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPoticPractice(item, v, index, key)">
               <div class="opi-abcd">
                 <span :class="{'blue-bg': v.selOption, 'red-bg': v.errorRed, 'green-bg': v.rightGreen}">{{v.option}}</span>
@@ -89,7 +89,7 @@
             </li>
           </ul>
           <!-- 真题模式：正常，无解析、答对、答错状态-->
-          <ul class="topic-opition" v-if="getQuestion.paper_mode != 1 && item.topicType == 1">
+          <ul class="topic-opition" v-if="item.topicType == 1 && getQuestion.paper_mode != 1">
             <li class="tpc-opi" v-for="(v, key) in item.options" :key="key" @click="doPotic(item, v, index, key)">
               <div class="opi-abcd">
                 <span :class="{'blue-bg': v.selOption}">{{v.option}}</span>

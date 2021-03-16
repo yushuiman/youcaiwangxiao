@@ -33,7 +33,6 @@
         flex: 1;
         color: #DCDCDC;
         font-size: 12px;
-
         span {
             margin: 0 3px;
             
@@ -43,25 +42,21 @@
             }
         }
     }
-
     .v-setting-ul {
         display: flex;
         align-items: center;
         padding: 0 19px;
     }
 }
-
 .v-set-item {
     position: relative;
     font-size: 12px;
     color: #070C12;
-
     &:hover {
         .check-set {
             display: block;
         }
     }
-
     &.v-set-voice {
         margin-right: 20px;
         display: flex;
@@ -90,7 +85,6 @@
             }
         }
     }
-
     // &.v-set-screen{
     //   margin-left: 19px;
     // }
@@ -102,14 +96,12 @@
         width: 80px;
         color: #ffffff;
         padding: 4px 0;
-
         div {
             background: #24272b;
             border: 1px solid rgba(255, 255, 255, .2);
             box-shadow: 0 8px 16px 0 rgba(7, 17, 27, .2);
             border-radius: 4px;
         }
-
         h4 {
             padding: 8px 0 4px 6px;
             width: 68px;
@@ -118,7 +110,6 @@
             border-bottom: 2px solid #43474b;
             margin: 0 auto 4px;
         }
-
         p {
             width: 100%;
             height: 36px;
@@ -127,27 +118,22 @@
             padding: 10px 12px 10px 14px;
             cursor: pointer;
             position: relative;
-
             &:hover {
                 background-color: #43474b;
             }
         }
     }
 }
-
 .set-icon {
     font-style: normal;
     text-align: center;
     cursor: pointer;
-
     .v-set-collect & {
         @include bg-img(20, 18, '../../assets/images/video/collect-icon.png');
-
         &.active {
             @include bg-img(20, 18, '../../assets/images/video/collect-active-icon.png');
         }
     }
-
     .v-set-voice & {
         margin-right: 16px;
             @include bg-img(14, 12, '../../assets/images/video/play-voice-m.png');
@@ -155,7 +141,6 @@
             @include bg-img(14, 12, '../../assets/images/video/play-voice-mute-m.png');
         }
     }
-
     .v-set-speed &,
     .v-set-quality & {
         width: 36px;
@@ -164,12 +149,10 @@
         border-radius: 2px;
         display: inline-block;
         background: #DCDCDC;
-
         &:hover {
             background: #ffffff;
         }
     }
-
     // .v-set-screen &{
     //   @include bg-img(18, 18, '../../assets/images/video/play-screen-m.png');
     //   &:hover{
@@ -184,8 +167,8 @@
     bottom: 42px;
     z-index: 1001;
     width: 100%;
-    height:100%;
-    text-align:center;
+    height: 100%;
+    text-align: center;
     background: #000;
     display: table;
 }
@@ -200,12 +183,10 @@
     // align-items: center;
     text-align: center;
     // justify-content: center;
-
     a {
         color: #999999;
         margin-top: 20px;
         display: block;
-
         &:hover {
             color: #F99111;
         }

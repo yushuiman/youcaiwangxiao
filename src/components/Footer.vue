@@ -105,7 +105,7 @@
 export default {
   data () {
     return {
-      curYear: '2020'
+      curYear: '2021'
     }
   },
   mounted () {

@@ -14,7 +14,7 @@
           </li>
           <li class="v-set-item v-set-voice">
             <i class="set-icon voice-icon" :class="{'voice-mute-icon': isMute == 1}" @click="setVoice"></i>
-            <Slider v-model="voiceNum" @on-input="onInput" style="width: 80px;height: 4px;background:#f00;"></Slider>
+            <Slider v-model="voiceNum" @on-input="onInput" style="width: 80px;height: 4px;"></Slider>
           </li>
           <li class="v-set-item v-set-quality">
             <i class="set-icon quality-icon">{{qualityTxt}}</i>
@@ -47,7 +47,6 @@
       </div>
     </div>
     <!-- 重播 -->
-    <!-- <div class="set-replay" v-if="isLianxu == 2 && showReplay"> -->
     <div class="set-replay" v-if="showReplay">
       <div class="wish-repaly">
         <div class="cpe-integral-img" v-if="visible">
@@ -57,6 +56,7 @@
           <i>{{cpe_integral}}</i>
         </div>
         <a @click="replayVideo"><Icon type="ios-refresh" style="font-size: 22px;margin-top: -3px;"/>重新观看</a>
+        <p class="guanggao-txt" v-if="activityVisible">当前视频已播放完成，{{activityTimerNum}}s后即将进入下一个视频</p>
       </div>
     </div>
     <!-- 后续教育签到 -->
@@ -103,6 +103,13 @@ export default {
     showReplay: {
       type: Boolean,
       default: false
+    },
+    activityVisible: {
+      type: Boolean,
+      default: false
+    },
+    activityTimerNum: {
+      type: Number
     },
     cpe_integral: {
       type: Number

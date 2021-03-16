@@ -221,7 +221,7 @@ let Base64 = require('js-base64').Base64
 export default {
   data () {
     return {
-      curYear: '2020',
+      curYear: '2021',
       selIdx: 1,
       ewmPayImg: '', // 二维码支付
       order_num: '',

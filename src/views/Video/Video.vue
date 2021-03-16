@@ -36,6 +36,8 @@
             :fixedVideo="fixedVideo"
             :isLianxu="isLianxu"
             :showReplay="showReplay"
+            :activityVisible="activityVisible"
+            :activityTimerNum="activityTimerNum"
             :user_id="user_id"
             @ready="ready"
             @ended="ended"
@@ -44,7 +46,6 @@
             @replayVideo="replayVideo"
             @courseCollection="courseCollection">
           </ali-player>
-          <p class="guanggao-txt" v-if="activityVisible">当前视频已播放完成，{{activityTimerNum}}s后即将进入下一个视频</p>
         </div>
       </div>
       <div class="video-info-c" id="left" :style="{ height: screenHeight - 137 + 'px' }" v-if="fixedVideo">
@@ -194,7 +195,7 @@ export default {
       isLianxu: parseInt(Cookies.get('isLianxu')) || 1, // 是否连续播放
       showReplay: false, // 连续播放按钮
       activityTimer: null, // 连续播放:10秒后播放下一个
-      activityTimerNum: 10,
+      activityTimerNum: 5,
       activityVisible: false
     }
   },
@@ -364,10 +365,11 @@ export default {
     ended () {
       this.socketIo() // 视频结束，再调一次socket，因为30秒监听一次，不准确。
       this.isLianxu = parseInt(Cookies.get('isLianxu')) || 1 // 1连续2重播
-      // if (this.isLianxu == 2) {
-      //   this.showReplay = true
-      //   return
-      // }
+      this.showReplay = true
+      if (this.isLianxu == 2) {
+        return
+      }
+      this.activityVisible = true
       // this.computedNextVid() // 计算下一个要播放的视频
       this.activityDown() // 10秒后进入下一个视频
       // this.videoCredentials.watch_time = parseInt(this.$refs.aliPlayers.getCurrentTime())
@@ -475,24 +477,25 @@ export default {
       })
     },
     activityDown () {
-      this.showReplay = true
-      if (this.isLianxu == 2) {
-         this.activityVisible = true
-        return
-      }
-      this.activityTimerNum = 10
+      clearInterval(this.activityTimer)
+      this.activityTimer = null
+      this.activityTimerNum = 5
       this.activityTimer = setInterval(() => {
         let a = parseInt(this.$refs.aliPlayers.getDuration())
         let b = parseInt(this.$refs.aliPlayers.getCurrentTime())
         this.activityTimerNum--
         if (b < a) {
           clearInterval(this.activityTimer)
+          this.activityTimer = null
+          this.showReplay = false
           this.activityVisible = false
           this.$refs.aliPlayers.play()
           return
         }
-        if(this.activityTimerNum < 1){
+        if (this.activityTimerNum < 1) {
           clearInterval(this.activityTimer)
+          this.activityTimer = null
+          this.showReplay = false
           this.activityVisible = false
           this.computedNextVid() // 计算下一个要播放的视频
         }

@@ -136,7 +136,8 @@ export default {
         know_id: this.$route.query.know_id,
         mock_id: this.$route.query.mock_id,
         plate_id: this.$route.query.plate_id,
-        paper_mode: this.$route.query.paper_mode || 2 // 练习1 考试2
+        paper_mode: this.$route.query.paper_mode || 2, // 练习1 考试2
+        paper_type: this.$route.query.paper_type || 1 // 1单选2论述
       },
       subTopics: { // 交卷
         id: this.$route.query.id,
@@ -249,12 +250,21 @@ export default {
             val.flag = false // 解析展开收起交互(练习模式)
             val.currenOption = false // 点击当前题，不能重复选择(练习模式)
             val.userOption = val.discuss_useranswer
-            val.options.forEach((v, index) => {
-              if (v.option.indexOf(v.userOption) > -1 && v.userOption !== '') {
-                val.currenOption = true // 答题卡蓝色
-                v.selOption = true // 选项蓝色
-              }
-            })
+            if (this.getQuestion.paper_type == 2) {
+              val.options.forEach((v, index) => {
+                if (v.userOption !== '') {
+                  val.currenOption = true // 答题卡蓝色
+                  v.selOption = true // 选项蓝色
+                }
+              })
+            } else {
+              val.options.forEach((v, index) => {
+                if (v.option.indexOf(v.userOption) > -1 && v.userOption !== '') {
+                  val.currenOption = true // 答题卡蓝色
+                  v.selOption = true // 选项蓝色
+                }
+              })
+            }
             // 练习模式
             if (this.getQuestion.paper_mode == 1) {
               val.options.forEach((v, index) => {
@@ -335,7 +345,7 @@ export default {
         this.subTopics.question_content.question.push({
           question_id: this.topics[i].ID,
           true_options: this.topics[i].options[0].right,
-          user_answer: this.topics[i].userOption || ''
+          user_answer: this.topics[i].discuss_useranswer || this.topics[i].userOption
         })
       }
       this.subTopics.user_id = this.user_id

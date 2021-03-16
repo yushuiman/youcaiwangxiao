@@ -274,7 +274,6 @@ export default {
           user_answer: this.topics[i].discuss_useranswer || this.topics[i].userOption
         })
       }
-
       this.subTopics.user_id = this.user_id
       this.subTopics.course_id = this.getQuestion.course_id
       this.subTopics.video_name = this.getQuestion.video_name
