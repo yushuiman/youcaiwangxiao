@@ -189,7 +189,7 @@ export default {
     width: 650px;
     position: relative;
     .cdi-video{
-      height: 364px;
+      height: 346px;
       .cdi-img{
         width: 100%;
         height: 100%;

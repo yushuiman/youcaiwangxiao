@@ -466,7 +466,7 @@ export default {
     }
     .course-main-con-img{
       width: 100%;
-      height: 147px;
+      height: 142px;
       border-radius: 6px;
       display: block;
     }

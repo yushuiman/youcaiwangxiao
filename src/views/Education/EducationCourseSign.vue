@@ -189,14 +189,14 @@ export default {
     padding-bottom: 19px;
     .class-detail-info{
       background: $colfff;
-      border-radius:10px;
+      border-radius: 10px;
     }
   }
   .cdi-wrap-l{
     width: 650px;
     position: relative;
     .cdi-video{
-      height: 364px;
+      height: 346px;
       .cdi-img{
         width: 100%;
         height: 100%;

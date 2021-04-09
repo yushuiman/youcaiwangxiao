@@ -5,7 +5,6 @@ const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV)
 const path = require('path')
 const CompressionPlugin = require('compression-webpack-plugin')
 
-
 const resolve = dir => path.resolve(__dirname, dir)
 // const BASE_URL = process.env.NODE_ENV === 'production'
 //   ? '/home/'

@@ -34,11 +34,24 @@
                 <input type="radio" value="4" v-model="pay_type">
                 <label for="银联">银联</label>
               </li>
+              <li>
+                <input type="radio" value="5" v-model="pay_type">
+                <label for="银联">花呗分期</label>
+              </li>
             </ul>
             <ul class="payform">
               <li v-if="pay_type == 4">
                 <label for="">银行卡号：</label>
                 <p><input type="text" v-model="accNo" maxlength="19"></p>
+                <i>*</i>
+              </li>
+              <li v-if="pay_type == 5">
+                <label for="">分期支付：</label>
+                <select class="interest-number" v-model="interest_number">
+                  <option value="3">3期</option>
+                  <option value="6">6期</option>
+                  <option value="12">12期</option>
+                </select>
                 <i>*</i>
               </li>
               <li>
@@ -236,6 +249,7 @@ export default {
       o_user_name: '',
       o_order_num: '',
       o_mobile: '',
+      interest_number: 3,
       orderList: [],
       columns1: [
         {
@@ -363,7 +377,7 @@ export default {
         this.$Message.error('手机号格式错误~')
         return
       }
-      if(this.pay_type == 4) {
+      if (this.pay_type == 4) {
         if(!this.accNo) {
           this.$Message.error('请输入必填信息～')
           return
@@ -373,12 +387,17 @@ export default {
           return
         }
       }
+      let fenqi_num = 0
+      if (this.pay_type == 5) {
+        fenqi_num = this.interest_number
+      }
       addQuickOrder({
         user_name: this.user_name,
         mobile: this.mobile,
         pay_price: this.pay_price,
         pay_type: this.pay_type,
-        course_name: this.course_name
+        course_name: this.course_name,
+        fenqi_num: fenqi_num // 分期期数
       }).then((data) => {
         const res = data.data
         if (res.code === 200) {
@@ -456,6 +475,15 @@ export default {
             }
             if (this.isMobile == 2) {
               window.location.href = callback2 + '/Unionpay/Unionconsume/unionpay?order_num=' + this.order_num + '&name=' + this.course_name + '&price=' + this.pay_price + '&accNo=' + this.accNo + '&phoneNo=' + this.mobile
+            }
+          }
+          // 花呗分期3 6 12
+          if (this.pay_type == 5) {
+            if (this.isMobile == 1) {
+              window.open(callback2 + '/alipay/Tokiopay/huabeipay?order_num=' + this.order_num + '&name=' + this.course_name + '&price=' + this.pay_price + '&accNo=' + this.accNo + '&phoneNo=' + this.mobile + '&interest_number=' + this.interest_number, "_blank")
+            }
+            if (this.isMobile == 2) {
+              window.location.href = callback2 + '/alipay/Tokiopay/huabeipay?order_num=' + this.order_num + '&name=' + this.course_name + '&price=' + this.pay_price + '&accNo=' + this.accNo + '&phoneNo=' + this.mobile + '&interest_number=' + this.interest_number
             }
           }
         } else {
@@ -627,6 +655,9 @@ export default {
           background: transparent;
         }
       }
+      .interest-number{
+        width: 200px;
+      }
     }
   }
   .quick-btn{
@@ -761,6 +792,9 @@ export default {
           }
         }
       }
+      .interest-number{
+        width: 60%;
+      }
     }
     .quick-btn{
       width: 2.666667rem;
@@ -808,7 +842,7 @@ export default {
      height: 93px;
      .yc-logo{
        width: 144px;
-       height: 38px;
+      //  height: 38px;
        margin-top: 29px;
      }
    }
