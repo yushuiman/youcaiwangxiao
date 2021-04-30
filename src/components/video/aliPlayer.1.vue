@@ -56,20 +56,14 @@
           <img v-if="gxNum == 3" src="../../assets/images/education/gx_30.png" alt="">
           <i>{{cpe_integral}}</i>
         </div>
-        <a @click="replayVideo"><Icon type="md-refresh" style="font-size: 16px;margin-top: -3px;"/>重新观看</a>
+        <a @click="replayVideo"><Icon type="ios-refresh" style="font-size: 22px;margin-top: -3px;"/>重新观看</a>
         <p class="guanggao-txt" v-if="activityVisible">当前视频已播放完成，{{activityTimerNum}}s后即将进入下一个视频</p>
       </div>
     </div>
     <!-- 防止录屏，增加困难，傻逼操作 -->
     <div class="problem-operation" v-if="problemVisible">
-      <div class="wish-repaly">
-        <p class="problem-txt">该章节已经学完了，是否要进行一下习题测试？</p>
-        <div class="operation-set">
-          <a @click="goDopic"><Icon type="md-brush" style="font-size: 16px;margin-top: -3px;"/>去做题</a>
-          <a @click="replayVideo"><Icon type="md-refresh" style="font-size: 16px;margin-top: -3px;"/>重新观看</a>
-          <a @click="computedNextVid"><Icon type="md-play" style="font-size: 16px;margin-top: -3px;"/>继续播放</a>
-        </div>        
-      </div>
+      <p>司芬克斯地方吧jksdfk </p>
+      <a @click="replayVideo"><Icon type="ios-refresh" style="font-size: 22px;margin-top: -3px;"/>重新观看</a>
     </div>
     <!-- 后续教育签到 -->
     <div class="sign-box" v-if="canSign && visible">
@@ -83,14 +77,15 @@
     <!-- 后续教育禁止拖拽进度条 -->
     <!-- <div class="progress-bar" v-if="diffLogic == 1"></div> -->
     <!-- 视频水印 -->
-    <!-- <div class="shuiyin-wrap">
+    <div class="shuiyin-wrap">
       <div class="shuiyin">优财网校{{user_id}}</div>
       <div class="shuiyin">优财网校{{user_id}}</div>
       <div class="shuiyin">优财网校{{user_id}}</div>
       <div class="shuiyin">优财网校{{user_id}}</div>
-    </div> -->
+    </div>
   </div>
 </template>
+
 <script>
 import Cookies from 'js-cookie'
 export default {
@@ -123,7 +118,7 @@ export default {
       type: Number
     },
     problemVisible: {
-      type: Boolean,
+      type: 'Boolean',
       default: false
     },
     cpe_integral: {
@@ -362,21 +357,6 @@ export default {
           }
         ]
       }
-    ],
-    skinLayout: [
-      {name: "bigPlayButton", align: "blabs", x: 30, y: 80},
-      {name: "errorDisplay", align: "tlabs", x: 0, y: 0},
-      {name: "infoDisplay", align: "cc"},
-      {
-        name: "controlBar", align: "blabs", x: 0, y: 0,
-        children: [
-            {name:"liveDisplay", align:"tlabs", x: 15, y:6},
-            {name:"fullScreenButton", align:"tr", x:10, y: 10},
-            {name:"subtitle", align:"tr",x:15, y:12},
-            {name:"setting", align:"tr",x:15, y:12},
-            {name:"volume", align:"tr", x:5, y:10}
-          ]
-      }
     ]
   },
   // inject: ['reload'],
@@ -438,7 +418,7 @@ export default {
     }
   },
   mounted () {
-    // this.animationTimerSet()
+    this.animationTimerSet()
     if (window.Aliplayer !== undefined) {
       // 如果全局对象存在，说明编辑器代码已经初始化完成，直接加载编辑器
       this.scriptTagStatus = 2
@@ -481,7 +461,7 @@ export default {
         //     console.log('removeChild')
         //   }, 10)
         // })
-      }, 300000) // 5分钟一次
+      }, 300000)
     },
     insertScriptTag () {
       const _this = this
@@ -534,17 +514,7 @@ export default {
             x5_type: _this.x5_type,
             x5_fullscreen: _this.x5_fullscreen,
             x5_orientation: _this.x5_orientation,
-            autoPlayDelay: _this.autoPlayDelay,
-            components: [{
-              name: 'BulletScreenComponent',
-              type: AliPlayerComponent.BulletScreenComponent,
-              /** Descriptions of the scrolling text component parameters: text, style, bulletPosition 
-              * text: The scrolling text
-              * style: The style of the scrolling text
-              * bulletPosition: The position of the scrolling text. Valid values: 'top', 'bottom', and 'random'. The default is 'random'.
-              */
-              args: ['优财网校' + this.user_id, {fontSize: '14px', fontWeight: 'bold', color: '#c8c8c8'}, 'random']
-            }]
+            autoPlayDelay: _this.autoPlayDelay
           })
           // 绑定事件，当 AliPlayer 初始化完成后，将编辑器实例通过自定义的 ready 事件交出去
           var _video = document.querySelector('video')
@@ -769,14 +739,6 @@ export default {
     replayVideo () {
       this.$emit('replayVideo')
     },
-    // 下一节
-    computedNextVid () {
-      this.$emit('computedNextVid', 1)
-    },
-    // 去题库
-    goDopic () {
-      this.$router.push('/question')
-    },
     switchVideo (type) {
       this.$emit('switchVideo', type)
     },
@@ -920,7 +882,7 @@ export default {
   }
   /* 自定义icon */
   /* 水印 */
-  /* .shuiyin-wrap .shuiyin{
+  .shuiyin-wrap .shuiyin{
     position: absolute;
     left: 10%;
     top: 25%;
@@ -939,7 +901,7 @@ export default {
   .shuiyin-wrap .shuiyin:nth-child(4){
     left: 82%;
     top: 82%;
-  } */
+  }
   /* 签到 */
   .sign-box .opa{
     /* position: fixed; */

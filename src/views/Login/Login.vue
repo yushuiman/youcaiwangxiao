@@ -979,7 +979,7 @@ export default {
     background:$blueColor;
     border: 1px solid $blueColor;
     border-radius:25px;
-    font-size: 24px;
+    font-size: 18px;
     margin: 0 auto;
     margin-top: 60px;
     margin-bottom: 15px;

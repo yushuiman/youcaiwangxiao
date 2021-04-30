@@ -69,6 +69,7 @@
             <li @click="modalShow(item, 'dy')"><i class="dy"></i><p>答疑</p></li>
             <li @click="modalShow(item, 'jc')"><i class="error"></i><p>纠错</p></li>
             <li @click="qtCollection(item)"><i class="collect" :class="{'active': item.collection == 1}"></i><p>收藏</p></li>
+            <li v-if="item.is_question == 1"><i class="dy"></i><p>已做</p></li>
           </ul>
         </div>
         <div class="topic-item">
@@ -318,7 +319,7 @@ export default {
     text-align: center;
     li{
       display: inline-block;
-      margin-left: 30px;
+      margin-left: 20px;
       cursor: pointer;
       p{
         color: $col999;
@@ -326,15 +327,15 @@ export default {
         margin-top: 2px;
       }
       .dy{
-        @include bg-img(20, 20, '../../assets/images/questions/answer-icon.png');
+        @include bg-img(16, 16, '../../assets/images/questions/answer-icon.png');
       }
       .error{
-        @include bg-img(20, 20, '../../assets/images/questions/error-icon.png');
+        @include bg-img(16, 16, '../../assets/images/questions/error-icon.png');
       }
       .collect{
-        @include bg-img(20, 20, '../../assets/images/questions/collection.png');
+        @include bg-img(16, 16, '../../assets/images/questions/collection.png');
         &.active{
-          @include bg-img(20, 20, '../../assets/images/questions/collection-active.png');
+          @include bg-img(16, 16, '../../assets/images/questions/collection-active.png');
         }
       }
     }

@@ -38,14 +38,12 @@
             :showReplay="showReplay"
             :activityVisible="activityVisible"
             :activityTimerNum="activityTimerNum"
-            :problemVisible="problemVisible"
             :user_id="user_id"
             @ready="ready"
             @ended="ended"
             @switchVideo="switchVideo"
             @setLianxuPlay="setLianxuPlay"
             @replayVideo="replayVideo"
-            @computedNextVid="computedNextVid"
             @courseCollection="courseCollection">
           </ali-player>
         </div>
@@ -198,8 +196,7 @@ export default {
       showReplay: false, // 连续播放按钮
       activityTimer: null, // 连续播放:10秒后播放下一个
       activityTimerNum: 5,
-      activityVisible: false,
-      problemVisible: false // 跨章节，提示弹窗，取消广告倒计时，傻逼操作
+      activityVisible: false
     }
   },
   components: {
@@ -362,7 +359,7 @@ export default {
           this.wImportant = 95
           this.flagClosed = true
         }
-        this.computedNextVid(1)
+        this.computedNextVid()
       }
     },
     ended () {
@@ -372,9 +369,9 @@ export default {
       if (this.isLianxu == 2) {
         return
       }
-      // this.activityVisible = true
-      this.computedNextVid(2) // 计算下一个要播放的视频
-      // this.activityDown() // 10秒后进入下一个视频
+      this.activityVisible = true
+      // this.computedNextVid() // 计算下一个要播放的视频
+      this.activityDown() // 10秒后进入下一个视频
       // this.videoCredentials.watch_time = parseInt(this.$refs.aliPlayers.getCurrentTime())
     },
     // 设置是否连续播放
@@ -386,11 +383,10 @@ export default {
     replayVideo () {
       this.showReplay = false
       this.activityVisible = false
-      this.problemVisible = false
+      this.$refs.aliPlayers.replay()
+      // this.$refs.aliPlayers.seek(0)
+      // this.$refs.aliPlayers.play()
       clearInterval(this.activityTimer)
-      // this.$refs.aliPlayers.replay()
-      this.$refs.aliPlayers.seek(0)
-      this.$refs.aliPlayers.play()
       this.socketIo()
     },
     // 播放器
@@ -481,16 +477,6 @@ export default {
       })
     },
     activityDown () {
-      // 视频id获取
-      this.$router.replace({ path: '/course-video',
-        query: {
-          ...this.$route.query,
-          section_id: this.playCourseInfoNextPrev.section_id,
-          video_id: this.playCourseInfoNextPrev.video_id
-        }
-      })
-      // 倒计时逻辑
-      this.activityVisible = true
       clearInterval(this.activityTimer)
       this.activityTimer = null
       this.activityTimerNum = 5
@@ -511,14 +497,12 @@ export default {
           this.activityTimer = null
           this.showReplay = false
           this.activityVisible = false
-          // 刷新，因为有视频重叠声音
-          this.reload()
-          // this.computedNextVid() // 计算下一个要播放的视频
+          this.computedNextVid() // 计算下一个要播放的视频
         }
       }, 1000)
     },
     // 下一个视频
-    computedNextVid (type) {
+    computedNextVid () {
       // clearInterval(this.socketTimer)
       // this.socketTimer = null
       this.playCourseInfoNextPrev = Object.assign({}, this.playCourseInfo)
@@ -537,47 +521,33 @@ export default {
         if (currentProfileIndex2 == profiles2.length - 1) {
           this.$Message.error('已经是最后一节')
           return
+          // this.playCourseInfoNextPrev.section_id = this.courseSections[0].section_id
+          // this.playCourseInfoNextPrev.video_id = this.courseSections[0].videos[0].video_id
         } else {
           ++currentProfileIndex2
           this.playCourseInfoNextPrev.section_id = this.courseSections[currentProfileIndex].section_id
           this.playCourseInfoNextPrev.video_id = this.courseSections[currentProfileIndex].videos[currentProfileIndex2].video_id
-          if (type === 2) { // 连续播放结束,计算
-            // this.activityVisible = true
-            console.log('没夸张1')
-            this.activityDown()
-          }
         }
       } else {
         if (currentProfileIndex2 == profiles2.length - 1) {
           ++currentProfileIndex
           this.playCourseInfoNextPrev.section_id = this.courseSections[currentProfileIndex].section_id
           this.playCourseInfoNextPrev.video_id = this.courseSections[currentProfileIndex].videos[0].video_id
-          if (type === 2) { // 连续播放结束,计算
-            this.problemVisible = true
-            console.log('夸张1')
-            // this.activityDown()
-          }
         } else {
           ++currentProfileIndex2
           this.playCourseInfoNextPrev.section_id = this.courseSections[currentProfileIndex].section_id
           this.playCourseInfoNextPrev.video_id = this.courseSections[currentProfileIndex].videos[currentProfileIndex2].video_id
-          if (type === 2) { // 连续播放结束,计算
-            // this.activityVisible = true
-            console.log('没夸张2')
-            this.activityDown()
-          }
         }
       }
-      if (type === 1) {
-        this.$router.replace({ path: '/course-video',
+      this.$router.replace({ path: '/course-video',
         query: {
-            ...this.$route.query,
-            section_id: this.playCourseInfoNextPrev.section_id,
-            video_id: this.playCourseInfoNextPrev.video_id
-          }
-        })
-        this.reload()
-      }
+          ...this.$route.query,
+          section_id: this.playCourseInfoNextPrev.section_id,
+          video_id: this.playCourseInfoNextPrev.video_id
+        }
+      })
+      // this.getVideoPlayback(2)
+      this.reload()
     },
     // 上一个视频
     computedPrevVid () {

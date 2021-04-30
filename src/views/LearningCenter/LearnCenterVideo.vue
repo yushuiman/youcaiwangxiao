@@ -400,8 +400,10 @@ export default {
     replayVideo () {
       this.showReplay = false
       this.activityVisible = false
-      this.$refs.aliPlayers.replay()
       clearInterval(this.activityTimer)
+      // this.$refs.aliPlayers.replay()
+      this.$refs.aliPlayers.seek(0)
+      this.$refs.aliPlayers.play()
       this.socketIo()
     },
     // 播放器

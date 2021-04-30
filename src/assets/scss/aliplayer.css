@@ -185,9 +185,10 @@
   background: #ffffff;
 }
 
-.set-replay {
+.set-replay, .problem-operation {
   position: absolute;
   left: 0;
+  top: 0;
   bottom: 42px;
   z-index: 1001;
   width: 100%;
@@ -201,16 +202,25 @@
   display: table-cell;
   vertical-align: middle;
   text-align: center;
+  color: #999999;
 }
 
 .wish-repaly a {
   color: #999999;
   margin-top: 20px;
-  display: block;
 }
 
-.wish-repaly a:hover {
-  color: #F99111;
+.wish-repaly .problem-txt {
+  font-size: 16px;
+}
+
+.operation-set {
+  padding: 20px 0;
+}
+
+.operation-set a {
+  padding: 0 10px;
+  border-radius: 3px;
 }
 
 .cpe-integral-img {
