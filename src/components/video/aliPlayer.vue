@@ -49,7 +49,7 @@
     </div>
     <!-- 重播 -->
     <div class="set-replay" v-if="showReplay">
-      <div class="wish-repaly">
+      <div class="wish-replay">
         <div class="cpe-integral-img" v-if="visible">
           <img v-if="gxNum == 1" src="../../assets/images/education/gx_10.png" alt="">
           <img v-if="gxNum == 2" src="../../assets/images/education/gx_20.png" alt="">
@@ -62,12 +62,22 @@
     </div>
     <!-- 防止录屏，增加困难，傻逼操作 -->
     <div class="problem-operation" v-if="problemVisible">
-      <div class="wish-repaly">
-        <p class="problem-txt">该章节已经学完了，是否要进行一下习题测试？</p>
+      <div class="wish-replay">
+        <p class="wish-txt">该章节已经学完了，是否要进行一下习题测试？</p>
         <div class="operation-set">
           <a @click="goDopic"><Icon type="md-brush" style="font-size: 16px;margin-top: -3px;"/>去做题</a>
           <a @click="replayVideo"><Icon type="md-refresh" style="font-size: 16px;margin-top: -3px;"/>重新观看</a>
           <a @click="computedNextVid"><Icon type="md-play" style="font-size: 16px;margin-top: -3px;"/>继续播放</a>
+        </div>        
+      </div>
+    </div>
+    <!-- 未购买，试听3分钟 -->
+    <div class="try-watch-dialog" v-if="tryWatchFlag">
+      <div class="wish-replay">
+        <p class="wish-txt">试看结束</p>
+        <div class="operation-set">
+          <a @click="goBuy"><Icon type="md-cart" style="font-size: 16px;margin-top: -3px;"/>去购买</a>
+          <a @click="replayVideo"><Icon type="md-refresh" style="font-size: 16px;margin-top: -3px;"/>重新观看</a>
         </div>        
       </div>
     </div>
@@ -123,6 +133,10 @@ export default {
       type: Number
     },
     problemVisible: {
+      type: Boolean,
+      default: false
+    },
+    tryWatchFlag: {
       type: Boolean,
       default: false
     },
@@ -776,6 +790,14 @@ export default {
     // 去题库
     goDopic () {
       this.$router.push('/question')
+    },
+    // 去购买
+    goBuy () {
+      this.$router.push({ path: '/course-detail',
+        query: {
+          package_id: this.$route.query.package_id
+        }
+      })
     },
     switchVideo (type) {
       this.$emit('switchVideo', type)

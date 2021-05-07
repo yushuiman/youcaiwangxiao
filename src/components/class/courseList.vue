@@ -116,10 +116,10 @@ export default {
         })
         return
       }
-      if (this.userstatus == 2) {
-        this.$Message.error('请购买课程')
-        return
-      }
+      // if (this.userstatus == 2) {
+      //   this.$Message.error('请购买课程')
+      //   return
+      // }
       window.sessionStorage.setItem('userstatus', this.userstatus) // 是否购买
       this.$router.push({ path: '/course-video',
         query: {

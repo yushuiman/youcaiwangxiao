@@ -173,7 +173,7 @@
     background: #000;
     display: table;
 }
-.wish-repaly {
+.wish-replay {
     display: table-cell;
     vertical-align: middle;
     // position: absolute;
@@ -183,17 +183,17 @@
     // display: flex;
     // align-items: center;
     text-align: center;
-    color: #999999;
+    color: #cccccc;
     // justify-content: center;
     a {
         color: #999999;
         margin-top: 20px;
         // display: block;
-        // &:hover {
-        //     color: #F99111;
-        // }
+        &:hover {
+            color: #F99111;
+        }
     }
-    .problem-txt{
+    .wish-txt{
         font-size: 16px;
     }
 }

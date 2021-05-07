@@ -198,19 +198,23 @@
   display: table;
 }
 
-.wish-repaly {
+.wish-replay {
   display: table-cell;
   vertical-align: middle;
   text-align: center;
-  color: #999999;
+  color: #cccccc;
 }
 
-.wish-repaly a {
+.wish-replay a {
   color: #999999;
   margin-top: 20px;
 }
 
-.wish-repaly .problem-txt {
+.wish-replay a:hover {
+  color: #F99111;
+}
+
+.wish-replay .wish-txt {
   font-size: 16px;
 }
 

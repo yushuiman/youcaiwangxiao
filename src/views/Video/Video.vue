@@ -39,6 +39,7 @@
             :activityVisible="activityVisible"
             :activityTimerNum="activityTimerNum"
             :problemVisible="problemVisible"
+            :tryWatchFlag="tryWatchFlag"
             :user_id="user_id"
             @ready="ready"
             @ended="ended"
@@ -50,6 +51,17 @@
           </ali-player>
         </div>
       </div>
+      <!-- <div class="video-info-c" id="left">
+        <ali-player ref="aliPlayers" @ready="ready" v-if="videoCredentials.playAuth" :vid="VideoId" :playauth="videoCredentials.playAuth"></ali-player>
+        <div class="try-watch-dialog" v-if="tryWatchFlag">
+          <div @click="goBuy">试看结束去购买</div>
+          <div @click="replay">重新开始</div>
+        </div>
+        <div class="star-collection" @click="courseCollection(videoCredentials.collect)">
+          <Icon type="md-star-outline" style="color: #ffffff;" v-if="videoCredentials.collect == 2"/>
+          <Icon type="md-star" style="color: #F99111;" v-if="videoCredentials.collect == 1"/>
+        </div>
+      </div> -->
       <div class="video-info-c" id="left" :style="{ height: screenHeight - 137 + 'px' }" v-if="fixedVideo">
         <div class="pdf-iframe" style="height: 100%;overflow-y: auto;">
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="100%"></iframe>
@@ -76,23 +88,6 @@
             @switchVideo="switchVideo">
           </course-list>
         </div>
-        <!-- <div class="course-video-box" :class="{'fix-video': fixedVideo}" v-if="fixedVideo">
-          <ali-player
-            ref="aliPlayers"
-            v-if="videoCredentials.playAuth"
-            :videoCredentials="videoCredentials"
-            :fixedVideo="fixedVideo"
-            :isLianxu="isLianxu"
-            :showReplay="showReplay"
-            :user_id="user_id"
-            @ready="ready"
-            @ended="ended"
-            @switchVideo="switchVideo"
-            @setLianxuPlay="setLianxuPlay"
-            @replayVideo="replayVideo"
-            @courseCollection="courseCollection">
-          </ali-player>
-        </div> -->
         <div class="jiangyi" v-if="flagJy" :class="{'littleScreen': fixedVideo}">
           <div class="vc-title" v-if="!fixedVideo">
             <p>
@@ -102,7 +97,7 @@
             <Icon type="md-close" style="color:#999999;font-size: 22px;" @click="closeModel('jy')"/>
           </div>
           <div class="video-screen" v-if="fixedVideo">
-            <button class="btn-com" @click="switchScreen('video')" >视频全屏</button>
+            <button class="btn-com" @click="switchScreen('video')">视频全屏</button>
           </div>
           <iframe id="main-frame" :src="videoCredentials.handouts" width="100%" height="100%" ></iframe>
         </div>
@@ -189,9 +184,9 @@ export default {
       courseSections: [],
       openMenu: '1-1', // 默认播放菜单menu-index
       socketTimer: null,
-      // tryWatchTimer: null,
-      // tryWatchFlag: false,
-      // tryQatchNum: 180, // 试看3分钟
+      tryWatchTimer: null,
+      tryWatchFlag: false,
+      tryQatchNum: 180, // 试看3分钟
       isPlay: false, // 视频初始化getStatus获取不准确
       answerTime: 0, // 答疑提问时间
       isLianxu: parseInt(Cookies.get('isLianxu')) || 1, // 是否连续播放
@@ -387,7 +382,9 @@ export default {
       this.showReplay = false
       this.activityVisible = false
       this.problemVisible = false
+      this.tryWatchFlag = false
       clearInterval(this.activityTimer)
+      // clearInterval(this.tryWatchTimer)
       // this.$refs.aliPlayers.replay()
       this.$refs.aliPlayers.seek(0)
       this.$refs.aliPlayers.play()
@@ -438,18 +435,18 @@ export default {
         }
       }, 30000)
       // 未购买试看3分钟 没有试看需求了
-      // if (this.playCourseInfo.userstatus == 2) {
-      //   this.tryWatchTimer = setInterval(() => {
-      //     let playtime = parseInt(instance.getCurrentTime())
-      //     if (playtime >= this.tryQatchNum) {
-      //       this.tryWatchFlag = true
-      //       instance.pause()
-      //       instance.seek(this.tryQatchNum)
-      //     } else {
-      //       this.videoCredentials.watch_time = playtime
-      //     }
-      //   }, 1000)
-      // }
+      if (this.playCourseInfo.userstatus == 2) {
+        this.tryWatchTimer = setInterval(() => {
+          let playtime = parseInt(instance.getCurrentTime())
+          if (playtime >= this.tryQatchNum) {
+            this.tryWatchFlag = true
+            instance.pause()
+            instance.seek(this.tryQatchNum)
+          } else {
+            this.videoCredentials.watch_time = playtime
+          }
+        }, 1000)
+      }
     },
     // 首次socket
     subFirstSocket () {
@@ -643,7 +640,7 @@ export default {
         _this.watchKeydοwn(key)
       }
     },
-    // 去购买
+    // // 去购买
     // goBuy () {
     //   this.$router.push({ path: '/course-detail',
     //     query: {
@@ -651,7 +648,7 @@ export default {
     //     }
     //   })
     // },
-    // 重新试听
+    // // 重新试听
     // replay () {
     //   this.tryWatchFlag = false
     //   this.$refs.aliPlayers.replay()
@@ -909,7 +906,9 @@ export default {
   },
   beforeDestroy () {
     clearInterval(this.socketTimer)
+    clearInterval(this.tryWatchTimer)
     this.socketTimer = null
+    this.tryWatchTimer = null
     if (this.$refs.aliPlayers) {
       this.$refs.aliPlayers.dispose()
     }
