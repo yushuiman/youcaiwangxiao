@@ -38,7 +38,7 @@
           <li v-for="(val, key) in knowList" :key="key" @click="multipleChoices(val, key)">
             <span>
               <label class="check" :class="{'checked': knowIdArr.indexOf(val.know_id)>=0}">
-                <Icon type="md-checkmark" style="color: #0267FF;" v-if="knowIdArr.indexOf(val.know_id)>=0"/>
+                <Icon type="md-checkmark" style="color: #066AE4;" v-if="knowIdArr.indexOf(val.know_id)>=0"/>
               </label>
               {{val.know_name}}
             </span>

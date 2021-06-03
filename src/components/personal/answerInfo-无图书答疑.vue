@@ -824,7 +824,7 @@ export default {
         border-radius: 0 4px 4px 0;
       }
       &.active{
-        background: #0267FF;
+        background: #066AE4;
         color: #ffffff;
       }
     }
@@ -900,7 +900,7 @@ export default {
     em{
       width: 2px;
       height: 14px;
-      background: #0267FF;
+      background: #066AE4;
       display: inline-block;
       vertical-align: middle;
       margin-top: -3px;

@@ -307,7 +307,7 @@ export default {
     button{
       width: 122px;
       height: 36px;
-      background: #0267FF;
+      background: #066AE4;
       color: #ffffff;
       margin: 20px auto;
     }

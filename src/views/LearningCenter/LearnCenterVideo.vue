@@ -841,7 +841,7 @@ export default {
   //     cursor: pointer;
   //   }
   //   &.curren{
-  //     color: #0267FF;
+  //     color: #066AE4;
   //   }
   // }
   // .el-video-icon{

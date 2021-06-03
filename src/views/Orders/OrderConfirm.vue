@@ -876,7 +876,7 @@ export default {
     overflow: hidden;
     position: relative;
     &.cur{
-      border: 1px solid #0267FF;
+      border: 1px solid #066AE4;
     }
   }
   .c-price{

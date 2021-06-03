@@ -599,9 +599,9 @@ export default {
           margin-left: -18px;
         }
         &.active {
-          color: #0267FF;
+          color: #066AE4;
           &:before {
-            background: #0267FF;
+            background: #066AE4;
           }
         }
     }
@@ -744,9 +744,9 @@ export default {
             margin-left: -0.24rem;
           }
           &.active {
-            color: #0267FF;
+            color: #066AE4;
             &:before {
-              background: #0267FF;
+              background: #066AE4;
             }
           }
       }

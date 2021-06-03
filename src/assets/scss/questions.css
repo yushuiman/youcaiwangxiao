@@ -19,7 +19,7 @@
     text-align: center;
     background: none;
     border: 1px solid rgba(2, 103, 255, 1);
-    color: #0267FF;
+    color: #066AE4;
 } */
 
 .btn-com:hover {
@@ -72,7 +72,7 @@
      margin-top: -14px;
  }
  .ivu-icon-md-checkmark:before {
-     color: #0267ff;
+     color: #066AE4;
  }
  .ivu-menu-light{
      background: none;

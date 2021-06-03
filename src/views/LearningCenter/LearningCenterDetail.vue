@@ -1893,7 +1893,7 @@ export default {
   }
   .open-txt{
     cursor: pointer;
-    color: #0267FF;
+    color: #066AE4;
   }
   // 观看记录
   .ucr-item{

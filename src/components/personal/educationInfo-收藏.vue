@@ -88,7 +88,7 @@
               <div class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(v, key) in val.course" :key="key" style="padding: 10px 40px;">
                 <div class="menu-jie-title" style="font-size: 16px;">
                   <div>{{v.name}}</div>
-                  <button @click="viewCpeList(val, v)" style="color: #0267FF;" v-if="val.type == 1">查看</button>
+                  <button @click="viewCpeList(val, v)" style="color: #066AE4;" v-if="val.type == 1">查看</button>
                 </div>
               </div>
             </Submenu>
@@ -479,7 +479,7 @@ export default {
   }
   .open-txt{
     cursor: pointer;
-    color: #0267FF;
+    color: #066AE4;
   }
   // 观看记录
   .ucr-item{

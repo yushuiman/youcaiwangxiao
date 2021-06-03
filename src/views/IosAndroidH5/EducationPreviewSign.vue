@@ -211,7 +211,7 @@ export default {
       line-height: .64rem;
     }
     p{
-      color: #0267FF;
+      color: #066AE4;
       line-height: .493333rem;
       @include font-dpr(26);
       margin-top: .106667rem;
@@ -240,7 +240,7 @@ export default {
         background-size: .413333rem .333333rem;
       }
       span{
-        color: #0267FF;
+        color: #066AE4;
       }
     }
   }

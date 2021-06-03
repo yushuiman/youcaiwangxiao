@@ -94,9 +94,11 @@ export default {
   mounted () {
     if (this.isLoadHttpRequest) {
       // this.init()
+      this.getIndexMessage() // 系统消息
     } else {
       this.$watch('isLoadHttpRequest', function (val, oldVal) {
         // this.init()
+        this.getIndexMessage() // 系统消息
       })
     }
   },

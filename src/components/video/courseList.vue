@@ -8,7 +8,7 @@
           class="el-menu-vertical-demo"
           background-color="#ffffff"
           text-color="#333333"
-          active-text-color="#0267FF">
+          active-text-color="#066AE4">
           <el-submenu :index="''+(key+1)" v-for="(val, key) in courseSections" :key="key" :ref="'a'+ key" :id="'a'+ key">
             <template slot="title">
               <span class="sec-name">{{val.section_name}}</span>

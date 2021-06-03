@@ -1,56 +1,62 @@
 <template>
   <div class="user-wrap">
-    <!-- 用户信息 -->
-    <user-top :personalInfo="personalInfo" :examine="examine" :user_id="user_id" :fixedFlag2="fixedFlag2" @setBaseInfo="setBaseInfo" @getPersonalInfo="getPersonalInfo"></user-top>
-    <!-- main -->
     <div class="u-news-wrap w-wrap">
-      <ul class="tab-list">
-        <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxNews == index}" :key="index" @click="tabClk(v, index)">{{v}}</li>
+      <h1 class="news-tit">消息中心</h1>
+      <ul class="tab-list-news">
+        <li class="tab-item" v-for="(v, index) in txtArr" :class="{'active': selIdxNews == v.types}" :key="index" @click="tabClk(v, index)"><b v-if="v.status == 1"></b>{{v.value}}</li>
       </ul>
       <div class="news-main">
         <!-- 网校公告 系统消息 -->
         <div v-if="systeMessageList.length">
-          <div v-if="newsFlag">
-            <ul class="news-list">
-              <li class="news-item" :class="{'invalid': item.status == 2}" v-for="(item, index) in systeMessageList" :key="index" @click="getRead(item)">
-                <span class="news-left" v-if="item.type != 4" :class="{'blue': (item.type == 1 ||item.type == 2), 'green': item.type == 6, 'orange': item.type == 3, 'red': item.type == 5 }">{{types[item.type]}}</span>
-                <img src="../../assets/images/global/news-logo.png" alt="优财logo" class="news-l" v-if="item.type == 4 && item.status == 1">
-                <img src="../../assets/images/global/new-logo-gray.png" alt="优财logo" class="news-l" v-if="item.type == 4 && item.status == 2">
-                <!-- 1课程 2题库-->
-                <div class="news-center" v-if="item.type == 1 || item.type == 2">
-                  <h3>{{item.title}}<em>{{item.create_time}}</em></h3>
-                  <p>您的提问{{item.content}}有新的回答</p>
-                </div>
-                <!-- 3订单 4普通 5链接 6直播 -->
-                <div class="news-center" v-if="item.type == 3 || item.type == 4 || item.type == 5 || item.type == 6">
-                  <h3><span>{{item.title}}</span><em>{{item.create_time}}</em></h3>
-                  <p v-html="item.content"></p>
-                </div>
-              </li>
-            </ul>
-            <div style="padding: 20px; text-align: center;">
-              <Page
-              :total="total"
-              @on-change="onChange"
-              :current="page"
-              :page-size="limit"
-              size="small"
-              />
-            </div>
-          </div>
-          <div class="news-datail" v-if="!newsFlag">
-            <div class="news-title">
-              <a class="return" @click="returnNewsList">返回</a>
-              <div class="txt">
-                <h2>{{newsDetail.message.title}}</h2>
-                <p>{{newsDetail.message.create_time}}</p>
+          <ul class="news-list">
+            <li class="news-item" :class="{'news-item-pb': selIdxNews == 1 || selIdxNews == 2}" v-for="(item, index) in systeMessageList" :key="index" @click.stop="getRead(item)">
+              <div class="nitem-title">
+                <p class="nitem-title-lf">
+                  <b :class="{'no-read': item.status == 1}"></b>
+                  <img v-if="selIdxNews == 3" src="../../assets/images/news/icon-wen.png" alt="">
+                  <span v-if="selIdxNews == 3">{{item.quiz}}</span>
+                  <span v-else-if="selIdxNews == 4">订单支付成功通知</span>
+                  <span v-else>{{item.title}}</span>
+                </p>
+                <span class="nitem-title-rt">{{item.time}}</span>
               </div>
-              <div class="change-item">
-                <a class="next-item" @click="changeItem(1)">&lt;&lt; 上一条</a>
-                <a class="prev-item" @click="changeItem(2)">下一条 &gt;&gt;</a>
+              <!-- 1系统消息2活动消息 -->
+              <div class="nitem-detail" :class="{'sl' : !item.openFlag}" v-if="selIdxNews == 1 || selIdxNews == 2">
+                <img v-if="selIdxNews == 3" src="../../assets/images/news/icon-da.png" alt="">
+                <span class="d-txt">{{item.content}}</span>
               </div>
-            </div>
-            <div class="news-info" v-html="newsDetail.message.content"></div>
+              <!-- @click.stop="hrefJump(item)" -->
+              <div class="href-info" v-if="selIdxNews == 1 && item.href">
+                <img src="../../assets/images/news/icon-href.png" alt="">
+                <span >超链接</span>
+              </div>
+              <div class="nitem-open" v-if="selIdxNews == 1">
+                <span @click.stop="openFlag(item, index)">{{item.openFlag ? '收起':'展开'}}</span>
+              </div>
+              <div class="nitem-open" v-if="selIdxNews == 2">
+                <span>查看详情</span>
+              </div>
+              <!-- 3答疑消息 -->
+              <div class="nitem-detail" v-if="selIdxNews == 3">
+                <img v-if="selIdxNews == 3" src="../../assets/images/news/icon-da.png" alt="">
+                <span class="d-txt">{{item.reply_quiz}}</span>
+              </div>
+              <!-- 4订单消息 -->
+              <div class="nitem-detail" v-if="selIdxNews == 4">
+                <p class="order-detail">订单编号：<span>{{item.order_num}}</span></p>
+                <p class="order-detail">订单金额：<span>{{item.pay_price}}元</span></p>
+                <p class="order-detail">课程名称：<span>{{item.package_name}}</span></p>
+              </div>
+            </li>
+          </ul>
+          <div style="margin-top: 50px; padding: 20px; text-align: center;">
+            <Page
+            :total="total"
+            @on-change="onChange"
+            :current="page"
+            :page-size="limit"
+            size="small"
+            />
           </div>
         </div>
         <div class="no-data" v-if="noDataFlag">暂无消息</div>
@@ -60,17 +66,14 @@
 </template>
 
 <script>
-import { getPersonal } from '@/api/personal'
-import { systeMessage, read, listMessage } from '@/api/message'
-import userTop from '../../components/personal/userTop'
+import { systeMessage, read, listMessage, menuList } from '@/api/message'
 import { mapState, mapActions } from 'vuex'
 export default {
   data () {
     return {
-      personalInfo: {}, // 个人信息
-      fixedFlag2: true,
-      txtArr: ['网校公告', '系统消息'],
-      selIdxNews: 0,
+      txtArr: [
+      ],
+      selIdxNews: 1,
       limit: 10,
       page: 1,
       noDataFlag: false,
@@ -82,10 +85,8 @@ export default {
         4: '普通',
         5: '推送',
         6: '课程'
-      },
-      newsDetail: {},
-      newsFlag: true,
-      examine: {} // 设置课程考试时间
+      }
+      // newsFlag: false
     }
   },
   computed: {
@@ -95,17 +96,13 @@ export default {
       isLoadHttpRequest: state => state.user.isLoadHttpRequest
     })
   },
-  components: {
-    userTop
-    // news
-  },
   mounted () {
     if (this.isLoadHttpRequest) {
-      this.getPersonalInfo()
+      this.getMenuList()
       this.getSysteMessage()
     } else {
       this.$watch('isLoadHttpRequest', function (val, oldVal) {
-        this.getPersonalInfo()
+        this.getMenuList()
         this.getSysteMessage()
       })
     }
@@ -114,132 +111,163 @@ export default {
     ...mapActions([
       'getIndexMessage'
     ]),
-    // 用户信息
-    getPersonalInfo () {
+    tabClk (v, index) {
+      this.selIdxNews = v.types
+      this.page = 1
+      this.getMenuList()
+      this.getSysteMessage()
+    },
+    openFlag (item, index) {
+      this.systeMessageList[index].openFlag = !item.openFlag
+      this.$forceUpdate()
+    },
+    // tab列表已读状态
+    getMenuList () {
+      this.systeMessage = []
       this.showLoading(true)
-      getPersonal({
+      menuList({
         user_id: this.user_id
       }).then(data => {
         this.showLoading(false)
         const res = data.data
-        if (res.code === 200) {
-          this.personalInfo = res.data
-          this.examine = res.data.examine
-        } else {
-          this.$Message.error(res.msg)
-        }
+        this.txtArr = [
+          {
+            value: '系统消息',
+            types: 1,
+            status: res.data.notice
+          },
+          {
+            value: '活动消息',
+            types: 2,
+            status: res.data.activity
+          },
+          {
+            value: '答疑消息',
+            types: 3,
+            status: res.data.answer
+          },
+          {
+            value: '订单消息',
+            types: 4,
+            status: res.data.order
+          }
+        ]
       })
-    },
-    setBaseInfo () {
-      this.$router.push({ path: '/personal', query: { type: 'set' } })
-    },
-    tabClk (v, index) {
-      this.selIdxNews = index
-      this.page = 1
-      this.newsFlag = true
-      this.getSysteMessage()
     },
     // 消息列表
     getSysteMessage () {
+      this.systeMessageList = []
       this.showLoading(true)
       systeMessage({
         user_id: this.user_id,
         limit: this.limit,
         page: this.page,
-        types: this.selIdxNews === 0 ? 1 : 2 // 1网校公告2系统消息
+        types: this.selIdxNews // 1系统2活动3答疑4订单
       }).then(data => {
         this.showLoading(false)
         this.noDataFlag = false
         const res = data.data
-        let { message, num } = res.data
-        this.systeMessageList = message
+        let { list, total } = res.data
+        if (list.length) {
+          this.systeMessageList = list
+          this.systeMessageList.map((val, index) => {
+            val.openFlag = false
+          })
+        }
         if (this.systeMessageList.length === 0) {
           this.noDataFlag = true
         }
-        this.total = num
+        this.total = total
       })
     },
     // 已读
+    hrefJump (item) {
+      // 此方法只会执行1和2
+      // 1系统，无链接默认为已读，有链接需要点击为已读
+      // 2活动，无链接默认为已读；有链接需要点击为已读
+      // 3答疑，需点击为已读
+      // 4订单，需点击为已读
+      if (!item.href) {
+        return
+      }
+      window.open(item.href, '_blank')
+      if (item.status === 2) {
+        return
+      }
+      read({
+        user_id: this.user_id,
+        message_id: item.message_id,
+        type: item.type || 4 // 1课程回复2题库回复3图书回复4链接消息
+      }).then(data => {
+        this.showLoading(false)
+        const res = data.data
+        if (res.code === 200) {
+          this.systeMessageList.forEach(v => {
+            if (item.message_id === v.message_id) {
+              v.status = 2
+            }
+          })
+          this.getMenuList() // 更新tab未读消息状态
+          this.getIndexMessage() // 更新小铃铛消息状态
+        }
+      })
+    },
     getRead (item) {
-      if (item.status === 2) { // 已读消息
-        this.diffNews(item) // 12345种消息
+      // 1系统，无链接默认为已读，有链接需要点击为已读
+      // 2活动，无链接默认为已读；有链接需要点击为已读
+      // 3答疑，需点击为已读
+      // 4订单，需点击为已读
+      if (this.selIdxNews === 1 || this.selIdxNews === 2) {
+        if (!item.href) {
+          return
+        }
+      }
+      this.diffNews(item) // 1234种消息
+      if (item.status === 2) {
         return
       }
       this.showLoading(true)
       read({
         user_id: this.user_id,
         message_id: item.message_id,
-        type: item.type
+        type: item.type || 4 // 1课程回复2题库回复3图书回复4链接消息
       }).then(data => {
         this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
-          this.getIndexMessage() // 更新未读消息状态
           this.systeMessageList.forEach(v => {
             if (item.message_id === v.message_id) {
               v.status = 2
             }
           })
-          this.diffNews(item) // 12345种消息
+          this.getMenuList() // 更新tab未读消息状态
+          this.getIndexMessage() // 更新小铃铛消息状态
         }
       })
     },
     diffNews (item) {
+      // 消息类型1课程回复2题库回复3订单支付成功4图书答疑5消息链接"
       if (item.type === 1) { // 课程回复
         this.$router.push({ path: '/personal', query: { type: 'answer', selIdx: 0, num: item.content_id } })
+        return
       }
       if (item.type === 2) { // 题库回复
         this.$router.push({ path: '/personal', query: { type: 'answer', selIdx: 1, num: item.content_id } })
+        return
       }
       if (item.type === 3) { // 订单
         this.$router.push({ path: '/personal', query: { type: 'order' } })
+        return
       }
-      if (item.type === 4) { // 普通
-        this.getListMessage(item)
+      if (item.type === 4) { // 图书
+        this.$router.push({ path: '/personal', query: { type: 'answer', selIdx: 2, num: item.content_id } })
+        return
       }
       if (item.type === 5) { // 推送
         window.open(item.href, '_blank')
+        return
       }
-    },
-    // 详情
-    getListMessage (item) {
-      this.showLoading(true)
-      listMessage({
-        message_id: item.message_id
-      }).then(data => {
-        this.showLoading(false)
-        const res = data.data
-        if (res.code === 200) {
-          const res = data.data
-          this.newsDetail = res.data
-          this.newsFlag = false
-        }
-      })
-    },
-    // 详情上一条下一条
-    changeItem (type) {
-      let obj = {
-        type: this.newsDetail.type
-      }
-      if (type === 1) {
-        obj.message_id = this.newsDetail.lastPage
-        if (!this.newsDetail.lastPage) {
-          this.$Message.error('已是第一条')
-          return
-        }
-      }
-      if (type === 2) {
-        obj.message_id = this.newsDetail.nextPage
-        if (!this.newsDetail.nextPage) {
-          this.$Message.error('已是最后一条')
-          return
-        }
-      }
-      this.getRead(obj)
-    },
-    // 返回
-    returnNewsList () {
-      this.newsFlag = true
+      window.open(item.href, '_blank')
     },
     // 分页
     onChange (val) {
@@ -253,161 +281,145 @@ export default {
 
 <style scoped lang="scss" rel="stylesheet/scss">
   @import "../../assets/scss/app";
+  .user-wrap{
+    padding-top: 50px;
+    .news-tit{
+      font-size: 28px;
+      line-height: 48px;
+      font-weight: bold;
+    }
+  }
   /* tab */
-  .tab-list {
+  .tab-list-news {
       display: flex;
       align-items: center;
       text-align: center;
-      margin-bottom: 20px;
+      padding-top: 30px;
+      padding-bottom: 22px;
       font-size: 18px;
-  }
-  .tab-list .tab-item {
-      margin: 0 30px;
-      position: relative;
-      cursor: pointer;
-  }
-  .tab-list .tab-item:before {
-      position: absolute;
-      content: "";
-      left: 50%;
-      width: 36px;
-      height: 2px;
-      background: none;
-      margin-top: 22px;
-      margin-left: -18px;
-  }
-
-  .tab-list .tab-item.active {
-      color: #0267FF;
-  }
-  .tab-list .tab-item.active:before {
-      background: #0267FF;
+      border-bottom: 2px solid #DDDDDD;
+      .tab-item {
+        margin: 0 40px;
+        position: relative;
+        cursor: pointer;
+        &:before {
+            position: absolute;
+            content: "";
+            left: 50%;
+            width: 26px;
+            height: 3px;
+            background: none;
+            margin-top: 26px;
+            margin-left: -13px;
+        }
+        &.active {
+            color: #066AE4;
+            &:before {
+                background: #4797F8;
+            }
+        }
+        b{
+          position: absolute;
+          right: -5px;
+          top: -5px;
+          width: 8px;
+          height: 8px;
+          background: #FF5235;
+          border-radius: 50%;
+        }
+    }
   }
   // 消息
   .u-news-wrap{
-    padding-top: 50px;
+    padding: 50px 50px 20px;
+    background: #FFFFFF;
+    border: 1px solid #EEEEEE;
+    border-radius: 10px;
   }
   .news-item {
-    padding: 20px 30px;
-    background:rgba(255,255,255,1);
-    box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
-    border-radius: 8px;
     font-size: 16px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
+    padding: 30px 0 30px 22px;
+    border-bottom: 1px solid #DDDDDD;
     cursor: pointer;
+    &.news-item-pb{
+      padding-bottom: 10px;
+    }
     &.invalid *{
       color: #C7C7C7!important;
     }
-    &.invalid{
-      .news-left{
-        border: 1px solid #C7C7C7;
-      }
-    }
   }
-  .news-l{
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 20px;
-  }
-  .news-left{
-    width: 53px;
-    height: 24px;
+  .nitem-detail{
+    width: 75%;
+    font-size: 16px;
+    color: #666666;
     line-height: 24px;
-    border-radius: 2px;
-    text-align: center;
-    margin-right: 20px;
-    &.blue{
-      border: 1px solid $blueColor;
-      color: $blueColor;
+    margin-top: 10px;
+    padding-left: 18px;
+    &.sl{
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
     }
-    &.orange{
-      border: 1px solid #F99111;
-      color: #F99111;
+    img{
+      width: 20px;
+      height: 18px;
+      vertical-align: middle;
+      margin-top: -3px;
+      margin-right: 10px;
     }
-    &.red{
-      border: 1px solid #E84342;
-      color: #E84342;
-    }
-    &.green{
-      border: 1px solid #0AAB55;
-      color: #0AAB55;
-    }
-    &.gray{
-      border: 1px solid #C7C7C7;
-      color: #C7C7C7;
-    }
-  }
-  .news-center{
-    flex: 1;
-    h2, h3{
-      line-height: 25px;
-      font-size: 18px;
-      color: $col666;
+    .order-detail{
       span{
-        margin: 0 5px;
-        color: $col333;
+        color: #163076;
       }
-      em{
-        color: $col999;
-      }
-    }
-    h3{
-      display: flex;
-      justify-content: space-between;
-    }
-    p{
-      margin-top: 8px;
-      line-height: 20px;
-      color: $col999;
     }
   }
-  // 消息详情
-  .news-datail{
-    font-size: 16px;
-    background: #ffffff;
-    box-shadow: 0px 2px 20px 0px rgba(140,196,255,0.3);
-    border-radius: 8px;
-  }
-  .news-title{
-    padding: 29px 30px 19px;
-    text-align: center;
-    border-bottom: 1px solid #E6E6E6;
-    position: relative;
-    .txt{
-      h2{
-        font-size: 20px;
-        line-height: 28px;
+  .nitem-title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .nitem-title-lf{
+      color: #000000;
+      font-size: 16px;
+      b{
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 10px;
+        &.no-read{
+          background: #F68902;
+        }
       }
-      p{
-        color: $col999;
-        line-height: 20px;
-      }
-    }
-    a{
-      line-height: 28px;
-      color: $blueColor;
-      &.prev-item{
-        margin-left: 30px;
+      img{
+        width: 20px;
+        height: 18px;
+        vertical-align: middle;
+        margin-top: -3px;
+        margin-right: 10px;
       }
     }
-    .return{
-      position: absolute;
-      left: 30px;
-      top: 29px;
-    }
-    .change-item{
-      position: absolute;
-      top: 29px;
-      right: 30px;
+    .nitem-title-rt{
+      color: #999999;
+      font-size: 14px;
     }
   }
-  .news-info{
-    padding: 19px 30px 29px;
-    font-size: 16px;
-    color: $col666;
-    line-height: 26px;
+  .href-info{
+    color: #1C3DA5;
+    margin-top: 8px;
+    padding-left: 18px;
+    img{
+      width: 16px;
+      height: 6px;
+      vertical-align: middle;
+      margin-top: -3px;
+      margin-right: 4px;
+    }
+  }
+  .nitem-open{
+    margin-top: 4px;
+    text-align: right;
+    color: #1C3DA5;
+    font-size: 14px;
   }
 </style>

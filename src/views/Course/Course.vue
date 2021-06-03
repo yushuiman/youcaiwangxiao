@@ -480,7 +480,7 @@ export default {
         padding: 8px 0;
         color: $col999;
         span{
-          margin-right: 20px;
+          margin-right: 10px;
         }
       }
       .ci-pay-free{

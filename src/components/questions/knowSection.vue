@@ -21,7 +21,7 @@
               <Progress
                 :percent="Number(item.have)"
                 :stroke-width="10"
-                stroke-color="#0267FF"
+                stroke-color="#066AE4"
                 hide-info style="width: 142px;font-size:14px;"/>
               <span style="margin-right: 30px; width: 68px; display: inline-block;text-align:right;">{{item.have}}%</span>
             </div>

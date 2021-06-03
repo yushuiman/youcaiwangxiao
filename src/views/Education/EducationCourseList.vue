@@ -367,7 +367,7 @@ export default {
       padding: 8px 0;
       color: $col999;
       span{
-        margin-left: 20px;
+        margin-left: 10px;
         color: $blueColor;
         &.noml{
           margin-left: 0;

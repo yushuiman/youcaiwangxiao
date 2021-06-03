@@ -394,7 +394,7 @@ export default {
       color: #5C646E;
       font-size: 12px;
       &.active{
-        background: #0267FF;
+        background: #066AE4;
         color: #ffffff;
       }
     }

@@ -56,7 +56,7 @@
 }
 
 .vc-title span.active {
-  color: #0267FF;
+  color: #066AE4;
 }
 
 .vc-title .ivu-icon:hover {
@@ -261,7 +261,7 @@
 
 .video-screen .btn-com:hover {
   color: #ffffff;
-  background: #0267FF;
+  background: #066AE4;
 }
 
 .answer-box {
@@ -385,7 +385,7 @@
 }
 
 .el-dot-icon.el-dot-now {
-  border: 2px solid #0267FF;
+  border: 2px solid #066AE4;
 }
 
 .el-dot-icon.el-dot-see {
@@ -420,11 +420,11 @@
 }
 
 .video-item.curren {
-  color: #0267FF;
+  color: #066AE4;
 }
 
 .video-item.curren .el-dot-icon {
-  border: 2px solid #0267FF;
+  border: 2px solid #066AE4;
 }
 
 .video-item .sl {
@@ -471,11 +471,11 @@
 }
 
 .tab-list-all-jx .tab-item.active {
-  color: #0267FF;
+  color: #066AE4;
 }
 
 .tab-list-all-jx .tab-item.active:before {
-  background: #0267FF;
+  background: #066AE4;
 }
 
 .aj-list-info-flex {
@@ -542,7 +542,7 @@
 }
 
 .jy-item span {
-  color: #0267FF;
+  color: #066AE4;
 }
 
 .jy-item span i {

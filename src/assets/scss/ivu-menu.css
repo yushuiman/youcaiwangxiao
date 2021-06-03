@@ -205,7 +205,7 @@
 }
 .menu-jie-title .btn-zsd {
     font-size: 16px;
-    color: #0267FF;
+    color: #066AE4;
     background: none;
 }
 
@@ -289,7 +289,7 @@
     line-height: 50px;
 }
 .munu-active .el-menu-item.is-active {
-    color: #0267FF!important;
+    color: #066AE4!important;
 }
 .el-submenu__title .el-submenu__icon-arrow{
     font-size: 18px;

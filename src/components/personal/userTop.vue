@@ -2,7 +2,7 @@
   <div class="user-top-wrap">
     <div class="w-wrap">
       <div class="user-info">
-        <div class="user-set" ref="fixedTit" :class="{'headCla': fixedFlag, 'headCla2': fixedFlag2}">
+        <div class="user-set" ref="fixedTit" :class="{'headCla': fixedFlag}">
           <img :src="personalInfo.head" alt="头像" class="head-logo">
           <span @click="setBaseInfo">个人设置</span>
         </div>
@@ -72,8 +72,8 @@
 import { learnClock, userCourse, courseTime, ctimeSub } from '@/api/personal'
 import { mapActions, mapState } from 'vuex'
 export default {
-  // 个人中心fixedFlag 消息中心fixedFlag2
-  props: ['personalInfo', 'user_id', 'fixedFlag', 'fixedFlag2', 'examine'],
+  // 个人中心fixedFlag 消息中心fixedFlag2(新版不需要了)
+  props: ['personalInfo', 'user_id', 'fixedFlag', 'examine'],
   data () {
     return {
       learnClockInfo: {}, // 签到打卡

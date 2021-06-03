@@ -516,7 +516,7 @@ export default {
   .btn_default{
     width:45px;
     height:24px;
-    color: #0267FF;
+    color: #066AE4;
     border-radius:20px;
     background:rgba(2,103,255,.1);
     border-radius:20px;

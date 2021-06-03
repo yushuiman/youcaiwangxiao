@@ -17,7 +17,7 @@
       <div class="right-top-wrap">
         <h2 class="title-com">做题进度</h2>
         <div class="progress-info">
-          <Progress :percent="percent" :stroke-width="10" stroke-color="#0267FF" hide-info/>
+          <Progress :percent="percent" :stroke-width="10" stroke-color="#066AE4" hide-info/>
           <span class="topic-num"><em data-v-680035d5="">{{percentNum}}</em>/{{total}}</span>
         </div>
         <ul class="dopic-status">

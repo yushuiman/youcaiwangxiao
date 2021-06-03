@@ -77,7 +77,7 @@
               <div class="error-menu-er" :name="(index+1)+ '-' + (key+1)" v-for="(v, key) in myCollcourseList" :key="key" style="padding: 10px 40px;">
                 <div class="menu-jie-title" style="font-size: 16px;">
                   <div>{{v.name}}</div>
-                  <button @click="getKnow(val, v, key)" style="color: #0267FF;">查看</button>
+                  <button @click="getKnow(val, v, key)" style="color: #066AE4;">查看</button>
                 </div>
               </div>
             </Submenu>
@@ -453,7 +453,7 @@ export default {
   }
   .open-txt{
     cursor: pointer;
-    color: #0267FF;
+    color: #066AE4;
   }
   // 观看记录
   .ucr-item{
