@@ -167,7 +167,7 @@ export default {
       })
     },
     makeReport () {
-      const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+      // const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
       if (this.user_name === '' && this.identity === '' && this.membership === '') {
         this.$Message.error('请填写信息~')
         return
@@ -190,13 +190,13 @@ export default {
         // this.errorTs3 = false
         return
       }
-      if (!reg.test(this.identity)) {
-        this.$Message.error('请输入正确的身份证号~')
-        // this.errorTs1 = false
-        // this.errorTs2 = true
-        // this.errorTs3 = false
-        return
-      }
+      // if (!reg.test(this.identity)) {
+      //   this.$Message.error('请输入正确的身份证号~')
+      //   // this.errorTs1 = false
+      //   // this.errorTs2 = true
+      //   // this.errorTs3 = false
+      //   return
+      // }
       if (this.membership === '') {
         this.$Message.error('请填写IMA会员号~')
         // this.errorTs1 = false

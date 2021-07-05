@@ -25,7 +25,7 @@
       </div>
       <div class="books-rt">
         <!-- 报考指南 -->
-        <baokao-zhinan></baokao-zhinan>
+        <!-- <baokao-zhinan></baokao-zhinan> -->
         <!-- 获取资料 -->
         <get-ziliao></get-ziliao>
       </div>

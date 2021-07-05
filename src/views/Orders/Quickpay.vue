@@ -17,62 +17,67 @@
           <div class="qp-left">
             <ul class="payul">
               <!-- 支付方式1支付宝2微信3京东 -->
+              <!-- isWxZfb：true代表支付宝和微信 -->
               <li><span>支付方式：</span></li>
-              <li>
+              <li v-if="!isWxZfb">
                 <input type="radio" value="1" v-model="pay_type">
                 <label for="支付宝">支付宝</label>
               </li>
-              <li>
+              <li v-if="!isWxZfb">
                 <input type="radio" value="2" v-model="pay_type">
                 <label for="微信">微信</label>
               </li>
-              <li>
+              <li v-if="!isWxZfb">
                 <input type="radio" value="3" v-model="pay_type">
                 <label for="京东">京东</label>
               </li>
-              <li>
+              <li v-if="!isWxZfb">
                 <input type="radio" value="4" v-model="pay_type">
                 <label for="银联">银联</label>
               </li>
-              <li>
+              <li v-if="!isWxZfb">
                 <input type="radio" value="5" v-model="pay_type">
-                <label for="银联">花呗分期</label>
+                <label for="花呗分期">花呗分期</label>
+              </li>
+              <li v-if="isWxZfb && isMobile == 2">
+                <input type="radio" value="6" v-model="pay_type">
+                <label for="快捷支付">快捷支付</label>
               </li>
             </ul>
             <ul class="payform">
               <li v-if="pay_type == 4">
+                <i>*</i>
                 <label for="">银行卡号：</label>
                 <p><input type="text" v-model="accNo" maxlength="19"></p>
-                <i>*</i>
               </li>
               <li v-if="pay_type == 5">
+                <i>*</i>
                 <label for="">分期支付：</label>
                 <select class="interest-number" v-model="interest_number">
                   <option value="3">3期</option>
                   <option value="6">6期</option>
                   <option value="12">12期</option>
                 </select>
-                <i>*</i>
               </li>
               <li>
+                <i>*</i>
                 <label for="">支付金额：</label>
                 <p><input type="number" v-model="pay_price"></p>
+              </li>
+              <li>
                 <i>*</i>
+                <label for="">姓名：</label>
+                <p><input type="text" v-model="user_name"></p>
               </li>
               <li>
-                  <label for="">姓名：</label>
-                  <p><input type="text" v-model="user_name"></p>
-                  <i>*</i>
-              </li>
-              <li>
+                <i>*</i>
                 <label for="">手机号码：</label>
                 <p><input type="text" v-model="mobile" maxlength="11"></p>
-                <i>*</i>
               </li>
               <li>
+                <i>*</i>
                 <label for="">课程名称：</label>
                 <p><input type="text" v-model="course_name"></p>
-                <i>*</i>
               </li>
               <li>
                 <label for=""></label>
@@ -216,7 +221,7 @@
           </div>
         </div>
         <div class="footer-bottom w-wrap">
-          <p>客服电话：400-666-5318</p>
+          <p>客服电话：400-867-5318</p>
           <p>2014-{{curYear}} 优财智业（北京）科技发展有限公司-美国注册管理会计师CMA认证培训 CMA培训专家 版权所有 京IPC备10036536号-8</p>
         </div>
       </div>
@@ -225,7 +230,7 @@
 </template>
 
 <script>
-import { getGoods, addQuickOrder, setCode2, queryQuickOrder, getGoodsQucik } from '@/api/order'
+import { getGoods, addQuickOrder, setCode2, queryQuickOrder, getGoodsQucik, getQrcode } from '@/api/order'
 import { mapState } from 'vuex'
 import { Decrypt } from '@/libs/crypto'
 import config from '@/config'
@@ -238,9 +243,9 @@ export default {
       selIdx: 1,
       ewmPayImg: '', // 二维码支付
       order_num: '',
-      accNo: '',
+      accNo: '', // 4367420010390365237
       mobile: '',
-      course_name: '',
+      course_name: '', // ceshi
       user_name: '',
       pay_type: 1,
       pay_price: '',
@@ -307,7 +312,8 @@ export default {
           align: 'center'
         }
       ],
-      isMobile: 1 // 1浏览器2手机
+      isMobile: 1, // 1浏览器2手机
+      isWxZfb: false // 微信.支付宝打开
     }
   },
   computed: {
@@ -324,8 +330,17 @@ export default {
     }
   },
   mounted () {
+    let ua = window.navigator.userAgent.toLowerCase()
     if (this._isMobile()) {
       this.isMobile = 2 // h5
+      if (ua.match(/MicroMessenger/i) == 'micromessenger' || ua.match(/Alipay/i) == 'alipay') {
+        this.isWxZfb = true
+        this.pay_type = 6
+        // alert('微信/支付宝')
+      } else {
+        this.isWxZfb = false
+        // alert('外部浏览器')
+      }
     } else {
       this.isMobile = 1 // pc
       var myDate = new Date()
@@ -486,6 +501,28 @@ export default {
               window.location.href = callback2 + '/alipay/Tokiopay/huabeipay?order_num=' + this.order_num + '&name=' + this.course_name + '&price=' + this.pay_price + '&accNo=' + this.accNo + '&phoneNo=' + this.mobile + '&interest_number=' + this.interest_number
             }
           }
+          // 新银联
+          if (this.pay_type == 6) {
+            getQrcode({
+              order_num: this.order_num,
+              name: this.course_name,
+              price: this.pay_price,
+              pay_type: this.pay_type,
+              // accNo: this.accNo,
+              phoneNo: this.mobile
+            }).then((data) => {
+              const res = data.data
+              if (res.errCode === 'SUCCESS') {
+                if (this.isMobile == 1) {
+                  // window.open(callback2 + '/unionpay/Cbpay/getQrcode?order_num=' + this.order_num + '&name=' + this.course_name + '&price=' + this.pay_price + '&accNo=' + this.accNo + '&phoneNo=' + this.mobile, "_blank")
+                  window.open(res.billQRCode, "_blank")
+                }
+                if (this.isMobile == 2) {
+                  window.location.href = res.billQRCode
+                }
+              }
+            })
+          }
         } else {
           this.$Message.error(res.data)
         }
@@ -638,7 +675,7 @@ export default {
         display: inline-block;
       }
       i{
-        margin-left: 10px;
+        margin-right: 3px;
         color: red;
       }
       p{
@@ -671,7 +708,7 @@ export default {
     flex: 1;
   }
   .qp-right{
-    width: 500px;
+    width: 420px;
     p{
       line-height: 30px;
       span{

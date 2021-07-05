@@ -30,7 +30,7 @@
       </keep-alive>
       <div class="zxm-right">
         <!-- 报考指南 -->
-        <baokao-zhinan></baokao-zhinan>
+        <!-- <baokao-zhinan></baokao-zhinan> -->
         <!-- 获取资料 -->
         <get-ziliao></get-ziliao>
       </div>

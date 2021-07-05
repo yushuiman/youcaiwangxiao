@@ -60,9 +60,9 @@ export const addQuickOrder = (data) => { // 快捷支付
     method: 'post'
   })
 }
-export const setCode2 = (data) => { // 创建每个用户的唯一二维码
+export const getQrcode = (data) => { // 新银联zhifu
   return axios.request({
-    url: '/web/Quickpay/setCode',
+    url: '/unionpay/Cbpay/getQrcode',
     data,
     method: 'post'
   })

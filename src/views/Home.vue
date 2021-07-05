@@ -29,10 +29,10 @@
         <img class="ci-img" src="@/assets/images/index/undraw_prototyping_process_rswj.png" alt="">
         <div class="class-instru">
           <h1>翻转课堂</h1>
-          <p>超50+CMA精选案例；提高论述题掌握程度；3天2晚互动；老师一对一沟通；团队共创；主动参与，互动交流。</p>
-          <div class="btn-box-index">
+          <p>超50+CMA精选案例+刻意训练论述题+4天直播互动。</p>
+          <!-- <div class="btn-box-index">
             <button type="button" name="button" class="more-btn" @click="jumpWhere(3)">更多</button>
-          </div>
+          </div> -->
         </div>
       </li>
       <!-- <li class="class-item class-item04">
@@ -87,7 +87,8 @@ export default {
         // window.open('http://www.ucfo.com.cn/xczt/', '_blank')
       }
       if (type === 2) {
-        window.open('https://youcaiwx.cn/Znten/STK/index.html', '_blank')
+        // window.open('https://youcaiwx.cn/Znten/STK/index.html', '_blank')
+        window.open('https://youcaiwx.cn/activityAll/auditionCourse/index.html', '_blank')
       }
       if (type === 3) {
         window.open('https://youcaiwx.cn/Znten/FZK/fzkt.html', '_blank')

@@ -62,7 +62,7 @@
     <!-- 课程内容 -->
     <div class="course-main w-wrap clearfix">
       <!-- 课程列表 左 -->
-      <div class="course-main-left fl">
+      <div class="course-main-left fl" v-if="courseList && courseList.length">
         <div class="clearfix">
           <div class="course-main-con fl" v-for="(items, index) in courseList" :key="index" @click="goClassDetails(items.id)">
             <img :src="items.pc_img" alt="" class="course-main-con-img">
@@ -83,6 +83,7 @@
           />
         </div>
       </div>
+      <div class="course-main-left no-data fl" v-else>暂无数据</div>
       <!-- 猜你喜欢 右 -->
       <div class="course-like-right fr">
         <like-list></like-list>
@@ -120,7 +121,8 @@ export default {
         price_start: '', // 起始价格
         price_end: '', // 结束价格
         limit: 6,
-        page: 1
+        page: 1,
+        user_id: ''
       }, // 课程列表 默认第一页 显示6个
       // typeInfo: [
       //   {
@@ -241,6 +243,8 @@ export default {
     // 获取数据
     getCourseList () {
       this.showLoading(true)
+      this.form.user_id = this.user_id || ''
+      this.courseList = []
       courseList(this.form).then(data => {
         this.showLoading(false)
         const res = data.data

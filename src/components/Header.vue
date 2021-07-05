@@ -59,10 +59,10 @@ export default {
           path: 'books',
           name: '图书'
         },
-        {
-          path: 'zixun',
-          name: '资讯'
-        },
+        // {
+        //   path: 'zixun',
+        //   name: '资讯'
+        // },
         {
           path: 'app',
           name: 'App'

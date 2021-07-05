@@ -32,7 +32,7 @@
         </div>
         <div class="cdi-special">
           特色服务：
-          <span><i class="icon-server"></i>1对1服务</span>
+          <!-- <span><i class="icon-server"></i>1对1服务</span> -->
           <span v-if="isntroduction.line_answer == 1"><i class="icon-answer"></i>在线答疑</span>
           <span v-if="isntroduction.is_overclass == 1"><i class="icon-fanzhuan"></i>翻转课堂</span>
         </div>

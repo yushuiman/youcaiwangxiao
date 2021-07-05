@@ -13,16 +13,20 @@
                 <h1>新手指南</h1>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=5&footer_name=报考条件" target="_blank">报考条件</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=5&footer_name=报考条件" target="_blank">报考条件</a> -->
+                <a>报考条件</a>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=2&footer_name=考试时间" target="_blank">考试时间</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=2&footer_name=考试时间" target="_blank">考试时间</a> -->
+                <a>考试时间</a>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=3&footer_name=考试费用" target="_blank">考试费用</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=3&footer_name=考试费用" target="_blank">考试费用</a> -->
+                <a>考试费用</a>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=4&footer_name=报考流程" target="_blank">报考流程</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=4&footer_name=报考流程" target="_blank">报考流程</a> -->
+                <a>报考流程</a>
               </li>
             </ul>
             <ul class="footer-instru">
@@ -30,13 +34,16 @@
                 <h1>关于优财</h1>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=5&footer_name=关于我们" target="_blank">关于我们</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=5&footer_name=关于我们" target="_blank">关于我们</a> -->
+                <a>关于我们</a>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=6&footer_name=联系我们" target="_blank">联系我们</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=6&footer_name=联系我们" target="_blank">联系我们</a> -->
+                <a>联系我们</a>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=7&footer_name=师资招聘" target="_blank">师资招聘</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=7&footer_name=师资招聘" target="_blank">师资招聘</a> -->
+                <a>师资招聘</a>
               </li>
             </ul>
             <ul class="footer-instru">
@@ -44,13 +51,16 @@
                 <h1>学习须知</h1>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=8&footer_name=支付方式" target="_blank">支付方式</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=8&footer_name=支付方式" target="_blank">支付方式</a> -->
+                <a>支付方式</a>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=9&footer_name=发票制度" target="_blank">发票制度</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=9&footer_name=发票制度" target="_blank">发票制度</a> -->
+                <a>发票制度</a>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=10&footer_name=课程下载" target="_blank">课程下载</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=10&footer_name=课程下载" target="_blank">课程下载</a> -->
+                <a>课程下载</a>
               </li>
             </ul>
             <ul class="footer-instru">
@@ -58,10 +68,12 @@
                 <h1>支付方式</h1>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">网上支付</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">网上支付</a> -->
+                <a>网上支付</a>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">开通支付</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">开通支付</a> -->
+                <a>开通支付</a>
               </li>
               <li>
                 <router-link to="/course-jd">京东分期</router-link>
@@ -75,16 +87,20 @@
                 <h1>售后服务</h1>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">发票制度</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">发票制度</a> -->
+                <a>发票制度</a>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">忘记密码</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">忘记密码</a> -->
+                <a>忘记密码</a>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">退换课说明</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">退换课说明</a> -->
+                <a>退换课说明</a>
               </li>
               <li>
-                <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">问题反馈</a>
+                <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">问题反馈</a> -->
+                <a>问题反馈</a>
               </li>
             </ul>
             <div class="erweima">
@@ -94,7 +110,7 @@
           </div>
         </div>
         <div class="footer-bottom w-wrap">
-          <p>客服电话：400-666-5318</p>
+          <p>客服电话：400-867-5318</p>
           <p>2014-{{curYear}} 优财智业（北京）科技发展有限公司-美国注册管理会计师CMA认证培训 CMA培训专家 版权所有 京IPC备10036536号-8</p>
         </div>
       </div>
