@@ -64,7 +64,7 @@
       <!-- 课程列表 左 -->
       <div class="course-main-left fl" v-if="courseList && courseList.length">
         <div class="clearfix">
-          <div class="course-main-con fl" v-for="(items, index) in courseList" :key="index" @click="goClassDetails(items.id)">
+          <div class="course-main-con fl" v-for="(items, index) in courseList" :key="index" @click="goClassDetails(items)">
             <img :src="items.pc_img" alt="" class="course-main-con-img">
             <div class="course-main-info">
               <p class="ci-title">{{items.name}}</p>
@@ -231,8 +231,12 @@ export default {
       this.getCourseList()
     },
     // 跳转到课程详情页
-    goClassDetails (id) {
-      this.$router.push({ path: '/course-detail', query: { package_id: id } })
+    goClassDetails (items) {
+      if (items.is_purchase == 1 && this.user_id) {
+        this.$router.push({ path: '/personal', query: { type: 'course' } })
+        return
+      }
+      this.$router.push({ path: '/course-detail', query: { package_id: items.id } })
     },
     // 分页
     onChange (val) {

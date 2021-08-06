@@ -320,3 +320,24 @@ export const bookskAnswerdetails = (data) => { // 图书答疑详情
     method: 'post'
   })
 }
+export const mycatalogueCourse = (data) => { // 新版课程目录
+  return axios.request({
+    url: '/web/Personal/mycatalogueCourse',
+    data,
+    method: 'post'
+  })
+}
+export const mycatalogueSection = (data) => { // 新版课程章节
+  return axios.request({
+    url: '/web/Personal/mycatalogueSection',
+    data,
+    method: 'post'
+  })
+}
+export const myPlate = (data) => { // 新版我的课程(板块)
+  return axios.request({
+    url: '/web/Personal/myPlate',
+    data,
+    method: 'post'
+  })
+}

@@ -71,12 +71,13 @@
           <p class="coupon-tit">您有<i>{{num}}</i>张可用优惠券</p>
           <ul class="coupon-list">
             <li class="coupon-item" v-for="(item, index) in availableList" :key="index">
-              <span class="c-price" v-if="item.is_type == 1">¥<em>{{item.coupon_price}}</em></span>
-              <span class="c-price" v-if="item.is_type == 2"><em>{{item.coupon_price}}</em>折</span>
+              <!-- <span class="c-price" v-if="item.is_type == 1">¥<em>{{item.coupon_price}}</em></span>
+              <span class="c-price" v-if="item.is_type == 2"><em>{{item.coupon_price}}</em>折</span> -->
+              <img class="c-img" :src="item.coupon_image" alt="">
               <div class="c-detail">
-                <p class="c-full-reduce">{{item.name}}</p>
+                <!-- <p class="c-full-reduce">{{item.name}}</p> -->
                 <p class="c-validity">有效期至{{item.end_time}}</p>
-                <span class="c-use">{{rangeSts[item.range]}}</span>
+                <!-- <span class="c-use">{{rangeSts[item.range]}}</span> -->
               </div>
             </li>
           </ul>
@@ -85,12 +86,13 @@
           <p class="coupon-tit">失效优惠券</p>
           <ul class="coupon-list">
             <li class="coupon-item gray" v-for="(item, index) in InvalidList" :key="index">
-              <span class="c-price" v-if="item.is_type == 1">¥<em>{{item.coupon_price}}</em></span>
-              <span class="c-price" v-if="item.is_type == 2"><em>{{item.coupon_price}}</em>折</span>
+              <!-- <span class="c-price" v-if="item.is_type == 1">¥<em>{{item.coupon_price}}</em></span>
+              <span class="c-price" v-if="item.is_type == 2"><em>{{item.coupon_price}}</em>折</span> -->
+              <img class="c-img" :src="item.coupon_image" alt="">
               <div class="c-detail">
-                <p class="c-full-reduce">{{item.name}}<span v-if="item.is_type == 2">折</span></p>
+                <!-- <p class="c-full-reduce">{{item.name}}<span v-if="item.is_type == 2">折</span></p> -->
                 <p class="c-validity">有效期至{{item.end_time}}</p>
-                <span class="c-use">{{rangeSts[item.range]}}</span>
+                <!-- <span class="c-use">{{rangeSts[item.range]}}</span> -->
               </div>
               <Icon type="md-close" class="del-coupon" @click="doDelcoupon(item.coupon_id, index)" />
             </li>
@@ -387,23 +389,32 @@ export default {
     flex-wrap: wrap;
   }
   .coupon-item{
-    width: 382px;
+    // width: 382px;
+    width: 346px;
     display: flex;
     align-items: center;
-    height: 112px;
-    border-radius: 16px;
+    // height: 112px;
+    height: 85px;
+    // border-radius: 16px;
     margin: 20px 40px 0 0;
     color: #ffffff;
-    @include bg-linear-gradient($btnGredientOrange, to right);
+    // @include bg-linear-gradient($btnGredientOrange, to right);
+    // background: url('../../assets/images/user/pic_hd.jpg') no-repeat;
+    // background-size: 100% auto;
     overflow: hidden;
     position: relative;
-    &.gray{
-      background: #DCDCDC;
+    &.gray *{
+      // background: #DCDCDC;
+      color: #a2a2a2!important;
       .c-use{
         background: #ffffff;
         color: #DDDDDD;
       }
     }
+  }
+  .c-img{
+    width: 100%;
+    height: 100%;
   }
   .c-price{
     width: 111px;
@@ -434,7 +445,12 @@ export default {
     }
   }
   .c-detail{
-    padding: 0 22px;
+    position: absolute;
+    left: 0;
+    right: 100px;
+    top: 0;
+    bottom: 0;
+    text-align: center;
     .c-full-reduce{
       font-size: 18px;
       font-weight: 400;
@@ -443,6 +459,8 @@ export default {
     .c-validity{
       line-height: 22px;
       font-size: 14px;
+      color: #f9554b;
+      margin-top: 55px;
     }
     .c-use{
       padding: 4px;
@@ -457,8 +475,8 @@ export default {
   .del-coupon{
     color: #ffffff;
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 2px;
+    top: 2px;
     font-size: 22px;
     cursor: pointer;
   }

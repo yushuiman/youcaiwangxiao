@@ -580,6 +580,9 @@ export default {
     })
   },
   mounted () {
+    if (process.env.NODE_ENV === 'production') {
+      this.apiPath = config.baseUrl.pro + '/upload/Index/uploadImage'
+    }
     if (this.isLoadHttpRequest) {
       this.initRes()
     } else {

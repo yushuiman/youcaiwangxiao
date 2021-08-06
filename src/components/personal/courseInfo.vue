@@ -6,8 +6,8 @@
     <div class="all-main">
       <!-- 课程 -->
       <div class="u-course-my" v-if="selIdx == 0">
-        <div v-if="myCourseList.length">
-          <div class="uc-pakeage-course-list" v-for="(item, index) in myCourseList" :key="index">
+        <div v-if="myPlateList.length">
+          <div class="uc-pakeage-course-list" v-for="(item, index) in myPlateList" :key="index">
             <div class="uc-item" style="cursor: pointer;" :class="{'uc-item-package': item.flag}" @click="openShow(item, index)">
               <img :src="item.pc_img" alt="" class="uci-img">
               <div class="uci-detail">
@@ -21,11 +21,11 @@
                 <Icon type="md-arrow-dropup" style="font-size: 20px;margin-top: -3px;" v-if="item.flag"/>
               </div>
             </div>
-            <ul v-if="item.flag && item.course.length">
-              <li class="uc-item uc-item-course" v-for="(val, key) in item.course" :key="key">
+            <ul v-if="item.flag && myCourseList[index]">
+              <li class="uc-item uc-item-course" v-for="(val, key) in myCourseList[index]" :key="key">
                 <img :src="val.pc_img" alt="" class="uci-img">
                 <div class="uci-detail">
-                  <h2 class="ucid-name">{{val.course_name}}</h2>
+                  <h2 class="ucid-name">{{val.name}}</h2>
                   <p class="ucid-des">{{val.description}}</p>
                   <p class="ucid-learn" v-if="val.video">学习至{{val.video.video_name}}</p>
                   <p class="ucid-learn" v-else>学习至未学习</p>
@@ -125,7 +125,7 @@
 
 <script>
 // import collMenuItem from '../../components/personal/course/collMenuItem'
-import { myCourse, watchRecords, myCollpackage, myCollcourse, myCollvideo } from '@/api/personal'
+import { myPlate, mycatalogueCourse, watchRecords, myCollpackage, myCollcourse, myCollvideo } from '@/api/personal'
 import { mapState, mapActions } from 'vuex'
 // import { Encrypt } from '@/libs/crypto'
 export default {
@@ -136,6 +136,7 @@ export default {
       selIdx: this.$route.query.selIdx || 0,
       limit: 10,
       page: 1,
+      myPlateList: [], // 我的课程分类
       myCourseList: [], // 我的课程
       watchRecordsList: [], // 播放记录
       myCollpackageList: [], // 收藏课程包
@@ -197,27 +198,48 @@ export default {
     },
     // 展开收起
     openShow (item, index) {
-      this.myCourseList[index].flag = !item.flag
+      this.myPlateList[index].flag = !item.flag
       this.$forceUpdate()
+      if (this.myCourseList[index] && this.myCourseList[index].length) {
+        return
+      }
+      this.getMycatalogueCourse(item, index)
     },
-    // 我的课程
+    // 我的课程分类
     getMyCourse () {
       this.showLoading(true)
-      myCourse({
+      myPlate({
         user_id: this.user_id
       }).then(data => {
         this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
-          this.myCourseList = res.data
-          if (this.myCourseList && this.myCourseList.length) {
-            this.myCourseList.forEach(v => {
+          this.myPlateList = res.data
+          if (this.myPlateList && this.myPlateList.length) {
+            this.myPlateList.forEach(v => {
               v.flag = false
             })
           }
-          if (this.myCourseList.length === 0) {
+          if (this.myPlateList.length === 0) {
             this.noDataFlag = true
           }
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    },
+    // 我的课程
+    getMycatalogueCourse (item, index) {
+      this.showLoading(true)
+      mycatalogueCourse({
+        package_id: item.package_id,
+        user_id: this.user_id,
+        plate_id: item.plate_id
+      }).then(data => {
+        this.showLoading(false)
+        const res = data.data
+        if (res.code === 200) {
+          this.$set(this.myCourseList, [index], res.data)
         } else {
           this.$Message.error(res.msg)
         }

@@ -52,12 +52,13 @@
       <ul class="coupon-list">
         <li class="coupon-item" :class="{'cur': originBillInfo.user_coupon_id == item.coupon_id}" v-for="(item, index) in couponList" :key="index"
         @click="useCoupon(item, index)">
-          <span class="c-price" v-if="item.is_type == 1">¥<em>{{item.coupon_price}}</em></span>
-          <span class="c-price" v-if="item.is_type == 2"><em>{{item.coupon_price}}</em>折</span>
+          <!-- <span class="c-price" v-if="item.is_type == 1">¥<em>{{item.coupon_price}}</em></span>
+          <span class="c-price" v-if="item.is_type == 2"><em>{{item.coupon_price}}</em>折</span> -->
+          <img class="c-img" :src="item.coupon_image" alt="">
           <div class="c-detail">
-            <p class="c-full-reduce">{{item.name}}</p>
+            <!-- <p class="c-full-reduce">{{item.name}}</p> -->
             <p class="c-validity">有效期至{{item.end_time}}</p>
-            <span class="c-use">{{rangeSts[item.range]}}</span>
+            <!-- <span class="c-use">{{rangeSts[item.range]}}</span> -->
           </div>
         </li>
       </ul>
@@ -354,6 +355,7 @@ export default {
       // type1修改 type2新增
       this.typeAddres = type
       if (type === 2) {
+        this.curAddressInfo = {}
         if (this.addressList.length === 5) {
           this.$Message.error('最多可创建5个收货地址')
           return
@@ -865,19 +867,28 @@ export default {
     flex-wrap: wrap;
   }
   .coupon-item{
-    width: 382px;
+    // width: 382px;
+    width: 346px;
     display: flex;
     align-items: center;
-    height: 112px;
-    border-radius: 16px;
+    // height: 112px;
+    height: 85px;
+    // border-radius: 16px;
     margin: 20px 40px 0 0;
     color: #ffffff;
-    @include bg-linear-gradient($btnGredientOrange, to right);
+    // @include bg-linear-gradient($btnGredientOrange, to right);
+    // background: url('../../assets/images/user/pic_hd.jpg') no-repeat;
+    // background-size: 100% auto;
     overflow: hidden;
     position: relative;
+    box-sizing: border-box;
     &.cur{
       border: 1px solid #066AE4;
     }
+  }
+  .c-img{
+    width: 100%;
+    height: 100%;
   }
   .c-price{
     width: 111px;
@@ -908,7 +919,12 @@ export default {
     }
   }
   .c-detail{
-    padding: 0 22px;
+    position: absolute;
+    left: 0;
+    right: 100px;
+    top: 0;
+    bottom: 0;
+    text-align: center;
     .c-full-reduce{
       font-size: 18px;
       font-weight: 400;
@@ -917,6 +933,8 @@ export default {
     .c-validity{
       line-height: 22px;
       font-size: 14px;
+      color: #f9554b;
+      margin-top: 50px;
     }
     .c-use{
       padding: 4px;

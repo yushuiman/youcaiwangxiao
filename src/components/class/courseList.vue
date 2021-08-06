@@ -33,6 +33,7 @@
 </template>
 <script>
 import { courseCatalog, secvCatalog } from '@/api/class'
+import { mycatalogueCourse, mycatalogueSection } from '@/api/personal'
 import { mapState } from 'vuex'
 export default {
   props: ['package_id', 'userstatus'],
@@ -45,7 +46,8 @@ export default {
   },
   computed: {
     ...mapState({
-      token: state => state.user.token
+      token: state => state.user.token,
+      user_id: state => state.user.user_id
     })
   },
   mounted () {
@@ -55,21 +57,24 @@ export default {
     // 课程大纲（目录）
     getCourseCatalog () {
       this.showLoading(true)
-      courseCatalog({
+      mycatalogueCourse({
         package_id: this.package_id,
-        user_id: this.user_id
+        user_id: this.user_id,
+        plate_id: ''
       }).then(data => {
         this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.courseCatalogInfo = res.data
-          this.$router.replace({ path: 'course-detail',
-            query: {
-              ...this.$route.query,
-              course_id: this.courseCatalogInfo[0].course_id,
-              is_zk: this.courseCatalogInfo[0].is_zhengke
-            }
-          })
+          if (this.courseCatalogInfo[0]) {
+            this.$router.replace({ path: 'course-detail',
+              query: {
+                ...this.$route.query,
+                course_id: this.courseCatalogInfo[0].course_id || '',
+                is_zk: this.courseCatalogInfo[0].is_zhengke || 2
+              }
+            })
+          }
           this.courseCatalogInfo.forEach((v, index) => {
             v.index = index + 1 + ''
           })
@@ -86,8 +91,10 @@ export default {
           return
         }
       }
-      secvCatalog({
-        course_id: item.course_id
+      mycatalogueSection({
+        course_id: item.course_id,
+        package_id: this.package_id,
+        user_id: this.user_id
       }).then(data => {
         const res = data.data
         if (res.code === 200) {
