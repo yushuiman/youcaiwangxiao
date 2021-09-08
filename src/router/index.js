@@ -36,6 +36,7 @@ const WechatPay = r => require.ensure([], () => r(require('@/views/Orders/Wechat
 const Quickpay = r => require.ensure([], () => r(require('@/views/Orders/Quickpay')), 'Quickpay')
 const Books = r => require.ensure([], () => r(require('@/views/Books/Books')), 'Books')
 const BooksDetail = r => require.ensure([], () => r(require('@/views/Books/BooksDetail')), 'BooksDetail')
+const FootDetail = r => require.ensure([], () => r(require('@/views/Foot/FootDetail')), 'FootDetail')
 const router = new Router({
   mode: 'history',
   routes: [
@@ -400,6 +401,17 @@ const router = new Router({
       component: BooksDetail,
       meta: {
         title: '图书',
+        showHeader: true,
+        showFooter: true,
+        showRightSlider: true
+      }
+    },
+    {
+      path: '/foot-detail',
+      name: 'foot-detail',
+      component: FootDetail,
+      meta: {
+        title: '底部导航详情',
         showHeader: true,
         showFooter: true,
         showRightSlider: true

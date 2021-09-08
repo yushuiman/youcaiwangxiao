@@ -8,7 +8,16 @@
         </div>
         <div class="footer_center">
           <div class="w-wrap clearfix">
-            <ul class="footer-instru">
+            <ul class="footer-instru" v-for="(item, index) in footerNavList" :key="index">
+              <li>
+                <h1>{{item.title}}</h1>
+              </li>
+              <li v-for="(val, key) in item.son" :key="key">
+                <router-link :to="{path: 'foot-detail', query: {footer_id: val.footer_id}}" v-if="val.is_jump == 2">{{val.title}}</router-link>
+                <a :href="val.jump_href" v-else>{{val.title}}</a>
+              </li>
+            </ul>
+            <ul class="footer-instru" style="display: none;">
               <li>
                 <h1>新手指南</h1>
               </li>
@@ -29,7 +38,7 @@
                 <a>报考流程</a>
               </li>
             </ul>
-            <ul class="footer-instru">
+            <ul class="footer-instru" style="display: none;">
               <li>
                 <h1>关于优财</h1>
               </li>
@@ -46,7 +55,7 @@
                 <a>师资招聘</a>
               </li>
             </ul>
-            <ul class="footer-instru">
+            <ul class="footer-instru" style="display: none;">
               <li>
                 <h1>学习须知</h1>
               </li>
@@ -63,7 +72,7 @@
                 <a>课程下载</a>
               </li>
             </ul>
-            <ul class="footer-instru">
+            <ul class="footer-instru" style="display: none;">
               <li>
                 <h1>支付方式</h1>
               </li>
@@ -82,7 +91,7 @@
                 <router-link to="/quick-pay" target="_blank">快捷支付</router-link>
               </li>
             </ul>
-            <ul class="footer-instru">
+            <ul class="footer-instru" style="display: none;">
               <li>
                 <h1>售后服务</h1>
               </li>
@@ -110,23 +119,41 @@
           </div>
         </div>
         <div class="footer-bottom w-wrap">
-          <p>客服电话：400-867-5318</p>
-          <p>2014-{{curYear}} 优财智业（北京）科技发展有限公司-美国注册管理会计师CMA认证培训 CMA培训专家 版权所有 京IPC备10036536号-8</p>
+          <p>2014-{{curYear}} 优财智业（北京）科技发展有限公司-美国注册管理会计师CMA认证培训 CMA培训专家 版权所有</p>
+          <p><a href="https://beian.miit.gov.cn/" target="_blank">京IPC备10036536号-8</a><img src="@/assets/images/global/gongan.png" alt="">京公网安备 11010802020104号<span>客服电话：400-867-5318</span></p>
+          <!-- <p>客服电话：400-867-5318</p> -->
         </div>
       </div>
     </footer>
   </div>
 </template>
 <script>
+import { footerNav } from '@/api/index'
 export default {
   data () {
     return {
-      curYear: '2021'
+      curYear: '2021',
+      footerNavList: []
     }
   },
   mounted () {
     var myDate = new Date()
     this.curYear = myDate.getFullYear()
+    this.getFooterNav()
+  },
+  methods: {
+    getFooterNav () {
+      // this.showLoading(true)
+      footerNav().then(data => {
+        // this.showLoading(false)
+        const res = data.data
+        if (res.code === 200) {
+          this.footerNavList = res.data
+        } else {
+          this.$Message.error(res.msg)
+        }
+      })
+    }
   }
 }
 </script>
@@ -186,11 +213,25 @@ export default {
      }
    }
   .footer-bottom {
-    height: 55px;
-    @include display_flex(flex);
-    @extend %justify-content;
-    @extend %alignitem_center;
+    padding: 10px 0;
+    // height: 55px;
+    line-height: 24px;
+    text-align: center;
+    // @include display_flex(flex);
+    // @extend %justify-content;
+    // @extend %alignitem_center;
     p{
+      color: $col999;
+      span{
+        margin-left: 20px;
+      }
+      img{
+        vertical-align: middle;
+        margin-top: -5px;
+        margin-left: 20px;
+      }
+    }
+    a{
       color: $col999;
     }
   }
