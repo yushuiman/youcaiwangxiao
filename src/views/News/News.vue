@@ -28,7 +28,7 @@
               <!-- @click.stop="hrefJump(item)" -->
               <div class="href-info" v-if="selIdxNews == 1 && item.href">
                 <img src="../../assets/images/news/icon-href.png" alt="">
-                <span >超链接</span>
+                <span>超链接</span>
               </div>
               <div class="nitem-open" v-if="selIdxNews == 1">
                 <span @click.stop="openFlag(item, index)">{{item.openFlag ? '收起':'展开'}}</span>

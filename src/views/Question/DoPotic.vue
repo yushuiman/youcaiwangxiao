@@ -172,7 +172,7 @@ export default {
         know_id: this.$route.query.know_id || 0,
         paper_id: this.$route.query.paper_id || 0,
         mock_id: this.$route.query.mock_id || 0,
-        plate_id: this.$route.query.plate_id,
+        plate_id: this.$route.query.plate_id, // 1知识点练习,2阶段测试,3论述题自测,4错题智能练习,5自主练习,6组卷模考,7冲刺训营
         paper_type: this.$route.query.paper_mode || 2, // 交卷 练习1 考试2
         question_content: {
           knob_id: this.$route.query.knob_id || 0,

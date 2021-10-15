@@ -164,16 +164,18 @@ export default {
     }
   },
   mounted () {
-    this.getCourseList() // 课程列表 默认第一页，6条数据
     this.getSubjects() // 科目
     if (!this.token) {
+      this.getCourseList() // 课程列表 默认第一页，6条数据
       this.getThickness() // 免费领取活动
       return
     }
     if (this.isLoadHttpRequest) {
+      this.getCourseList() // 课程列表 默认第一页，6条数据
       this.getThickness() // 免费领取活动
     } else {
       this.$watch('isLoadHttpRequest', function (val, oldVal) {
+        this.getCourseList() // 课程列表 默认第一页，6条数据
         this.getThickness() // 免费领取活动
       })
     }

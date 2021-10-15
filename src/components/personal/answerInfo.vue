@@ -517,6 +517,7 @@ import zhuiwen from '@/components/answer/zhuiwen'
 import tousu from '@/components/answer/tousu'
 import { videoCredentials } from '@/api/class'
 import aliPlayer from '@/components/video/aliPlayer'
+import config from '@/config'
 import { mapState } from 'vuex'
 export default {
   props: {
