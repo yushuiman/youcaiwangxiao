@@ -283,9 +283,7 @@ export default {
   },
   methods: {
     getFooterNav () {
-      // this.showLoading(true)
       footerNav().then(data => {
-        // this.showLoading(false)
         const res = data.data
         if (res.code === 200) {
           this.footerNavList = res.data
@@ -294,7 +292,7 @@ export default {
         }
       })
     },
-    _isMobile() {
+    _isMobile () {
       let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
       return flag
     },

@@ -39,7 +39,7 @@ export const zfbpay = (data) => { // 支付宝
     method: 'post'
   })
 }
-export const setCode = (data) => { // 订单支付微信二维码
+export const setCode = (data) => { // 订单支付微信二维码pc
   return axios.request({
     url: '/web/Pay/setCode',
     data,
@@ -49,6 +49,13 @@ export const setCode = (data) => { // 订单支付微信二维码
 export const getGoods = (data) => { // 支付回调
   return axios.request({
     url: '/web/Pay/getGoods',
+    data,
+    method: 'post'
+  })
+}
+export const setCode2 = (data) => { // 创建每个用户的唯一二维码h5
+  return axios.request({
+    url: '/web/Quickpay/setCode',
     data,
     method: 'post'
   })
