@@ -4,9 +4,9 @@
       <el-col :span="24">
         <el-menu
           :unique-opened="true"
-          default-active="2"
+          default-active="1"
           class="el-menu-vertical-demo">
-          <el-submenu :index="item.index" v-for="item in courseCatalogInfo" :key="item.course_id" style="margin-bottom: 10px;border:0;">
+          <el-submenu :index="item.index" v-for="(item, index) in courseCatalogInfo" :key="item.course_id" style="margin-bottom: 10px;border:0;">
             <template slot="title" >
               <div @click="getSecvCatalog(item, index)">
                 <i class="elt-icon elt-icon-01"></i>

@@ -68,6 +68,13 @@ export const courseCatalog = (data) => { // 课程大纲
     method: 'post'
   })
 }
+export const Plate = (data) => { // 新版课程(板块)
+  return axios.request({
+    url: '/web/Course/Plate',
+    data,
+    method: 'post'
+  })
+}
 export const videoPlayback = (data) => { // 视频播放
   return axios.request({
     url: '/web/Course/videoPlayback',

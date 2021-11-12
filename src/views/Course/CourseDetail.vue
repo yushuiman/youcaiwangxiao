@@ -18,7 +18,7 @@
               <span>{{isntroduction.description}}</span>
             </div>
           </div>
-          <div v-if="videoflag" class="video-object">
+          <div v-if="videoFlag" class="video-object">
             <video :src="isntroduction.audition_href" style="position:absolute;left:0;top:0;z-index:999;" autoplay="autoplay" controls="controls" width="650" height="346">
               您的浏览器不支持 video 标签。
             </video>
@@ -89,7 +89,7 @@ export default {
       isChoose: 'kcjj',
       teacehr: [], // 教师信息
       isntroduction: {}, // 课程简介
-      videoflag: false,
+      videoFlag: false,
       consultInfo: JSON.parse(window.sessionStorage.getItem('consultInfo')) || {} // 在线咨询
     }
   },
@@ -134,7 +134,7 @@ export default {
       this.isChoose = type
     },
     playVideo () {
-      this.videoflag = true
+      this.videoFlag = true
     },
     consultLink () {
       window.open(this.consultInfo.consult_href, '_blank')

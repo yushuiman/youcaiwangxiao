@@ -234,10 +234,10 @@ export default {
     },
     // 跳转到课程详情页
     goClassDetails (items) {
-      if (items.is_purchase == 1 && this.user_id) {
-        this.$router.push({ path: '/personal', query: { type: 'course' } })
-        return
-      }
+      // if (items.is_purchase == 1 && this.user_id) {
+      //   this.$router.push({ path: '/personal', query: { type: 'course' } })
+      //   return
+      // }
       this.$router.push({ path: '/course-detail', query: { package_id: items.id } })
     },
     // 分页
