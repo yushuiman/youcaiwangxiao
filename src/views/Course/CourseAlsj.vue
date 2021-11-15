@@ -47,7 +47,7 @@ export default {
       form: {
         limit: 6,
         page: 1
-      },
+      }
     }
   },
   components: {
@@ -57,7 +57,7 @@ export default {
   computed: {
     ...mapState({
       user_id: state => state.user.user_id
-    }),
+    })
   },
   mounted () {
     this.getCourseList() // 课程列表 默认第一页，6条数据
