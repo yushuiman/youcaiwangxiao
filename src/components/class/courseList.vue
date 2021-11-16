@@ -3,7 +3,7 @@
     <el-menu :unique-opened="true" class="el-menu-demo">
       <el-submenu :index="index + 1 + ''" v-for="(items, index) in PlateList" :key="items.plate_id" style="margin-bottom: 10px;border:0;">
         <template slot="title">
-          <div @click="getCourseCatalog(items, index)">
+          <div @click="getCourseCatalog(items, 1)">
             <i class="elt-icon elt-icon-01"></i>
             {{items.name}}
           </div>
@@ -56,8 +56,8 @@ export default {
     })
   },
   mounted () {
-    this.getPlate()
     // this.getCourseCatalog()
+    this.getPlate()
     if (this.isLoadHttpRequest) {
       // this.getCourseCatalog() // 课程大纲（目录）
     } else {
@@ -75,13 +75,16 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.PlateList = res.data
+          if (res.data && res.data.length) {
+            this.getCourseCatalog(res.data[0], 2)
+          }
         } else {
           this.$Message.error(res.msg)
         }
       })
     },
     // 课程大纲（目录）
-    getCourseCatalog (items) {
+    getCourseCatalog (items, type) {
       this.showLoading(true)
       mycatalogueCourse({
         package_id: this.package_id,
@@ -92,15 +95,15 @@ export default {
         const res = data.data
         if (res.code === 200) {
           this.courseCatalogInfo = res.data
-          // if (this.courseCatalogInfo[0]) {
-          //   this.$router.replace({ path: 'course-detail',
-          //     query: {
-          //       ...this.$route.query,
-          //       course_id: this.courseCatalogInfo[0].course_id || '',
-          //       is_zk: this.courseCatalogInfo[0].is_zhengke || 2
-          //     }
-          //   })
-          // }
+          if (this.courseCatalogInfo[0] && type === 2) {
+            this.$router.replace({ path: 'course-detail',
+              query: {
+                ...this.$route.query,
+                course_id: this.courseCatalogInfo[0].course_id || '',
+                is_zk: this.courseCatalogInfo[0].is_zhengke || 2
+              }
+            })
+          }
           // this.courseCatalogInfo.forEach((v, index) => {
           //   v.index = index + 1 + ''
           // })
