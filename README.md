@@ -30,5 +30,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
 ### git token
-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
 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
