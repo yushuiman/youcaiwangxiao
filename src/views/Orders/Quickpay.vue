@@ -686,8 +686,8 @@ export default {
   .h5-quick-pay-wrap {
     .head-pay{
       padding: 0 .266667rem /* 20px -> .266667rem */;
-      height: 0.8rem;
-      line-height: 0.8rem;
+      height: .8rem /* 60px -> .8rem */;
+      line-height:.8rem /* 60px -> .8rem */;
       background: #ffffff;
       color: $col333;
       font-size: 0.24rem;

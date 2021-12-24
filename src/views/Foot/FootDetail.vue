@@ -2,11 +2,14 @@
   <div class="zixun-detail-wrap">
     <zixun-banner></zixun-banner>
     <div class="zx-main w-wrap">
-      <div class="zxm-left">
+      <div class="zxm-left" v-if="detailInfo.title">
         <!-- <p class="zx-address">您的位置：<router-link :to="{path: '/zixun'}">{{detailInfo.parent_name}} </router-link>> {{detailInfo.type_name}}</p> -->
         <h1 class="zx-title">{{detailInfo.title}}</h1>
         <p class="zx-source">{{detailInfo.create_time}}<span>来源：{{detailInfo.source}}</span></p>
         <div class="zx-cont" v-html="detailInfo.content"></div>
+      </div>
+      <div class="zxm-left" v-else>
+        <span class="no-info">暂无数据</span>
       </div>
       <div class="zxm-right">
         <!-- 报考指南 -->
@@ -44,6 +47,7 @@ export default {
   methods: {
     // 详情
     getNewsDetails () {
+      this.detailInfo = {}
       this.showLoading(true)
       footerContent({
         footer_id: this.$route.query.footer_id
@@ -73,6 +77,12 @@ export default {
         width: 903px;
         background: #ffffff;
         padding: 20px 60px;
+        .no-info{
+          margin: 0 auto;
+          display: block;
+          text-align: center;
+          line-height: 180px;
+        }
       }
       .zxm-right{
         width: 278px;
