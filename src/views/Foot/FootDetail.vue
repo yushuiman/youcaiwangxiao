@@ -35,6 +35,9 @@ export default {
     baokaoZhinan,
     getZiliao
   },
+  watch: {
+    '$route': 'getNewsDetails'
+  },
   mounted () {
     this.getNewsDetails()
   },
@@ -43,7 +46,7 @@ export default {
     getNewsDetails () {
       this.showLoading(true)
       footerContent({
-        footer_id: this.footer_id
+        footer_id: this.$route.query.footer_id
       }).then(data => {
         this.showLoading(false)
         const res = data.data

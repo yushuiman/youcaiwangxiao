@@ -2,7 +2,7 @@
   <div class="quick-pay-wrap" :class="{'h5-quick-pay-wrap': isMobile == 2}">
     <div class="head-pay">
       <div class="w-wrap">
-        <img src="../../assets/images/global/yc-logo.png" alt="">
+        <img src="../../assets/images/global/yc-logo.png" alt="" @click="goIndex">
         <em>｜</em>
         <span>网上快捷支付通道</span>
       </div>
@@ -282,6 +282,9 @@ export default {
     }
   },
   methods: {
+    goIndex () {
+      this.$router.push('/')
+    },
     getFooterNav () {
       footerNav().then(data => {
         const res = data.data
@@ -538,12 +541,13 @@ export default {
     color: $col333;
     font-size: 18px;
     .w-wrap{
-      width: 100%;
+      width: 1300px;
     }
     img{
       width: 130px;
       vertical-align: middle;
       margin-top: -3px;
+      cursor: pointer;
     }
     em{
       color: $col999;
@@ -681,6 +685,7 @@ export default {
   // 移动端
   .h5-quick-pay-wrap {
     .head-pay{
+      padding: 0 .266667rem /* 20px -> .266667rem */;
       height: 0.8rem;
       line-height: 0.8rem;
       background: #ffffff;
