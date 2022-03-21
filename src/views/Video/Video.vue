@@ -21,8 +21,12 @@
             <i class="vio-icon vio-icon-02"></i>
             <p class="txt">答疑</p>
           </li>
-          <li class="vinfo-item" :class="{'curren': vinfoIdex == 2}" @click="showModel('讲义', 2)">
+          <li class="vinfo-item" :class="{'curren': vinfoIdex == 2}" v-if="playCourseInfo.is_zk == 1 && playCourseInfo.userstatus == 1" @click="showModel('答疑', 1)">
             <i class="vio-icon vio-icon-03"></i>
+            <p class="txt">笔记</p>
+          </li>
+          <li class="vinfo-item" :class="{'curren': vinfoIdex == 3}" @click="showModel('讲义', 2)">
+            <i class="vio-icon vio-icon-04"></i>
             <p class="txt">讲义</p>
           </li>
         </ul>
@@ -479,7 +483,8 @@ export default {
     },
     activityDown () {
       // 视频id获取
-      this.$router.replace({ path: '/course-video',
+      this.$router.replace({
+        path: '/course-video',
         query: {
           ...this.$route.query,
           section_id: this.playCourseInfoNextPrev.section_id,
@@ -540,7 +545,7 @@ export default {
           this.playCourseInfoNextPrev.video_id = this.courseSections[currentProfileIndex].videos[currentProfileIndex2].video_id
           if (type === 2) { // 连续播放结束,计算
             // this.activityVisible = true
-            console.log('没夸张1')
+            console.log('没跨章1')
             this.activityDown()
           }
         }
@@ -551,7 +556,7 @@ export default {
           this.playCourseInfoNextPrev.video_id = this.courseSections[currentProfileIndex].videos[0].video_id
           if (type === 2) { // 连续播放结束,计算
             this.problemVisible = true
-            console.log('夸张1')
+            console.log('跨章1')
             // this.activityDown()
           }
         } else {
@@ -560,14 +565,15 @@ export default {
           this.playCourseInfoNextPrev.video_id = this.courseSections[currentProfileIndex].videos[currentProfileIndex2].video_id
           if (type === 2) { // 连续播放结束,计算
             // this.activityVisible = true
-            console.log('没夸张2')
+            console.log('没跨章2')
             this.activityDown()
           }
         }
       }
       if (type === 1) {
-        this.$router.replace({ path: '/course-video',
-        query: {
+        this.$router.replace({
+          path: '/course-video',
+          query: {
             ...this.$route.query,
             section_id: this.playCourseInfoNextPrev.section_id,
             video_id: this.playCourseInfoNextPrev.video_id
@@ -616,7 +622,8 @@ export default {
           this.playCourseInfoNextPrev.video_id = this.courseSections[currentProfileIndex].videos[currentProfileIndex2].video_id
         }
       }
-      this.$router.replace({ path: '/course-video',
+      this.$router.replace({
+        path: '/course-video',
         query: {
           ...this.$route.query,
           section_id: this.playCourseInfoNextPrev.section_id,
@@ -851,7 +858,7 @@ export default {
       }).then(data => {
         let res = data.data
         let { Title, collect, handouts, playAuth, watch_time, status } = res.data
-        if(status === 1){
+        if (status === 1) {
           this.videoCredentials.format = 'm3u8'
         } else {
           this.videoCredentials.format = 'mp4'

@@ -447,7 +447,8 @@ export default {
           this.playCourseInfoNextPrev.video_id = this.courseSections[currentProfileIndex].video[currentProfileIndex2].video_id
         }
       }
-      this.$router.replace({ path: '/education-video',
+      this.$router.replace({
+        path: '/education-video',
         query: {
           ...this.$route.query,
           section_id: this.playCourseInfoNextPrev.section_id,
@@ -493,7 +494,8 @@ export default {
           this.playCourseInfoNextPrev.video_id = this.courseSections[currentProfileIndex].video[currentProfileIndex2].video_id
         }
       }
-      this.$router.replace({ path: '/education-video',
+      this.$router.replace({ 
+        path: '/education-video',
         query: {
           ...this.$route.query,
           section_id: this.playCourseInfoNextPrev.section_id,
@@ -686,7 +688,7 @@ export default {
       }).then(data => {
         let res = data.data
         let { Title, collect, handouts, playAuth, watch_time, status } = res.data
-        if(status === 1){
+        if (status === 1) {
           this.videoCredentials.format = 'm3u8'
         } else {
           this.videoCredentials.format = 'mp4'

@@ -6,7 +6,7 @@
         <p class="zx-address">您的位置：<router-link :to="{path: '/zixun'}">{{detailInfo.parent_name}} </router-link>> {{detailInfo.type_name}}</p>
         <h1 class="zx-title">{{detailInfo.title}}</h1>
         <p class="zx-source">{{detailInfo.create_time}}<span>来源：{{detailInfo.source}}</span></p>
-        <div class="zx-cont" v-html="detailInfo.content"></div>
+        <div class="zx-cont" v-html="unescapeHTML(detailInfo.content)"></div>
       </div>
       <div class="zxm-right">
         <!-- 报考指南 -->
@@ -39,6 +39,10 @@ export default {
     this.getNewsDetails() // 消息列表
   },
   methods: {
+    unescapeHTML (html) {
+      html = "" + html
+      return html.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"')
+    },
     // 详情
     getNewsDetails () {
       this.showLoading(true)

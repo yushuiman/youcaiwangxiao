@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- i2DH2i换行，i3SJ3i缩进 -->
     <!-- 一、解析页面 纯展示-->
     <div class="topic-main" v-if="getQuestion.jiexi == 1">
       <div class="topic-list" :class="{'topic-list-pb': item.flag}" :id="'anchor-' + index" v-for="(item, index) in topics" :key="index">
@@ -13,15 +14,15 @@
         </div>
         <div class="topic-item">
           <div class="topic-title">
-            <p v-if="item.topic[0]">{{item.topic[0]}}</p>
+            <p style="white-space: pre-wrap;" v-if="item.topic[0]" v-html="item.topic[0].replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></p>
             <img v-if="item.topic[1]" :src="item.topic[1]" alt="">
-            <p v-if="item.topic[2]">{{item.topic[2]}}</p>
+            <p style="white-space: pre-wrap;" v-if="item.topic[2]" v-html="item.topic[2].replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></p>
             <img v-if="item.topic[3]" :src="item.topic[3]" alt="">
-            <p v-if="item.topic[4]">{{item.topic[4]}}</p>
+            <p style="white-space: pre-wrap;" v-if="item.topic[4]" v-html="item.topic[4].replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></p>
           </div>
           <!-- 论述题样式 -->
           <div v-if="item.topicType == 2">
-            <textarea v-model.trim="item.discuss_useranswer" disabled class="texta-discuss"></textarea>
+            <textarea style="white-space: pre-wrap;" v-model.trim="item.discuss_useranswer" disabled class="texta-discuss"></textarea>
           </div>
           <!-- 做题ABCD样式 else -->
           <ul class="topic-opition" v-if="item.topicType == 1">
@@ -29,7 +30,7 @@
               <div class="opi-abcd">
                 <span :class="{'red-bg': v.errorRed, 'green-bg': v.rightGreen}">{{v.option}}</span>
               </div>
-              <p>{{v.topic}}</p>
+              <p style="white-space: pre-wrap;" v-html="v.topic.replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></p>
               <span class="eprone" v-if="v.eprone">{{item.eprone}}</span>
             </li>
           </ul>
@@ -40,19 +41,19 @@
             <!-- 非论述题，展示正确答案，用户答案 -->
             <p class="right-resolve" v-if="item.topicType == 1 && getQuestion.sc != 1">
               <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
-              <span v-if="item.options[0].userOption">我的答案<em>{{item.options[0].userOption}}</em></span>
+              <span v-if="item.options[0].userOption">我的答案<em style="white-space: pre-wrap;" v-html="item.options[0].userOption.replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></em></span>
               <span v-else>我的答案<em>未作答</em></span>
             </p>
             <!-- 非论述题，收藏不展示用户答案 -->
             <p class="right-resolve" v-if="item.topicType == 1 && getQuestion.sc == 1">
-              <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
+              <span>正确答案<em class="right" style="white-space: pre-wrap;" v-html="item.options[0].right.replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></em></span>
             </p>
             <div class="instr-resolve instr-resolve-tw">
               <span>解析：</span>
               <div class="twtw">
-                <p v-if="item.analysis">{{item.analysis}}</p>
+                <p style="white-space: pre-wrap;" v-if="item.analysis" v-html="item.analysis.replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></p>
                 <img v-if="item.analysisPic" :src="item.analysisPic" alt="">
-                <p v-if="item.analysis_one">{{item.analysis_one}}</p>
+                <p style="white-space: pre-wrap;" v-if="item.analysis_one" v-html="item.analysis_one.replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></p>
                 <img v-if="item.analysis_img_one" :src="item.analysis_img_one" alt="">
               </div>
             </div>
@@ -74,11 +75,16 @@
         </div>
         <div class="topic-item">
           <div class="topic-title">
-            <p v-if="item.topic[0]">{{item.topic[0]}}</p>
+            <!-- <p v-if="item.topic[0]">{{item.topic[0]}}</p>
             <img v-if="item.topic[1]" :src="item.topic[1]" alt="">
             <p v-if="item.topic[2]">{{item.topic[2]}}</p>
             <img v-if="item.topic[3]" :src="item.topic[3]" alt="">
-            <p v-if="item.topic[4]">{{item.topic[4]}}</p>
+            <p v-if="item.topic[4]">{{item.topic[4]}}</p> -->
+            <p style="white-space: pre-wrap;" v-if="item.topic[0]" v-html="item.topic[0].replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></p>
+            <img v-if="item.topic[1]" :src="item.topic[1]" alt="">
+            <p style="white-space: pre-wrap;" v-if="item.topic[2]" v-html="item.topic[2].replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></p>
+            <img v-if="item.topic[3]" :src="item.topic[3]" alt="">
+            <p style="white-space: pre-wrap;" v-if="item.topic[4]" v-html="item.topic[4].replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></p>
           </div>
           <!-- 练习模式：有解析、答对、答错状态-->
           <ul class="topic-opition" v-if="item.topicType == 1 && getQuestion.paper_mode == 1">
@@ -86,7 +92,7 @@
               <div class="opi-abcd">
                 <span :class="{'blue-bg': v.selOption, 'red-bg': v.errorRed, 'green-bg': v.rightGreen}">{{v.option}}</span>
               </div>
-              <p>{{v.topic}}</p>
+              <p style="white-space: pre-wrap;" v-html="v.topic.replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></p>
             </li>
           </ul>
           <!-- 真题模式：正常，无解析、答对、答错状态-->
@@ -95,12 +101,12 @@
               <div class="opi-abcd">
                 <span :class="{'blue-bg': v.selOption}">{{v.option}}</span>
               </div>
-              <p>{{v.topic}}</p>
+              <p style="white-space: pre-wrap;" v-html="v.topic.replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></p>
             </li>
           </ul>
           <!-- 论述题：没有ABCD样式 -->
           <div v-if="item.topicType == 2">
-            <textarea v-model.trim="item.discuss_useranswer" class="texta-discuss" placeholder="请填写您的答案" v-on:focus="doPoticDiscuss(item, index)" @blur="doPoticDiscuss(item, index)"></textarea>
+            <textarea style="white-space: pre-wrap;" v-model.trim="item.discuss_useranswer" class="texta-discuss" placeholder="请填写您的答案" v-on:focus="doPoticDiscuss(item, index)" @blur="doPoticDiscuss(item, index)"></textarea>
           </div>
         </div>
         <!-- 练习模式答错才显示解析 12.11号改为答对答错都展示解析-->
@@ -109,9 +115,9 @@
           <div class="resolve-detail" v-show="item.flag">
             <p class="right-resolve">
               <span>正确答案<em class="right">{{item.options[0].right}}</em></span>
-              <span v-if="item.userOption">我的答案<em>{{item.userOption}}</em></span>
+              <span v-if="item.userOption">我的答案<em style="white-space: pre-wrap;" v-html="item.userOption.replace(/i2DH2i/g, '<br>').replace(/i3SJ3i/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')"></em></span>
             </p>
-            <p class="instr-resolve"><span>解析：</span>{{item.analysis}}</p>
+            <p class="instr-resolve" style="white-space: pre-wrap;"><span>解析：</span>{{item.analysis}}</p>
             <img v-if="item.analysisPic" :src="item.analysisPic" alt="">
           </div>
         </div>

@@ -703,7 +703,7 @@ export default {
       }).then(data => {
         let res = data.data
         let { Title, collect, handouts, playAuth, watch_time, status } = res.data
-        if(status === 1){
+        if (status === 1) {
           this.videoCredentials.format = 'm3u8'
         } else {
           this.videoCredentials.format = 'mp4'
