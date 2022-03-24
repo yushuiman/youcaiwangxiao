@@ -21,6 +21,10 @@
             <i class="vio-icon vio-icon-02"></i>
             <p class="txt">答疑</p>
           </li>
+          <!-- <li class="vinfo-item" :class="{'curren': vinfoIdex == 3}" @click="showModel('笔记', 3)">
+            <i class="vio-icon vio-icon-04"></i>
+            <p class="txt">笔记</p>
+          </li> -->
           <li class="vinfo-item" :class="{'curren': vinfoIdex == 2}" @click="showModel('讲义', 2)">
             <i class="vio-icon vio-icon-03"></i>
             <p class="txt">讲义</p>
