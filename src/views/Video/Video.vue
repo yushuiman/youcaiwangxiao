@@ -16,8 +16,8 @@
             <i class="vio-icon vio-icon-01"></i>
             <p class="txt">章节</p>
           </li>
-          <!-- 正课且购买 -->
-          <li class="vinfo-item" :class="{'curren': vinfoIdex == 1}" v-if="playCourseInfo.is_zk == 1 && playCourseInfo.userstatus == 1" @click="showModel('答疑', 1)">
+          <!-- 正课且购买 后来改成非正课也可答疑 playCourseInfo.is_zk == 1 && playCourseInfo.userstatus == 1 -->
+          <li class="vinfo-item" :class="{'curren': vinfoIdex == 1}" v-if="playCourseInfo.userstatus == 1" @click="showModel('答疑', 1)">
             <i class="vio-icon vio-icon-02"></i>
             <p class="txt">答疑</p>
           </li>
@@ -156,11 +156,11 @@ export default {
       chooseIdx: 0,
       vinfoIdex: 0,
       txtArr: ['答疑', '讲义下载'],
-      flagAnswer: false,
-      flagCourseSec: true,
-      flagJy: false,
-      fixedVideo: false,
-      flagClosed: false,
+      flagAnswer: false, // 右侧答疑
+      flagCourseSec: true, // 右侧章节列表
+      flagJy: false, // 右侧讲义
+      fixedVideo: false, // 右侧视频小窗口
+      flagClosed: false, // drag
       wImportant: 445,
       videoCredentials: {
         VideoId: '', // 视频VideoId

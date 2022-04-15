@@ -151,7 +151,8 @@
           </div>
         </div>
         <div class="footer-bottom w-wrap">
-          <p>2014-{{curYear}} 优财智业（北京）科技发展有限公司-美国注册管理会计师CMA认证培训 CMA培训专家 版权所有</p>
+          <p><a href="https://youcai2020.oss-cn-beijing.aliyuncs.com/style/images/20180904/F58FBBE07FB7268C8F37F0524B52BF37.jpg" target="_blank">营业执照</a><a href="https://youcai2020.oss-cn-beijing.aliyuncs.com/style/pdf/20181120/13F2CCEDD2AFDD16839A4A7DB644274D.pdf" target="_blank" style="margin-left: 20px;">出版物经营许可证</a></p>
+          <p>2014-{{curYear}} 优财智业（北京）科技发展有限公司-美国注册管理会计师CMA认证培训 CMA培训专家 版权所有</p>   
           <p><a href="https://beian.miit.gov.cn/" target="_blank">京IPC备10036536号-8</a><img src="@/assets/images/global/gongan.png" alt="">京公网安备 11010802020104号<span>客服电话：400-867-5318</span></p>
           <!-- <p>客服电话：400-867-5318</p> -->
         </div>

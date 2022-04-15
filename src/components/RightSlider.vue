@@ -102,7 +102,8 @@ export default {
     //   }
     // },
     serviceLink () {
-      window.open(this.consultInfo.consult_href, '_blank')
+      mantis.requestChat();
+      // window.open(this.consultInfo.consult_href, '_blank')
     },
     goQq (type) {
       if (type === 1) {

@@ -28,13 +28,11 @@ yarn run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-
-### git token
-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
-
-
-#git token
+###git token
 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
 
-youcaiwangxiao
+###youcaiwangxiao
 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
+
+###新token 测试能否共用
+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
