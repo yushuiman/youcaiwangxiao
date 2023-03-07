@@ -31,8 +31,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ###git token
 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
 
-###youcaiwangxiao
-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
+###youcaiwangxiao 2023
+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 
 
 ###新token 测试能否共用
 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
