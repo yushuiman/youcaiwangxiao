@@ -719,10 +719,6 @@ export default {
       // 1静音2正常
       if (this.isMute == 1) {
         this.isMute = 2
-        // if (this.voiceNum == 0) {
-        //   this.voiceNum = this.voiceNum || 100
-        // } else {
-        // }
         this.voiceNum = this.voiceNum1 || 100
         this.instance.setVolume(this.voiceNum1 / 100)
         return

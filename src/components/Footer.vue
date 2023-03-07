@@ -84,9 +84,9 @@
                 <!-- <a href="http://www.youcaiwx.com/html/help_center.html?id=1&footer_name=报考条件" target="_blank">开通支付</a> -->
                 <a>开通支付</a>
               </li>
-              <li>
+              <!-- <li>
                 <router-link to="/course-jd">京东分期</router-link>
-              </li>
+              </li> -->
               <li>
                 <router-link to="/quick-pay" target="_blank">快捷支付</router-link>
               </li>
@@ -133,7 +133,7 @@ import { footerNav } from '@/api/index'
 export default {
   data () {
     return {
-      curYear: '2021',
+      curYear: '2023',
       footerNavList: []
     }
   },

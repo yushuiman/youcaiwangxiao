@@ -11,6 +11,7 @@ const CourseAlsj = r => require.ensure([], () => r(require('@/views/Course/Cours
 const courseVideo = r => require.ensure([], () => r(require('@/views/Video/Video')), 'courseVideo')
 const Question = r => require.ensure([], () => r(require('@/views/Question/Question')), 'Question')
 const DoPotic = r => require.ensure([], () => r(require('@/views/Question/DoPotic')), 'DoPotic')
+const DoPoticNew = r => require.ensure([], () => r(require('@/views/Question/DoPoticNew')), 'DoPoticNew')
 const DoPoticExperience = r => require.ensure([], () => r(require('@/views/Question/DoPoticExperience')), 'DoPoticExperience')
 const DoPoticContinue = r => require.ensure([], () => r(require('@/views/Personal/DoPoticContinue')), 'DoPoticContinue')
 const DoPoticError = r => require.ensure([], () => r(require('@/views/Personal/DoPoticError')), 'DoPoticError')
@@ -121,6 +122,17 @@ const router = new Router({
       path: '/dopotic',
       name: 'dopotic',
       component: DoPotic,
+      meta: {
+        title: '题库',
+        showHeader: true,
+        showFooter: false,
+        showRightSlider: true
+      }
+    },
+    {
+      path: '/dopoticnew',
+      name: 'dopoticnew',
+      component: DoPoticNew,
       meta: {
         title: '题库',
         showHeader: true,

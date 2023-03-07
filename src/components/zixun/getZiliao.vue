@@ -1,6 +1,6 @@
 <template>
   <div class="right-com get-ziliao">
-    <p class="tit">每周更新优财独家CMA资料</p>
+    <p class="tit">每周更新优财CMA资料</p>
     <p class="ts">[温馨提示：每周分发前100人，还有30人]</p>
     <div class="ziliao-inp">
       <input type="text" placeholder="姓名" v-model="user_name">

@@ -1,5 +1,6 @@
 <template>
   <div class="question-wrap w-wrap clearfix">
+    <!-- <div @click="doQuestionsNew" style="width: 160px; height: 80px; line-height: 80px; border-radius: 8px; font-size: 20px; text-align:center; background:rgb(141 138 255); color:#ffffff;">拿题测试</div> -->
     <!-- 0元体验 -->
     <div class="qt-wrap-l fl" v-if="experience">
       <Row class="qt-subject">
@@ -392,6 +393,10 @@ export default {
     },
 
     // 7大板块拿题
+    // 新测试
+    doQuestionsNew () {
+      this.$router.push('/dopoticnew')
+    },
     // 1、5板块
     getSectionList () {
       this.showLoading(true)

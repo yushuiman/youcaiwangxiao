@@ -93,6 +93,13 @@ export const topicList = (data) => { // 6大板块拿题
     method: 'post'
   })
 }
+export const topicListNew = (data) => { // 6大板块拿题-新
+  return axios.request({
+    url: '/apps/Testquestion/topicList',
+    data,
+    method: 'post'
+  })
+}
 export const questionCollection = (data) => { // 收藏
   return axios.request({
     url: '/web/Question/questionCollection',

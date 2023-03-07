@@ -27,18 +27,18 @@
                 <input type="radio" value="2" v-model="pay_type">
                 <label for="微信">微信</label>
               </li>
-              <li v-if="!isWxZfb">
+              <!-- <li v-if="!isWxZfb">
                 <input type="radio" value="3" v-model="pay_type">
                 <label for="京东">京东</label>
-              </li>
+              </li> -->
               <li v-if="!isWxZfb">
                 <input type="radio" value="4" v-model="pay_type">
                 <label for="银联">银联</label>
               </li>
-              <li v-if="!isWxZfb">
+              <!-- <li v-if="!isWxZfb">
                 <input type="radio" value="5" v-model="pay_type">
                 <label for="花呗分期">花呗分期</label>
-              </li>
+              </li> -->
               <li v-if="isWxZfb && isMobile == 2">
                 <input type="radio" value="6" v-model="pay_type">
                 <label for="快捷支付">快捷支付</label>
@@ -173,7 +173,7 @@ export default {
   data () {
     return {
       footerNavList: [],
-      curYear: '2021',
+      curYear: '2023',
       selIdx: 1,
       ewmPayImg: '', // 二维码支付
       order_num: '',

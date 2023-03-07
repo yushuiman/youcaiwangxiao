@@ -6,7 +6,7 @@
           <p class="p1">— 新 版 —</p>
           <p class="p2">优财网校APP</p>
           <ul class="str-list">
-            <li class="str-item"><i></i>2021新纲网课</li>
+            <li class="str-item"><i></i>{{curYear}}新纲网课</li>
             <li class="str-item"><i></i>精品题库</li>
             <li class="str-item"><i></i>定制学习计划</li>
             <li class="str-item"><i></i>在线答疑</li>
@@ -29,7 +29,7 @@
       <div class="course-cont">
         <h2>课程板块</h2>
         <div class="str-txt">
-          <span>2021新纲</span>
+          <span>{{curYear}}新纲</span>
           <span>老师在线答疑</span>
           <span>讲义切换</span>
           <span>金牌师资</span>
@@ -79,7 +79,7 @@
           <p class="p1">— 新 版 —</p>
           <p class="p2">优财网校APP</p>
           <ul class="str-list">
-            <li class="str-item"><i></i>2021新纲网课</li>
+            <li class="str-item"><i></i>{{curYear}}新纲网课</li>
             <li class="str-item"><i></i>精品题库</li>
             <li class="str-item"><i></i>定制学习计划</li>
             <li class="str-item"><i></i>在线答疑</li>
@@ -104,11 +104,14 @@
 export default {
   data () {
     return {
-      h: 400
+      h: 400,
+      curYear: '2023'
     }
   },
   mounted () {
     this.h = document.documentElement.clientHeight
+    var myDate = new Date()
+    this.curYear = myDate.getFullYear()
   },
   methods: {
     downIos (type) {

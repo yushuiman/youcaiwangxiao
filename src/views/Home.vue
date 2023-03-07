@@ -8,7 +8,7 @@
         <img class="ci-img" src="@/assets/images/index/undraw_video_call_kxyp.png" alt="">
         <div class="class-instru">
           <h1>CMA高清网课全科</h1>
-          <p>科学的理念 + 优秀的师资 + 权威的课程</p>
+          <p>科学的理念 + 优秀的师资 + 专业课程，免费体验</p>
           <div class="btn-box-index">
             <button type="button" name="button" class="more-btn" @click="jumpWhere(1)">更多</button>
           </div>
@@ -18,7 +18,7 @@
         <span class="anima-icon"></span>
         <div class="class-instru">
           <h1>体验课程</h1>
-          <p>专业高效的课程，免费体验</p>
+          <p>专业课程，免费体验</p>
           <div class="btn-box-index">
             <button type="button" name="button" class="ty-btn" @click="jumpWhere(2)">体验</button>
           </div>
@@ -29,7 +29,7 @@
         <img class="ci-img" src="@/assets/images/index/undraw_prototyping_process_rswj.png" alt="">
         <div class="class-instru">
           <h1>翻转课堂</h1>
-          <p>超50+CMA精选案例+刻意训练论述题+4天直播互动。</p>
+          <p>超50+CMA精选案例 专注论述题训练</p>
           <!-- <div class="btn-box-index">
             <button type="button" name="button" class="more-btn" @click="jumpWhere(3)">更多</button>
           </div> -->
